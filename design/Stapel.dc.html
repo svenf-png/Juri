@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Stapel Amtshaftung</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button{font-family:inherit;cursor:pointer}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .25s,color .25s,border-color .25s}
+.tap:active{transform:scale(.95)}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.grow{transform-origin:left center;animation:grow .7s cubic-bezier(.2,.8,.2,1) .15s both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 54px 24px 0 24px; display: flex; flex-direction: column; gap: 18px">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-left: -12px">
+    <a href="Bibliothek.dc.html" style="height: 44px; display: flex; align-items: center; gap: 2px; font-size: 16px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Stapel</a>
+    <a href="Teilen.dc.html" aria-label="Stapel teilen" class="tap" style="width: 44px; height: 44px; border-radius: 22px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4"></path><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"></path></svg></a>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <h1 class="d" style="margin: 0; font-size: 38px; font-weight: 750; letter-spacing: -0.03em">Amtshaftung</h1>
+    <div style="font-size: 15px; color: #6B6678; font-weight: 500">§ 839 BGB i. V. m. Art. 34 GG · von Mara · Version 3</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <span style="font-size: 12px; font-weight: 700; color: #6B6678; letter-spacing: .06em; text-transform: uppercase">Rechtsgebiete</span>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px">
+      <sc-for list="{{areas}}" as="a" hint-placeholder-count="3">
+        <button class="tap" onClick="{{a.toggle}}" aria-pressed="{{a.on}}" style="{{a.style}}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{a.icon}}"></path></svg>{{a.name}}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 3px">
+      <span class="grow" style="width: 48%; background: #6A3FE0; border-radius: 6px"></span>
+      <span class="grow" style="width: 33%; background: #C9B8F7; border-radius: 6px; animation-delay: .25s"></span>
+      <span class="grow" style="width: 19%; background: #EEE8FD; border-radius: 6px; animation-delay: .35s"></span>
+    </div>
+    <div style="display: flex; gap: 16px; font-size: 13px; font-weight: 600; color: #6B6678">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #6A3FE0"></span>10 sicher</span>
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #C9B8F7"></span>7 im Lernen</span>
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #EEE8FD"></span>4 neu</span>
+    </div>
+  </div>
+
+  <a href="Lernen.dc.html" class="tap" style="height: 58px; border-radius: 20px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; box-shadow: 0 10px 24px -10px rgba(106,63,224,.55)">2 fällige Karten lernen</a>
+
+  <div style="display: flex; flex-direction: column">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px">
+      <span style="font-size: 12px; font-weight: 700; color: #6B6678; letter-spacing: .06em; text-transform: uppercase">21 Karten</span>
+      <a href="Erstellen.dc.html" style="font-size: 14px; font-weight: 700">+ Karte</a>
+    </div>
+    <sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+      <div style="min-height: 56px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #EFECF5">
+        <span style="width: 70px; flex-shrink: 0; height: 24px; border-radius: 8px; border: 1.5px solid #E4DDF7; color: #6B6678; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{c.type}}</span>
+        <span style="font-size: 15px; font-weight: 600; line-height: 1.3">{{c.front}}</span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { on: { ZR: true, 'ÖR': true, SR: false } }; }
+  renderVals() {
+    const defs = [['ZR', 'Zivilrecht'], ['ÖR', 'Öffentliches Recht'], ['SR', 'Strafrecht']];
+    const areas = defs.map((d) => {
+      const on = !!this.state.on[d[0]];
+      return {
+        name: d[1], on: on ? 'true' : 'false',
+        icon: on ? 'M5 12.5l4.5 4.5L19 7' : 'M12 5v14M5 12h14',
+        toggle: () => { const next = Object.assign({}, this.state.on); next[d[0]] = !on; this.setState({ on: next }); },
+        style: 'height: 40px; padding: 0 14px 0 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; border: ' + (on ? '1.5px solid #17141F' : '1.5px dashed #CFC8E0') + '; background: ' + (on ? '#17141F' : '#FFFFFF') + '; color: ' + (on ? '#FFFFFF' : '#6B6678')
+      };
+    });
+    const cards = [
+      { type: 'Frage', front: 'Wer haftet nach Art. 34 S. 1 GG im Außenverhältnis?' },
+      { type: 'Schema', front: 'Amtshaftungsanspruch: Prüfungsaufbau' },
+      { type: 'Lücke', front: 'Subsidiarität nach § 839 I 2 BGB' },
+      { type: 'Abdeckung', front: 'Übersicht Staatshaftung (PDF, S. 3)' }
+    ];
+    return { areas, cards };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Tagesziel geschafft</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+@keyframes ring{from{stroke-dashoffset:465}to{stroke-dashoffset:0}}
+.ring{animation:ring 1.1s cubic-bezier(.3,.7,.2,1) .15s both}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.pop{animation:pop .5s cubic-bezier(.2,.8,.2,1) 1.05s both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.rise{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes lit{0%{background:#C9B8F7;transform:scale(1)}50%{transform:scale(1.25)}100%{background:#6A3FE0;transform:scale(1)}}
+.lit{animation:lit .7s cubic-bezier(.2,.8,.2,1) 1.6s both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 96px 28px 40px 28px; display: flex; flex-direction: column; align-items: center; gap: 24px">
+  <div style="position: relative; width: 150px; height: 150px">
+    <svg width="150" height="150" viewBox="0 0 170 170" aria-hidden="true">
+      <circle cx="85" cy="85" r="74" fill="none" stroke="#EEE8FD" stroke-width="12"></circle>
+      <circle class="ring" cx="85" cy="85" r="74" fill="none" stroke="#6A3FE0" stroke-width="12" stroke-linecap="round" stroke-dasharray="465" transform="rotate(-90 85 85)"></circle>
+    </svg>
+    <div class="pop" style="position: absolute; left: 40px; top: 40px; width: 70px; height: 70px; border-radius: 35px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+    <h1 class="d rise" style="margin: 0; font-size: 44px; font-weight: 750; letter-spacing: -0.03em; animation-delay: .4s">Tagesziel erreicht.</h1>
+    <p class="rise" style="margin: 0; font-size: 17px; color: #6B6678; animation-delay: .5s">24 von 24 Karten · 13 Tage in Folge</p>
+  </div>
+
+  <div class="rise" style="width: 334px; display: flex; flex-direction: column; gap: 10px; animation-delay: .7s">
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 30px; height: 30px; border-radius: 15px; background: #9A7BEF"></span><span style="font-size: 12px; font-weight: 600; color: #6B6678">Di</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 30px; height: 30px; border-radius: 15px; background: #6A3FE0; box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 5px #17141F"></span><span style="font-size: 12px; font-weight: 600; color: #6B6678">Mi</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 30px; height: 30px; border-radius: 15px; border: 2px dashed #D6D1E2; box-sizing: border-box"></span><span style="font-size: 12px; font-weight: 600; color: #6B6678">Do</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 30px; height: 30px; border-radius: 15px; background: #C9B8F7"></span><span style="font-size: 12px; font-weight: 600; color: #6B6678">Fr</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 30px; height: 30px; border-radius: 15px; background: #9A7BEF"></span><span style="font-size: 12px; font-weight: 600; color: #6B6678">Sa</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 30px; height: 30px; border-radius: 15px; background: #EEE8FD"></span><span style="font-size: 12px; font-weight: 600; color: #6B6678">So</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span class="lit" style="width: 30px; height: 30px; border-radius: 15px; background: #6A3FE0"></span><span style="font-size: 12px; font-weight: 700; color: #17141F">Mo</span></div>
+    </div>
+    <div style="text-align: center; font-size: 14px; font-weight: 600; color: #4B2AA8">Heute leuchtet voll: dein zweitstärkster Tag.</div>
+  </div>
+
+  <div class="rise" style="width: 334px; box-sizing: border-box; border-radius: 22px; background: #F6F4FB; padding: 16px 18px; display: flex; align-items: center; gap: 14px; animation-delay: 1.9s">
+    <div style="width: 52px; height: 52px; border-radius: 26px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4"></path></svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6A3FE0">Neuer Meilenstein</span>
+      <span style="font-size: 17px; font-weight: 700">1.000 Wiederholungen</span>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1"></div>
+  <div style="display: flex; flex-direction: column; gap: 10px; width: 334px">
+    <a href="Erfolge.dc.html" style="height: 60px; border-radius: 20px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700">Erfolge ansehen</a>
+    <a href="Main.dc.html" style="height: 52px; border-radius: 18px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">Fertig</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

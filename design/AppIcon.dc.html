@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Juri App-Icon und Wortmarke</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1}a:hover{color:#4B2AA8}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+</style>
+</helmet>
+<div style="width: 1000px; height: 440px; box-sizing: border-box; background: #FFFFFF; padding: 56px; display: flex; align-items: center; gap: 72px">
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
+    <div style="position: relative; width: 200px; height: 200px">
+      <div style="position: absolute; left: 0; top: 0; width: 200px; height: 200px; border-radius: 45px; background: #6A3FE0; overflow: hidden">
+        <div style="position: absolute; left: 52px; top: 40px; width: 110px; height: 130px; border-radius: 18px; background: #9A7BEF; transform: rotate(8deg)"></div>
+        <div style="position: absolute; left: 40px; top: 36px; width: 110px; height: 130px; border-radius: 18px; background: #FFFFFF; display: flex; align-items: center; justify-content: center">
+          <span class="d" style="font-size: 96px; font-weight: 800; color: #17141F; letter-spacing: -0.04em; line-height: 1; margin-top: -6px">J</span>
+        </div>
+      </div>
+    </div>
+    <span style="font-size: 13px; font-weight: 600; color: #6B6678">Home-Bildschirm · 180 × 180 px</span>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 22px">
+    <div class="d" style="font-size: 150px; font-weight: 800; letter-spacing: -0.05em; line-height: .9; display: flex; align-items: flex-end">Jur<span style="position: relative; display: inline-block">ı<span style="position: absolute; left: 50%; top: 4px; width: 30px; height: 30px; margin-left: -15px; border-radius: 9px; background: #6A3FE0; transform: rotate(8deg)"></span></span></div>
+    <div style="display: flex; align-items: center; gap: 18px">
+      <div style="width: 60px; height: 60px; border-radius: 14px; background: #6A3FE0; position: relative; overflow: hidden">
+        <div style="position: absolute; left: 16px; top: 12px; width: 33px; height: 39px; border-radius: 6px; background: #9A7BEF; transform: rotate(8deg)"></div>
+        <div style="position: absolute; left: 12px; top: 11px; width: 33px; height: 39px; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><span class="d" style="font-size: 29px; font-weight: 800; color: #17141F; line-height: 1; margin-top: -2px">J</span></div>
+      </div>
+      <span style="font-size: 13px; font-weight: 600; color: #6B6678">Klein · 60 × 60 px</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1000,"height":440}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

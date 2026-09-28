@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>iPad Stapel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button,input{font-family:inherit}
+button{cursor:pointer}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s}
+.tap:active{transform:scale(.97)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.rise{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 1180px; height: 820px; box-sizing: border-box; background: #FFFFFF; display: flex; overflow: hidden">
+  <aside style="width: 240px; flex-shrink: 0; box-sizing: border-box; border-right: 1px solid #EFECF5; padding: 34px 16px 24px 16px; display: flex; flex-direction: column; gap: 4px">
+    <div class="d" style="font-size: 34px; font-weight: 800; letter-spacing: -0.04em; padding: 0 12px 22px 12px; display: flex; align-items: flex-end; line-height: 1">Jur<span style="position: relative; display: inline-block">ı<span style="position: absolute; left: 50%; top: 1px; width: 8px; height: 8px; margin-left: -4px; border-radius: 3px; background: #6A3FE0; transform: rotate(8deg)"></span></span></div>
+    <a href="iPadHeute.dc.html" style="height: 44px; border-radius: 12px; padding: 0 12px; display: flex; align-items: center; gap: 12px; color: #17141F; font-size: 15px; font-weight: 600">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"></path></svg>Heute</a>
+    <a href="iPadStapel.dc.html" style="height: 44px; border-radius: 12px; padding: 0 12px; display: flex; align-items: center; gap: 12px; background: #F6F4FB; color: #6A3FE0; font-size: 15px; font-weight: 700">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"></rect><path d="M7 4.5h10"></path></svg>Stapel</a>
+    <a href="iPadErfolge.dc.html" style="height: 44px; border-radius: 12px; padding: 0 12px; display: flex; align-items: center; gap: 12px; color: #17141F; font-size: 15px; font-weight: 600">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"></path><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M9 20h6"></path></svg>Erfolge</a>
+    <a href="Fristen.dc.html" style="height: 44px; border-radius: 12px; padding: 0 12px; display: flex; align-items: center; gap: 12px; color: #17141F; font-size: 15px; font-weight: 600">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"></path></svg>Fristen</a>
+    <a href="Teilen.dc.html" style="height: 44px; border-radius: 12px; padding: 0 12px; display: flex; align-items: center; gap: 12px; color: #17141F; font-size: 15px; font-weight: 600">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4"></path><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"></path></svg>Teilen</a>
+    <a href="Einstellungen.dc.html" style="height: 44px; border-radius: 12px; padding: 0 12px; display: flex; align-items: center; gap: 12px; color: #17141F; font-size: 15px; font-weight: 600">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"></path><circle cx="16" cy="7" r="2"></circle><circle cx="8" cy="17" r="2"></circle></svg>Lernrhythmus</a>
+    <div style="flex-grow: 1"></div>
+    <a href="iPadErstellen.dc.html" class="tap" style="height: 50px; border-radius: 16px; background: #17141F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Neue Karte</a>
+  </aside>
+
+  <section style="width: 340px; flex-shrink: 0; box-sizing: border-box; border-right: 1px solid #EFECF5; padding: 34px 20px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+    <h1 class="d" style="margin: 0; font-size: 34px; font-weight: 750; letter-spacing: -0.03em">Stapel</h1>
+    <label style="height: 42px; border-radius: 12px; background: #F6F4FB; display: flex; align-items: center; gap: 8px; padding: 0 12px; color: #6B6678">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg>
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Suchen</span>
+      <input type="search" placeholder="Karten, Normen, Tags" style="flex-grow: 1; border: 0; background: transparent; font-size: 15px; color: #17141F; outline: none">
+    </label>
+    <div style="display: flex; gap: 6px">
+      <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
+        <button class="tap" onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="{{f.style}}">{{f.label}}</button>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+      <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+        <div class="rise" style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 12px; font-weight: 800; color: #6B6678; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px">{{g.name}}</span>
+          <sc-for list="{{g.stacks}}" as="s" hint-placeholder-count="2">
+            <button class="tap" onClick="{{s.pick}}" style="{{s.style}}">
+              <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px; text-align: left">
+                <span style="font-size: 15px; font-weight: 700; color: #17141F">{{s.name}}</span>
+                <span style="font-size: 12.5px; color: #6B6678; font-weight: 500">{{s.meta}}</span>
+              </span>
+              <span style="min-width: 26px; height: 26px; border-radius: 13px; background: #EEE8FD; color: #4B2AA8; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.due}}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <main style="flex-grow: 1; box-sizing: border-box; padding: 34px 40px; display: flex; flex-direction: column; gap: 20px; background: #FFFFFF">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h2 class="d" style="margin: 0; font-size: 40px; font-weight: 750; letter-spacing: -0.03em">{{sel.name}}</h2>
+        <span style="font-size: 15px; color: #6B6678">{{sel.sub}}</span>
+      </div>
+      <div style="display: flex; gap: 10px">
+        <a href="Teilen.dc.html" aria-label="Stapel teilen" class="tap" style="width: 48px; height: 48px; border-radius: 16px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4"></path><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"></path></svg></a>
+        <a href="iPad.dc.html" class="tap" style="height: 48px; padding: 0 22px; border-radius: 16px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; font-size: 16px; font-weight: 700">{{sel.cta}}</a>
+      </div>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <sc-for list="{{sel.areas}}" as="a" hint-placeholder-count="2">
+        <span style="height: 34px; padding: 0 14px; border-radius: 17px; background: #17141F; color: #FFFFFF; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">{{a}}</span>
+      </sc-for>
+      <span style="height: 34px; padding: 0 14px; border-radius: 17px; border: 1.5px dashed #CFC8E0; color: #6B6678; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">+ Rechtsgebiet</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; height: 12px; gap: 3px">
+        <span style="width: 48%; background: #6A3FE0; border-radius: 6px"></span>
+        <span style="width: 33%; background: #C9B8F7; border-radius: 6px"></span>
+        <span style="width: 19%; background: #EEE8FD; border-radius: 6px"></span>
+      </div>
+      <div style="display: flex; gap: 18px; font-size: 13px; font-weight: 600; color: #6B6678"><span>sicher</span><span>im Lernen</span><span>neu</span></div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+      <sc-for list="{{cards}}" as="c" hint-placeholder-count="6">
+        <div class="rise" style="min-height: 118px; border-radius: 20px; background: #F6F4FB; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700"><span style="color: #6A3FE0; letter-spacing: .06em; text-transform: uppercase">{{c.type}}</span><span style="color: #6B6678">{{c.norm}}</span></div>
+          <span style="font-size: 16px; font-weight: 650; line-height: 1.35">{{c.front}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { f: 'ALL', sel: 'Amtshaftung' }; }
+  renderVals() {
+    const areas = [{ code: 'ZR', name: 'Zivilrecht' }, { code: 'SR', name: 'Strafrecht' }, { code: 'ÖR', name: 'Öffentliches Recht' }];
+    const stacks = [
+      { name: 'Deliktsrecht', areas: ['ZR'], n: 48, due: 3, sub: '§§ 823 ff. BGB' },
+      { name: 'ZPO: Versäumnisurteil', areas: ['ZR'], n: 32, due: 3, sub: '§§ 330 ff. ZPO' },
+      { name: 'Amtshaftung', areas: ['ZR', 'ÖR'], n: 21, due: 2, from: 'Mara', sub: '§ 839 BGB i. V. m. Art. 34 GG · von Mara · Version 3' },
+      { name: 'Diebstahl & Betrug', areas: ['SR'], n: 40, due: 4, sub: '§§ 242, 263 StGB' },
+      { name: 'StPO: Revision', areas: ['SR'], n: 27, due: 2, from: 'Mara', sub: '§§ 333 ff. StPO · von Mara' },
+      { name: 'VwGO: Anfechtungsklage', areas: ['ÖR'], n: 35, due: 4, sub: '§ 42 I Alt. 1 VwGO' }
+    ];
+    const s = this.state;
+    const filters = [{ code: 'ALL', label: 'Alle' }].concat(areas.map((a) => ({ code: a.code, label: a.code }))).map((x) => {
+      const on = s.f === x.code;
+      return { label: x.label, on: on ? 'true' : 'false', pick: () => this.setState({ f: x.code }), style: 'height: 34px; padding: 0 14px; border-radius: 17px; font-size: 13.5px; font-weight: 700; border: ' + (on ? '0' : '1.5px solid #E4DDF7') + '; background: ' + (on ? '#6A3FE0' : '#FFFFFF') + '; color: ' + (on ? '#FFFFFF' : '#17141F') };
+    });
+    const groups = areas.filter((a) => s.f === 'ALL' || s.f === a.code).map((a) => ({
+      name: a.name,
+      stacks: stacks.filter((x) => x.areas.indexOf(a.code) >= 0).map((x) => {
+        const on = s.sel === x.name;
+        return { name: x.name, due: x.due, meta: x.n + ' Karten' + (x.areas.length > 1 ? ' · auch ' + x.areas.filter((c) => c !== a.code).join(', ') : ''), pick: () => this.setState({ sel: x.name }), style: 'min-height: 56px; border: 0; border-radius: 14px; padding: 6px 10px; display: flex; align-items: center; gap: 10px; background: ' + (on ? '#F6F4FB' : 'transparent') + '; box-shadow: ' + (on ? 'inset 3px 0 0 #6A3FE0' : 'none') };
+      })
+    }));
+    const st = stacks.find((x) => x.name === s.sel) || stacks[2];
+    const names = { ZR: 'Zivilrecht', SR: 'Strafrecht', 'ÖR': 'Öffentliches Recht' };
+    const sel = { name: st.name, sub: st.sub + ' · ' + st.n + ' Karten', cta: st.due + ' fällige lernen', areas: st.areas.map((c) => names[c]) };
+    const cards = st.name === 'Amtshaftung' ? [
+      { type: 'Frage', norm: 'Art. 34 S. 1 GG', front: 'Wer haftet nach Art. 34 S. 1 GG im Außenverhältnis?' },
+      { type: 'Schema', norm: '§ 839 BGB', front: 'Amtshaftungsanspruch: Prüfungsaufbau' },
+      { type: 'Lücke', norm: '§ 839 I 2 BGB', front: 'Subsidiarität bei Fahrlässigkeit' },
+      { type: 'Abdeckung', norm: 'PDF S. 3', front: 'Übersicht Staatshaftung' },
+      { type: 'Frage', norm: '§ 839 BGB', front: 'Wann ist eine Amtspflicht drittbezogen?' },
+      { type: 'Frage', norm: '§ 839 III BGB', front: 'Folge der schuldhaften Nichteinlegung eines Rechtsmittels?' }
+    ] : [
+      { type: 'Frage', norm: st.sub.split(' · ')[0], front: '[Karten aus ' + st.name + ']' }
+    ];
+    return { filters, groups, sel, cards };
+  }
+}
+</script>
+</body>
+</html>
