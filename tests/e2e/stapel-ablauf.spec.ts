@@ -266,6 +266,10 @@ test.describe('Stapel und Karten', () => {
         .getByRole('button', { name: /Öffentliches Recht/ })
         .click();
       await page.getByRole('dialog').getByRole('button', { name: 'Fertig' }).click();
+      // Erst weiter, wenn das Rechtsgebiet gespeichert ist (die Ansicht liest aus der Datenbank).
+      await expect(
+        visible(page.getByRole('button', { name: 'Öffentliches Recht entfernen' })),
+      ).toBeVisible();
     } else {
       await page.getByRole('button', { name: 'Öffentliches Recht' }).click();
       // Das letzte Rechtsgebiet lässt sich nicht abwählen.
@@ -275,6 +279,12 @@ test.describe('Stapel und Karten', () => {
         visible(page.getByText('Ein Stapel braucht mindestens ein Rechtsgebiet.')),
       ).toBeVisible();
       await page.getByRole('button', { name: 'Zivilrecht' }).click();
+      // Erst weiter, wenn beide Rechtsgebiete gespeichert sind: ein Seitenwechsel mitten im
+      // Schreiben würde die Änderung verwerfen.
+      await expect(page.getByRole('button', { name: 'Zivilrecht' })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      );
     }
     await page.goto('/Juri/stapel');
     await expect(page.getByRole('link', { name: /Amtshaftung/ })).toHaveCount(2);
