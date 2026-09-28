@@ -89,6 +89,7 @@ export function CardScreen({
       text: draftToMarkup(form.draft),
       norm: form.norm,
       tags: form.tags,
+      note: form.note,
     });
     if (!checked.ok) {
       setErrors(checked.errors);

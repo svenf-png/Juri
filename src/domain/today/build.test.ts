@@ -53,13 +53,15 @@ describe('todayInputFrom', () => {
       decks,
       cardTotal: 7,
       dueByDeck: { amt: 2, delikt: 3, betrug: 4 },
+      dueTotal: 9,
+      reviewedToday: 5,
       createdAt: [at(28, 9), at(27, 9), at(1, 9)],
     });
     expect(input).toMatchObject({
       totalCards: 7,
       due: 9,
       createdThisWeek: 2,
-      goal: { done: 0, target: 24 },
+      goal: { done: 5, target: 24 },
     });
     const model = todayModel(input);
     expect(model.headline).toEqual({ accent: '9 Karten', rest: 'warten heute.' });
@@ -74,7 +76,15 @@ describe('todayInputFrom', () => {
 
   it('zeigt ohne Karten den Leerzustand und ohne Rechtsgebiete keine Liste', () => {
     const model = todayModel(
-      todayInputFrom(today, { areas: [], decks: [], cardTotal: 0, dueByDeck: {}, createdAt: [] }),
+      todayInputFrom(today, {
+        areas: [],
+        decks: [],
+        cardTotal: 0,
+        dueByDeck: {},
+        dueTotal: 0,
+        reviewedToday: 0,
+        createdAt: [],
+      }),
     );
     expect(model.headline.accent).toBe('Noch keine Karten.');
     expect(model.areas).toEqual([]);

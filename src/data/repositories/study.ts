@@ -1,0 +1,133 @@
+import type { Card, ReviewItem } from '@/domain/model/records';
+import type { RatingKey } from '@/domain/scheduler/rating';
+import { ratingValue } from '@/domain/scheduler/rating';
+import { restoreItem, reviewItem, withActiveDue } from '@/domain/scheduler/schedule';
+import { DEFAULT_LEARNING, withDefaults, type LearningSettings } from '@/domain/scheduler/settings';
+import type { JuriDb } from '../db';
+
+/** Einstellungen des Lernrhythmus; fehlt der Eintrag, gelten die Voreinstellungen. */
+export async function readSettings(db: JuriDb): Promise<LearningSettings> {
+  const entry = await db.meta.get('learning');
+  return entry?.key === 'learning' ? withDefaults(entry.value) : DEFAULT_LEARNING;
+}
+
+/**
+ * Speichert die Einstellungen. Wechselt der Algorithmus, schreibt dieselbe Transaktion den
+ * `due`-Index aller Abfragen neu; FSRS-Zustand und Leitner-Fach bleiben unberührt (ADR-004).
+ */
+export async function writeSettings(db: JuriDb, next: LearningSettings): Promise<void> {
+  await db.transaction('rw', db.meta, db.reviewItems, async () => {
+    const before = await readSettings(db);
+    await db.meta.put({ key: 'learning', value: next });
+    if (before.algorithm === next.algorithm) return;
+    const items = await db.reviewItems.toArray();
+    const changed = items
+      .map((item) => withActiveDue(item, next.algorithm))
+      .filter((item, i) => item.due !== items[i]?.due);
+    await db.reviewItems.bulkPut(changed);
+  });
+}
+
+/** Neue Abfragen, die seit `since` erstmals bewertet wurden (Tageslimit „Neue Karten“). */
+export async function startedSince(db: JuriDb, since: number): Promise<number> {
+  return db.reviewLog
+    .where('at')
+    .aboveOrEqual(since)
+    .filter((entry) => entry.wasNew)
+    .count();
+}
+
+/** Abfragen, die seit `since` mindestens einmal bewertet wurden (Tagesziel „Lernen“, A5). */
+export async function reviewedSince(db: JuriDb, since: number): Promise<number> {
+  const ids = await db.reviewLog.where('at').aboveOrEqual(since).primaryKeys();
+  const entries = await db.reviewLog.bulkGet(ids);
+  return new Set(entries.map((e) => e?.itemId)).size;
+}
+
+export interface StudySnapshot {
+  items: ReviewItem[];
+  settings: LearningSettings;
+  /** Neue Abfragen, die heute schon begonnen wurden. */
+  startedToday: number;
+}
+
+/**
+ * Abfragen mit Lernzustand, Einstellungen und heute begonnene neue Abfragen. Liest alle Abfragen
+ * (klein: eine Zeile je Frage oder Lücke); für 5.000 Karten misst M11 nach.
+ */
+export async function readStudy(db: JuriDb, todayStart: number): Promise<StudySnapshot> {
+  const [items, settings, startedToday] = await Promise.all([
+    db.reviewItems.toArray(),
+    readSettings(db),
+    startedSince(db, todayStart),
+  ]);
+  return { items, settings, startedToday };
+}
+
+/** Karten zu Karten-IDs; Unbekannte fehlen im Ergebnis. */
+export async function readCardsById(db: JuriDb, ids: readonly string[]): Promise<Card[]> {
+  const cards = await db.cards.bulkGet([...ids]);
+  return cards.filter((card): card is Card => card !== undefined);
+}
+
+/**
+ * Bewertet Abfragen: Lernzustand, Lernlog und Ereignis „bewertet“ entstehen in einer Transaktion.
+ * Eine inzwischen gelöschte Abfrage wird übersprungen.
+ */
+export async function rateItems(
+  db: JuriDb,
+  itemIds: readonly string[],
+  rating: RatingKey,
+  now: number,
+): Promise<void> {
+  await db.transaction('rw', db.reviewItems, db.reviewLog, db.events, db.meta, async () => {
+    const settings = await readSettings(db);
+    for (const id of itemIds) {
+      const item = await db.reviewItems.get(id);
+      if (!item) continue;
+      const outcome = reviewItem(item, ratingValue(rating), now, settings);
+      await db.reviewItems.put(outcome.item);
+      await db.reviewLog.add(outcome.log);
+      await db.events.add({
+        at: now,
+        type: 'reviewed',
+        cardId: item.cardId,
+        deckId: item.deckId,
+        itemId: item.id,
+        rating: outcome.log.rating,
+        first: outcome.log.wasNew,
+      });
+    }
+  });
+}
+
+/**
+ * Nimmt die letzte Bewertung dieser Abfragen zurück: Der Lernzustand kommt aus dem Lernlog, der
+ * Logeintrag entfällt (er würde sonst eine nie gültige Bewertung zählen), das Ereignis-Log bleibt
+ * anhängend und bekommt „zurückgenommen“.
+ */
+export async function undoRating(
+  db: JuriDb,
+  itemIds: readonly string[],
+  now: number,
+): Promise<void> {
+  await db.transaction('rw', db.reviewItems, db.reviewLog, db.events, db.meta, async () => {
+    const settings = await readSettings(db);
+    for (const id of itemIds) {
+      const entry = await db.reviewLog.where('itemId').equals(id).last();
+      const item = await db.reviewItems.get(id);
+      if (!entry || !item) continue;
+      await db.reviewItems.put(withActiveDue(restoreItem(item, entry.before), settings.algorithm));
+      await db.reviewLog.delete(entry.seq);
+      await db.events.add({
+        at: now,
+        type: 'reviewUndone',
+        cardId: entry.cardId,
+        deckId: entry.deckId,
+        itemId: entry.itemId,
+        rating: entry.rating,
+        first: entry.wasNew,
+      });
+    }
+  });
+}

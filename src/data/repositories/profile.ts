@@ -1,4 +1,4 @@
-import type { MetaKey, MetaValues, Profile } from '@/domain/model/records';
+import type { MetaEntry, MetaKey, MetaValues, Profile } from '@/domain/model/records';
 import { normalizeName } from '@/domain/profile/name';
 import type { JuriDb } from '../db';
 
@@ -32,5 +32,11 @@ export async function writeMeta<K extends MetaKey>(
   key: K,
   value: MetaValues[K],
 ): Promise<void> {
-  await db.meta.put({ key, value });
+  await db.meta.put({ key, value } as MetaEntry);
+}
+
+/** Zähler aus den Metadaten; fehlt er, ist er 0. */
+export async function readCounter(db: JuriDb, key: 'newCardsSinceBackup'): Promise<number> {
+  const entry = await db.meta.get(key);
+  return entry?.key === key ? entry.value : 0;
 }

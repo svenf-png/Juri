@@ -13,6 +13,7 @@ export const FRONT_MAX = 2000;
 export const BACK_MAX = 4000;
 export const TEXT_MAX = 4000;
 export const NORM_MAX = 200;
+export const NOTE_MAX = 2000;
 
 export type CardContent =
   | { readonly type: 'qa'; readonly front: string; readonly back: string }
@@ -28,15 +29,19 @@ export interface CardForm {
   readonly norm: string;
   /** „#Klausur #AG“ oder „Klausur, AG“. */
   readonly tags: string;
+  /** Eigene Notiz; erscheint beim Lernen unter der Antwort (Entscheidung 5). */
+  readonly note: string;
 }
 
 export interface CardFields {
   readonly content: CardContent;
   readonly norm: string;
   readonly tags: string[];
+  /** Leer, wenn es keine Notiz gibt. */
+  readonly note: string;
 }
 
-export type CardErrors = Partial<Record<'front' | 'back' | 'text' | 'norm', string>>;
+export type CardErrors = Partial<Record<'front' | 'back' | 'text' | 'norm' | 'note', string>>;
 
 /** Tags aus freier Eingabe: getrennt durch Leerraum oder Komma, ohne „#“, ohne Doppelte. */
 export function normalizeTags(input: string): string[] {
@@ -72,8 +77,10 @@ export function checkCard(
 ): { ok: true; fields: CardFields } | { ok: false; errors: CardErrors } {
   const norm = tidyLine(form.norm, Infinity);
   const tags = normalizeTags(form.tags);
+  const note = form.note.trim();
   const errors: CardErrors = {};
   if (norm.length > NORM_MAX) errors.norm = tooLong('Die Norm', NORM_MAX);
+  if (note.length > NOTE_MAX) errors.note = tooLong('Die Notiz', NOTE_MAX);
   if (form.type === 'qa') {
     const front = form.front.trim();
     const back = form.back.trim();
@@ -82,7 +89,7 @@ export function checkCard(
     if (back === '') errors.back = 'Die Rückseite fehlt.';
     else if (back.length > BACK_MAX) errors.back = tooLong('Die Rückseite', BACK_MAX);
     if (Object.keys(errors).length > 0) return { ok: false, errors };
-    return { ok: true, fields: { content: { type: 'qa', front, back }, norm, tags } };
+    return { ok: true, fields: { content: { type: 'qa', front, back }, norm, tags, note } };
   }
   const text = form.text.trim();
   if (text === '') errors.text = 'Der Text fehlt.';
@@ -90,7 +97,7 @@ export function checkCard(
   // Die Markierungen zählen mit: `{{c1::` und `}}` machen jede Lücke um acht Zeichen länger.
   else if (text.length > TEXT_MAX) errors.text = tooLong('Der Text mit den Lücken', TEXT_MAX);
   if (Object.keys(errors).length > 0) return { ok: false, errors };
-  return { ok: true, fields: { content: { type: 'cloze', text }, norm, tags } };
+  return { ok: true, fields: { content: { type: 'cloze', text }, norm, tags, note } };
 }
 
 /** Kennungen der Abfragen einer Karte: Frage `['']`, Lückentext `['c1', 'c3']`. */
@@ -126,7 +133,15 @@ export function buildCard(
   createdAt: number,
   updatedAt: number,
 ): Card {
-  const base = { id, deckId, norm: fields.norm, tags: fields.tags, createdAt, updatedAt };
+  const base = {
+    id,
+    deckId,
+    norm: fields.norm,
+    tags: fields.tags,
+    ...(fields.note === '' ? {} : { note: fields.note }),
+    createdAt,
+    updatedAt,
+  };
   const { content } = fields;
   return content.type === 'qa'
     ? { ...base, type: 'qa', front: content.front, back: content.back }

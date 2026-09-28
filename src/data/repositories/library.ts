@@ -1,5 +1,7 @@
-import type { Area, Card, Deck } from '@/domain/model/records';
+import type { Area, Card, Deck, ReviewItem } from '@/domain/model/records';
+import type { LearningSettings } from '@/domain/scheduler/settings';
 import type { JuriDb } from '../db';
+import { readSettings, readStudy, reviewedSince, startedSince } from './study';
 
 function countBy(keys: readonly unknown[]): Record<string, number> {
   const counts: Record<string, number> = {};
@@ -30,42 +32,66 @@ export interface DeckDetail {
   areas: Area[];
   cards: Card[];
   itemCount: number;
+  /** Abfragen des Stapels mit Lernzustand. */
+  items: ReviewItem[];
+  settings: LearningSettings;
+  startedToday: number;
 }
 
-export async function readDeckDetail(db: JuriDb, id: string): Promise<DeckDetail | null> {
-  const [deck, areas, cards, itemCount] = await Promise.all([
+export async function readDeckDetail(
+  db: JuriDb,
+  id: string,
+  todayStart: number,
+): Promise<DeckDetail | null> {
+  const [deck, areas, cards, items, settings, startedToday] = await Promise.all([
     db.decks.get(id),
     db.areas.toArray(),
     db.cards.where('deckId').equals(id).toArray(),
-    db.reviewItems.where('deckId').equals(id).count(),
+    db.reviewItems.where('deckId').equals(id).toArray(),
+    readSettings(db),
+    startedSince(db, todayStart),
   ]);
-  return deck ? { deck, areas, cards, itemCount } : null;
+  return deck
+    ? { deck, areas, cards, itemCount: items.length, items, settings, startedToday }
+    : null;
 }
 
 export interface TodaySnapshot {
   areas: Area[];
   decks: Deck[];
   cardTotal: number;
-  itemCounts: Record<string, number>;
+  items: ReviewItem[];
+  settings: LearningSettings;
+  startedToday: number;
+  /** Abfragen, die heute mindestens einmal bewertet wurden. */
+  reviewedToday: number;
   createdAt: number[];
 }
 
-/** Grundlage für Heute; `since` ist der Beginn des ersten Tages der letzten Woche. */
-export async function readTodaySnapshot(db: JuriDb, since: number): Promise<TodaySnapshot> {
-  const [areas, decks, cardTotal, itemKeys, events] = await Promise.all([
+/**
+ * Grundlage für Heute; `since` ist der Beginn des ersten Tages der letzten Woche, `todayStart`
+ * der Beginn des heutigen Lerntags.
+ */
+export async function readTodaySnapshot(
+  db: JuriDb,
+  since: number,
+  todayStart: number,
+): Promise<TodaySnapshot> {
+  const [areas, decks, cardTotal, study, reviewedToday, events] = await Promise.all([
     db.areas.toArray(),
     db.decks.toArray(),
     db.cards.count(),
-    db.reviewItems.orderBy('deckId').keys(),
+    readStudy(db, todayStart),
+    reviewedSince(db, todayStart),
     db.events.where('at').aboveOrEqual(since).toArray(),
   ]);
   return {
     areas,
     decks,
     cardTotal,
-    itemCounts: countBy(itemKeys),
-    // Bisher gibt es nur „Karte angelegt“; mit weiteren Ereignisarten hier nach Typ filtern.
-    createdAt: events.map((e) => e.at),
+    ...study,
+    reviewedToday,
+    createdAt: events.filter((e) => e.type === 'cardCreated').map((e) => e.at),
   };
 }
 
@@ -78,8 +104,11 @@ export interface CreateSnapshot {
 /** Grundlage für Erstellen: Tageszähler und Gesamtzahl. */
 export async function readCreateSnapshot(db: JuriDb, since: number): Promise<CreateSnapshot> {
   const [madeToday, total] = await Promise.all([
-    // Bisher gibt es nur „Karte angelegt“; mit weiteren Ereignisarten hier nach Typ filtern.
-    db.events.where('at').aboveOrEqual(since).count(),
+    db.events
+      .where('at')
+      .aboveOrEqual(since)
+      .filter((e) => e.type === 'cardCreated')
+      .count(),
     db.cards.count(),
   ]);
   return { madeToday, total };

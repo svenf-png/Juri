@@ -12,6 +12,7 @@ export interface FormState {
   draft: ClozeDraft;
   norm: string;
   tags: string;
+  note: string;
 }
 
 export const EMPTY_FORM: FormState = {
@@ -21,6 +22,7 @@ export const EMPTY_FORM: FormState = {
   draft: EMPTY_DRAFT,
   norm: '',
   tags: '',
+  note: '',
 };
 
 export function formFromCard(card: Card): FormState {
@@ -31,5 +33,6 @@ export function formFromCard(card: Card): FormState {
     draft: card.type === 'cloze' ? draftFromMarkup(card.text) : EMPTY_DRAFT,
     norm: card.norm,
     tags: formatTags(card.tags),
+    note: card.note ?? '',
   };
 }

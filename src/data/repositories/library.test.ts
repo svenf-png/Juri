@@ -25,6 +25,7 @@ function fields(form: Partial<Parameters<typeof checkCard>[0]> = {}): CardFields
     text: '',
     norm: '§ 242 StGB',
     tags: '#Klausur',
+    note: '',
     ...form,
   });
   if (!result.ok) throw new Error(JSON.stringify(result.errors));
@@ -282,10 +283,10 @@ describe('Lesen', () => {
   it('Stapel-Detail liefert Karten und Abfragen, unbekannte Stapel null', async () => {
     const { db } = await setup();
     await createCard(db, { id: 'k1', deckId: 'amt', fields: fields() }, T);
-    const detail = await readDeckDetail(db, 'amt');
+    const detail = await readDeckDetail(db, 'amt', T);
     expect(detail?.cards.map((c) => c.id)).toEqual(['k1']);
     expect(detail?.itemCount).toBe(1);
-    expect(await readDeckDetail(db, 'weg')).toBeNull();
+    expect(await readDeckDetail(db, 'weg', T)).toBeNull();
   });
 
   it('Heute und Erstellen zählen Ereignisse ab einem Zeitpunkt', async () => {
@@ -293,8 +294,14 @@ describe('Lesen', () => {
     await createCard(db, { id: 'k1', deckId: 'amt', fields: fields() }, T - 5 * 86_400_000);
     await createCard(db, { id: 'k2', deckId: 'amt', fields: fields() }, T);
     await createCard(db, { id: 'k3', deckId: 'amt', fields: fields() }, T + 1000);
-    const today = await readTodaySnapshot(db, T - 1000);
-    expect(today).toMatchObject({ cardTotal: 3, itemCounts: { amt: 3 }, createdAt: [T, T + 1000] });
+    const today = await readTodaySnapshot(db, T - 1000, T - 1000);
+    expect(today).toMatchObject({
+      cardTotal: 3,
+      startedToday: 0,
+      reviewedToday: 0,
+      createdAt: [T, T + 1000],
+    });
+    expect(today.items).toHaveLength(3);
     expect(await readCreateSnapshot(db, T - 1000)).toMatchObject({ madeToday: 2, total: 3 });
     const search = await readSearchSnapshot(db);
     expect(search.cards).toHaveLength(3);
