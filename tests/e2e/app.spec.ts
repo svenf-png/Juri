@@ -127,7 +127,9 @@ test.describe('Echte App (/Juri/)', () => {
             text: el.textContent.trim().slice(0, 30),
             h: el.getBoundingClientRect().height,
           }))
-          .filter((b) => b.h > 0 && b.h < 44),
+          // Toleranz: getBoundingClientRect rechnet mit Fließkomma, unter einer laufenden Transform-
+          // Animation (Einblenden) liefert WebKit 43,99997 statt 44.
+          .filter((b) => b.h > 0 && b.h < 43.9),
       );
       expect(small, path).toEqual([]);
     }

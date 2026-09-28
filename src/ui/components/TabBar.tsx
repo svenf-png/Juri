@@ -20,10 +20,10 @@ function Tab({ item, active }: { item: NavKey; active: boolean }) {
 }
 
 /** Tab-Bar des iPhones (Main.dc.html), unter 768 px Breite (A8). */
-export function TabBar({ active }: { active: NavKey | null }) {
+export function TabBar({ active, hidden = false }: { active: NavKey | null; hidden?: boolean }) {
   const [a, b, c, d] = TAB_BAR;
   return (
-    <nav className={styles.bar} aria-label="Hauptnavigation">
+    <nav className={styles.bar} aria-label="Hauptnavigation" hidden={hidden}>
       <Tab item={a} active={active === a} />
       <Tab item={b} active={active === b} />
       <Link to={NEW_CARD_PATH} className={cx(styles.create, tap.tap)} aria-label="Neue Karte">

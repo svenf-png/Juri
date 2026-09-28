@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { dayKey, learningDay, nextDayStart, parseDayKey } from '@/domain/calendar/day';
-import { emptyToday, todayModel, type TodayModel } from '@/domain/today/today';
+import { todayInputFrom } from '@/domain/today/build';
+import { todayModel, type TodayModel } from '@/domain/today/today';
+import { useTodayData } from '../library/queries';
 
 /**
  * Aktueller Lerntag („JJJJ-MM-TT“). Wechselt um 04:00 von selbst und prüft neu, wenn Juri aus
@@ -26,11 +28,19 @@ export function useLearningDayKey(): string {
 }
 
 /**
- * Daten für Heute. Stand M2 gibt es weder Karten noch Fristen, Ziele oder Verlauf in der
- * Datenbank: Das Modell zeigt den Leerzustand mit dem heutigen Datum. Ab M3 kommen die
- * Eingaben aus den Repositories.
+ * Daten für Heute aus der Datenbank: Karten, Rechtsgebiete, fällige Abfragen und in der letzten
+ * Woche angelegte Karten. Fristen, Ziele und Verlauf kommen mit M7 und M8. Bis die Datenbank
+ * geantwortet hat, gibt es kein Modell (`model: null`), damit kein falscher Leerzustand aufblitzt;
+ * scheitert die Datenbank, ist `failed` gesetzt.
  */
-export function useToday(): TodayModel {
+export function useToday(): { model: TodayModel | null; failed: boolean } {
   const key = useLearningDayKey();
-  return useMemo(() => todayModel(emptyToday(parseDayKey(key))), [key]);
+  const data = useTodayData(key);
+  const model = useMemo(() => {
+    if (data.status !== 'ready') return null;
+    const { itemCounts, ...rest } = data.value;
+    // Bis M4 (Lern-Engine) ist jede neue Abfrage fällig (Annahme A19).
+    return todayModel(todayInputFrom(parseDayKey(key), { ...rest, dueByDeck: itemCounts }));
+  }, [data, key]);
+  return { model, failed: data.status === 'error' };
 }

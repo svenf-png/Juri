@@ -28,6 +28,20 @@ Manuelle Prüfungen auf echten Geräten. Testgeräte (Entscheidung 7): iPhone 14
 7. **Härtetest:** Juri vom Home-Bildschirm löschen, neu installieren, Backup einspielen: Name ist zurück.
 8. **Testinstanz:** `svenf-png.github.io/Juri/test/` installieren, „Mit Demo-Profil starten“: Einstellungen zeigen „Zeit für ein neues Backup“. „Alles zurücksetzen“ führt zurück zum Onboarding.
 
-## Ab M2 (wird je Meilenstein ergänzt)
+## M2: Shell und Heute (pro Gerät)
 
-- Offline-Start, Layout auf iPhone und iPad.
+- Offline-Start, Layout auf iPhone und iPad: Tab-Bar unten (iPhone), Sidebar links (iPad).
+- Heute: Datum, Kopfzeile und Initiale stehen unter der Statusleiste, nichts wird abgeschnitten.
+
+## M3: Karten und Stapel (pro Gerät)
+
+1. **Testinstanz:** `svenf-png.github.io/Juri/test/` öffnen, Einstellungen → Testdaten → „Demo-Stapel hinzufügen“. Stapel-Übersicht zeigt 5 Stapel; „Amtshaftung (Demo)“ steht in ZR und ÖR.
+2. **Echte App, erster Stapel:** Stapel → „Ersten Stapel anlegen“, Name „Deliktsrecht“, „Zivilrecht“ antippen, anlegen.
+3. **Frage anlegen:** „+“ (iPhone) bzw. „Neue Karte“ (iPad), Vorderseite und Rückseite tippen, „Speichern & nächste“. Die Meldung „Karte gespeichert“ erscheint oben; die Tastatur verdeckt weder Felder noch Knopf.
+4. **Lückentext:** Typ „Lücke“, einen Satz tippen, ein Wort **per Doppeltipp oder Ziehen der Auswahlgriffe** markieren, „Markierung wird Lücke“. Das Wort wird violett und die Auswahl bleibt im Text sichtbar. Drei Lücken setzen: „Lücken · 3 Abfragen“. Text weiter tippen, ohne dass die Hervorhebung verrutscht (auch bei Zeilenumbruch und Diktat). Notieren: Sitzt die violette Fläche exakt hinter dem Wort?
+5. **Heute:** zeigt „N Karten warten heute“, „+N Karten angelegt“ und die Rechtsgebiete.
+6. **Bearbeiten und Löschen:** Karte im Stapel antippen, ändern, speichern. „Karte löschen“ und bestätigen. Stapel über „⋯“ umbenennen und löschen.
+7. **Rechtsgebiete:** Stift-Chip → „Rechtsgebiet anlegen“; ein Rechtsgebiet mit Stapel löschen versuchen (gesperrt).
+8. **Suche:** „Gewahrsam“ eintippen; Treffer öffnen die Karte. Umlaute tippen („Verjährung“).
+9. **iPad:** Liste links, Stapel rechts. Hochkant und Split View: Liste und Stapel nacheinander.
+10. **Backup:** Karten anlegen, Backup erstellen, App löschen, neu installieren, einspielen: Stapel, Karten und Lücken sind wieder da.

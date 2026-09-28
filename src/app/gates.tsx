@@ -2,7 +2,7 @@ import type { ComponentType } from 'react';
 import { Navigate, Outlet, useOutletContext } from 'react-router';
 import { useAppData, type ProfileData } from '@/features/app/appData';
 import { needsInstall } from '@/features/app/install';
-import { Screen, ScreenTitle } from '@/ui/components/Screen';
+import { StorageError } from '@/ui/components/StorageError';
 
 /*
  * Routen-Wächter. Im Safari-Tab auf iPhone und iPad öffnet Juri die Datenbank gar nicht erst
@@ -47,14 +47,4 @@ function OnboardingGate() {
   if (state.status === 'loading') return null;
   if (state.status === 'error') return <StorageError />;
   return state.value.profile ? <Navigate to="/" replace /> : <Outlet />;
-}
-
-function StorageError() {
-  return (
-    <Screen>
-      <ScreenTitle lead="Bitte schließe Juri und öffne es erneut. Hilft das nicht, starte das Gerät neu.">
-        Kein Zugriff auf den Speicher
-      </ScreenTitle>
-    </Screen>
-  );
 }

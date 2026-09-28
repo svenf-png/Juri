@@ -37,6 +37,9 @@ export const colors = {
   'line-soft': '#F3F1F8',
   paper: '#FBFAFD',
   scrim: 'rgba(23,20,31,.28)',
+
+  // Warnung, nur für Löschen und Fehler (Annahme A20; 6,6:1 auf Weiß, 6,0:1 auf Fläche)
+  danger: '#B42318',
 } as const;
 
 /** Heatmap-Stufen 0 bis 4 (System.dc.html). */

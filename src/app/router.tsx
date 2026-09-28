@@ -6,6 +6,9 @@ import { Installieren } from '@/ui/screens/installieren/Installieren';
 import { Onboarding } from '@/ui/screens/onboarding/Onboarding';
 import { Platzhalter } from '@/ui/screens/platzhalter/Platzhalter';
 import { PLATZHALTER } from '@/ui/screens/platzhalter/texte';
+import { Erstellen } from '@/ui/screens/erstellen/Erstellen';
+import { KarteBearbeiten } from '@/ui/screens/erstellen/KarteBearbeiten';
+import { Stapel } from '@/ui/screens/stapel/Stapel';
 import { ProfileScreen, RequireBrowserTab, RequireNoProfile, RequireProfile } from './gates';
 
 const Styleguide = lazy(() =>
@@ -13,6 +16,12 @@ const Styleguide = lazy(() =>
 );
 const HeuteVorschau = lazy(() =>
   import('@/ui/screens/heute/HeuteVorschau').then((m) => ({ default: m.HeuteVorschau })),
+);
+const StapelVorschau = lazy(() =>
+  import('@/ui/screens/stapel/StapelVorschau').then((m) => ({ default: m.StapelVorschau })),
+);
+const ErstellenVorschau = lazy(() =>
+  import('@/ui/screens/stapel/StapelVorschau').then((m) => ({ default: m.ErstellenVorschau })),
 );
 const Einstellungen = lazy(() =>
   import('@/ui/screens/einstellungen/Einstellungen').then((m) => ({ default: m.Einstellungen })),
@@ -47,7 +56,7 @@ export function routes(
           element: <AppShell />,
           children: [
             { path: '/', element: <ProfileScreen screen={Heute} /> },
-            { path: '/stapel', element: <Platzhalter {...PLATZHALTER.stapel} /> },
+            { path: '/stapel/:deckId?', element: <Stapel /> },
             { path: '/erfolge', element: <Platzhalter {...PLATZHALTER.erfolge} /> },
             { path: '/teilen', element: <Platzhalter {...PLATZHALTER.teilen} /> },
             { path: '/fristen', element: <Platzhalter {...PLATZHALTER.fristen} /> },
@@ -63,7 +72,8 @@ export function routes(
           ],
         },
         // Abläufe im Vollbild, ohne Navigation.
-        { path: '/neu', element: <Platzhalter {...PLATZHALTER.neu} /> },
+        { path: '/neu', element: <Erstellen /> },
+        { path: '/karte/:cardId', element: <KarteBearbeiten /> },
         { path: '/lernen', element: <Platzhalter {...PLATZHALTER.lernen} /> },
       ],
     },
@@ -89,6 +99,23 @@ export function routes(
       element: (
         <Lazy>
           <HeuteVorschau />
+        </Lazy>
+      ),
+    },
+    // Stapel und Erstellen mit den Beispieldaten der Designs (Bildvergleich, A12).
+    ...(['liste', 'detail', 'ipad'] as const).map((screen) => ({
+      path: `/styleguide/stapel/${screen}`,
+      element: (
+        <Lazy>
+          <StapelVorschau screen={screen} />
+        </Lazy>
+      ),
+    })),
+    {
+      path: '/styleguide/erstellen',
+      element: (
+        <Lazy>
+          <ErstellenVorschau />
         </Lazy>
       ),
     },

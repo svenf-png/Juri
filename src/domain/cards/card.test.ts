@@ -1,0 +1,204 @@
+import { describe, expect, it } from 'vitest';
+import type { Card } from '../model/records';
+import {
+  cardTitle,
+  buildCard,
+  buildItems,
+  checkCard,
+  contentOf,
+  formatTags,
+  normalizeTags,
+  reviewItemId,
+  reviewSubs,
+  tidyLine,
+  type CardForm,
+} from './card';
+
+const qa: CardForm = {
+  type: 'qa',
+  front: ' Was ist Gewahrsam? ',
+  back: ' Sachherrschaft. ',
+  text: '',
+  norm: ' § 242  StGB ',
+  tags: '#Klausur #AG',
+};
+const cloze: CardForm = {
+  type: 'cloze',
+  front: '',
+  back: '',
+  text: 'A {{c1::b}} {{c2::c}}',
+  norm: '',
+  tags: '',
+};
+
+describe('normalizeTags', () => {
+  it('trennt an Leerraum und Komma, entfernt „#“ und Doppelte ohne Rücksicht auf Groß- und Kleinschreibung', () => {
+    expect(normalizeTags('#Klausur, #AG  klausur ##Examen# #')).toEqual([
+      'Klausur',
+      'AG',
+      'Examen',
+    ]);
+    expect(normalizeTags('')).toEqual([]);
+  });
+
+  it('kürzt lange Tags, verwirft Tags mit „#“ in der Mitte und begrenzt die Anzahl', () => {
+    expect(normalizeTags('a'.repeat(50))[0]).toHaveLength(40);
+    expect(normalizeTags('a#b')).toEqual([]);
+    const many = Array.from({ length: 30 }, (_, i) => `t${i}`).join(' ');
+    expect(normalizeTags(many)).toHaveLength(20);
+  });
+
+  it('formatiert für das Eingabefeld', () => {
+    expect(formatTags(['Klausur', 'AG'])).toBe('#Klausur #AG');
+    expect(formatTags([])).toBe('');
+  });
+});
+
+describe('tidyLine', () => {
+  it('fasst Leerraum zusammen und kürzt', () => {
+    expect(tidyLine('  a \n b  ', 10)).toBe('a b');
+    expect(tidyLine('abcdef ', 3)).toBe('abc');
+  });
+});
+
+describe('checkCard', () => {
+  it('bereinigt eine Frage', () => {
+    expect(checkCard(qa)).toEqual({
+      ok: true,
+      fields: {
+        content: { type: 'qa', front: 'Was ist Gewahrsam?', back: 'Sachherrschaft.' },
+        norm: '§ 242 StGB',
+        tags: ['Klausur', 'AG'],
+      },
+    });
+  });
+
+  it('meldet fehlende Seiten einzeln', () => {
+    expect(checkCard({ ...qa, front: ' ', back: '' })).toEqual({
+      ok: false,
+      errors: { front: 'Die Vorderseite fehlt.', back: 'Die Rückseite fehlt.' },
+    });
+    expect(checkCard({ ...qa, back: '' })).toEqual({
+      ok: false,
+      errors: { back: 'Die Rückseite fehlt.' },
+    });
+  });
+
+  it('prüft Lückentexte auf Text und Lücke', () => {
+    expect(checkCard(cloze)).toMatchObject({
+      ok: true,
+      fields: { content: { type: 'cloze', text: 'A {{c1::b}} {{c2::c}}' } },
+    });
+    expect(checkCard({ ...cloze, text: '  ' })).toEqual({
+      ok: false,
+      errors: { text: 'Der Text fehlt.' },
+    });
+    expect(checkCard({ ...cloze, text: 'ohne Lücke' })).toEqual({
+      ok: false,
+      errors: { text: 'Markiere mindestens ein Wort als Lücke.' },
+    });
+  });
+});
+
+describe('Abfragen einer Karte', () => {
+  it('eine Frage hat eine, ein Lückentext eine je Nummer', () => {
+    expect(reviewSubs({ type: 'qa', front: 'a', back: 'b' })).toEqual(['']);
+    expect(reviewSubs({ type: 'cloze', text: '{{c3::a}} {{c1::b}} {{c1::c}} {{c2::d}}' })).toEqual([
+      'c1',
+      'c2',
+      'c3',
+    ]);
+  });
+
+  it('haben feste Kennungen', () => {
+    expect(reviewItemId('k1', '')).toBe('k1');
+    expect(reviewItemId('k1', 'c2')).toBe('k1:c2');
+  });
+});
+
+describe('Karte und Formular', () => {
+  const base = { id: 'k1', deckId: 'd1', norm: '§ 1', tags: ['A'], createdAt: 1, updatedAt: 2 };
+  const qaCard: Card = { ...base, type: 'qa', front: 'F', back: 'B' };
+  const clozeCard: Card = { ...base, type: 'cloze', text: 'x {{c1::y}}' };
+
+  it('liest Inhalt und Titel', () => {
+    expect(contentOf(qaCard)).toEqual({ type: 'qa', front: 'F', back: 'B' });
+    expect(contentOf(clozeCard)).toEqual({ type: 'cloze', text: 'x {{c1::y}}' });
+    expect(cardTitle({ type: 'qa', front: 'Zeile 1\n  Zeile 2' })).toBe('Zeile 1 Zeile 2');
+    expect(cardTitle(clozeCard)).toBe('x y');
+    expect(cardTitle({ type: 'qa' })).toBe('');
+    expect(cardTitle({ type: 'cloze' })).toBe('');
+  });
+});
+
+describe('Grenzen', () => {
+  it('meldet zu lange Felder, statt sie zu kürzen', () => {
+    expect(checkCard({ ...qa, front: 'a'.repeat(2001) })).toEqual({
+      ok: false,
+      errors: { front: 'Die Vorderseite ist zu lang (höchstens 2.000 Zeichen).' },
+    });
+    expect(checkCard({ ...qa, back: 'a'.repeat(4001) })).toEqual({
+      ok: false,
+      errors: { back: 'Die Rückseite ist zu lang (höchstens 4.000 Zeichen).' },
+    });
+    expect(checkCard({ ...cloze, text: `{{c1::a}}${'a'.repeat(4000)}` })).toEqual({
+      ok: false,
+      errors: { text: 'Der Text mit den Lücken ist zu lang (höchstens 4.000 Zeichen).' },
+    });
+    expect(checkCard({ ...qa, front: 'a'.repeat(2000), back: 'b'.repeat(4000) }).ok).toBe(true);
+  });
+
+  it('meldet eine zu lange Norm und prüft alle Felder zugleich', () => {
+    expect(checkCard({ ...qa, norm: 'n'.repeat(201) })).toEqual({
+      ok: false,
+      errors: { norm: 'Die Norm ist zu lang (höchstens 200 Zeichen).' },
+    });
+    expect(checkCard({ ...qa, front: '', norm: 'n'.repeat(201) })).toMatchObject({
+      ok: false,
+      errors: { front: 'Die Vorderseite fehlt.', norm: expect.any(String) as string },
+    });
+    expect(checkCard({ ...cloze, text: 'ohne Lücke', norm: 'n'.repeat(201) })).toMatchObject({
+      ok: false,
+      errors: {
+        text: 'Markiere mindestens ein Wort als Lücke.',
+        norm: expect.any(String) as string,
+      },
+    });
+  });
+});
+
+describe('buildCard und buildItems', () => {
+  it('bauen Karte und Abfragen aus den Feldern', () => {
+    const fields = {
+      content: { type: 'cloze' as const, text: '{{c1::a}} {{c2::b}}' },
+      norm: '§ 1',
+      tags: ['A'],
+    };
+    const card = buildCard('k1', 'd1', fields, 5, 6);
+    expect(card).toEqual({
+      id: 'k1',
+      deckId: 'd1',
+      norm: '§ 1',
+      tags: ['A'],
+      createdAt: 5,
+      updatedAt: 6,
+      type: 'cloze',
+      text: '{{c1::a}} {{c2::b}}',
+    });
+    expect(buildItems(card, 7)).toEqual([
+      { id: 'k1:c1', cardId: 'k1', deckId: 'd1', sub: 'c1', createdAt: 7 },
+      { id: 'k1:c2', cardId: 'k1', deckId: 'd1', sub: 'c2', createdAt: 7 },
+    ]);
+    const qaCard = buildCard(
+      'k2',
+      'd1',
+      { content: { type: 'qa', front: 'F', back: 'B' }, norm: '', tags: [] },
+      1,
+      1,
+    );
+    expect(qaCard).toMatchObject({ type: 'qa', front: 'F', back: 'B' });
+    expect(buildItems(qaCard, 1)).toEqual([
+      { id: 'k2', cardId: 'k2', deckId: 'd1', sub: '', createdAt: 1 },
+    ]);
+  });
+});

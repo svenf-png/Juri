@@ -32,7 +32,15 @@ describe('metaEntrySchema', () => {
 
 describe('Tabellen', () => {
   it('haben je ein Schema; Gerätedaten sind Metadaten-Schlüssel', () => {
-    expect(Object.keys(RECORD_SCHEMAS)).toEqual(['profile', 'meta']);
+    expect(Object.keys(RECORD_SCHEMAS)).toEqual([
+      'profile',
+      'meta',
+      'areas',
+      'decks',
+      'cards',
+      'reviewItems',
+      'events',
+    ]);
     for (const key of DEVICE_META_KEYS) {
       expect(metaEntrySchema.safeParse({ key, value: 0 }).success).toBe(true);
     }

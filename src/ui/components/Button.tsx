@@ -3,7 +3,7 @@ import { Link, type LinkProps } from 'react-router';
 import { cx } from '../cx';
 import styles from './Button.module.css';
 
-export type ButtonVariant = 'primary' | 'ink' | 'soft' | 'outline' | 'ghost';
+export type ButtonVariant = 'primary' | 'ink' | 'soft' | 'outline' | 'ghost' | 'danger';
 export type ButtonSize = 'lg' | 'md' | 'sm';
 
 interface StyleProps {

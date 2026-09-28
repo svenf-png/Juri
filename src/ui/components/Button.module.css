@@ -72,6 +72,12 @@
   border: 1.5px solid var(--border-soft);
 }
 
+.danger,
+.danger:hover {
+  background: var(--danger);
+  color: var(--bg);
+}
+
 .ghost,
 .ghost:hover {
   background: transparent;
