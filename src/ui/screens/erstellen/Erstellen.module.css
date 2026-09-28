@@ -1,0 +1,610 @@
+/*
+ * Karte anlegen und bearbeiten nach Erstellen.dc.html, Werte exakt aus dem Design.
+ * Ab 768 px steht die Spalte mittig (A8: nicht eigens gestaltete Breiten); die iPad-Variante
+ * des Designs (iPadErstellen.dc.html) zeigt den PDF-Ablauf und kommt mit M6.
+ */
+.screen {
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: normal;
+  padding: calc(54px + var(--top-shift)) max(20px, env(safe-area-inset-right)) 0
+    max(20px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .screen {
+    padding-top: calc(54px + var(--top-inset));
+  }
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.topLink {
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--link);
+}
+
+.topTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* „Mehr“: 34 px sichtbar, Trefferfläche 44 px (A1). */
+.more {
+  position: relative;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 17px;
+  border: 1.5px solid var(--track);
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.more::after {
+  content: '';
+  position: absolute;
+  inset: -5px -4px;
+}
+
+.types {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-field-lg);
+  background: var(--surface);
+}
+
+.type {
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.typeOn {
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: var(--shadow-segment);
+}
+
+.typeFixed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.typeFixedValue {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 16px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.placeholderPanel {
+  min-height: 160px;
+  border-radius: 22px;
+  border: 2px dashed var(--violet-300);
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 0 30px;
+}
+
+.placeholderTitle {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.placeholderText {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Lückentext */
+.cloze {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.textBox {
+  border-radius: var(--radius-field-xl);
+  background: var(--surface);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.textBox:focus-within {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.textInvalid {
+  box-shadow: 0 0 0 2px var(--danger);
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/*
+ * Der Text liegt zweimal übereinander: unten die Hervorhebung der Lücken, oben das
+ * durchsichtige Eingabefeld mit gleicher Schrift. So bleibt Tippen und Markieren
+ * ein normales Textfeld, und die Lücken erscheinen wie im Design.
+ */
+.editor {
+  position: relative;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.mirror,
+.area {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  letter-spacing: normal;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+  tab-size: 4;
+}
+
+.mirror {
+  min-height: calc(1.55em * 3);
+  color: var(--ink);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.area {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  caret-color: var(--ink);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.area::selection {
+  background: rgba(106, 63, 224, 0.25);
+  -webkit-text-fill-color: transparent;
+}
+
+/* Die Lücke ragt 3 px über den Text hinaus, ohne ihn zu verschieben (Design: Innenabstand 5 px). */
+.gap {
+  background: var(--violet);
+  color: var(--bg);
+  border-radius: 6px;
+  padding: 1px 3px;
+  margin: 0 -3px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.mark,
+.mark:hover {
+  height: 48px;
+  border: 0;
+  border-radius: var(--radius-field-lg);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+  text-align: center;
+}
+
+.hintStrong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.errorText {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.gaps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gapChips {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gapChip {
+  height: 34px;
+  padding: 0 6px;
+  border-radius: 17px;
+  border: 1.5px solid var(--track);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  max-width: 100%;
+}
+
+.gapNumber {
+  width: 22px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--violet);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gapText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Entfernen: 22 px sichtbar, Trefferfläche 44 px. */
+.gapRemove {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gapRemove::after {
+  content: '';
+  position: absolute;
+  inset: -11px;
+}
+
+/* Mehr: Norm und Tags */
+.extra {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mini {
+  border-radius: var(--radius-field-lg);
+  border: 1.5px solid var(--line);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mini:focus-within {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.miniLabel {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.miniInput {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 15px;
+  color: var(--ink);
+  outline: none;
+}
+
+.media {
+  display: flex;
+  gap: 10px;
+}
+
+.mediaButton {
+  flex-grow: 1;
+  height: 50px;
+  border-radius: var(--radius-field-lg);
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.mediaButton svg {
+  color: var(--violet);
+}
+
+.mediaButton:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.deckRow {
+  width: 100%;
+  /* Das Design rechnet ohne border-box: 52 px Inhalt plus zwei Linien. */
+  box-sizing: content-box;
+  min-height: 52px;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.deckLabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.deckValue {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: right;
+}
+
+.deckValue svg {
+  color: var(--chevron);
+  flex-shrink: 0;
+}
+
+.note {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 500;
+  text-align: center;
+}
+
+.footer {
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  background: var(--bg);
+  padding: 10px 0 max(34px, var(--bottom-inset));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.goal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.goalTrack {
+  flex-grow: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--violet-100);
+  overflow: hidden;
+}
+
+.goalFill {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--violet);
+  transition: width 0.5s var(--ease-standard);
+}
+
+.delete,
+.delete:hover {
+  height: 48px;
+  border: 0;
+  border-radius: var(--radius-field-lg);
+  background: transparent;
+  color: var(--danger);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.failed {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+  text-align: center;
+}
+
+/* Meldung nach dem Speichern (Erstellen.dc.html: oben, 2,4 s) */
+.toast {
+  position: fixed;
+  z-index: 60;
+  top: calc(56px + var(--top-shift));
+  left: 20px;
+  right: 20px;
+  max-width: 480px;
+  margin: 0 auto;
+  border-radius: 22px;
+  background: var(--bg);
+  box-shadow: var(--shadow-toast);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: toast 2.4s var(--ease-standard) both;
+}
+
+@media (min-width: 768px) {
+  .toast {
+    top: calc(56px + var(--top-inset));
+  }
+}
+
+.plus {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: var(--violet);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  animation: plus 0.5s var(--ease-standard) 0.1s both;
+}
+
+.toastText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.toastTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.toastSub {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+@keyframes toast {
+  0% {
+    opacity: 0;
+    transform: translateY(-24px) scale(0.9);
+  }
+  14% {
+    opacity: 1;
+    transform: translateY(0) scale(1.03);
+  }
+  20% {
+    transform: none;
+  }
+  85% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes plus {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}

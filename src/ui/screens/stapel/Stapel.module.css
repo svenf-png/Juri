@@ -1,0 +1,995 @@
+/*
+ * Stapel-Übersicht und Stapel-Detail nach Bibliothek.dc.html, Stapel.dc.html (iPhone) und
+ * iPadStapel.dc.html (iPad), Werte exakt aus den Designs. Breiten (A8): unter 768 px iPhone mit
+ * Tab-Bar; 768 bis 1099 px Sidebar und eine Spalte (Liste oder Detail); ab 1100 px Master-Detail
+ * wie das iPad-Design. Die Designs setzen keine Zeilenhöhe, daher line-height: normal.
+ * Oben: iPhone-Designwert inkl. 47 px Statusleiste plus --top-shift, iPad plus --top-inset.
+ */
+
+/* ---------- Rahmen ---------- */
+.stapel {
+  min-height: 100dvh;
+  line-height: normal;
+}
+
+/* Unter 1100 px zeigt die Route entweder die Liste oder das Detail. */
+@media (max-width: 1099px) {
+  .stapel[data-view='detail'] .list,
+  .stapel[data-view='list'] .detail {
+    display: none;
+  }
+}
+
+.list,
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+  padding-bottom: calc(var(--tabbar-height, 0px) + 24px);
+  min-width: 0;
+}
+
+.list {
+  padding-top: calc(64px + var(--top-shift));
+}
+
+.detail {
+  padding-top: calc(54px + var(--top-shift));
+}
+
+@media (min-width: 768px) {
+  .list,
+  .detail {
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-bottom: calc(40px + var(--bottom-inset));
+  }
+}
+
+@media (min-width: 1100px) {
+  .stapel {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .list {
+    max-width: none;
+    margin: 0;
+    min-height: 100dvh;
+    border-right: 1px solid var(--line);
+    padding: calc(34px + var(--top-inset)) 20px 20px;
+    gap: 16px;
+  }
+
+  .detail {
+    max-width: none;
+    margin: 0;
+    padding: calc(34px + var(--top-inset)) 40px 40px;
+  }
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.sectionLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.textLink,
+.textButton {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--link);
+}
+
+/* Die Schrift ist klein wie im Design; die Trefferfläche reicht auf 44 px (A1). */
+.textLink::after,
+.textButton::after {
+  content: '';
+  position: absolute;
+  inset: -14px -8px;
+}
+
+.textButton {
+  font-size: 15px;
+}
+
+/* ---------- Liste ---------- */
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.h1 {
+  font-size: 40px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.search {
+  height: 46px;
+  border-radius: var(--radius-field);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  color: var(--muted);
+}
+
+.search:focus-within {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.search input {
+  flex-grow: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+  color: var(--ink);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 38 px sichtbar, Trefferfläche 44 px (A1). */
+.chip {
+  position: relative;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 19px;
+  border: 1.5px solid var(--track);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.chip::after {
+  content: '';
+  position: absolute;
+  inset: -3px -2px;
+}
+
+.chipOn {
+  border: 0;
+  background: var(--violet);
+  color: var(--bg);
+}
+
+.chipIcon {
+  width: 38px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+}
+
+.groupHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 4px;
+}
+
+.badge {
+  width: 34px;
+  height: 24px;
+  border-radius: var(--radius-tag);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.groupName {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* Das Design rechnet ohne border-box: 60 px Mindesthöhe plus 1 px Linie. */
+.row,
+.row:hover {
+  box-sizing: content-box;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.rowText {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rowName {
+  font-size: 16.5px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.rowMeta {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.alsoInline {
+  display: none;
+}
+
+.alsoTag {
+  box-sizing: content-box;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 11px;
+  border: 1.5px solid var(--border-soft);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--violet-700);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.due {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dueOn {
+  background: var(--violet-100);
+  color: var(--violet-700);
+}
+
+/* Suche */
+.hits {
+  display: flex;
+  flex-direction: column;
+}
+
+.hits .sectionLabel {
+  padding-bottom: 6px;
+}
+
+.hit,
+.hit:hover {
+  min-height: 68px;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.hitText {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hitTitle {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.hitMeta {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.mark {
+  background: var(--violet-100);
+  color: inherit;
+  border-radius: 4px;
+  padding: 0 2px;
+}
+
+.typeChip {
+  box-sizing: content-box;
+  width: 70px;
+  flex-shrink: 0;
+  height: 24px;
+  border-radius: var(--radius-tag);
+  border: 1.5px solid var(--track);
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Leerzustände */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 56px 12px 0;
+}
+
+.emptyIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  background: var(--surface);
+  color: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyTitle {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.emptyText {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 300px;
+}
+
+.emptyAction {
+  width: 100%;
+  max-width: 300px;
+  margin-top: 10px;
+}
+
+/* Liste im Master-Detail (iPadStapel.dc.html) */
+@media (min-width: 1100px) {
+  .h1 {
+    font-size: 34px;
+  }
+
+  .search {
+    height: 42px;
+    border-radius: 12px;
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  .search input {
+    font-size: 15px;
+  }
+
+  .search svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .filters {
+    gap: 6px;
+  }
+
+  .chip {
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 17px;
+    font-size: 13.5px;
+  }
+
+  .chip::after {
+    inset: -5px -2px;
+  }
+
+  .chipIcon {
+    width: 34px;
+    padding: 0;
+  }
+
+  .groups {
+    gap: 14px;
+    overflow: hidden;
+  }
+
+  .group {
+    gap: 2px;
+  }
+
+  .groupHead {
+    padding: 4px 10px;
+  }
+
+  .badge {
+    display: none;
+  }
+
+  .groupName {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .row,
+  .row:hover {
+    box-sizing: border-box;
+    min-height: 56px;
+    border: 0;
+    border-radius: var(--radius-field);
+    padding: 6px 10px;
+    gap: 10px;
+  }
+
+  .rowSelected {
+    background: var(--surface);
+    box-shadow: inset 3px 0 0 var(--violet);
+  }
+
+  .rowName {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .rowMeta {
+    font-size: 12.5px;
+  }
+
+  .rowText {
+    gap: 1px;
+  }
+
+  .alsoInline {
+    display: inline;
+  }
+
+  .alsoTag {
+    display: none;
+  }
+
+  .due {
+    min-width: 26px;
+    height: 26px;
+    border-radius: 13px;
+    font-size: 12.5px;
+  }
+}
+
+/* ---------- Detail ---------- */
+.detail {
+  gap: 18px;
+}
+
+.phone {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pad {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .detail {
+    gap: 20px;
+  }
+
+  .phone {
+    display: none;
+  }
+
+  .pad {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: -12px;
+}
+
+.back,
+.back:hover {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--link);
+}
+
+.round,
+.round:hover {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: var(--surface);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.deckTitle {
+  flex-grow: 1;
+  min-width: 0;
+  font-size: 38px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+/* „⋯“ steht am rechten Rand, ohne die Titelzeile höher zu machen. */
+.titleRow > :last-child {
+  margin-right: -12px;
+}
+
+.sub {
+  font-size: 15px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.areas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.areaChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.areaChip {
+  position: relative;
+  height: 40px;
+  padding: 0 14px 0 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1.5px dashed var(--dash-chip);
+  background: var(--bg);
+  color: var(--muted);
+}
+
+.areaChip::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+}
+
+.areaChipOn {
+  border: 1.5px solid var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.areaChip[aria-disabled='true'] {
+  cursor: default;
+}
+
+.hint {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  gap: 3px;
+}
+
+.barPart {
+  border-radius: 6px;
+  transform-origin: left center;
+  animation: grow 0.7s var(--ease-standard) both;
+}
+
+.barSecure {
+  background: var(--violet);
+}
+
+.barLearning {
+  background: var(--violet-300);
+}
+
+.barFresh {
+  background: var(--violet-100);
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.legend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.cta,
+.cta:hover {
+  height: 58px;
+  border-radius: var(--radius-button);
+  background: var(--violet);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 700;
+  box-shadow: var(--shadow-primary);
+}
+
+.ctaIdle,
+.ctaIdle:hover {
+  background: var(--surface);
+  color: var(--muted);
+  box-shadow: none;
+}
+
+.ctaShort {
+  display: none;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardsHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6px;
+}
+
+.cardRow,
+.cardRow:hover {
+  box-sizing: content-box;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.dashed {
+  border-radius: 20px;
+  border: 1.5px dashed var(--border-soft);
+  padding: 26px 20px;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.dashedTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.dashedText {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+/* iPad-Variante */
+.padHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.padTitleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.padTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.padTitle {
+  min-width: 0;
+  font-size: 40px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+.padSub {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.padActions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.padRound,
+.padRound:hover {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.padCta,
+.padCta:hover {
+  white-space: nowrap;
+  height: 48px;
+  padding: 0 22px;
+  border-radius: 16px;
+  background: var(--violet);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.padCta.ctaIdle,
+.padCta.ctaIdle:hover {
+  background: var(--surface);
+  color: var(--muted);
+}
+
+@media (min-width: 1100px) {
+  .ctaLong {
+    display: none;
+  }
+
+  .ctaShort {
+    display: inline;
+  }
+}
+
+.padChips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.padChip {
+  position: relative;
+  /* Das Design rechnet ohne border-box: 34 px plus die gestrichelte Linie. */
+  box-sizing: content-box;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 17px;
+  border: 1.5px dashed var(--dash-chip);
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.padChip::after {
+  content: '';
+  position: absolute;
+  inset: -5px -2px;
+}
+
+.padChipOn {
+  border: 0;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.padChip[aria-disabled='true'] {
+  cursor: default;
+}
+
+.padProgress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.padBar {
+  display: flex;
+  height: 12px;
+  gap: 3px;
+}
+
+.padBarPart {
+  border-radius: 6px;
+}
+
+.padLegend {
+  display: flex;
+  gap: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tile,
+.tile:hover {
+  min-height: 118px;
+  border-radius: 20px;
+  background: var(--surface);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--ink);
+}
+
+.tileHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tileType {
+  color: var(--violet);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tileNorm {
+  color: var(--muted);
+  text-align: right;
+}
+
+.tileTitle {
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}

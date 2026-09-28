@@ -8,17 +8,6 @@ export interface PlatzhalterProps {
 
 /** Platzhalter je Pfad; die Texte sagen, was dort entsteht. */
 export const PLATZHALTER = {
-  stapel: {
-    title: 'Stapel',
-    milestone: 'M3',
-    text: 'Hier stehen bald deine Stapel, sortiert nach Rechtsgebiet.',
-  },
-  neu: {
-    title: 'Neue Karte',
-    milestone: 'M3',
-    text: 'Hier legst du bald Karten an: Frage und Antwort oder Lückentext.',
-    back: true,
-  },
   lernen: {
     title: 'Lernen',
     milestone: 'M4',

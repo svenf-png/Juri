@@ -13,6 +13,22 @@ import type { BrowserContext, Page } from '@playwright/test';
  * Bewusste Korrekturen am Design, jeweils mit Grund. Sie gelten für jeden Vergleich.
  */
 const FIXES: Record<string, { css: string; reason: string }[]> = {
+  'Erstellen.dc.html': [
+    {
+      css: 'textarea::placeholder, input::placeholder { color: #726E7A }',
+      reason: 'Annahme A2: #8E8A99 erreicht auf der Fläche nur 3,08:1, die App nimmt #726E7A.',
+    },
+  ],
+  'iPadStapel.dc.html': [
+    {
+      css:
+        'a[aria-label="Stapel teilen"], a[href="iPad.dc.html"] { flex-shrink: 0 } ' +
+        'a[href="iPad.dc.html"] { white-space: nowrap }',
+      reason:
+        'Im Design schrumpfen bei der langen Zeile unter dem Titel der Teilen-Knopf zum Oval ' +
+        '(35 × 48 px) und der Lernen-Knopf bricht um. Die App hält beide ungeschrumpft.',
+    },
+  ],
   'iPadHeute.dc.html': [
     {
       css: 'a[href="HighFive.dc.html"] > span:first-child { flex-shrink: 0 }',
@@ -35,7 +51,7 @@ function fontFaces(): string {
     });
 }
 
-type Vals = Record<string, Record<string, unknown>[]>;
+type Vals = Record<string, unknown>;
 interface PropSpec {
   default?: unknown;
 }
@@ -62,19 +78,67 @@ function renderVals(html: string): Vals {
   return new Component().renderVals();
 }
 
-/** Setzt <sc-for list="{{liste}}" as="x"> … {{x.feld}} … </sc-for> ein (nicht verschachtelt). */
-function expand(markup: string, vals: Vals): string {
-  return markup.replace(
-    /<sc-for list="\{\{(\w+)\}\}" as="(\w+)"[^>]*>([\s\S]*?)<\/sc-for>/g,
-    (_, list: string, as: string, inner: string) =>
-      (vals[list] ?? [])
-        .map((item) =>
-          inner.replace(new RegExp(`\\{\\{${as}\\.(\\w+)\\}\\}`, 'g'), (__, key: string) =>
-            String(item[key]),
-          ),
-        )
-        .join(''),
-  );
+type Scope = Record<string, unknown>;
+
+/** Wert zu „a.b.c“ im Geltungsbereich; unbekannte Pfade ergeben `undefined`. */
+function lookup(path: string, scope: Scope): unknown {
+  let current: unknown = scope;
+  for (const part of path.trim().split('.')) {
+    if (current === null || typeof current !== 'object') return undefined;
+    current = (current as Scope)[part];
+  }
+  return current;
+}
+
+/** Text für {{…}}; Funktionen (Klick-Handler des Design-Tools) bleiben leer. */
+function asText(value: unknown): string {
+  return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
+    ? String(value)
+    : '';
+}
+
+/** Ende des passenden Schließ-Tags zu einem Öffnungs-Tag, auch bei Verschachtelung. */
+function closingTag(markup: string, from: number, tag: string): { bodyEnd: number; end: number } {
+  const pattern = new RegExp(`<${tag}\\b|</${tag}>`, 'g');
+  pattern.lastIndex = from;
+  let depth = 1;
+  for (let m = pattern.exec(markup); m; m = pattern.exec(markup)) {
+    depth += m[0].startsWith('</') ? -1 : 1;
+    if (depth === 0) return { bodyEnd: m.index, end: m.index + m[0].length };
+  }
+  throw new Error(`<${tag}> ist nicht geschlossen`);
+}
+
+/**
+ * Setzt die Vorlagen des Design-Tools ein: <sc-for list="{{liste}}" as="x"> (auch verschachtelt),
+ * <sc-if value="{{bedingung}}"> und {{pfad}} in Text und Attributen.
+ */
+function expand(markup: string, scope: Scope): string {
+  const fill = (text: string) =>
+    text.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, path: string) => asText(lookup(path, scope)));
+  const open = /<(sc-for|sc-if)\b([^>]*)>/g;
+  let out = '';
+  let at = 0;
+  for (let m = open.exec(markup); m; m = open.exec(markup)) {
+    out += fill(markup.slice(at, m.index));
+    const bodyStart = m.index + m[0].length;
+    const { bodyEnd, end } = closingTag(markup, bodyStart, m[1]!);
+    const body = markup.slice(bodyStart, bodyEnd);
+    const attr = (name: string) =>
+      new RegExp(`\\s${name}="\\{\\{\\s*([\\w.]+)\\s*\\}\\}"`).exec(m[2]!)?.[1];
+    if (m[1] === 'sc-for') {
+      const items = lookup(attr('list') ?? '', scope);
+      const name = /\sas="(\w+)"/.exec(m[2]!)?.[1] ?? 'item';
+      if (Array.isArray(items)) {
+        for (const item of items as unknown[]) out += expand(body, { ...scope, [name]: item });
+      }
+    } else if (lookup(attr('value') ?? '', scope)) {
+      out += expand(body, scope);
+    }
+    at = end;
+    open.lastIndex = end;
+  }
+  return out + fill(markup.slice(at));
 }
 
 /** Design als eigenständige HTML-Seite samt Korrekturen aus FIXES. */

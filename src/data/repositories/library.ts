@@ -70,23 +70,19 @@ export async function readTodaySnapshot(db: JuriDb, since: number): Promise<Toda
 }
 
 export interface CreateSnapshot {
-  areas: Area[];
-  decks: Deck[];
   /** Karten, die seit `since` angelegt wurden. */
   madeToday: number;
   total: number;
 }
 
-/** Grundlage für Erstellen: Stapel zur Auswahl, Tageszähler und Gesamtzahl. */
+/** Grundlage für Erstellen: Tageszähler und Gesamtzahl. */
 export async function readCreateSnapshot(db: JuriDb, since: number): Promise<CreateSnapshot> {
-  const [areas, decks, madeToday, total] = await Promise.all([
-    db.areas.toArray(),
-    db.decks.toArray(),
+  const [madeToday, total] = await Promise.all([
     // Bisher gibt es nur „Karte angelegt“; mit weiteren Ereignisarten hier nach Typ filtern.
     db.events.where('at').aboveOrEqual(since).count(),
     db.cards.count(),
   ]);
-  return { areas, decks, madeToday, total };
+  return { madeToday, total };
 }
 
 export interface SearchSnapshot {

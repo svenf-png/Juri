@@ -12,18 +12,23 @@ describe('routes', () => {
     expect(paths(routes('test', Dummy))).toContain('/geraetecheck');
     expect(paths(routes('app', Dummy))).toEqual([
       '/',
-      '/stapel',
+      '/stapel/:deckId?',
       '/erfolge',
       '/teilen',
       '/fristen',
       '/high-fives',
       '/einstellungen',
       '/neu',
+      '/karte/:cardId',
       '/lernen',
       '/willkommen',
       '/installieren',
       '/styleguide',
       '/styleguide/heute',
+      '/styleguide/stapel/liste',
+      '/styleguide/stapel/detail',
+      '/styleguide/stapel/ipad',
+      '/styleguide/erstellen',
       '*',
     ]);
   });

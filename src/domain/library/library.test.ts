@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { Area, Card, Deck } from '../model/records';
-import { areaDeckCounts, deckModel, deckProgress, libraryModel, progressBar } from './library';
+import {
+  areaDeckCounts,
+  deckLabel,
+  deckModel,
+  deckProgress,
+  libraryModel,
+  progressBar,
+} from './library';
 
 const area = (id: string, code: string, name: string, createdAt = 1): Area => ({
   id,
@@ -155,5 +162,13 @@ describe('deckModel', () => {
       kind: 'create',
       label: 'Erste Karte anlegen',
     });
+  });
+});
+
+describe('deckLabel', () => {
+  it('nennt Stapel und Kürzel der Rechtsgebiete in fester Reihenfolge', () => {
+    expect(deckLabel(decks[0]!, areas)).toBe('Amtshaftung · ZR, ÖR');
+    expect(deckLabel(decks[2]!, areas)).toBe('Diebstahl & Betrug · SR');
+    expect(deckLabel(decks[0]!, [])).toBe('Amtshaftung');
   });
 });

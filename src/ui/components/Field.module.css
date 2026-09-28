@@ -32,3 +32,13 @@
   outline: 2px solid var(--violet);
   outline-offset: 2px;
 }
+
+.error {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.invalid {
+  box-shadow: 0 0 0 2px var(--danger);
+}

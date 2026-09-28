@@ -1,0 +1,244 @@
+/* Inhalte der Bottom Sheets (BackupImport.dc.html): Felder, Chips, Infokasten, Zeilen. */
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hint {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.error {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.para {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.paraMuted {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.info {
+  margin: 0;
+  border-radius: 20px;
+  background: var(--surface);
+  padding: 6px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.info > div + div {
+  border-top: 1px solid var(--line);
+}
+
+.info dt {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.info dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.preview {
+  border-radius: 20px;
+  background: var(--surface);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.previewType {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--violet);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.previewText {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.linkButton,
+.linkButton:hover {
+  min-height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--link);
+}
+
+.dangerLink,
+.dangerLink:hover {
+  color: var(--danger);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.row,
+.row:hover {
+  width: 100%;
+  min-height: 60px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  text-align: left;
+}
+
+.rowText {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rowName {
+  font-size: 16px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.rowMeta {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.rowIcon {
+  display: flex;
+  color: var(--chevron);
+}
+
+.rowCheck {
+  display: flex;
+  color: var(--violet);
+}
+
+.badge {
+  width: 34px;
+  height: 24px;
+  border-radius: var(--radius-tag);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dashedRow {
+  min-height: 52px;
+  border-radius: 16px;
+  border: 1.5px dashed var(--dash-chip);
+  background: var(--bg);
+  color: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.pickGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 330px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.pickGroupHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 2px;
+}
+
+.pickGroupName {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pickRow,
+.pickRow:hover {
+  width: 100%;
+  min-height: 56px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  text-align: left;
+}
+
+.spaceTop {
+  margin-top: 4px;
+}

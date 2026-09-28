@@ -205,3 +205,9 @@ export function deckModel(input: {
       .map((c) => ({ id: c.id, type: CARD_TYPE_LABEL[c.type], title: cardTitle(c), norm: c.norm })),
   };
 }
+
+/** „Diebstahl & Betrug · SR“ bzw. „Amtshaftung · ZR, ÖR“ für die Stapel-Zeile beim Erstellen. */
+export function deckLabel(deck: Deck, areas: readonly Area[]): string {
+  const codes = sortAreas(areas.filter((a) => deck.areaIds.includes(a.id))).map((a) => a.code);
+  return codes.length > 0 ? `${deck.name} · ${codes.join(', ')}` : deck.name;
+}

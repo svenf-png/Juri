@@ -189,7 +189,7 @@ test.describe('Shell und Navigation', () => {
     await expect(page.locator('ol > li')).toHaveCount(7);
     await page.getByRole('link', { name: 'Neue Karte anlegen' }).click();
     await expect(page.getByRole('heading', { name: 'Neue Karte', level: 1 })).toBeVisible();
-    await page.getByRole('link', { name: 'Heute' }).click();
+    await page.getByRole('button', { name: 'Schließen' }).click();
     await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
     expect(watch.errors).toEqual([]);
   });
