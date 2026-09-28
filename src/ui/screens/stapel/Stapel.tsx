@@ -1,10 +1,18 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { ALL_AREAS, deckModel, libraryModel } from '@/domain/library/library';
+import { ALL_AREAS, deckModel, deckProgress, libraryModel } from '@/domain/library/library';
 import { searchCards, searchTokens } from '@/domain/library/search';
+import { dueSummary } from '@/domain/scheduler/queue';
 import { rememberDeck } from '@/platform/lastDeck';
 import { removeDeck, switchDeckArea } from '@/features/library/actions';
-import { useDeckDetail, useLibraryData, useSearchData } from '@/features/library/queries';
+import {
+  useDeckDetail,
+  useLibraryData,
+  useSearchData,
+  useStudyData,
+} from '@/features/library/queries';
+import { dueContext } from '@/features/study/due';
+import { useLearningDayKey } from '@/features/today/useToday';
 import { BackLink, ScreenTitle } from '../../components/Screen';
 import { StorageError } from '../../components/StorageError';
 import { useMediaQuery } from '../../useMediaQuery';
@@ -24,6 +32,8 @@ export function Stapel() {
   const { deckId } = useParams();
   const navigate = useNavigate();
   const library = useLibraryData();
+  const dayKey = useLearningDayKey();
+  const study = useStudyData(dayKey);
   const [filter, setFilter] = useState(ALL_AREAS);
   const [query, setQuery] = useState('');
   const [sheet, setSheet] = useState<SheetState>(null);
@@ -34,6 +44,14 @@ export function Stapel() {
   const searching = searchText !== '';
   const searchData = useSearchData(searching);
 
+  const dueCounts = useMemo(
+    () =>
+      study.status === 'ready'
+        ? dueSummary(study.value.items, dueContext(dayKey, study.value)).byDeck
+        : {},
+    [study, dayKey],
+  );
+
   const model = useMemo(
     () =>
       library.status === 'ready'
@@ -42,13 +60,12 @@ export function Stapel() {
               areas: library.value.areas,
               decks: library.value.decks,
               cardCounts: library.value.cardCounts,
-              // Bis M4 (Lern-Engine) ist jede neue Abfrage fällig (Annahme A19).
-              dueCounts: library.value.itemCounts,
+              dueCounts,
             },
             filter,
           )
         : null,
-    [library, filter],
+    [library, filter, dueCounts],
   );
 
   const hits = useMemo(
@@ -62,7 +79,7 @@ export function Stapel() {
   // Ab 1100 px ist ohne Auswahl der erste Stapel offen; auf dem iPhone bleibt die Liste allein.
   const wide = useMediaQuery('(min-width: 1100px)');
   const selectedId = deckId ?? (wide ? model?.groups[0]?.stacks[0]?.id : undefined);
-  const detail = useDeckDetail(selectedId);
+  const detail = useDeckDetail(selectedId, dayKey);
   const deckReady = detail.status === 'ready' ? detail.value : null;
 
   useEffect(() => {
@@ -70,7 +87,9 @@ export function Stapel() {
   }, [deckReady]);
   useEffect(() => () => window.clearTimeout(hintTimer.current), []);
 
-  if (library.status === 'error' || detail.status === 'error') return <StorageError />;
+  if (library.status === 'error' || detail.status === 'error' || study.status === 'error') {
+    return <StorageError />;
+  }
   if (!model || library.status !== 'ready') return null;
 
   const { areas, decks } = library.value;
@@ -79,8 +98,8 @@ export function Stapel() {
         deck: deckReady.deck,
         areas: deckReady.areas,
         cards: deckReady.cards,
-        itemCount: deckReady.itemCount,
-        due: deckReady.itemCount,
+        progress: deckProgress(deckReady.items, deckReady.settings),
+        due: dueSummary(deckReady.items, dueContext(dayKey, deckReady)).total,
       })
     : null;
 

@@ -389,6 +389,12 @@
   outline: none;
 }
 
+.miniArea {
+  resize: none;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
 .media {
   display: flex;
   gap: 10px;

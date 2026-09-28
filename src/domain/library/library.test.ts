@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { Area, Card, Deck } from '../model/records';
+import type { Area, Card, Deck, ReviewItem } from '../model/records';
+import { reviewItem } from '../scheduler/schedule';
+import { DEFAULT_LEARNING } from '../scheduler/settings';
 import {
   areaDeckCounts,
   deckLabel,
@@ -103,9 +105,33 @@ describe('libraryModel', () => {
 });
 
 describe('Fortschritt', () => {
-  it('ist bis M4 ganz „neu“', () => {
-    expect(deckProgress(4)).toEqual({ secure: 0, learning: 0, fresh: 4 });
-    expect(progressBar(deckProgress(4)).map((p) => [p.key, p.label, p.pct])).toEqual([
+  const item = (id: string): ReviewItem => ({
+    id,
+    cardId: id,
+    deckId: 'amt',
+    sub: '',
+    createdAt: 1,
+  });
+  const learned = (id: string, rating: 3 | 4, reviews: number): ReviewItem => {
+    let it = item(id);
+    let now = 0;
+    for (let i = 0; i < reviews; i += 1) {
+      it = reviewItem(it, rating, now, DEFAULT_LEARNING).item;
+      now = it.due ?? now;
+    }
+    return it;
+  };
+
+  it('ordnet Abfragen nach Lernzustand: neu, im Lernen, sicher', () => {
+    const items = [item('a'), item('b'), learned('c', 3, 1), learned('d', 4, 6)];
+    expect(deckProgress(items, DEFAULT_LEARNING)).toEqual({ secure: 1, learning: 1, fresh: 2 });
+    expect(deckProgress([item('a'), item('b'), item('c'), item('d')], DEFAULT_LEARNING)).toEqual({
+      secure: 0,
+      learning: 0,
+      fresh: 4,
+    });
+    const bar = progressBar({ secure: 0, learning: 0, fresh: 4 });
+    expect(bar.map((p) => [p.key, p.label, p.pct])).toEqual([
       ['secure', '0 sicher', 0],
       ['learning', '0 im Lernen', 0],
       ['fresh', '4 neu', 100],
@@ -116,7 +142,7 @@ describe('Fortschritt', () => {
     const parts = progressBar({ secure: 10, learning: 7, fresh: 4 });
     expect(parts.map((p) => Math.round(p.pct))).toEqual([48, 33, 19]);
     expect(parts.map((p) => p.label)).toEqual(['10 sicher', '7 im Lernen', '4 neu']);
-    expect(progressBar(deckProgress(0))).toEqual([]);
+    expect(progressBar(deckProgress([], DEFAULT_LEARNING))).toEqual([]);
   });
 });
 
@@ -126,7 +152,7 @@ describe('deckModel', () => {
     deck: amt,
     areas,
     cards: [card('k2', 'amt', 'Zweite', 2), card('k1', 'amt', 'Erste', 1)],
-    itemCount: 2,
+    progress: { secure: 0, learning: 0, fresh: 2 },
     due: 2,
   };
 
@@ -158,7 +184,9 @@ describe('deckModel', () => {
     });
     expect(deckModel({ ...base, due: 1 }).cta.label).toBe('1 fällige Karte lernen');
     expect(deckModel({ ...base, due: 0 }).cta.kind).toBe('idle');
-    expect(deckModel({ ...base, cards: [], itemCount: 0, due: 0 }).cta).toMatchObject({
+    expect(
+      deckModel({ ...base, cards: [], progress: { secure: 0, learning: 0, fresh: 0 }, due: 0 }).cta,
+    ).toMatchObject({
       kind: 'create',
       label: 'Erste Karte anlegen',
     });

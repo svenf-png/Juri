@@ -1,4 +1,5 @@
 import type { JuriDb } from '@/data/db';
+import { readCounter, writeMeta } from '@/data/repositories/profile';
 import { demoDecks } from './demoDecks';
 
 /**
@@ -30,11 +31,8 @@ export async function addDemoDecks(
       await db.reviewItems.bulkAdd(demo.items);
       await db.events.bulkAdd(demo.events);
       if (demo.cards.length > 0) {
-        const counter = await db.meta.get('newCardsSinceBackup');
-        await db.meta.put({
-          key: 'newCardsSinceBackup',
-          value: (counter?.value ?? 0) + demo.cards.length,
-        });
+        const counter = await readCounter(db, 'newCardsSinceBackup');
+        await writeMeta(db, 'newCardsSinceBackup', counter + demo.cards.length);
       }
       return { decks: demo.decks.length, cards: demo.cards.length };
     },

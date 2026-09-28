@@ -2,9 +2,9 @@
  * Gespeicherte Datensätze (IndexedDB über Dexie, src/data/). Die zod-Schemas sind die einzige
  * Quelle der Typen und prüfen Datensätze beim Einspielen eines Backups.
  *
- * Stand M3: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen und Ereignisse. Die
- * übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen dazu, jeweils mit
- * Schema und Migration. Zeitpunkte sind Millisekunden seit 1970 (UTC).
+ * Stand M4: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog
+ * und Ereignisse. Die übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen
+ * dazu, jeweils mit Schema und Migration. Zeitpunkte sind Millisekunden seit 1970 (UTC).
  */
 import { hasGap } from '../cards/cloze';
 import { normalizeName } from '../profile/name';
@@ -22,6 +22,21 @@ export const profileSchema = z.strictObject({
 /** Profil der Person, die Juri auf diesem Gerät nutzt; genau ein Datensatz. */
 export type Profile = z.infer<typeof profileSchema>;
 
+export const learningSettingsSchema = z.strictObject({
+  algorithm: z.enum(['fsrs', 'leitner']),
+  retention: z.number().int().min(80).max(97),
+  newPerDay: z.number().int().min(0).max(100),
+  leitnerDays: z
+    .tuple([
+      z.number().int().min(1).max(180),
+      z.number().int().min(1).max(180),
+      z.number().int().min(1).max(180),
+      z.number().int().min(1).max(180),
+      z.number().int().min(1).max(180),
+    ])
+    .refine((days) => days.every((d, i) => i === 0 || d >= (days[i - 1] ?? 0))),
+});
+
 export const metaEntrySchema = z.discriminatedUnion('key', [
   /** Onboarding abgeschlossen. */
   z.strictObject({ key: z.literal('onboardedAt'), value: millis }),
@@ -29,6 +44,8 @@ export const metaEntrySchema = z.discriminatedUnion('key', [
   z.strictObject({ key: z.literal('lastBackupAt'), value: millis }),
   /** Neue Karten seit dem letzten Backup (Backup-Erinnerung, gezählt ab M3). */
   z.strictObject({ key: z.literal('newCardsSinceBackup'), value: z.number().int().nonnegative() }),
+  /** Einstellungen des Lernrhythmus (M4); fehlt der Eintrag, gelten die Voreinstellungen. */
+  z.strictObject({ key: z.literal('learning'), value: learningSettingsSchema }),
 ]);
 
 export type MetaEntry = z.infer<typeof metaEntrySchema>;
@@ -100,6 +117,8 @@ const cardBase = {
   norm: optionalLine(200),
   /** Ohne führendes „#“. */
   tags: z.array(tag).max(20),
+  /** Eigene Notiz (Entscheidung 5); erscheint beim Lernen unter der Antwort. */
+  note: z.string().min(1).max(2000).optional(),
   createdAt: millis,
   updatedAt: millis,
 };
@@ -123,6 +142,37 @@ export const cardSchema = z.discriminatedUnion('type', [
 export type Card = z.infer<typeof cardSchema>;
 export type CardType = Card['type'];
 
+/** FSRS-Zustand einer Abfrage (ts-fsrs 5.x, ADR-004); Zeiten in Millisekunden. */
+export const fsrsStateSchema = z.strictObject({
+  due: millis,
+  stability: z.number().nonnegative(),
+  difficulty: z.number().nonnegative(),
+  scheduledDays: z.number().nonnegative(),
+  learningSteps: z.number().int().nonnegative(),
+  reps: z.number().int().nonnegative(),
+  lapses: z.number().int().nonnegative(),
+  /** 0 neu, 1 Lernen, 2 Wiederholen, 3 Wiederlernen. */
+  state: z.number().int().min(0).max(3),
+  lastReview: millis.optional(),
+});
+export type FsrsState = z.infer<typeof fsrsStateSchema>;
+
+/** Leitner-Zustand: Fach 1 bis 5 mit eigener Fälligkeit. */
+export const leitnerStateSchema = z.strictObject({
+  box: z.number().int().min(1).max(5),
+  due: millis,
+});
+export type LeitnerState = z.infer<typeof leitnerStateSchema>;
+
+/** Lernzustand einer Abfrage; beide Algorithmen laufen parallel (ADR-004). */
+const learningState = {
+  fsrs: fsrsStateSchema.optional(),
+  leitner: leitnerStateSchema.optional(),
+  /** Fälligkeit des aktiven Algorithmus als Index; fehlt bei neuen Abfragen. */
+  due: millis.optional(),
+  lastReviewedAt: millis.optional(),
+};
+
 export const reviewItemSchema = z.strictObject({
   /** Frage: die Karten-ID; Lücke: `<Karten-ID>:c1` (deterministisch, siehe cards/card.ts). */
   id,
@@ -132,13 +182,48 @@ export const reviewItemSchema = z.strictObject({
   /** Leer für die ganze Karte, sonst `c1`, `c2` … für eine Lücke. */
   sub: z.string().regex(/^(?:c[1-9]\d?)?$/),
   createdAt: millis,
+  ...learningState,
 });
 
 /**
  * Abfrage: die kleinste lernbare Einheit. Eine Frage hat eine, ein Lückentext eine je Nummer.
- * Lernzustand (FSRS, Leitner, Fälligkeit) kommt mit M4; bis dahin ist jede Abfrage neu.
+ * Neue Abfragen haben keinen Lernzustand; die erste Bewertung legt FSRS und Leitner an.
  */
 export type ReviewItem = z.infer<typeof reviewItemSchema>;
+
+/** Lernzustand vor einer Bewertung, vollständig, damit Undo den Vorzustand herstellen kann. */
+export const itemSnapshotSchema = z.strictObject(learningState);
+export type ItemSnapshot = z.infer<typeof itemSnapshotSchema>;
+
+/** Eine Bewertung (Lernlog, ADR-004). Enthält alle Felder für eine spätere FSRS-Optimierung. */
+export const reviewLogSchema = z.strictObject({
+  seq: z.number().int().positive(),
+  at: millis,
+  itemId: id,
+  cardId: id,
+  deckId: id,
+  /** 1 Nochmal, 2 Schwer, 3 Gut, 4 Leicht. */
+  rating: z.number().int().min(1).max(4),
+  /** Aktiver Algorithmus zum Zeitpunkt der Bewertung. */
+  algorithm: z.enum(['fsrs', 'leitner']),
+  /** Die Abfrage war vor dieser Bewertung neu (zählt für „Neue Karten pro Tag“). */
+  wasNew: z.boolean(),
+  /** ts-fsrs-Protokoll: Zustand, Stabilität und Schwierigkeit vor der Bewertung, Abstände in Tagen. */
+  fsrs: z.strictObject({
+    state: z.number().int().min(0).max(3),
+    stability: z.number().nonnegative(),
+    difficulty: z.number().nonnegative(),
+    elapsedDays: z.number().nonnegative(),
+    scheduledDays: z.number().nonnegative(),
+    learningSteps: z.number().int().nonnegative(),
+  }),
+  /** Vollständiger Lernzustand der Abfrage vor der Bewertung (Undo). */
+  before: itemSnapshotSchema,
+});
+
+/** Bewertungen in der Reihenfolge des Lernens; Undo löscht die letzte einer Abfrage. */
+export type ReviewLogEntry = z.infer<typeof reviewLogSchema>;
+export type NewReviewLogEntry = Omit<ReviewLogEntry, 'seq'>;
 
 export const eventSchema = z.discriminatedUnion('type', [
   z.strictObject({
@@ -147,6 +232,29 @@ export const eventSchema = z.discriminatedUnion('type', [
     type: z.literal('cardCreated'),
     cardId: id,
     deckId: id,
+  }),
+  /** Eine Abfrage wurde bewertet (M4); Grundlage für Tagesziel und Statistik (M8). */
+  z.strictObject({
+    seq: z.number().int().positive(),
+    at: millis,
+    type: z.literal('reviewed'),
+    cardId: id,
+    deckId: id,
+    itemId: id,
+    rating: z.number().int().min(1).max(4),
+    /** Erste Bewertung dieser Abfrage überhaupt. */
+    first: z.boolean(),
+  }),
+  /** Die letzte Bewertung einer Abfrage wurde zurückgenommen; hebt ein `reviewed` auf. */
+  z.strictObject({
+    seq: z.number().int().positive(),
+    at: millis,
+    type: z.literal('reviewUndone'),
+    cardId: id,
+    deckId: id,
+    itemId: id,
+    rating: z.number().int().min(1).max(4),
+    first: z.boolean(),
   }),
 ]);
 
@@ -162,5 +270,6 @@ export const RECORD_SCHEMAS: Readonly<Record<string, z.ZodType>> = {
   decks: deckSchema,
   cards: cardSchema,
   reviewItems: reviewItemSchema,
+  reviewLog: reviewLogSchema,
   events: eventSchema,
 };

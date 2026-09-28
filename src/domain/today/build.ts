@@ -1,11 +1,11 @@
 /**
- * Eingaben für Heute aus den Daten der Bibliothek (ab M3). Fälligkeit und Ziele kommen
- * mit M4 und M8; bis dahin zählt jede neue Abfrage als fällig (Annahme A19).
+ * Eingaben für Heute aus den Daten der Bibliothek (ab M3) und dem Lernzustand (ab M4). Ziele
+ * kommen mit M8.
  */
 import { addDays, dayKey, learningDay, type Day } from '../calendar/day';
 import { sortAreas } from '../library/areas';
 import type { Area, Deck } from '../model/records';
-import { emptyToday, WEEK_DAYS, type TodayInput } from './today';
+import { DEFAULT_DAILY_GOAL, emptyToday, WEEK_DAYS, type TodayInput } from './today';
 
 export interface TodayData {
   readonly areas: readonly Area[];
@@ -14,6 +14,10 @@ export interface TodayData {
   readonly cardTotal: number;
   /** Heute fällige Abfragen je Stapel-ID. */
   readonly dueByDeck: Readonly<Record<string, number>>;
+  /** Heute fällige Abfragen insgesamt (das Limit für neue gilt hier einmal, nicht je Stapel). */
+  readonly dueTotal: number;
+  /** Abfragen, die heute mindestens einmal bewertet wurden (Tagesziel „Lernen“, Annahme A5). */
+  readonly reviewedToday: number;
   /** Zeitpunkte der Ereignisse „Karte angelegt“ (mindestens die letzten 7 Lerntage). */
   readonly createdAt: readonly number[];
 }
@@ -49,8 +53,9 @@ export function todayInputFrom(today: Day, data: TodayData): TodayInput {
   return {
     ...emptyToday(today),
     totalCards: data.cardTotal,
-    due: Object.values(data.dueByDeck).reduce((a, b) => a + b, 0),
+    due: data.dueTotal,
     dueByArea: dueByArea(data.areas, data.decks, data.dueByDeck),
     createdThisWeek: createdWithin(today, data.createdAt, WEEK_DAYS),
+    goal: { done: data.reviewedToday, target: DEFAULT_DAILY_GOAL },
   };
 }

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Leitner: Fach ändern</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button{font-family:inherit;cursor:pointer}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .18s,box-shadow .18s}
+.tap:active{transform:scale(.96)}
+input[type=range]{accent-color:#6A3FE0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 54px 24px 40px 24px; display: flex; flex-direction: column; gap: 20px">
+  <a href="Main.dc.html" style="height: 44px; display: flex; align-items: center; gap: 2px; font-size: 16px; font-weight: 600; margin-left: -10px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Einstellungen</a>
+  <h1 class="d" style="margin: -8px 0 0 0; font-size: 38px; font-weight: 750; letter-spacing: -0.03em">Lernrhythmus</h1>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: #F6F4FB">
+    <button style="height: 42px; border: 0; border-radius: 12px; font-size: 14px; font-weight: 700; background: transparent; color: #6B6678">FSRS (empfohlen)</button>
+    <button style="height: 42px; border: 0; border-radius: 12px; font-size: 14px; font-weight: 700; background: #FFFFFF; color: #17141F; box-shadow: 0 2px 8px -3px rgba(46,26,115,.3)">Leitner-Kasten</button>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-size: 14px; color: #6B6678; line-height: 1.4">Klassisches Karteikasten-System: gewusst rückt ein Fach weiter, nicht gewusst zurück in Fach 1.</span>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px"><div style="height: 96px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; background: #EEE8FD; color: #2E1A73"><span style="font-size: 12px; font-weight: 700; opacity: .85">Fach 1</span><span class="d" style="font-size: 22px; font-weight: 750">1</span><span style="font-size: 11px; font-weight: 600; opacity: .85">Tage</span></div><div style="height: 96px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; background: #DCD1FB; color: #2E1A73"><span style="font-size: 12px; font-weight: 700; opacity: .85">Fach 2</span><span class="d" style="font-size: 22px; font-weight: 750">3</span><span style="font-size: 11px; font-weight: 600; opacity: .85">Tage</span></div><div style="height: 96px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; background: #C9B8F7; color: #2E1A73"><span style="font-size: 12px; font-weight: 700; opacity: .85">Fach 3</span><span class="d" style="font-size: 22px; font-weight: 750">7</span><span style="font-size: 11px; font-weight: 600; opacity: .85">Tage</span></div><div style="height: 96px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; background: #9A7BEF; color: #2E1A73"><span style="font-size: 12px; font-weight: 700; opacity: .85">Fach 4</span><span class="d" style="font-size: 22px; font-weight: 750">14</span><span style="font-size: 11px; font-weight: 600; opacity: .85">Tage</span></div><div style="height: 96px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; background: #6A3FE0; color: #FFFFFF"><span style="font-size: 12px; font-weight: 700; opacity: .85">Fach 5</span><span class="d" style="font-size: 22px; font-weight: 750">30</span><span style="font-size: 11px; font-weight: 600; opacity: .85">Tage</span></div></div>
+    <span style="font-size: 13px; color: #6B6678">Fach antippen, um Tage zu ändern.</span>
+  </div>
+  <div style="position: absolute; inset: 0; background: rgba(23,20,31,.28)"></div>
+  <div role="dialog" aria-modal="true" style="position: absolute; left: 0; right: 0; bottom: 0; min-height: 460px; box-sizing: border-box; border-radius: 30px 30px 0 0; background: #FFFFFF; padding: 12px 24px 34px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 -20px 40px -24px rgba(46,26,115,.4)">
+    <span style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #DCD6EA"></span>
+    <span style="color: #6A3FE0; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-top: 6px">Leitner-Kasten</span>
+    <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.015em">Fach 3</h2>
+    <p style="margin: 0; font-size: 15px; color: #6B6678; line-height: 1.45">Nach so vielen Tagen fragt Juri eine Karte in diesem Fach wieder ab. Möglich sind 3 bis 14 Tage, damit die Fächer aufsteigend bleiben.</p>
+    <div style="display: flex; justify-content: center"><div style="display: flex; align-items: center; gap: 4px"><button class="tap" aria-label="Einen Tag weniger" style="width: 36px; height: 36px; border-radius: 12px; border: 0; background: #F6F4FB; font-size: 20px; font-weight: 600; color: #17141F">−</button><span style="min-width: 36px; text-align: center; font-size: 17px; font-weight: 800">7</span><button class="tap" aria-label="Einen Tag mehr" style="width: 36px; height: 36px; border-radius: 12px; border: 0; background: #F6F4FB; font-size: 20px; font-weight: 600; color: #17141F">+</button></div></div>
+    <input type="range" min="3" max="14" step="1" value="7" aria-label="Tage in Fach 3" style="width: 100%; height: 28px">
+    <button class="tap" style="background: #6A3FE0; color: #FFFFFF; border: 0; height: 60px; border-radius: 20px; font-size: 18px; font-weight: 700; width: 100%">Fertig</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

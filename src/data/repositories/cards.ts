@@ -1,6 +1,7 @@
 import { buildCard, buildItems, type CardFields } from '@/domain/cards/card';
 import type { Card, NewEvent } from '@/domain/model/records';
 import type { JuriDb } from '../db';
+import { readCounter, writeMeta } from './profile';
 
 /**
  * Legt eine Karte an: Karte, ihre Abfragen (ein Lückentext mit drei Lücken ergibt drei),
@@ -17,8 +18,7 @@ export async function createCard(
     await db.reviewItems.bulkAdd(buildItems(card, now));
     const event: NewEvent = { at: now, type: 'cardCreated', cardId: card.id, deckId: card.deckId };
     await db.events.add(event);
-    const counter = await db.meta.get('newCardsSinceBackup');
-    await db.meta.put({ key: 'newCardsSinceBackup', value: (counter?.value ?? 0) + 1 });
+    await writeMeta(db, 'newCardsSinceBackup', (await readCounter(db, 'newCardsSinceBackup')) + 1);
   });
   return card;
 }

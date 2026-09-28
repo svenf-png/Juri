@@ -2,6 +2,7 @@ import { lazy, Suspense, type ComponentType, type ReactNode } from 'react';
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import { AppShell } from '@/ui/components/AppShell';
 import { Heute } from '@/ui/screens/heute/Heute';
+import { Lernen } from '@/ui/screens/lernen/Lernen';
 import { Installieren } from '@/ui/screens/installieren/Installieren';
 import { Onboarding } from '@/ui/screens/onboarding/Onboarding';
 import { Platzhalter } from '@/ui/screens/platzhalter/Platzhalter';
@@ -17,11 +18,25 @@ const Styleguide = lazy(() =>
 const HeuteVorschau = lazy(() =>
   import('@/ui/screens/heute/HeuteVorschau').then((m) => ({ default: m.HeuteVorschau })),
 );
+const HeuteErledigtVorschau = lazy(() =>
+  import('@/ui/screens/heute/HeuteVorschau').then((m) => ({ default: m.HeuteErledigtVorschau })),
+);
+const LernenVorschau = lazy(() =>
+  import('@/ui/screens/lernen/LernenVorschau').then((m) => ({ default: m.LernenVorschau })),
+);
+const LernrhythmusVorschau = lazy(() =>
+  import('@/ui/screens/einstellungen/LernrhythmusVorschau').then((m) => ({
+    default: m.LernrhythmusVorschau,
+  })),
+);
 const StapelVorschau = lazy(() =>
   import('@/ui/screens/stapel/StapelVorschau').then((m) => ({ default: m.StapelVorschau })),
 );
 const ErstellenVorschau = lazy(() =>
   import('@/ui/screens/stapel/StapelVorschau').then((m) => ({ default: m.ErstellenVorschau })),
+);
+const Lernrhythmus = lazy(() =>
+  import('@/ui/screens/einstellungen/Lernrhythmus').then((m) => ({ default: m.Lernrhythmus })),
 );
 const Einstellungen = lazy(() =>
   import('@/ui/screens/einstellungen/Einstellungen').then((m) => ({ default: m.Einstellungen })),
@@ -62,6 +77,14 @@ export function routes(
             { path: '/fristen', element: <Platzhalter {...PLATZHALTER.fristen} /> },
             { path: '/high-fives', element: <Platzhalter {...PLATZHALTER.highFives} /> },
             {
+              path: '/einstellungen/lernrhythmus',
+              element: (
+                <Lazy>
+                  <Lernrhythmus />
+                </Lazy>
+              ),
+            },
+            {
               path: '/einstellungen',
               element: (
                 <Lazy>
@@ -74,7 +97,7 @@ export function routes(
         // Abläufe im Vollbild, ohne Navigation.
         { path: '/neu', element: <Erstellen /> },
         { path: '/karte/:cardId', element: <KarteBearbeiten /> },
-        { path: '/lernen', element: <Platzhalter {...PLATZHALTER.lernen} /> },
+        { path: '/lernen', element: <Lernen /> },
       ],
     },
     {
@@ -99,6 +122,31 @@ export function routes(
       element: (
         <Lazy>
           <HeuteVorschau />
+        </Lazy>
+      ),
+    },
+    {
+      path: '/styleguide/heute-erledigt',
+      element: (
+        <Lazy>
+          <HeuteErledigtVorschau />
+        </Lazy>
+      ),
+    },
+    // Lernen und Lernrhythmus mit den Beispieldaten der Designs (Bildvergleich, A12).
+    ...(['frage', 'luecke'] as const).map((variant) => ({
+      path: `/styleguide/lernen/${variant}`,
+      element: (
+        <Lazy>
+          <LernenVorschau variant={variant} />
+        </Lazy>
+      ),
+    })),
+    {
+      path: '/styleguide/lernrhythmus',
+      element: (
+        <Lazy>
+          <LernrhythmusVorschau />
         </Lazy>
       ),
     },

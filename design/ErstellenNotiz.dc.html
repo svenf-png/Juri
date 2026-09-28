@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Karte erstellen: Notiz</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button{font-family:inherit;cursor:pointer}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .18s,box-shadow .18s}
+.tap:active{transform:scale(.96)}
+input[type=range]{accent-color:#6A3FE0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 54px 20px 0 20px; display: flex; flex-direction: column; gap: 16px">
+  <div style="display: flex; justify-content: space-between; align-items: center; height: 44px"><a href="Main.dc.html" style="font-size: 16px; font-weight: 600">Schließen</a><span style="font-size: 16px; font-weight: 700">Neue Karte</span><button style="height: 34px; padding: 0 12px; border-radius: 17px; border: 1.5px solid #E4DDF7; background: #FFFFFF; font-size: 13px; font-weight: 700; color: #17141F">Einfach</button></div>
+  <div style="border-radius: 20px; background: #F6F4FB; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Vorderseite</span><span style="font-size: 17px; font-weight: 600">Voraussetzungen eines Versäumnisurteils gegen den Beklagten?</span></div>
+  <div style="border-radius: 20px; background: #F6F4FB; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Rückseite</span><span style="font-size: 17px; font-weight: 500">Antrag, Säumnis, ordnungsgemäße Ladung …</span></div>
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <label style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Norm</span><span style="font-size: 15px">§ 331 ZPO</span></label>
+    <label style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Tags</span><span style="font-size: 15px">#Klausur #ZPO</span></label>
+    <label style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #6A3FE0"><span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Notiz</span><span style="font-size: 15px; line-height: 1.4; min-height: 63px">Merke: Ladungsfrist nach § 217 ZPO eine Woche, im Anwaltsprozess prüfen.</span></label>
+  </div>
+  <p style="margin: 0; font-size: 13px; color: #6B6678; line-height: 1.4">Die Notiz erscheint beim Lernen unter der Antwort. Beim Teilen kommt sie nur mit, wenn du es einschaltest.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

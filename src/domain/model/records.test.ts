@@ -39,6 +39,7 @@ describe('Tabellen', () => {
       'decks',
       'cards',
       'reviewItems',
+      'reviewLog',
       'events',
     ]);
     for (const key of DEVICE_META_KEYS) {

@@ -88,6 +88,7 @@ export function demoDecks(
         text: k.text ?? '',
         norm: k.norm,
         tags: k.tags.join(' '),
+        note: '',
       });
       if (!checked.ok) throw new Error(`Ungültige Demo-Karte ${s.id} Nr. ${ci + 1}`);
       const at = start + ci * KARTEN_PRO_STAPEL_ABSTAND;

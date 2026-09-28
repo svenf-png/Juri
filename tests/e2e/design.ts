@@ -20,6 +20,15 @@ const SEARCH_PLACEHOLDER = {
 };
 
 const FIXES: Record<string, { css: string; reason: string }[]> = {
+  'Luecke.dc.html': [
+    {
+      css: 'a[aria-label="Lernen beenden"] + div + div { min-width: 34px; text-align: right }',
+      reason:
+        'Luecke.dc.html und Antwort.dc.html lassen die Mindestbreite des Zählers weg, ' +
+        'Lernen.dc.html setzt 34 px. Die App nimmt 34 px, damit die Leiste beim Weiterschalten ' +
+        'nicht springt.',
+    },
+  ],
   'Bibliothek.dc.html': [SEARCH_PLACEHOLDER],
   'Erstellen.dc.html': [
     {

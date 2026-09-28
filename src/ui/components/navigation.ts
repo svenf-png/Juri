@@ -17,8 +17,13 @@ export const NAV: Record<NavKey, NavItem> = {
   erfolge: { key: 'erfolge', to: '/erfolge', label: 'Erfolge', Icon: TrophyIcon },
   fristen: { key: 'fristen', to: '/fristen', label: 'Fristen', Icon: CalendarIcon },
   teilen: { key: 'teilen', to: '/teilen', label: 'Teilen', Icon: ShareIcon },
-  // Im Design führt „Lernrhythmus“ zu Einstellungen.dc.html; der Rhythmus selbst kommt mit M4.
-  rhythmus: { key: 'rhythmus', to: '/einstellungen', label: 'Lernrhythmus', Icon: SlidersIcon },
+  // Im Design führt „Lernrhythmus“ zu Einstellungen.dc.html (M4).
+  rhythmus: {
+    key: 'rhythmus',
+    to: '/einstellungen/lernrhythmus',
+    label: 'Lernrhythmus',
+    Icon: SlidersIcon,
+  },
 };
 
 /** Tab-Bar (iPhone): links zwei, in der Mitte „Neue Karte“, rechts zwei. */
@@ -43,7 +48,8 @@ export const NEW_CARD_PATH = '/neu';
 
 /** Aktiver Navigationspunkt zu einem Pfad (ohne Basis-Pfad), sonst `null`. */
 export function navKeyFor(pathname: string): NavKey | null {
-  const first = `/${pathname.split('/')[1] ?? ''}`;
-  const match = Object.values(NAV).find((item) => item.to === first);
+  const match = Object.values(NAV).find(
+    (item) => pathname === item.to || (item.to !== '/' && pathname.startsWith(`${item.to}/`)),
+  );
   return match ? match.key : null;
 }

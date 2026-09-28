@@ -198,3 +198,30 @@ export function ImageIcon(props: IconProps) {
     </Svg>
   );
 }
+
+export function UndoIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M9 14 4 9l5-5" />
+      <path d="M4 9h10a6 6 0 0 1 0 12h-3" />
+    </Svg>
+  );
+}
+
+export function FlipIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3" />
+      <path d="M18 3v4h-4M6 21v-4h4" />
+    </Svg>
+  );
+}
+
+export function NoteIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5M9 13h6M9 17h4" />
+    </Svg>
+  );
+}

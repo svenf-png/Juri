@@ -10,6 +10,8 @@ import type {
   NewEvent,
   Profile,
   ReviewItem,
+  ReviewLogEntry,
+  NewReviewLogEntry,
 } from '@/domain/model/records';
 import { MIGRATIONS, type Migration } from './migrations';
 
@@ -21,6 +23,7 @@ export class JuriDb extends Dexie {
   declare decks: EntityTable<Deck, 'id'>;
   declare cards: EntityTable<Card, 'id'>;
   declare reviewItems: EntityTable<ReviewItem, 'id'>;
+  declare reviewLog: Table<ReviewLogEntry, number, NewReviewLogEntry>;
   declare events: Table<AppEvent, number, NewEvent>;
 
   constructor(

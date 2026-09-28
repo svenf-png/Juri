@@ -29,6 +29,16 @@ export const MIGRATIONS: readonly Migration[] = [
       events: '++seq, at, type',
     },
   },
+  {
+    // M4: Lernzustand an den Abfragen (optionale Felder `fsrs`, `leitner`, `due`, `lastReviewedAt`;
+    // bestehende Abfragen sind damit „neu“, keine Umformung nötig), Index auf `due` für die
+    // Fälligkeit, und das Lernlog `reviewLog` (Undo, Tagesbilanz, spätere FSRS-Optimierung).
+    version: 3,
+    stores: {
+      reviewItems: 'id, cardId, deckId, due',
+      reviewLog: '++seq, itemId, at',
+    },
+  },
 ];
 
 export function schemaVersion(migrations: readonly Migration[] = MIGRATIONS): number {

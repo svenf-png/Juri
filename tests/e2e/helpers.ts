@@ -48,8 +48,19 @@ export async function onboard(page: Page, base = '/Juri/', name = 'Sven') {
   await page.getByRole('heading', HEUTE_LEER).waitFor();
 }
 
-/** Einstellungen über die Oberfläche: Avatar (iPhone) oder Sidebar „Lernrhythmus“ (iPad). */
+/**
+ * Einstellungen über die Oberfläche: Avatar (iPhone) oder auf dem iPad die Sidebar „Lernrhythmus“
+ * und von dort „Profil, Speicher und Backup“.
+ */
 export async function openSettings(page: Page) {
-  await page.getByRole('link', { name: /^(Profil und Einstellungen|Lernrhythmus)$/ }).click();
+  const avatar = page.getByRole('link', { name: 'Profil und Einstellungen' });
+  const sidebar = page.getByRole('link', { name: 'Lernrhythmus', exact: true });
+  await avatar.or(sidebar).first().waitFor();
+  if (await avatar.isVisible()) {
+    await avatar.click();
+  } else {
+    await sidebar.click();
+    await page.getByRole('link', { name: 'Profil, Speicher und Backup' }).click();
+  }
   await page.getByRole('heading', { name: 'Einstellungen', level: 1 }).waitFor();
 }

@@ -21,6 +21,7 @@ const qa: CardForm = {
   text: '',
   norm: ' § 242  StGB ',
   tags: '#Klausur #AG',
+  note: '',
 };
 const cloze: CardForm = {
   type: 'cloze',
@@ -29,6 +30,7 @@ const cloze: CardForm = {
   text: 'A {{c1::b}} {{c2::c}}',
   norm: '',
   tags: '',
+  note: '',
 };
 
 describe('normalizeTags', () => {
@@ -69,7 +71,19 @@ describe('checkCard', () => {
         content: { type: 'qa', front: 'Was ist Gewahrsam?', back: 'Sachherrschaft.' },
         norm: '§ 242 StGB',
         tags: ['Klausur', 'AG'],
+        note: '',
       },
+    });
+  });
+
+  it('bereinigt die Notiz und prüft ihre Länge', () => {
+    expect(checkCard({ ...qa, note: '  Merke: Alt.\nNeu.  ' })).toMatchObject({
+      ok: true,
+      fields: { note: 'Merke: Alt.\nNeu.' },
+    });
+    expect(checkCard({ ...qa, note: 'x'.repeat(2001) })).toEqual({
+      ok: false,
+      errors: { note: 'Die Notiz ist zu lang (höchstens 2.000 Zeichen).' },
     });
   });
 
@@ -173,6 +187,7 @@ describe('buildCard und buildItems', () => {
       content: { type: 'cloze' as const, text: '{{c1::a}} {{c2::b}}' },
       norm: '§ 1',
       tags: ['A'],
+      note: '',
     };
     const card = buildCard('k1', 'd1', fields, 5, 6);
     expect(card).toEqual({
@@ -192,11 +207,20 @@ describe('buildCard und buildItems', () => {
     const qaCard = buildCard(
       'k2',
       'd1',
-      { content: { type: 'qa', front: 'F', back: 'B' }, norm: '', tags: [] },
+      { content: { type: 'qa', front: 'F', back: 'B' }, norm: '', tags: [], note: '' },
       1,
       1,
     );
     expect(qaCard).toMatchObject({ type: 'qa', front: 'F', back: 'B' });
+    expect('note' in qaCard).toBe(false);
+    const noted = buildCard(
+      'k3',
+      'd1',
+      { content: { type: 'qa', front: 'F', back: 'B' }, norm: '', tags: [], note: 'N' },
+      1,
+      1,
+    );
+    expect(noted).toMatchObject({ note: 'N' });
     expect(buildItems(qaCard, 1)).toEqual([
       { id: 'k2', cardId: 'k2', deckId: 'd1', sub: '', createdAt: 1 },
     ]);

@@ -3,7 +3,9 @@
  * reine Funktionen: Rohdaten rein, fertige Texte und Listen raus. Die Oberfläche rechnet nichts.
  */
 import { cardTitle, CARD_TYPE_LABEL } from '../cards/card';
-import type { Area, Card, Deck } from '../model/records';
+import type { Area, Card, Deck, ReviewItem } from '../model/records';
+import { maturityOf } from '../scheduler/schedule';
+import type { LearningSettings } from '../scheduler/settings';
 import { cardCount, groupDigits } from '../today/today';
 import { sortAreas } from './areas';
 
@@ -107,11 +109,16 @@ export interface DeckProgress {
 }
 
 /**
- * Fortschritt eines Stapels in Abfragen. Bis M4 (Lern-Engine) ist jede Abfrage neu; die
- * Aufteilung in „sicher“ und „im Lernen“ kommt mit dem Lernzustand.
+ * Fortschritt eines Stapels in Abfragen: neu (nie bewertet), im Lernen und sicher (Abstand ab
+ * 21 Tagen, siehe `maturityOf`).
  */
-export function deckProgress(itemCount: number): DeckProgress {
-  return { secure: 0, learning: 0, fresh: itemCount };
+export function deckProgress(
+  items: readonly ReviewItem[],
+  settings: LearningSettings,
+): DeckProgress {
+  const count = { secure: 0, learning: 0, fresh: 0 };
+  for (const item of items) count[maturityOf(item, settings)] += 1;
+  return count;
 }
 
 export interface BarPart {
@@ -173,7 +180,8 @@ export function deckModel(input: {
   deck: Deck;
   areas: readonly Area[];
   cards: readonly Card[];
-  itemCount: number;
+  progress: DeckProgress;
+  /** Heute fällige Abfragen des Stapels. */
   due: number;
 }): DeckModel {
   const { deck, cards, due } = input;
@@ -197,7 +205,7 @@ export function deckModel(input: {
       on: deck.areaIds.includes(a.id),
       locked: deck.areaIds.length === 1 && deck.areaIds.includes(a.id),
     })),
-    bar: progressBar(deckProgress(input.itemCount)),
+    bar: progressBar(input.progress),
     cta,
     cardCount: cardCount(cards.length),
     cards: [...cards]

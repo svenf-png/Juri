@@ -3,7 +3,7 @@ titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
 stand: 2026-09-28
-version: 0.3 (nach M3)
+version: 0.5 (nach M4)
 ---
 
 # Die Idee
@@ -135,17 +135,32 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - Jede neue Karte schreibt ein Ereignis; daraus entstehen Tagesziel und Verlauf
 - Stapel löschen und Rechtsgebiet löschen folgen Regeln, damit nichts ins Leere zeigt
 
-> **Notizen:** Ein Backup prüft vor dem Einspielen alle Verweise zwischen Rechtsgebieten, Stapeln, Karten und Abfragen. Bis zur Lern-Engine (M4) zählt jede neue Abfrage als fällig.
+> **Notizen:** Ein Backup prüft vor dem Einspielen alle Verweise zwischen Rechtsgebieten, Stapeln, Karten und Abfragen. Seit M4 trägt jede Abfrage ihren Lernzustand und wird nach Fälligkeit gezählt.
 
 ## Wie der Lernrhythmus funktioniert
 
+<!-- status: M4 umgesetzt (ADR-008) -->
+
 - **FSRS** schätzt für jede Karte, wie sicher sie noch sitzt
 - Sie kommt wieder, kurz bevor diese Sicherheit unter das Ziel fällt
-- Ziel einstellbar: 85, 90 oder 95 Prozent (Entspannt, Standard, Examen)
-- **Leitner** als Alternative: fünf Fächer mit festen Abständen
-- Wechsel zwischen beiden jederzeit ohne Datenverlust
+- Ziel einstellbar: 85, 90 oder 95 Prozent (Entspannt, Standard, Examen), dazwischen frei
+- **Leitner** als Alternative: fünf Fächer mit festen, einstellbaren Abständen
+- Jede Bewertung aktualisiert **beide** Verfahren; der Wechsel ändert nur, welches die Fälligkeit bestimmt
+- Kein Abstand länger als 180 Tage, „Nochmal“ führt über Lernschritte von 1 und 10 Minuten
 
-> **Notizen:** FSRS (Free Spaced Repetition Scheduler) ist ein offenes Verfahren, das auch Anki verwendet. Juri nutzt die Bibliothek ts-fsrs unter MIT-Lizenz.
+> **Notizen:** FSRS (Free Spaced Repetition Scheduler) ist ein offenes Verfahren, das auch Anki verwendet. Juri nutzt die Bibliothek ts-fsrs 5.4 unter MIT-Lizenz, gepinnt und nur über einen eigenen Adapter angesprochen. Streuung der Abstände ist aus, damit die Vorschau auf den Knöpfen genau stimmt.
+
+## Die Lernrunde
+
+<!-- status: M4 umgesetzt -->
+
+- Reine **Zustandsmaschine** ohne Browser: Karte drehen, bewerten, „Nochmal“ nach drei anderen Karten, Rückgängig
+- Mehrere fällige Lücken einer Karte erscheinen **gebündelt**, eine Bewertung gilt für jede Lücke
+- Fällig heißt: vor dem Ende des Lerntags (4 Uhr); neue Karten bis zum Tageslimit
+- Jede Bewertung entsteht in **einer Transaktion**: Lernzustand, Lernlog, Ereignis
+- **Rückgängig** stellt den Zustand aus dem Lernlog her; nichts wird geraten
+
+> **Notizen:** Das Lernlog enthält alle Felder, die eine spätere Optimierung der FSRS-Parameter auf den eigenen Daten braucht. Zufall und Uhr sind Parameter der Logik, damit die Tests deterministisch sind.
 
 ## Fristen
 
@@ -219,7 +234,7 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 | Phase      | Inhalt                                                          |
 | ---------- | --------------------------------------------------------------- |
 | M0 bis M3  | Fundament, Daten und Backup, Oberfläche, Karten und Stapel      |
-| M4 bis M5  | Lern-Engine, Prüfungsschemata                                   |
+| M4 bis M5  | Lern-Engine (fertig), Prüfungsschemata                          |
 | M6 bis M8  | PDF und Abdeckung, Fristen, Erfolge                             |
 | M9 bis M11 | Teilen und Import, High fives, Feinschliff und Veröffentlichung |
 
@@ -233,5 +248,6 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M1 fertig:** Datenbank mit Migrationen, Onboarding, Install-Anleitung im Safari-Tab, Speicheranzeige, Backup erstellen und einspielen
 - **M2 fertig:** Tab-Bar und Sidebar, Heute-Screen pixelgleich zum Design, Lerntag ab 4 Uhr
 - **M3 fertig:** Rechtsgebiete, Stapel (in mehreren Rechtsgebieten), Frage und Lückentext, Suche, Bearbeiten und Löschen, Master-Detail auf dem iPad, Demo-Stapel
-- Automatische Prüfung bei jeder Änderung: 309 Unit-Tests, 46 E2E-Szenarien auf iPhone- und iPad-Größen
-- Nächster Schritt: Gerätetest von M0 bis M3 auf iPhone und iPad, dann M4 (Lern-Engine)
+- **M4 fertig:** Lernen mit FSRS und Leitner, Vorschau der Abstände, Wischen, Rückgängig, Tastatur, gebündelte Lücken, Lernrhythmus einstellen, Notiz an Karten, „Alles erledigt für heute“, Entwicklungsstand in den Einstellungen
+- Automatische Prüfung bei jeder Änderung: 403 Unit-Tests, 59 E2E-Szenarien auf iPhone- und iPad-Größen
+- Nächster Schritt: Gerätetest von M0 bis M4 auf iPhone und iPad, dann M5 (Schema und Verknüpfungen)

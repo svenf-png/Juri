@@ -18,7 +18,7 @@ Mit M3 entstehen die Inhalte der App. Sie müssen sich sichern, teilen (M9) und 
 - **Ereignis-Log ab hier:** `events` (`++seq`, `at`, `type`) nimmt bisher „Karte angelegt“ auf, nur anhängend. Tagesziel „Anlegen“, „+N Karten angelegt“ und der Backup-Zähler (`newCardsSinceBackup`) entstehen in derselben Transaktion wie die Karte. Löschen einer Karte lässt das Ereignis stehen.
 - **Löschregeln:** Ein Stapel löschen entfernt Karten und Abfragen in einer Transaktion. Ein Rechtsgebiet lässt sich nicht löschen, solange Stapel nur dort liegen; andere Stapel verlieren nur die Zuordnung.
 - **Backup prüft Verweise:** Vor dem Einspielen müssen alle `areaIds` und `deckId` auf vorhandene Datensätze zeigen und jede Karte genau ihre Abfragen haben (`hasIntegrity`). Ein Backup aus M1 ohne die neuen Tabellen bleibt einspielbar.
-- **Bis M4 ist jede Abfrage fällig.** Der Lernzustand (FSRS, Leitner, `due`) kommt als optionale Felder und neue Indizes mit M4.
+- **Bis M4 war jede Abfrage fällig.** Der Lernzustand (FSRS, Leitner, `due`) kam mit M4 als optionale Felder und neuer Index, siehe ADR-008.
 
 ## Konsequenzen
 

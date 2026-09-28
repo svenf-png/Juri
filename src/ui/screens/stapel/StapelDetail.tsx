@@ -40,7 +40,7 @@ function Cta({ model, className }: { model: DeckModel; className: string | undef
   }
   return (
     <Link
-      to={cta.kind === 'learn' ? '/lernen' : `/neu?stapel=${model.id}`}
+      to={cta.kind === 'learn' ? `/lernen?stapel=${model.id}` : `/neu?stapel=${model.id}`}
       className={cx(className, tap.tap)}
     >
       <span className={styles.ctaLong}>{cta.label}</span>
