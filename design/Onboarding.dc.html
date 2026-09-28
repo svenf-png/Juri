@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Willkommen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input[type=range]{accent-color:#6A3FE0}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s,border-color .2s}
+.tap:active{transform:scale(.97)}
+.chip{transition:all .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise{animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 96px 24px 40px 24px; display: flex; flex-direction: column; gap: 24px">
+  <div class="rise" style="position: relative; width: 72px; height: 72px; flex-shrink: 0" aria-hidden="true">
+    <div style="position: absolute; left: 0; top: 0; width: 200px; height: 200px; border-radius: 45px; overflow: hidden; background: #6A3FE0; transform: scale(.36); transform-origin: 0 0">
+      <div style="position: absolute; left: 52px; top: 40px; width: 110px; height: 130px; border-radius: 18px; background: #9A7BEF; transform: rotate(8deg)"></div>
+      <div style="position: absolute; left: 40px; top: 36px; width: 110px; height: 130px; border-radius: 18px; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><span class="d" style="font-size: 96px; font-weight: 800; color: #17141F; letter-spacing: -0.04em; line-height: 1; margin-top: -6px">J</span></div>
+    </div>
+  </div>
+  <h1 class="d rise" style="margin: 0; font-size: 46px; font-weight: 750; letter-spacing: -0.03em; line-height: 1.0; animation-delay: .05s">Willkommen<br>bei <span style="color: #6A3FE0">Juri.</span></h1>
+  <p class="rise" style="margin: 0; font-size: 17px; line-height: 1.45; color: #6B6678; animation-delay: .1s">Karteikarten für das Referendariat. Alles bleibt auf deinem Gerät, ohne Konto und ohne Server.</p>
+  <label class="field rise" style="border-radius: 20px; background: #F6F4FB; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; animation-delay: .16s">
+    <span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Wie heißt du?</span>
+    <input placeholder="Vorname" autocomplete="given-name" style="border: 0; background: transparent; font-size: 18px; color: #17141F; outline: none">
+  </label>
+  <p style="margin: 0; font-size: 13px; color: #6B6678; line-height: 1.4; margin-top: -12px">Dein Name steht nur auf diesem Gerät und in Dateien, die du selbst teilst.</p>
+  <div style="flex: 1"></div>
+  <button class="tap" style="height: 60px; border-radius: 20px; border: 0; background: #6A3FE0; color: #FFFFFF; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 10px 24px -10px rgba(106,63,224,.55)">Los geht’s <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+</div>
+</x-dc>
+</body>
+</html>

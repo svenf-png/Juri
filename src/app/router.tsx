@@ -1,9 +1,15 @@
 import { lazy, Suspense, type ComponentType, type ReactNode } from 'react';
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
+import { Installieren } from '@/ui/screens/installieren/Installieren';
+import { Onboarding } from '@/ui/screens/onboarding/Onboarding';
 import { Start } from '@/ui/screens/start/Start';
+import { ProfileScreen, RequireBrowserTab, RequireNoProfile, RequireProfile } from './gates';
 
 const Styleguide = lazy(() =>
   import('@/ui/screens/styleguide/Styleguide').then((m) => ({ default: m.Styleguide })),
+);
+const Einstellungen = lazy(() =>
+  import('@/ui/screens/einstellungen/Einstellungen').then((m) => ({ default: m.Einstellungen })),
 );
 // Nur in der Testinstanz; in der echten App entfernt der Build diesen Zweig samt Chunk.
 const Geraetecheck =
@@ -27,7 +33,28 @@ export function routes(
 ): RouteObject[] {
   const Check = geraetecheck;
   const list: RouteObject[] = [
-    { path: '/', element: <Start /> },
+    {
+      element: <RequireProfile />,
+      children: [
+        { path: '/', element: <ProfileScreen screen={Start} /> },
+        {
+          path: '/einstellungen',
+          element: (
+            <Lazy>
+              <ProfileScreen screen={Einstellungen} />
+            </Lazy>
+          ),
+        },
+      ],
+    },
+    {
+      element: <RequireNoProfile />,
+      children: [{ path: '/willkommen', element: <Onboarding /> }],
+    },
+    {
+      element: <RequireBrowserTab />,
+      children: [{ path: '/installieren', element: <Installieren /> }],
+    },
     {
       path: '/styleguide',
       element: (

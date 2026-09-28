@@ -1,0 +1,35 @@
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.large {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  font-size: 22px;
+}
+
+.link {
+  width: var(--touch-target);
+  height: var(--touch-target);
+  margin: -2px -2px -2px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  transition: transform var(--dur-tap) var(--ease-standard);
+}
+
+.link:active {
+  transform: scale(0.97);
+}

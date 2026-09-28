@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Installieren</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input[type=range]{accent-color:#6A3FE0}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s,border-color .2s}
+.tap:active{transform:scale(.97)}
+.chip{transition:all .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise{animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 96px 24px 40px 24px; display: flex; flex-direction: column; gap: 20px">
+  <div class="rise" style="position: relative; width: 72px; height: 72px; flex-shrink: 0" aria-hidden="true">
+    <div style="position: absolute; left: 0; top: 0; width: 200px; height: 200px; border-radius: 45px; overflow: hidden; background: #6A3FE0; transform: scale(.36); transform-origin: 0 0">
+      <div style="position: absolute; left: 52px; top: 40px; width: 110px; height: 130px; border-radius: 18px; background: #9A7BEF; transform: rotate(8deg)"></div>
+      <div style="position: absolute; left: 40px; top: 36px; width: 110px; height: 130px; border-radius: 18px; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><span class="d" style="font-size: 96px; font-weight: 800; color: #17141F; letter-spacing: -0.04em; line-height: 1; margin-top: -6px">J</span></div>
+    </div>
+  </div>
+  <h1 class="d" style="margin: 0; font-size: 38px; font-weight: 750; letter-spacing: -0.03em; line-height: 1.05">Erst installieren,<br>dann lernen.</h1>
+  <p style="margin: 0; font-size: 16px; line-height: 1.45; color: #6B6678">Juri läuft als App vom Home-Bildschirm: im Vollbild, offline und mit dauerhaftem Speicher.</p>
+  <ol style="margin: 0; padding: 0; list-style: none; border-top: 1px solid #EFECF5">
+    <li style="display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #EFECF5">
+      <span style="width: 32px; height: 32px; border-radius: 16px; background: #EEE8FD; color: #4B2AA8; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">1</span>
+      <span style="display: flex; flex-direction: column; gap: 2px; padding-top: 5px"><span style="font-size: 16px; font-weight: 600">In Safari auf „Teilen“ tippen</span><span style="font-size: 13px; color: #6B6678; line-height: 1.4">Je nach Ansicht zuerst auf „•••“.</span></span>
+    </li>
+    <li style="display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #EFECF5">
+      <span style="width: 32px; height: 32px; border-radius: 16px; background: #EEE8FD; color: #4B2AA8; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">2</span>
+      <span style="display: flex; flex-direction: column; gap: 2px; padding-top: 5px"><span style="font-size: 16px; font-weight: 600">„Zum Home-Bildschirm“ wählen</span><span style="font-size: 13px; color: #6B6678; line-height: 1.4">Fehlt der Eintrag, in der Liste nach unten blättern.</span></span>
+    </li>
+    <li style="display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #EFECF5">
+      <span style="width: 32px; height: 32px; border-radius: 16px; background: #EEE8FD; color: #4B2AA8; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">3</span>
+      <span style="display: flex; flex-direction: column; gap: 2px; padding-top: 5px"><span style="font-size: 16px; font-weight: 600">„Hinzufügen“ tippen und Juri über das neue Symbol öffnen</span></span>
+    </li>
+  </ol>
+  <div style="border-radius: 20px; background: #F6F4FB; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+    <span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Warum?</span>
+    <p style="margin: 0; font-size: 14px; line-height: 1.45">Safari und die App auf dem Home-Bildschirm haben getrennte Speicher. Karten aus dem Browser fehlen später in der App, deshalb legt Juri hier nichts an.</p>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -134,6 +134,15 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - Anzeige: Countdown und Anteil, der am Stichtag sicher sitzt
 - Nach der Frist läuft der normale Rhythmus weiter
 
+## Daten und Backup
+
+- Alle Daten in der Gerätedatenbank (IndexedDB), jede Tabelle mit geprüftem Schema
+- Neue Versionen heben die Datenbank an, **ältere Backups gleich mit**
+- Backup = eine Datei (.juri-backup), vor dem Einspielen vollständig geprüft
+- Einspielen in einem Schritt: klappt es nicht, bleibt alles wie vorher
+
+> **Notizen:** Dieselbe Umformung gilt für die Datenbank und für alte Backups, so bleibt ein Backup aus dem ersten Monat auch nach vielen Updates einspielbar. Der Roundtrip ist byte-genau getestet: Backup, Einspielen und erneutes Backup ergeben dieselbe Datei.
+
 ## Teilen ohne Server
 
 - Format `.juri`: ein ZIP mit Beschreibung, Karten und Medien
@@ -192,13 +201,13 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 | M6 bis M8  | PDF und Abdeckung, Fristen, Erfolge                             |
 | M9 bis M11 | Teilen und Import, High fives, Feinschliff und Veröffentlichung |
 
-> **Notizen:** Geschätzt rund 33 Personentage. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
+> **Notizen:** Geschätzt rund 35 Personentage. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
 
 ## Stand heute
 
 <!-- status: bei jedem Meilenstein aktualisieren -->
 
-- **M0 fertig:** Grundgerüst, Design-Tokens, Schriften, App-Icon, Styleguide
-- Installierbar und offline startbar, Testinstanz „Juri Test“ mit Geräte-Check
-- Automatische Prüfung bei jeder Änderung: 72 Unit-Tests, E2E-Tests auf iPhone- und iPad-Größen
-- Nächster Schritt: Geräte-Check auf echten Geräten, dann M1 (Daten, Profil, Backup)
+- **M0 fertig:** Grundgerüst, Design-Tokens, Schriften, App-Icon, Styleguide, Testinstanz mit Geräte-Check
+- **M1 fertig:** Datenbank mit Migrationen, Onboarding, Install-Anleitung im Safari-Tab, Speicheranzeige, Backup erstellen und einspielen
+- Automatische Prüfung bei jeder Änderung: 144 Unit-Tests, 23 E2E-Szenarien auf iPhone- und iPad-Größen
+- Nächster Schritt: Gerätetest von M0 und M1 auf iPhone und iPad, dann M2 (Oberfläche und Heute-Screen)

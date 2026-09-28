@@ -1,0 +1,34 @@
+/* Eingabefeld nach Erstellen.dc.html: Fläche surface, Radius 20, Beschriftung in Versalien. */
+.field {
+  border-radius: var(--radius-field-xl);
+  background: var(--surface);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.input {
+  width: 100%;
+  min-height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 18px;
+  color: var(--ink);
+  outline: none;
+}
+
+/* Sichtbarer Fokus am ganzen Feld, weil das Eingabefeld selbst keinen Rahmen hat. */
+.field:focus-within {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}

@@ -1,7 +1,9 @@
 import type { CSSProperties } from 'react';
 import { BUILD, buildLabel } from '@/app/build';
 import { instanceById } from '@/app/instance';
+import type { ProfileData } from '@/features/app/appData';
 import { AppIconMark } from '../../components/AppIconMark';
+import { AvatarLink } from '../../components/Avatar';
 import { ButtonAnchor, ButtonLink } from '../../components/Button';
 import { Screen } from '../../components/Screen';
 import { Wordmark } from '../../components/Wordmark';
@@ -10,7 +12,7 @@ import rise from '../../motion/rise.module.css';
 import styles from './Start.module.css';
 
 const MILESTONES = 12;
-const DONE = 1;
+const DONE = 2;
 
 function delay(seconds: number): CSSProperties {
   return { animationDelay: `${seconds}s` };
@@ -35,11 +37,15 @@ function Arrow() {
   );
 }
 
-/** Übergangs-Startseite bis zum Heute-Screen (M2). */
-export function Start() {
+/** Übergangs-Startseite bis zum Heute-Screen (M2); Kopfzeile wie Main.dc.html. */
+export function Start({ data }: { data: ProfileData }) {
   const isTest = __JURI_INSTANCE__ === 'test';
   return (
     <Screen className={styles.start}>
+      <header className={styles.top}>
+        <span className={styles.hello}>Hallo, {data.profile.name}</span>
+        <AvatarLink name={data.profile.name} />
+      </header>
       <div className={styles.hero}>
         <div className={rise.rise}>
           <AppIconMark size={88} variant={isTest ? 'test' : 'app'} />
@@ -55,10 +61,11 @@ export function Start() {
       <section className={cx(styles.card, rise.rise)} style={delay(0.16)} aria-labelledby="stand">
         <span className={styles.label}>Im Aufbau</span>
         <h2 id="stand" className={styles.cardTitle}>
-          Meilenstein M0: Fundament
+          Meilenstein M1: Daten, Profil, Backup
         </h2>
         <p className={styles.cardText}>
-          Juri entsteht Schritt für Schritt. Farben, Schrift und Bewegung sind schon da.
+          Dein Profil liegt sicher auf diesem Gerät, Backups findest du in den Einstellungen. Karten
+          und Stapel kommen mit M3.
         </p>
         <div
           className={styles.steps}
@@ -76,9 +83,12 @@ export function Start() {
       </section>
 
       <div className={cx(styles.actions, rise.rise)} style={delay(0.22)}>
-        <ButtonLink to="/styleguide" variant="primary" block>
-          <span>Styleguide ansehen</span>
+        <ButtonLink to="/einstellungen" variant="primary" block>
+          <span>Einstellungen und Backup</span>
           <Arrow />
+        </ButtonLink>
+        <ButtonLink to="/styleguide" variant="soft" size="md" block>
+          Styleguide ansehen
         </ButtonLink>
         {isTest ? (
           <ButtonLink to="/geraetecheck" variant="ink" size="md" block>

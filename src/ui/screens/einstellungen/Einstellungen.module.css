@@ -1,0 +1,198 @@
+/* Profil.dc.html, Zeilen wie Einstellungen.dc.html (58 px, Trennlinie line). */
+.screen {
+  --screen-top: 54px;
+}
+
+.title {
+  margin-top: -8px;
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.profile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.nameField {
+  flex: 1;
+  min-width: 0;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px 12px 16px;
+}
+
+.nameText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Sichtbar 36 px (Design), Trefferfläche 44 px (A1). */
+.save {
+  height: var(--touch-target);
+  margin: -4px 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.saveFace {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  transition: transform var(--dur-tap) var(--ease-standard);
+}
+
+.save:active .saveFace {
+  transform: scale(0.97);
+}
+
+.section {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionLabel {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.row {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.row dt {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.row dd {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: right;
+}
+
+.row dd.accent {
+  color: var(--violet);
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 0;
+}
+
+.due {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--violet);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.help {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.success {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--violet-700);
+}
+
+.error {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--violet-900);
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.sheetText {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.sheetAction {
+  margin-top: 6px;
+}
+
+.facts {
+  margin: 0;
+  border-radius: var(--radius-field-xl);
+  background: var(--surface);
+  padding: 6px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 15px;
+}
+
+.facts div + div {
+  border-top: 1px solid var(--line);
+}
+
+.facts dt {
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: right;
+  overflow-wrap: anywhere;
+}

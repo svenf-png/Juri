@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Backup einspielen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input[type=range]{accent-color:#6A3FE0}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s,border-color .2s}
+.tap:active{transform:scale(.97)}
+.chip{transition:all .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise{animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 54px 24px 40px 24px; display: flex; flex-direction: column; gap: 20px">
+  <a href="Main.dc.html" style="height: 44px; display: flex; align-items: center; gap: 2px; font-size: 16px; font-weight: 600; margin-left: -10px">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Heute</a>
+  <h1 class="d" style="margin: -8px 0 0 0; font-size: 38px; font-weight: 750; letter-spacing: -0.03em">Einstellungen</h1>
+  <div style="display: flex; flex-direction: column; border-top: 1px solid #EFECF5">
+    <div style="min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #EFECF5"><span style="font-size: 16px; font-weight: 600">Letztes Backup</span><span style="font-size: 16px; font-weight: 700; color: #6B6678">Heute</span></div>
+  </div>
+  <div class="dim" style="position: absolute; inset: 0; background: rgba(23,20,31,.28)"></div>
+  <div role="dialog" aria-modal="true" style="position: absolute; left: 0; right: 0; bottom: 0; min-height: 460px; box-sizing: border-box; border-radius: 30px 30px 0 0; background: #FFFFFF; padding: 12px 24px 34px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 -20px 40px -24px rgba(46,26,115,.4)">
+    <span style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #DCD6EA"></span>
+    <span style="display: flex; align-items: center; gap: 8px; color: #6A3FE0; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-top: 6px">Backup einspielen</span>
+    <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.015em">Alle Daten durch das Backup ersetzen?</h2>
+    <dl style="margin: 0; border-radius: 20px; background: #F6F4FB; padding: 6px 16px; display: flex; flex-direction: column">
+      <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #EFECF5"><dt style="font-size: 15px; color: #6B6678">Profil</dt><dd style="margin: 0; font-size: 15px; font-weight: 700">Sven</dd></div>
+      <div style="display: flex; justify-content: space-between; padding: 10px 0"><dt style="font-size: 15px; color: #6B6678">Erstellt</dt><dd style="margin: 0; font-size: 15px; font-weight: 700">28.09.2026, 20:15</dd></div>
+    </dl>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5">Was jetzt auf diesem Gerät ist, wird ersetzt. Das lässt sich nicht rückgängig machen.</p>
+    <button class="tap" style="height: 60px; border-radius: 20px; border: 0; background: #17141F; color: #FFFFFF; font-size: 18px; font-weight: 700; margin-top: 6px">Einspielen</button>
+    <button class="tap" style="height: 52px; border-radius: 18px; border: 0; background: transparent; color: #6B6678; font-size: 16px; font-weight: 700">Abbrechen</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

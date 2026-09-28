@@ -1,0 +1,53 @@
+/* Onboarding.dc.html: oben 96 px (inkl. Statusleiste), Abstand 24 px, Knopf unten. */
+.screen {
+  --screen-top: 96px;
+}
+
+.form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  letter-spacing: var(--type-display-tracking);
+  line-height: var(--type-display-line);
+}
+
+.accent {
+  color: var(--violet);
+}
+
+.lead {
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.hint {
+  margin-top: -12px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.error {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--violet-900);
+}
+
+.actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.arrow {
+  margin-left: auto;
+}
