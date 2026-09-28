@@ -1,0 +1,60 @@
+/*
+ * Tab-Bar nach Main.dc.html: 86 px hoch (8 oben, 52 Inhalt, 26 unten), Weiß zu 94 %, Linie oben.
+ * Unten reicht sie bis zum Bildschirmrand; --tabbar-pad kommt aus AppShell.module.css und
+ * wächst nur, wenn die Safe Area mehr Platz verlangt als das Design.
+ */
+.bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  height: var(--tabbar-height);
+  padding: 8px max(12px, env(safe-area-inset-right)) var(--tabbar-pad)
+    max(12px, env(safe-area-inset-left));
+  background: rgba(255, 255, 255, 0.94);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  line-height: normal;
+}
+
+/* Mittig wie im Design; 2 px Polster oben und unten ergeben 44 px Trefferfläche (A1). */
+.tab,
+.tab:hover {
+  padding: 2px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.active,
+.active:hover {
+  color: var(--violet);
+  font-weight: 700;
+}
+
+.create,
+.create:hover {
+  justify-self: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: var(--ink);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .bar {
+    display: none;
+  }
+}

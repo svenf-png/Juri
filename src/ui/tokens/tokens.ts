@@ -73,6 +73,8 @@ export const shadows = {
   segment: '0 2px 8px -3px rgba(46,26,115,.3)',
   popover: '0 20px 44px -18px rgba(46,26,115,.45), 0 0 0 1px #EFECF5',
   record: '0 0 0 2px #FFFFFF, 0 0 0 4px #17141F',
+  /** Rekordtag in „Letzte 7 Tage“ (Main.dc.html, iPadHeute.dc.html). */
+  'record-day': '0 0 0 3px #FFFFFF, 0 0 0 5px #17141F',
 } as const;
 
 export const fonts = {

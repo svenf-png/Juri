@@ -275,3 +275,7 @@
   color: var(--muted);
   text-align: center;
 }
+
+.preview {
+  align-self: flex-start;
+}

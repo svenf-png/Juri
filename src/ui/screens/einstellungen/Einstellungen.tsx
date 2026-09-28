@@ -21,6 +21,7 @@ import { BackLink, Screen } from '../../components/Screen';
 import { Sheet } from '../../components/Sheet';
 import { cx } from '../../cx';
 import styles from './Einstellungen.module.css';
+import { Entwicklung } from './Entwicklung';
 
 // Nur in der Testinstanz; der Build der echten App enthält das Testdaten-Menü nicht.
 const Testdaten =
@@ -34,7 +35,7 @@ const dateTime = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium', timeSty
 export function Einstellungen({ data }: { data: ProfileData }) {
   return (
     <Screen className={styles.screen}>
-      <BackLink to="/" label="Start" />
+      <BackLink to="/" label="Heute" />
       <h1 className={styles.title}>Einstellungen</h1>
       <ProfileForm key={data.profile.name} name={data.profile.name} />
       <StorageSection />
@@ -44,6 +45,7 @@ export function Einstellungen({ data }: { data: ProfileData }) {
           <Testdaten />
         </Suspense>
       ) : null}
+      <Entwicklung />
       <p className={styles.footer}>
         {__JURI_INSTANCE__ === 'test' ? 'Juri Test' : 'Juri'} · Version {buildLabel(BUILD)}
       </p>

@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { asInstalledApp, onboard, watchPage } from './helpers';
+import { asInstalledApp, HEUTE_LEER, onboard, openSettings, watchPage } from './helpers';
 
 const WILLKOMMEN = { name: 'Willkommen bei Juri.', level: 1 } as const;
 
@@ -17,10 +17,16 @@ test.describe('Daten, Profil, Backup (M1)', () => {
     await expect(submit).toBeDisabled();
     await page.getByLabel('Wie heißt du?').fill('  Sven  ');
     await submit.click();
-    await expect(page.getByText('Hallo, Sven')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Profil und Einstellungen' })).toHaveText('S');
-    await page.reload();
-    await expect(page.getByText('Hallo, Sven')).toBeVisible();
+    await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
+    if (page.viewportSize()!.width < 768) {
+      await expect(page.getByRole('link', { name: 'Profil und Einstellungen' })).toHaveText('S');
+    }
+    await openSettings(page);
+    await expect(page.getByLabel('Name')).toHaveValue('Sven');
+    await page.goto('/Juri/');
+    await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
+    await openSettings(page);
+    await expect(page.getByLabel('Name')).toHaveValue('Sven');
     await page.goto('/Juri/willkommen');
     await expect(page).toHaveURL(/\/Juri\/$/);
     expect(watch.errors).toEqual([]);
@@ -33,7 +39,7 @@ test.describe('Daten, Profil, Backup (M1)', () => {
   }, testInfo) => {
     const watch = watchPage(page, baseURL!);
     await onboard(page);
-    await page.getByRole('link', { name: 'Einstellungen und Backup' }).click();
+    await openSettings(page);
     await expect(page.getByTestId('last-backup')).toHaveText('Noch keins');
 
     await page.getByRole('button', { name: 'Backup erstellen' }).click();
@@ -50,7 +56,6 @@ test.describe('Daten, Profil, Backup (M1)', () => {
 
     await page.getByLabel('Name').fill('Max');
     await page.getByRole('button', { name: 'Sichern', exact: true }).click();
-    await expect(page.getByText('Hallo')).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Sichern', exact: true })).toHaveCount(0);
 
     const choosing = page.waitForEvent('filechooser');
@@ -108,7 +113,8 @@ test.describe('Testinstanz: Testdaten', () => {
     page.on('dialog', (dialog) => void dialog.accept());
     await page.goto('/Juri/test/');
     await page.getByRole('button', { name: 'Mit Demo-Profil starten' }).click();
-    await expect(page.getByText('Hallo, Demo')).toBeVisible();
+    await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'Hauptnavigation' })).toBeVisible();
     await page.goto('/Juri/test/einstellungen');
     await expect(page.getByText('Zeit für ein neues Backup')).toBeVisible();
     await page.getByRole('button', { name: 'Alles zurücksetzen' }).click();

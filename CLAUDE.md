@@ -41,6 +41,7 @@ npm run build          # dist/ (App) und dist/test/ (Testinstanz) + 404.html
 npm run serve          # dist/ wie GitHub Pages unter http://127.0.0.1:4173/Juri/
 npm run e2e            # Playwright (baut nicht selbst: vorher npm run build)
 npm run icons          # App-Icons aus dem Design neu rendern
+npm run docs:bilder    # Screenshots nach docs/bilder/ (nach npm run build; Pixelvergleich mit dem Design)
 npm run format         # Prettier
 ```
 
@@ -57,7 +58,9 @@ WebKit läuft in der GitHub-CI.
 - Deep Links über `404.html` (`src/app/deepLink.ts`, `scripts/postbuild.mjs`).
 - Daten (ADR-006): Schema-Versionen in `src/data/migrations.ts` nur anhängen, je Tabelle ein zod-Schema in `src/domain/model/records.ts`; Backup `.juri-backup` in `src/domain/backup/`. Routen-Wächter in `src/app/gates.tsx`: im Safari-Tab auf iPhone/iPad keine Datenbank (A13); E2E-Tests emulieren die installierte App mit `asInstalledApp`.
 - Tokens: `tokens.ts` → `tokens.css` (Vite-Plugin), Gleichstand und Kontraste in `tokens.test.ts`.
-- Bildschirm-Abstände oben: Designwert + `var(--top-shift)` (Designs enthalten 47 px Statusleiste).
+- Bildschirm-Abstände oben: iPhone Designwert + `var(--top-shift)` (Designs enthalten 47 px Statusleiste), iPad Designwert + `var(--top-inset)`.
+- Shell (M2): `AppShell` als Layout-Route, Tab-Bar unter 768 px, Sidebar ab 768 px, iPad-Designs ab 1100 px (A8). Bildschirme sind reine Ansichten eines Modells aus `domain/` (z. B. `todayModel`), Beispieldaten der Designs unter `/styleguide/heute`.
+- Pixelnähe: `tests/e2e/design.ts` rendert `design/*.dc.html` im Testbrowser; `heute.spec.ts` vergleicht Bild und Lage mit der App (auch WebKit). Neue Screens so absichern.
 
 ## Stand
 

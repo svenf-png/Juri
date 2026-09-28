@@ -13,9 +13,13 @@ export function Avatar({ name, size = 40 }: { name: string; size?: 40 | 56 }) {
 }
 
 /** Avatar als Link zu den Einstellungen; Trefferfläche 44 px bei 40 px Optik (A1). */
-export function AvatarLink({ name }: { name: string }) {
+export function AvatarLink({ name, className }: { name: string; className?: string | undefined }) {
   return (
-    <Link to="/einstellungen" className={styles.link} aria-label="Profil und Einstellungen">
+    <Link
+      to="/einstellungen"
+      className={cx(styles.link, className)}
+      aria-label="Profil und Einstellungen"
+    >
       <Avatar name={name} />
     </Link>
   );

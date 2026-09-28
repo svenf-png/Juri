@@ -1,6 +1,6 @@
 # Juri: Architektur, Rückfragen, Plan
 
-Stand: 28.09.2026 · Status: **M1 (Daten, Profil, Backup) umgesetzt, wartet auf Review und Gerätetest; nächster Schritt M2** · Grundlage: Technisches Briefing und die 23 Screens in `design/` (Quelle: Design-Canvas „Juri“)
+Stand: 28.09.2026 · Status: **M2 (Shell, UI-Kit, Heute) umgesetzt, wartet auf Gerätetest von M0 bis M2; nächster Schritt M3** · Grundlage: Technisches Briefing und die 23 Screens in `design/` (Quelle: Design-Canvas „Juri“)
 
 ---
 
@@ -90,13 +90,17 @@ platform/   Web Share, Datei-Input, persist/estimate,    -> Browser-APIs
 - **A5 Tagesziel Lernen** zählt die erste Bewertung je Abfrage und Tag („24 von 24 Karten“). Der Zähler „Wiederholungen“ in Erfolge zählt jede Bewertung.
 - **A6 Leitner mit vier Knöpfen:** Nochmal: Fach 1. Schwer: Fach bleibt. Gut und Leicht: Fach +1.
 - **A7 Abdeckung:** „Alle verdeckt, eine gefragt“ wie Abdeckung.dc.html, jede Maske eine eigene Abfrage.
-- **A8 iPad-Breiten:** unter 768 px iPhone-Layout, 768 bis 1099 px Sidebar mit einspaltigem Inhalt, ab 1100 px die iPad-Designs. Nicht eigens gestaltete Screens stehen auf dem iPad mittig in der Inhaltsspalte.
+- **A8 iPad-Breiten:** unter 768 px iPhone-Layout, 768 bis 1099 px Sidebar mit einspaltigem Inhalt, ab 1100 px die iPad-Designs. Nicht eigens gestaltete Screens stehen auf dem iPad mittig in der Inhaltsspalte. Umgesetzt (M2) als CSS-Media-Queries; Tab-Bar und Sidebar stehen beide im DOM, `display: none` blendet je eine aus. Ab 768 px übernimmt die Sidebar den Weg zu den Einstellungen („Lernrhythmus“), der Avatar entfällt wie im iPad-Design.
 - **A9 Erfolgs-Snapshot und High fives** reisen standardmäßig in jeder `.juri`-Datei mit, abschaltbar in den Einstellungen.
 - **A10 Import-Dialog ohne `accept`-Filter:** iOS graut Dateien mit unbekannter Endung sonst aus. Die Prüfung erfolgt nach der Auswahl (ZIP-Signatur, manifest, zod).
 - **A11 Keine Seed-Daten in der echten App:** Die Produktiv-App startet leer. Testdaten gibt es nach Entscheidung 10: Demo-Stapel zum Import und Demo-Profil nur in der Testinstanz.
 - **A12 Referenz-Screenshots** rendere ich selbst aus `design/` mit festen Fixture-Daten. Vergleich mit Toleranz, dazu exakte Prüfung der Tokens über berechnete Styles.
 - **A13 Safari-Tab vs. installierte App:** Auf iPhone und iPad haben Safari und die Home-Bildschirm-App getrennte Speicher. Im Safari-Tab zeigt Juri deshalb zuerst die Install-Anleitung und legt dort keine Daten an.
 - **A14 Statusleiste:** `apple-mobile-web-app-status-bar-style = default` (dunkle Schrift). `black-translucent` scheidet aus, weil die Schrift dann weiß ist und auf dem hellen Design unlesbar wäre. Ob sich der Hintergrund der Lern-Screens (`#F6F4FB`) per `theme-color` bis in die Statusleiste ziehen lässt, prüfe ich im Geräte-Check; sonst bleibt oben ein weißer Streifen.
+- **A15 Schriftgewichte wie im Design geladen (M2):** Das Design lädt Bricolage Grotesque mit 500 bis 800 und Figtree mit 400 bis 700. Die App begrenzt ihre `@font-face`-Bereiche genauso. Verlangt ein Stil mehr (Figtree 800, `<strong>` in 600), rendert Juri wie der Design-Canvas das nächste verfügbare Gewicht (700).
+- **A16 Korrekturen am Design (M2):** Wo das Design offensichtlich unbeabsichtigt rendert, übernimmt Juri die Absicht und dokumentiert die Abweichung in `tests/e2e/design.ts` (`FIXES`). Bisher eine: Das High-five-Icon in iPadHeute bleibt ein 40-px-Kreis; im Design darf es schrumpfen und wird bei langem Text zum Oval (34 × 40 px).
+- **A17 Heute (M2):** Heute zeigt den Lerntag (Tageswechsel 04:00, Entscheidung 6): Zwischen 0 und 4 Uhr steht noch das Datum des Vortags. Leerzustände sind aus dem System abgeleitet und nicht eigens entworfen: ohne Karten „Noch keine Karten. Leg los.“ mit „Neue Karte anlegen“, ohne fällige Karten „Alles erledigt für heute.“. Tagesziel bis M8 fest 24, die Leiste hat höchstens 24 Segmente (darüber anteilig). Fristen, High five und „+N Karten angelegt“ erscheinen nur, wenn es Daten gibt.
+- **A18 Basiskomponenten (M2):** Gebaut sind die Komponenten der M2-Designs (Tab-Bar, Sidebar, App-Rahmen, Segmentleiste, Wochenpunkte, Icons, Platzhalter) neben den vorhandenen aus M0/M1. Schalter, Stepper, Ring und die große Heatmap entstehen mit den Meilensteinen, deren Designs sie zeigen (M4, M8, M9), damit jeder Meilenstein nur seine Designs liest.
 
 ---
 
@@ -185,7 +189,7 @@ Juri/
 │   │                       004-scheduler-zustaende, 005-hosting, 006-datenbank-und-backup
 │   └── geraete-testliste.md
 ├── public/                 App-Icons, apple-touch-icon, Lizenzen (OFL)
-├── scripts/                render-design-refs.ts (Referenz-Screenshots), build-icons.ts, build-testdaten.ts
+├── scripts/                build-icons.mjs, postbuild.mjs, serve-pages.mjs, später build-testdaten
 ├── testdaten/              Inhalte der Demo-Stapel als prüfbare JSON-Dateien, Quellen der Normtexte, Demo-Bilder
 ├── src/
 │   ├── app/                Einstieg, Router, Provider, Layouts (Tab-Bar/Sidebar), Fehlergrenzen
@@ -210,7 +214,7 @@ Juri/
 │   └── sw/                 service-worker.ts
 ├── tests/
 │   ├── e2e/                Playwright (WebKit): iPhone 14, iPhone 16 Pro Max, iPad Air 11 quer und hoch
-│   ├── visual/             Referenz-Screenshots aus design/
+│   │                       design.ts rendert design/*.dc.html im Testbrowser (Pixel- und Lagevergleich, A12)
 │   └── fixtures/           Test-Stapel, gültige und manipulierte .juri-Dateien
 ├── index.html, vite.config.ts, tsconfig.json, eslint.config.js,
 ├── vitest.config.ts, playwright.config.ts, package.json

@@ -37,10 +37,19 @@ export async function asInstalledApp(page: Page) {
   });
 }
 
-/** Onboarding bis zur Startseite. */
+/** Überschrift von Heute ohne Karten (Stand M2 nach dem Onboarding). */
+export const HEUTE_LEER = { name: /Noch keine Karten/, level: 1 } as const;
+
+/** Onboarding bis Heute. */
 export async function onboard(page: Page, base = '/Juri/', name = 'Sven') {
   await page.goto(base);
   await page.getByLabel('Wie heißt du?').fill(name);
   await page.getByRole('button', { name: 'Los geht’s' }).click();
-  await page.getByText(`Hallo, ${name}`).waitFor();
+  await page.getByRole('heading', HEUTE_LEER).waitFor();
+}
+
+/** Einstellungen über die Oberfläche: Avatar (iPhone) oder Sidebar „Lernrhythmus“ (iPad). */
+export async function openSettings(page: Page) {
+  await page.getByRole('link', { name: /^(Profil und Einstellungen|Lernrhythmus)$/ }).click();
+  await page.getByRole('heading', { name: 'Einstellungen', level: 1 }).waitFor();
 }

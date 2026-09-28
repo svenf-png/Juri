@@ -1,0 +1,26 @@
+.segments {
+  display: grid;
+  gap: var(--seg-gap, 3px);
+}
+
+.segment {
+  display: block;
+  height: var(--seg-height, 10px);
+  border-radius: var(--seg-radius, 3px);
+  background: var(--violet-100);
+  transform-origin: left center;
+  animation: grow 0.5s var(--ease-standard) both;
+}
+
+.done {
+  background: var(--violet);
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}

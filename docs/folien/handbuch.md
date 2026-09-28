@@ -3,7 +3,7 @@ titel: Juri benutzen
 untertitel: Das Handbuch für iPhone und iPad
 zielgruppe: Referendarinnen und Referendare
 stand: 2026-09-28
-version: 0.1 (Entwurf nach Design, noch nicht gegen die fertige App geprüft)
+version: 0.2 (Entwurf nach Design; Loslegen und Heute gegen die App geprüft)
 ---
 
 <!-- status: alle Kapitel sind Entwürfe nach den Design-Screens. Jedes Kapitel wird im genannten Meilenstein gegen die fertige App geprüft und bekommt echte Screenshots. -->
@@ -61,6 +61,31 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 - Kein Passwort, keine E-Mail, kein Konto
 - Oben rechts steht danach deine **Initiale**: Tippen öffnet die Einstellungen
 - Die Rechtsgebiete **ZR, SR und ÖR** sind schon angelegt (ab M3)
+
+## Heute
+
+<!-- layout: bild-gross -->
+<!-- status: M2 umgesetzt (Main.dc.html, iPadHeute.dc.html); Inhalte füllen sich ab M3 (Karten), M4 (Fälligkeit), M7 (Fristen), M8 (Ziele, Verlauf), M10 (High fives). Bild mit Beispieldaten. -->
+
+![Heute auf dem iPhone: 18 Karten warten, nächste Frist, Tagesziel, letzte 7 Tage](../bilder/heute-iphone.png)
+
+- Oben: wie viele Karten heute warten, darunter deine **nächste Frist**
+- **Tagesziel** als Leiste, darunter **Lernen starten**
+- **Letzte 7 Tage:** je dunkler, desto mehr gelernt; der Ring markiert deinen Rekordtag
+- Ein neuer Tag beginnt um **4 Uhr** morgens, nicht um Mitternacht
+
+> **Notizen:** Ohne Karten zeigt Heute „Noch keine Karten.“ und einen Knopf zum Anlegen. Wer nach Mitternacht noch lernt, lernt für den Vortag.
+
+## Navigation
+
+<!-- layout: zwei-spalten -->
+<!-- status: M2 umgesetzt; die Bereiche hinter Stapel, Erfolge, Teilen, Fristen und Lernrhythmus füllen spätere Meilensteine -->
+
+![Heute auf dem iPad mit Seitenleiste](../bilder/heute-ipad.png)
+
+- **iPhone:** Leiste unten mit Heute, Stapel, Erfolge, Teilen und dem schwarzen **Plus** für neue Karten
+- **iPad:** Seitenleiste links, zusätzlich Fristen und Lernrhythmus; rechts nächste Fristen und High fives
+- Deine **Initiale** (iPhone) bzw. **Lernrhythmus** (iPad) führt zu den Einstellungen
 
 # Karten anlegen
 

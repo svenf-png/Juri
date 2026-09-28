@@ -1,0 +1,21 @@
+/*
+ * Antippen (Main.dc.html, .tap): 180 ms, Standardkurve, Skalierung .97.
+ * Im iPad-Layout blendet die Hintergrundfarbe in 200 ms über (iPadHeute.dc.html).
+ */
+.tap {
+  transition:
+    transform var(--dur-tap) var(--ease-standard),
+    background-color var(--dur-tap);
+}
+
+.tap:active {
+  transform: scale(0.97);
+}
+
+@media (min-width: 1100px) {
+  .tap {
+    transition:
+      transform var(--dur-tap) var(--ease-standard),
+      background-color 200ms;
+  }
+}

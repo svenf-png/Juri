@@ -5,12 +5,16 @@
  *
  * Bricolage Grotesque mit opsz-Achse (12 bis 96), wie im Design über Google Fonts genutzt;
  * font-optical-sizing: auto (Standard) wählt die optische Größe passend zur Schriftgröße.
+ *
+ * Gewichte wie im Design geladen (Google Fonts: Bricolage 500 bis 800, Figtree 400 bis 700).
+ * Verlangt ein Stil mehr (z. B. Figtree 800 oder <strong> in 600), nimmt der Browser das
+ * nächste verfügbare Gewicht, genau wie im Design-Canvas.
  */
 @font-face {
   font-family: 'Bricolage Grotesque Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 200 800;
+  font-weight: 500 800;
   src: url('@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-ext-opsz-normal.woff2')
     format('woff2-variations');
   unicode-range:
@@ -23,7 +27,7 @@
   font-family: 'Bricolage Grotesque Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 200 800;
+  font-weight: 500 800;
   src: url('@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2')
     format('woff2-variations');
   unicode-range:
@@ -35,7 +39,7 @@
   font-family: 'Figtree Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 300 900;
+  font-weight: 400 700;
   src: url('@fontsource-variable/figtree/files/figtree-latin-ext-wght-normal.woff2')
     format('woff2-variations');
   unicode-range:
@@ -48,7 +52,7 @@
   font-family: 'Figtree Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 300 900;
+  font-weight: 400 700;
   src: url('@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2')
     format('woff2-variations');
   unicode-range:

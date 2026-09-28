@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { asInstalledApp, onboard, watchPage } from './helpers';
+import { asInstalledApp, HEUTE_LEER, onboard, watchPage } from './helpers';
 
 const WILLKOMMEN = { name: 'Willkommen bei Juri.', level: 1 } as const;
 
@@ -8,13 +8,11 @@ test.describe('Echte App (/Juri/)', () => {
     await asInstalledApp(page);
   });
 
-  test('Startseite lädt ohne Fehler und ohne fremde Anfragen', async ({ page, baseURL }) => {
+  test('Heute lädt ohne Fehler und ohne fremde Anfragen', async ({ page, baseURL }) => {
     const watch = watchPage(page, baseURL!);
     await onboard(page);
-    await expect(page.getByRole('img', { name: 'Juri' })).toBeVisible();
-    await expect(
-      page.getByRole('heading', { name: 'Meilenstein M1: Daten, Profil, Backup' }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'Hauptnavigation' })).toBeVisible();
     await expect(page.getByText('Testinstanz · keine echten Lerndaten')).toHaveCount(0);
     await page.waitForLoadState('networkidle');
     expect(watch.errors).toEqual([]);
@@ -111,10 +109,16 @@ test.describe('Echte App (/Juri/)', () => {
     const button = page.getByRole('button', { name: 'Los geht’s' });
     expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     await button.click();
-    await page.getByText('Hallo, Sven').waitFor();
+    await page.getByRole('heading', HEUTE_LEER).waitFor();
     await page.goto('/Juri/einstellungen');
     await page.getByLabel('Name').fill('Sven F.');
-    for (const path of ['/Juri/einstellungen', '/Juri/', '/Juri/styleguide']) {
+    for (const path of [
+      '/Juri/einstellungen',
+      '/Juri/',
+      '/Juri/stapel',
+      '/Juri/styleguide',
+      '/Juri/styleguide/heute',
+    ]) {
       if (path !== '/Juri/einstellungen') await page.goto(path);
       await page.waitForLoadState('networkidle');
       const small = await page.evaluate(() =>

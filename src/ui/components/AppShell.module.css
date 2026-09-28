@@ -1,0 +1,27 @@
+/*
+ * Maße der Tab-Bar für Rahmen und Inhalte: 26 px Abstand unten wie im Design; nur wenn die
+ * Safe Area (Home-Indikator) mehr als 34 px verlangt, wächst er mit. Auf dem iPhone 14 ist die
+ * Safe Area unten 34 px, das Design zeichnet dort 26 px (8 px Luft oberhalb inbegriffen).
+ */
+.shell {
+  --tabbar-pad: max(26px, calc(var(--bottom-inset) - 8px));
+  --tabbar-height: calc(60px + var(--tabbar-pad));
+  min-height: 100dvh;
+}
+
+.content {
+  min-width: 0;
+  /* Bildschirme mit <Screen> lassen unten Platz für die Tab-Bar. */
+  --screen-bottom: calc(var(--tabbar-height) + 24px);
+}
+
+@media (min-width: 768px) {
+  .shell {
+    display: flex;
+  }
+
+  .content {
+    flex: 1;
+    --screen-bottom: calc(40px + var(--bottom-inset));
+  }
+}

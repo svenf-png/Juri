@@ -3,7 +3,7 @@ titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
 stand: 2026-09-28
-version: 0.1 (Planung)
+version: 0.2 (nach M2)
 ---
 
 # Die Idee
@@ -91,6 +91,15 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - Erfolg: Ring, dann Haken, dann Funken
 - Bei „Bewegung reduzieren“ in iOS sind alle Animationen aus
 
+## So sieht es aus
+
+<!-- layout: bild-gross -->
+<!-- status: M2, Bild automatisch aus der App (npm run docs:bilder) mit den Beispieldaten der Designs -->
+
+![Heute auf dem iPad: fällige Karten, Tagesziel, letzte 7 Tage, Fristen](../bilder/heute-ipad.png)
+
+> **Notizen:** Das Bild stammt aus der App, nicht aus dem Design-Werkzeug. Ein Test vergleicht es bei jeder Änderung Pixel für Pixel mit dem Design.
+
 # Technik
 
 ## Warum eine Web-App
@@ -164,12 +173,13 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 ## Testen
 
 - Automatische Tests für Fachlogik, Abläufe und Aussehen
+- **Pixelvergleich:** Design und App im selben Browser gerendert, auch in Safaris Engine WebKit
 - Geprüft auf iPhone 14, iPhone 16 Pro Max und iPad Air 11 Zoll
 - **Testinstanz** „Juri Test“ unter `svenf-png.github.io/Juri/test/`, getrennt von echten Daten
 - Dort per Knopfdruck: 26 Wochen Lernverlauf, Fristen, High fives, 5.000 Karten
 - **Demo-Stapel** mit echten juristischen Inhalten, als Demo gekennzeichnet
 
-> **Notizen:** Erfolge, Heatmap und Fristen sieht man sonst erst nach Wochen echter Nutzung. Die Testinstanz macht alle Screens sofort prüfbar, ohne die eigenen Lerndaten anzufassen. Normtexte in den Demo-PDFs sind als amtliche Werke nach § 5 UrhG gemeinfrei.
+> **Notizen:** Der Heute-Screen weicht in Chromium um 0 Pixel vom Design ab; bewusste Korrekturen am Design sind im Test dokumentiert. Erfolge, Heatmap und Fristen sieht man sonst erst nach Wochen echter Nutzung. Die Testinstanz macht alle Screens sofort prüfbar, ohne die eigenen Lerndaten anzufassen. Normtexte in den Demo-PDFs sind als amtliche Werke nach § 5 UrhG gemeinfrei.
 
 # Entscheidungen
 
@@ -209,5 +219,6 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 - **M0 fertig:** Grundgerüst, Design-Tokens, Schriften, App-Icon, Styleguide, Testinstanz mit Geräte-Check
 - **M1 fertig:** Datenbank mit Migrationen, Onboarding, Install-Anleitung im Safari-Tab, Speicheranzeige, Backup erstellen und einspielen
-- Automatische Prüfung bei jeder Änderung: 144 Unit-Tests, 23 E2E-Szenarien auf iPhone- und iPad-Größen
-- Nächster Schritt: Gerätetest von M0 und M1 auf iPhone und iPad, dann M2 (Oberfläche und Heute-Screen)
+- **M2 fertig:** Tab-Bar und Sidebar, Heute-Screen pixelgleich zum Design, Lerntag ab 4 Uhr
+- Automatische Prüfung bei jeder Änderung: 191 Unit-Tests, 29 E2E-Szenarien auf iPhone- und iPad-Größen
+- Nächster Schritt: Gerätetest von M0 bis M2 auf iPhone und iPad, dann M3 (Karten und Stapel)
