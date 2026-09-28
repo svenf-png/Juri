@@ -1,6 +1,6 @@
 # Juri: Architektur, Rückfragen, Plan
 
-Stand: 28.09.2026 · Status: **wartet auf Freigabe** · Grundlage: Technisches Briefing und die 23 Screens in `design/` (Quelle: Design-Canvas „Juri“)
+Stand: 28.09.2026 · Status: **Rückfragen entschieden (siehe Abschnitt 2), offen: Domain und Testgeräte** · Grundlage: Technisches Briefing und die 23 Screens in `design/` (Quelle: Design-Canvas „Juri“)
 
 ---
 
@@ -37,6 +37,21 @@ platform/   Web Share, Datei-Input, persist/estimate,    -> Browser-APIs
 ---
 
 ## 2. Rückfragen
+
+### Entscheidungen vom 28.09.2026
+
+| # | Thema | Entscheidung | Folge für die Umsetzung |
+|---|---|---|---|
+| 1 | Hosting | **GitHub Pages mit eigener Domain** | Deploy per GitHub Actions, CNAME auf die Domain, CSP per Meta-Tag. Domain muss vor dem ersten echten Einsatz feststehen (offen). ADR-005. |
+| 2 | Fehlende Screens | **Ich entwerfe sie im Canvas** | Neue Artboards aus dem bestehenden System, gebaut wird erst nach Freigabe, pro Meilenstein. |
+| 3 | Lückentext | **Bündeln, eine Bewertung** | Fällige Lücken einer Karte in einer Ansicht wie Luecke.dc.html; eine Bewertung wird auf jede fällige Lücke einzeln angewendet. |
+| 4 | Schema | **Eine Abfrage pro Schema, Lernziel ist auch der Inhalt, nicht nur die Abfolge** | Knoten bekommen neben Text und Norm ein optionales Feld „Inhalt“ (Definition, Prüfungsinhalt). Im Lernmodus wird jeder Punkt mit seinem Inhalt aufgedeckt. Die Editor-Erweiterung wird im Canvas entworfen. |
+| 5 | Notizen | **Notiz pro Karte** | Feld `cards.note` im Mehr-Modus, im Lernen unter der Antwort, beim Export nur mit Schalter. |
+| 6 | Serie | **Alle drei Regeln** | Anlegen-Ziel zählt für die Serie; Tage ohne verfügbare Karten brechen sie nicht; Tageswechsel 04:00 in der Gerätezeitzone. |
+| 7 | Mindestversion | **iOS/iPadOS 18+** | Getestet zusätzlich auf dem jeweils aktuellen iOS. Testgeräte noch offen. |
+| 8 | Lizenz | **MIT** | `LICENSE` im Repo; Font-Lizenzen (OFL) bleiben daneben bestehen. |
+
+### Ursprüngliche Fragen
 
 **1. Hosting und Domain.** Das Repo ist öffentlich, GitHub Pages wäre kostenlos. Aber alle Projektseiten unter `svenf-png.github.io` teilen sich eine Origin, also auch IndexedDB, Speicherquote und persist()-Status mit jeder anderen Pages-Seite dieses Accounts. GitHub Pages erlaubt außerdem keine eigenen HTTP-Header (CSP nur per Meta-Tag). Optionen:
    - (a) Cloudflare Pages mit eigener Subdomain, Deploy aus GitHub Actions. **Empfehlung.**
@@ -88,12 +103,12 @@ Hinweis: Lighthouse hat die PWA-Kategorie mit Version 12 (April 2024) entfernt. 
 
 | # | Meilenstein | Inhalt | Abnahme | PT (Briefing → neu) |
 |---|---|---|---|---|
-| M0 | Fundament + Geräte-Check | Toolchain, CI, ADR-001 bis 005, Tokens, Fonts, `/styleguide`, Deploy-Pipeline, Seite `/geraetecheck` (persist, estimate, standalone, Web Share mit `.juri`, Dateiauswahl, 50-MB-Blob in IndexedDB, HEIC, `.ics`, Statusleiste) | leere App installierbar und offline startbar; Geräte-Check-Ergebnisse von deinem iPhone/iPad | 0,5 → 1,5 |
+| M0 | Fundament + Geräte-Check | Toolchain, CI, ADR-001 bis 005, Tokens, Fonts, `/styleguide`, Deploy-Pipeline (GitHub Pages), Seite `/geraetecheck` (persist, estimate, standalone, Web Share mit `.juri`, Dateiauswahl, 50-MB-Blob in IndexedDB, HEIC, `.ics`, Statusleiste) | leere App installierbar und offline startbar; Geräte-Check-Ergebnisse von deinem iPhone/iPad | 0,5 → 1,5 |
 | M1 | Daten, Profil, Backup | Dexie-Schema, Repositories, Migrationstest, Onboarding, persist(), Speicheranzeige, Backup Export/Import | Daten überleben Neustart; Backup-Roundtrip identisch | 1 → 2 |
 | M2 | Shell, UI-Kit, Heute | Tab-Bar, Sidebar, Routing, Safe Areas, alle Basiskomponenten, Motion, Reduced Motion | Heute auf iPhone/iPad pixelnah zu Main/iPadHeute (Screenshot-Test) | 1,5 → 2,5 |
 | M3 | Karten und Stapel | Areas, Decks m:n, Tags, Frage/Antwort und Lückentext, Einfach/Mehr, Bibliothek, Stapel-Detail, iPad Master-Detail; Ereignis-Log ab hier | Stapel in ZR und ÖR in beiden Gruppen; Cloze mit 3 Lücken ergibt 3 reviewItems | 2 → 3 |
 | M4 | Lern-Engine | ts-fsrs, Leitner, Rhythmus-Einstellungen, Session-Maschine, Flip, Bewertung, Wischen, Undo, Tastatur, Session-Ende | Scheduler-Tests inkl. Algorithmuswechsel; Flow wie Lernen.dc.html; Intervallvorschau korrekt | 2,5 → 4 |
-| M5 | Schema und Verknüpfungen | Schema-Editor, schrittweises Aufdecken, Link-Sheet, Integrität bei Löschung | Editor und Lernmodus wie SchemaEditor/Schema | 1,5 → 2 |
+| M5 | Schema und Verknüpfungen | Schema-Editor inkl. Feld „Inhalt“ pro Punkt, schrittweises Aufdecken mit Inhalt, Link-Sheet, Integrität bei Löschung | Editor und Lernmodus wie SchemaEditor/Schema | 1,5 → 2 |
 | M6 | Medien, PDF, Abdeckung | Upload, Verkleinern, pdf.js-Viewer, Markierung zu Karte, iPad-Split, Abdeckungs-Editor, Quelle an Karte | 50-seitiges PDF flüssig auf iPad; Masken sitzen nach Zoom exakt | 3 → 5 |
 | M7 | Fristen | CRUD, Deckelung, Endspurt, Countdown, „x % sitzen sicher“, `.ics`-Export | Grenzfall-Tests aus B8 | 1 → 1,5 |
 | M8 | Fortschritt | Tagesaggregate, Heatmap 12/26 Wochen, Rekord, Serie mit Pausentag, Tagesziele, Meilensteine, Feiern | deterministische Tests für Serie und Quantil-Stufen | 2 → 2,5 |
