@@ -1,12 +1,20 @@
 import { expect, test } from '@playwright/test';
-import { watchPage } from './helpers';
+import { asInstalledApp, onboard, watchPage } from './helpers';
+
+const WILLKOMMEN = { name: 'Willkommen bei Juri.', level: 1 } as const;
 
 test.describe('Echte App (/Juri/)', () => {
+  test.beforeEach(async ({ page }) => {
+    await asInstalledApp(page);
+  });
+
   test('Startseite lädt ohne Fehler und ohne fremde Anfragen', async ({ page, baseURL }) => {
     const watch = watchPage(page, baseURL!);
-    await page.goto('/Juri/');
+    await onboard(page);
     await expect(page.getByRole('img', { name: 'Juri' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Meilenstein M0: Fundament' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Meilenstein M1: Daten, Profil, Backup' }),
+    ).toBeVisible();
     await expect(page.getByText('Testinstanz · keine echten Lerndaten')).toHaveCount(0);
     await page.waitForLoadState('networkidle');
     expect(watch.errors).toEqual([]);
@@ -23,8 +31,7 @@ test.describe('Echte App (/Juri/)', () => {
   });
 
   test('Styleguide zeigt die Tokens und lädt die eigenen Schriften', async ({ page }) => {
-    await page.goto('/Juri/');
-    await page.getByRole('link', { name: 'Styleguide ansehen' }).click();
+    await page.goto('/Juri/styleguide');
     await expect(page.getByRole('heading', { name: 'Styleguide', level: 1 })).toBeVisible();
     await expect(page.getByTestId('tile-violet')).toHaveCSS(
       'background-color',
@@ -58,15 +65,15 @@ test.describe('Echte App (/Juri/)', () => {
     expect(new URL(page.url()).search).toBe('?x=1');
   });
 
-  test('unbekannte Pfade führen zur Startseite', async ({ page }) => {
+  test('unbekannte Pfade führen zur Startseite, ohne Profil zum Onboarding', async ({ page }) => {
     await page.goto('/Juri/gibt-es-nicht');
-    await expect(page.getByRole('heading', { name: 'Meilenstein M0: Fundament' })).toBeVisible();
-    expect(new URL(page.url()).pathname).toBe('/Juri/');
+    await expect(page.getByRole('heading', WILLKOMMEN)).toBeVisible();
+    expect(new URL(page.url()).pathname).toBe('/Juri/willkommen');
   });
 
   test('der Geräte-Check ist in der echten App nicht erreichbar', async ({ page }) => {
     await page.goto('/Juri/geraetecheck');
-    await expect(page.getByRole('heading', { name: 'Meilenstein M0: Fundament' })).toBeVisible();
+    await expect(page.getByRole('heading', WILLKOMMEN)).toBeVisible();
   });
 
   test('Manifest und Icons sind vollständig', async ({ request }) => {
@@ -98,9 +105,17 @@ test.describe('Echte App (/Juri/)', () => {
     }
   });
 
-  test('Touch-Ziele auf Start und Styleguide sind mindestens 44 px hoch', async ({ page }) => {
-    for (const path of ['/Juri/', '/Juri/styleguide']) {
-      await page.goto(path);
+  test('Touch-Ziele sind überall mindestens 44 px hoch', async ({ page }) => {
+    await page.goto('/Juri/willkommen');
+    await page.getByLabel('Wie heißt du?').fill('Sven');
+    const button = page.getByRole('button', { name: 'Los geht’s' });
+    expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+    await button.click();
+    await page.getByText('Hallo, Sven').waitFor();
+    await page.goto('/Juri/einstellungen');
+    await page.getByLabel('Name').fill('Sven F.');
+    for (const path of ['/Juri/einstellungen', '/Juri/', '/Juri/styleguide']) {
+      if (path !== '/Juri/einstellungen') await page.goto(path);
       await page.waitForLoadState('networkidle');
       const small = await page.evaluate(() =>
         Array.from(document.querySelectorAll('a, button'))
@@ -126,14 +141,15 @@ test.describe('Echte App (/Juri/)', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/Juri/');
     const name = await page
-      .getByRole('img', { name: 'Juri' })
-      .evaluate((el) => getComputedStyle(el.parentElement!).animationName);
+      .getByRole('heading', WILLKOMMEN)
+      .evaluate((el) => getComputedStyle(el).animationName);
     expect(name).toBe('none');
   });
 });
 
 test.describe('Offline', () => {
   test('startet nach dem ersten Besuch ohne Netz', async ({ page, context, browserName }) => {
+    await asInstalledApp(page);
     test.skip(browserName !== 'chromium', 'Service-Worker-Steuerung wird mit Chromium geprüft.');
     await page.goto('/Juri/');
     await page.evaluate(async () => {
@@ -145,7 +161,7 @@ test.describe('Offline', () => {
       .toBe(true);
     await context.setOffline(true);
     await page.reload();
-    await expect(page.getByRole('heading', { name: 'Meilenstein M0: Fundament' })).toBeVisible();
+    await expect(page.getByRole('heading', WILLKOMMEN)).toBeVisible();
     await page.goto('/Juri/styleguide');
     await expect(page.getByRole('heading', { name: 'Styleguide', level: 1 })).toBeVisible();
     await context.setOffline(false);

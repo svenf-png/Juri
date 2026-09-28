@@ -1,7 +1,21 @@
 .start {
-  --screen-top: 96px;
+  --screen-top: 60px;
   justify-content: flex-start;
   gap: 28px;
+}
+
+/* Kopfzeile wie Main.dc.html: Text 15 px, Avatar rechts. */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.hello {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted);
 }
 
 .hero {

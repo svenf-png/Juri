@@ -22,3 +22,25 @@ export function watchPage(page: Page, origin: string, { allow404 = false } = {})
   });
   return { errors, foreign };
 }
+
+/**
+ * Wie die installierte Home-Bildschirm-App: `navigator.standalone` wie auf iOS, damit die
+ * Install-Anleitung (A13) nicht greift. Web Share ist aus, Backups kommen als Download an.
+ */
+export async function asInstalledApp(page: Page) {
+  await page.addInitScript(() => {
+    // Am Objekt selbst, damit keine Eigenschaft des Browsers die Werte überdeckt.
+    Object.defineProperty(navigator, 'standalone', { get: () => true, configurable: true });
+    for (const name of ['share', 'canShare']) {
+      Object.defineProperty(navigator, name, { value: undefined, configurable: true });
+    }
+  });
+}
+
+/** Onboarding bis zur Startseite. */
+export async function onboard(page: Page, base = '/Juri/', name = 'Sven') {
+  await page.goto(base);
+  await page.getByLabel('Wie heißt du?').fill(name);
+  await page.getByRole('button', { name: 'Los geht’s' }).click();
+  await page.getByText(`Hallo, ${name}`).waitFor();
+}

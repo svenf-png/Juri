@@ -17,8 +17,8 @@ Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, 
 
 ## Budget und Chats
 
-- Budget: rund 100 $ Guthaben für das ganze Projekt (nach M0 verbraucht: 10,50 $). Testbarer Prototyp = M1 bis M4 (Entscheidung 11).
-- **Ein neuer Chat pro Meilenstein**, damit der Kontext klein bleibt. Am Ende jedes Meilensteins den Kostenstand aus `get_session` (usage.cost_usd) melden und in `docs/ARCHITEKTUR.md` (Entscheidung 11) nachtragen.
+- Budget: rund 100 $ Guthaben für das ganze Projekt (nach M0 verbraucht: 28,44 $). Testbarer Prototyp = M1 bis M4 (Entscheidung 11).
+- **Ein neuer Chat pro Meilenstein**, damit der Kontext klein bleibt. Am Ende jedes Meilensteins den Kostenstand melden und in `docs/ARCHITEKTUR.md` (Entscheidung 11) nachtragen. `get_session` liefert keinen Kostenwert (in M1 geprüft): den Betrag nicht schätzen, sondern Sven fragen, der ihn aus der Abrechnung abliest.
 - Sparsam arbeiten: wenige Screenshots und Bild-Reads, gezielte Datei-Ausschnitte statt ganzer Dateien, keine breite Web-Recherche ohne Anlass. Designs nur für den jeweiligen Meilenstein lesen.
 - Routine-Meilensteine mit `/effort high`, M4 (Lernalgorithmus) und M9 (Merge) mit höherer Stufe.
 
@@ -55,6 +55,7 @@ WebKit läuft in der GitHub-CI.
 - Router-`basename` ist `import.meta.env.BASE_URL` **mit** Schrägstrich (Manifest-Scope).
 - CSP als Meta-Tag (`src/app/security.ts`), keine fremden Origins, keine Inline-Skripte, React-Styles nur über `style`-Props (CSSOM).
 - Deep Links über `404.html` (`src/app/deepLink.ts`, `scripts/postbuild.mjs`).
+- Daten (ADR-006): Schema-Versionen in `src/data/migrations.ts` nur anhängen, je Tabelle ein zod-Schema in `src/domain/model/records.ts`; Backup `.juri-backup` in `src/domain/backup/`. Routen-Wächter in `src/app/gates.tsx`: im Safari-Tab auf iPhone/iPad keine Datenbank (A13); E2E-Tests emulieren die installierte App mit `asInstalledApp`.
 - Tokens: `tokens.ts` → `tokens.css` (Vite-Plugin), Gleichstand und Kontraste in `tokens.test.ts`.
 - Bildschirm-Abstände oben: Designwert + `var(--top-shift)` (Designs enthalten 47 px Statusleiste).
 

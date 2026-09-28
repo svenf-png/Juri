@@ -1,0 +1,73 @@
+/* Bottom Sheet (Schema.dc.html): Radius 30, Schatten sheet, Abdunklung scrim, 550 ms hinein. */
+.sheet {
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100dvh - 40px);
+  margin: auto auto 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: var(--shadow-sheet);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.sheet[open] {
+  animation: sheet-in var(--dur-sheet) var(--ease-sheet) both;
+}
+
+.sheet::backdrop {
+  background: var(--scrim);
+  animation: fade-in var(--dur-sheet) var(--ease-sheet) both;
+}
+
+.body {
+  padding: 12px 24px calc(34px + var(--bottom-inset));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.handle {
+  align-self: center;
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border-soft);
+}
+
+.eyebrow {
+  margin-top: 6px;
+  color: var(--violet);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -14,15 +14,15 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 
 ## Juri auf dem iPhone installieren
 
-<!-- status: entwurf, auf iPhone 14 und 16 Pro Max pruefen in M0 und M11; Wortlaut der iOS-Menues je Version pruefen -->
+<!-- status: M1, Schritte wie in der App (Installieren.dc.html) nach Apple Support; Wortlaut auf iPhone 14 und 16 Pro Max pruefen -->
 
-1. In **Safari** die Adresse `svenf-png.github.io/Juri` öffnen
-2. Auf das **Teilen-Symbol** tippen (Quadrat mit Pfeil nach oben)
-3. **„Zum Home-Bildschirm“** wählen
+1. In **Safari** die Adresse `svenf-png.github.io/Juri` öffnen; Juri zeigt dort diese Anleitung
+2. Auf **„Teilen“** tippen, je nach Ansicht zuerst auf **„•••“**
+3. **„Zum Home-Bildschirm“** wählen; fehlt der Eintrag, in der Liste nach unten blättern
 4. **„Hinzufügen“** tippen
 5. Juri ab jetzt nur noch über das neue Symbol öffnen
 
-> **Notizen:** Je nach iOS-Version sitzt das Teilen-Symbol direkt in der Leiste oder im Menü mit den drei Punkten. Wichtig ist Schritt 5: Juri speichert deine Daten in der installierten App, nicht im Safari-Tab.
+> **Notizen:** Wichtig ist Schritt 5: Juri speichert deine Daten in der installierten App, nicht im Safari-Tab. Im Safari-Tab legt Juri deshalb gar keine Daten an. Quelle der Schritte: Apple Support, „Turn a website into an app in Safari on iPhone“.
 
 ## Juri auf dem iPad installieren
 
@@ -55,12 +55,12 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 
 ## Der erste Start
 
-<!-- status: entwurf, Screen wird im Canvas entworfen, pruefen in M1 -->
+<!-- status: M1 umgesetzt (Onboarding.dc.html); Rechtsgebiete ab M3 -->
 
 - Juri fragt nach deinem **Vornamen** (für Initiale und High fives)
 - Kein Passwort, keine E-Mail, kein Konto
-- Die Rechtsgebiete **ZR, SR und ÖR** sind schon angelegt
-- Eigene Rechtsgebiete kannst du jederzeit ergänzen
+- Oben rechts steht danach deine **Initiale**: Tippen öffnet die Einstellungen
+- Die Rechtsgebiete **ZR, SR und ÖR** sind schon angelegt (ab M3)
 
 # Karten anlegen
 
@@ -242,9 +242,11 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Backup
 
-<!-- status: entwurf, Screen wird im Canvas entworfen, pruefen in M1 -->
+<!-- status: M1 umgesetzt (Profil.dc.html, BackupExport.dc.html, BackupImport.dc.html); Teilen-Menue auf dem Geraet pruefen -->
 
-- **Backup exportieren** sichert alle Karten, Medien und deinen Fortschritt
-- Am besten **„In Dateien sichern“** und dort **iCloud Drive** wählen
-- Juri erinnert dich nach 14 Tagen oder 50 neuen Karten
-- Wiederherstellen: **Backup importieren** und bestätigen
+- In den **Einstellungen**: **Backup erstellen**, dann **„Sichern oder teilen“**
+- Im Teilen-Menü **„In Dateien sichern“** und dort **iCloud Drive** wählen
+- Juri erinnert dich nach 14 Tagen oder 50 neuen Karten („Zeit für ein neues Backup“)
+- Wiederherstellen: **Backup einspielen**, Datei wählen, bestätigen. Das Backup **ersetzt** alle Daten auf dem Gerät
+
+> **Notizen:** Das Backup ist eine Datei mit der Endung .juri-backup. Juri prüft sie vollständig, bevor etwas überschrieben wird; eine falsche oder beschädigte Datei ändert nichts. Unter „Speicher“ zeigen die Einstellungen, ob iOS die Daten dauerhaft aufbewahrt und wie viel Platz sie belegen.
