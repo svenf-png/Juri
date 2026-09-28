@@ -15,6 +15,21 @@ Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, 
 - Design exakt übernehmen (Farben, Radien, Größen, Kurven), Werte aus `src/ui/tokens/tokens.ts`, nicht runden.
 - Touch-Ziele mindestens 44 px (sichtbare Größe darf kleiner sein, Trefferfläche erweitern), Text-Kontrast mindestens 4,5:1, echte Buttons/Links/Labels, reduzierte Bewegung respektieren.
 
+## Budget und Chats
+
+- Budget: rund 100 $ Guthaben für das ganze Projekt (nach M0 verbraucht: 10,50 $). Testbarer Prototyp = M1 bis M4 (Entscheidung 11).
+- **Ein neuer Chat pro Meilenstein**, damit der Kontext klein bleibt. Am Ende jedes Meilensteins den Kostenstand aus `get_session` (usage.cost_usd) melden und in `docs/ARCHITEKTUR.md` (Entscheidung 11) nachtragen.
+- Sparsam arbeiten: wenige Screenshots und Bild-Reads, gezielte Datei-Ausschnitte statt ganzer Dateien, keine breite Web-Recherche ohne Anlass. Designs nur für den jeweiligen Meilenstein lesen.
+- Routine-Meilensteine mit `/effort high`, M4 (Lernalgorithmus) und M9 (Merge) mit höherer Stufe.
+
+### Start-Nachricht für einen Meilenstein-Chat
+
+```
+Juri, Meilenstein Mx. Lies CLAUDE.md, docs/ARCHITEKTUR.md (Entscheidungen, Annahmen,
+Plan-Zeile Mx) und nur die Design-Dateien, die Mx betrifft. Setze Mx um, ein PR gegen main.
+Frag mich nur bei kritischen Punkten. Am Ende: Demo-Notiz, offene Punkte, Kostenstand.
+```
+
 ## Befehle
 
 ```bash
