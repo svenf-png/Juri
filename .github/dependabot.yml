@@ -5,6 +5,13 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # TypeScript 7 erst, wenn typescript-eslint es unterstützt (aktuell <6.1, ADR-001).
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+      # Typen passend zur Laufzeit Node 22 (.nvmrc), keine Major-Sprünge.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     groups:
       entwicklung:
         dependency-type: development
