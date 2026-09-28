@@ -100,8 +100,12 @@ p {
   }
 }
 
-/* Unter dem Hinweisband der Testinstanz ist die Safe Area schon verbraucht. */
+/*
+ * Unter dem Hinweisband der Testinstanz ist die Safe Area schon verbraucht. Die Sidebar
+ * bleibt beim Scrollen unter dem Band stehen (28 px plus Safe Area, InstanceBanner.module.css).
+ */
 .after-banner {
   --top-inset: 0px;
   --top-shift: -47px;
+  --shell-top: calc(28px + max(env(safe-area-inset-top, 0px), var(--sim-safe-top, 0px)));
 }

@@ -121,7 +121,7 @@ export function Geraetecheck() {
 
   return (
     <Screen>
-      <BackLink to="/" label="Start" />
+      <BackLink to="/" label="Heute" />
       <ScreenTitle lead="Prüft, was dein iPhone oder iPad für Juri kann. Manche Punkte brauchen einen Tipp von dir. Am Ende „Ergebnisse kopieren“ und an Claude schicken.">
         Geräte-Check
       </ScreenTitle>

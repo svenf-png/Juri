@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AppIconMark } from '../../components/AppIconMark';
-import { Button } from '../../components/Button';
+import { Button, ButtonLink } from '../../components/Button';
 import { CardFlip } from '../../components/CardFlip';
 import { Celebration } from '../../components/Celebration';
 import { RatingBar, type RatingKey } from '../../components/RatingBar';
@@ -54,10 +54,13 @@ export function Styleguide() {
 
   return (
     <Screen width="wide">
-      <BackLink to="/" label="Start" />
+      <BackLink to="/" label="Heute" />
       <ScreenTitle lead="Tokens aus design/System.dc.html, live aus src/ui/tokens/tokens.ts.">
         Styleguide
       </ScreenTitle>
+      <ButtonLink to="/styleguide/heute" variant="soft" size="md" className={styles.preview}>
+        Heute mit Beispieldaten ansehen
+      </ButtonLink>
 
       <div className={styles.grid}>
         <section className={styles.section} aria-labelledby="sg-farbe">

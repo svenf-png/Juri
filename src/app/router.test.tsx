@@ -12,10 +12,18 @@ describe('routes', () => {
     expect(paths(routes('test', Dummy))).toContain('/geraetecheck');
     expect(paths(routes('app', Dummy))).toEqual([
       '/',
+      '/stapel',
+      '/erfolge',
+      '/teilen',
+      '/fristen',
+      '/high-fives',
       '/einstellungen',
+      '/neu',
+      '/lernen',
       '/willkommen',
       '/installieren',
       '/styleguide',
+      '/styleguide/heute',
       '*',
     ]);
   });

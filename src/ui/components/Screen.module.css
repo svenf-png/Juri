@@ -1,11 +1,12 @@
 /*
  * Grundlayout eines Bildschirms. Oberer Abstand wie im Design (z. B. 64 px inkl. 47 px
  * Statusleiste), korrigiert um die tatsächliche Safe Area (--top-shift, global.css).
+ * Unten Platz für die Tab-Bar, wenn der Bildschirm im App-Rahmen steht (--screen-bottom).
  */
 .screen {
   min-height: 100dvh;
   padding: calc(var(--screen-top, 64px) + var(--top-shift)) max(24px, env(safe-area-inset-right))
-    calc(40px + var(--bottom-inset)) max(24px, env(safe-area-inset-left));
+    var(--screen-bottom, calc(40px + var(--bottom-inset))) max(24px, env(safe-area-inset-left));
   margin: 0 auto;
   display: flex;
   flex-direction: column;

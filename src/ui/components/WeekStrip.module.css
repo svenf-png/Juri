@@ -1,0 +1,56 @@
+.week {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--dot-gap, 8px);
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: var(--dot-size, 30px);
+  height: var(--dot-size, 30px);
+  border-radius: 50%;
+}
+
+/* Stufen wie die Heatmap (System.dc.html); ohne Aktivität ein gestrichelter Ring. */
+.level0 {
+  border: 2px dashed var(--dash-empty);
+}
+
+.level1 {
+  background: var(--heat-1);
+}
+
+.level2 {
+  background: var(--heat-2);
+}
+
+.level3 {
+  background: var(--heat-3);
+}
+
+.level4 {
+  background: var(--heat-4);
+}
+
+.record {
+  box-shadow: var(--shadow-record-day);
+}
+
+.label {
+  font-size: var(--dot-label-size, 12px);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.today {
+  color: var(--ink);
+}

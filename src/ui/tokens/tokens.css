@@ -60,6 +60,7 @@
   --shadow-segment: 0 2px 8px -3px rgba(46,26,115,.3);
   --shadow-popover: 0 20px 44px -18px rgba(46,26,115,.45), 0 0 0 1px #EFECF5;
   --shadow-record: 0 0 0 2px #FFFFFF, 0 0 0 4px #17141F;
+  --shadow-record-day: 0 0 0 3px #FFFFFF, 0 0 0 5px #17141F;
   --font-display: 'Bricolage Grotesque Variable', 'Figtree Variable', system-ui, sans-serif;
   --font-text: 'Figtree Variable', -apple-system, system-ui, sans-serif;
   --type-display-size: 46px;

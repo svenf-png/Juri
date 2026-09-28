@@ -1,12 +1,18 @@
 import { lazy, Suspense, type ComponentType, type ReactNode } from 'react';
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
+import { AppShell } from '@/ui/components/AppShell';
+import { Heute } from '@/ui/screens/heute/Heute';
 import { Installieren } from '@/ui/screens/installieren/Installieren';
 import { Onboarding } from '@/ui/screens/onboarding/Onboarding';
-import { Start } from '@/ui/screens/start/Start';
+import { Platzhalter } from '@/ui/screens/platzhalter/Platzhalter';
+import { PLATZHALTER } from '@/ui/screens/platzhalter/texte';
 import { ProfileScreen, RequireBrowserTab, RequireNoProfile, RequireProfile } from './gates';
 
 const Styleguide = lazy(() =>
   import('@/ui/screens/styleguide/Styleguide').then((m) => ({ default: m.Styleguide })),
+);
+const HeuteVorschau = lazy(() =>
+  import('@/ui/screens/heute/HeuteVorschau').then((m) => ({ default: m.HeuteVorschau })),
 );
 const Einstellungen = lazy(() =>
   import('@/ui/screens/einstellungen/Einstellungen').then((m) => ({ default: m.Einstellungen })),
@@ -36,15 +42,29 @@ export function routes(
     {
       element: <RequireProfile />,
       children: [
-        { path: '/', element: <ProfileScreen screen={Start} /> },
         {
-          path: '/einstellungen',
-          element: (
-            <Lazy>
-              <ProfileScreen screen={Einstellungen} />
-            </Lazy>
-          ),
+          // Hauptbereiche mit Tab-Bar (iPhone) bzw. Sidebar (iPad).
+          element: <AppShell />,
+          children: [
+            { path: '/', element: <ProfileScreen screen={Heute} /> },
+            { path: '/stapel', element: <Platzhalter {...PLATZHALTER.stapel} /> },
+            { path: '/erfolge', element: <Platzhalter {...PLATZHALTER.erfolge} /> },
+            { path: '/teilen', element: <Platzhalter {...PLATZHALTER.teilen} /> },
+            { path: '/fristen', element: <Platzhalter {...PLATZHALTER.fristen} /> },
+            { path: '/high-fives', element: <Platzhalter {...PLATZHALTER.highFives} /> },
+            {
+              path: '/einstellungen',
+              element: (
+                <Lazy>
+                  <ProfileScreen screen={Einstellungen} />
+                </Lazy>
+              ),
+            },
+          ],
         },
+        // Abläufe im Vollbild, ohne Navigation.
+        { path: '/neu', element: <Platzhalter {...PLATZHALTER.neu} /> },
+        { path: '/lernen', element: <Platzhalter {...PLATZHALTER.lernen} /> },
       ],
     },
     {
@@ -60,6 +80,15 @@ export function routes(
       element: (
         <Lazy>
           <Styleguide />
+        </Lazy>
+      ),
+    },
+    {
+      // Heute mit den Beispieldaten der Designs; ohne Datenbank, auch im Safari-Tab.
+      path: '/styleguide/heute',
+      element: (
+        <Lazy>
+          <HeuteVorschau />
         </Lazy>
       ),
     },

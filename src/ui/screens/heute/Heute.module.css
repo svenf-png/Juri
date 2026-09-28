@@ -1,0 +1,487 @@
+/*
+ * Heute nach Main.dc.html (iPhone) und iPadHeute.dc.html (iPad), Werte exakt aus dem Design.
+ * Breiten (A8): unter 768 px iPhone mit Tab-Bar; 768 bis 1099 px Sidebar und eine Spalte;
+ * ab 1100 px zwei Spalten wie das iPad-Design. Die Designs setzen keine Zeilenhöhe, daher
+ * line-height: normal. Oben: iPhone-Designwert inkl. 47 px Statusleiste plus --top-shift, iPad
+ * ohne gezeichnete Statusleiste plus --top-inset.
+ */
+.heute {
+  line-height: normal;
+  min-height: 100dvh;
+  padding: calc(60px + var(--top-shift)) max(24px, env(safe-area-inset-right))
+    calc(var(--tabbar-height, 0px) + 24px) max(24px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.primary,
+.secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.title {
+  font-size: 46px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 750;
+  text-wrap: balance;
+}
+
+.accent {
+  color: var(--violet);
+}
+
+.muted {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Frist-Chip: 34 px sichtbar, Trefferfläche 44 px (A1), -8 px Abstand nach oben wie im Design. */
+.chipLink,
+.chipLink:hover {
+  align-self: flex-start;
+  min-height: var(--touch-target);
+  margin: -13px 0 -5px;
+  display: flex;
+  align-items: center;
+  color: var(--ink);
+}
+
+.chip {
+  height: 34px;
+  padding: 0 14px 0 10px;
+  border-radius: 17px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.chipIcon {
+  flex-shrink: 0;
+  color: var(--violet);
+}
+
+.goal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.goalHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 14px;
+}
+
+.goalCount {
+  font-weight: 700;
+}
+
+.cta,
+.cta:hover {
+  height: 60px;
+  border-radius: var(--radius-button);
+  background: var(--violet);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px 0 24px;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: var(--shadow-primary);
+}
+
+.ctaIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.weekHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* „+3 Karten angelegt“ und „Erfolge“: 22 px sichtbar, Trefferfläche 44 px. */
+.erfolge {
+  min-height: var(--touch-target);
+  margin: -11px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pill {
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 11px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  display: flex;
+  align-items: center;
+}
+
+.areas {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.areasLabel {
+  padding-bottom: 6px;
+}
+
+.areaList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Im Design ohne border-box: 52 px Höhe plus 1 px Linie. */
+.area,
+.area:hover {
+  box-sizing: content-box;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.code {
+  width: 36px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--violet-700);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.areaName {
+  flex-grow: 1;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.areaDue {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--violet);
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: var(--chevron);
+}
+
+/* Nur im iPad-Design. */
+.deadlines,
+.highFive {
+  display: none;
+}
+
+/* Gestaffeltes Einblenden wie im Design (Spezifität über .rise, das die Verzögerung zurücksetzt). */
+.heute .chipLink {
+  animation-delay: 0.05s;
+}
+
+.heute .goal {
+  animation-delay: 0.08s;
+}
+
+.heute .cta {
+  animation-delay: 0.14s;
+}
+
+.heute .week {
+  animation-delay: 0.2s;
+}
+
+.heute .areas {
+  animation-delay: 0.26s;
+}
+
+.heute .deadlines {
+  animation-delay: 0.3s;
+}
+
+.heute .highFive {
+  animation-delay: 0.35s;
+}
+
+/* Ab 768 px: Sidebar statt Tab-Bar und Avatar, Fristen und High five sichtbar. */
+@media (min-width: 768px) {
+  .heute {
+    max-width: 656px;
+    margin: 0 auto;
+    padding: calc(48px + var(--top-inset)) 48px calc(48px + var(--bottom-inset));
+  }
+
+  .avatar,
+  .erfolgeText,
+  .erfolgeOnly {
+    display: none;
+  }
+
+  .deadlines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .deadline {
+    border-radius: 20px;
+    border: 1.5px solid var(--line);
+    padding: 16px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .deadlineNext {
+    border: 0;
+    background: var(--violet);
+    color: var(--bg);
+  }
+
+  .deadlineText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .deadlineTitle {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .deadlineDetail {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .deadlineNext .deadlineDetail {
+    color: inherit;
+    opacity: 0.9;
+  }
+
+  .countdown {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .deadlineNext .countdown {
+    font-size: 32px;
+  }
+
+  .highFive,
+  .highFive:hover {
+    min-height: 64px;
+    border-radius: 20px;
+    background: var(--surface);
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink);
+  }
+
+  .highFiveIcon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    background: var(--bg);
+    color: var(--violet);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .highFiveText {
+    flex-grow: 1;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .highFiveAction {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--violet);
+  }
+}
+
+/* Ab 1100 px: zwei Spalten mit den Maßen aus iPadHeute.dc.html. */
+@media (min-width: 1100px) {
+  .heute {
+    max-width: none;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 56px;
+    padding: calc(48px + var(--top-inset)) 56px calc(48px + var(--bottom-inset));
+  }
+
+  .primary {
+    gap: 26px;
+  }
+
+  .secondary {
+    gap: 26px;
+    padding-top: 38px;
+  }
+
+  .date {
+    font-size: 16px;
+  }
+
+  .title {
+    font-size: 72px;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    font-weight: 780;
+    text-wrap: wrap;
+  }
+
+  .chipLink,
+  .chipLink:hover {
+    margin: -3px 0;
+  }
+
+  .chip {
+    height: 38px;
+    padding: 0 16px 0 12px;
+    border-radius: 19px;
+    font-size: 15px;
+  }
+
+  .goalHead {
+    font-size: 15px;
+  }
+
+  .segments {
+    --seg-height: 12px;
+    --seg-radius: 4px;
+    --seg-gap: 4px;
+  }
+
+  .cta,
+  .cta:hover {
+    height: 68px;
+    border-radius: 22px;
+    padding: 0 26px 0 28px;
+    font-size: 20px;
+    box-shadow: var(--shadow-primary-ipad);
+  }
+
+  .ctaIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .week {
+    gap: 12px;
+    --dot-gap: 10px;
+    --dot-size: 36px;
+    --dot-label-size: 12.5px;
+  }
+
+  .erfolge {
+    margin: -10px 0;
+  }
+
+  .pill {
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 12px;
+  }
+
+  .areas,
+  .areaList {
+    gap: 0;
+  }
+
+  .areasLabel {
+    padding-bottom: 8px;
+  }
+
+  .area,
+  .area:hover {
+    height: 60px;
+  }
+
+  .code {
+    width: 40px;
+    height: 30px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    letter-spacing: normal;
+  }
+
+  .areaName,
+  .areaDue {
+    font-size: 18px;
+  }
+
+  .chevron {
+    display: none;
+  }
+
+  .heute .goal {
+    animation-delay: 0.1s;
+  }
+
+  .heute .cta {
+    animation-delay: 0.15s;
+  }
+
+  .heute .areas {
+    animation-delay: 0.25s;
+  }
+}
