@@ -12,7 +12,15 @@ import type { BrowserContext, Page } from '@playwright/test';
 /**
  * Bewusste Korrekturen am Design, jeweils mit Grund. Sie gelten für jeden Vergleich.
  */
+const SEARCH_PLACEHOLDER = {
+  css: 'input::placeholder { color: #726E7A }',
+  reason:
+    'Annahme A2: Das Design setzt für die Suche keine Platzhalterfarbe, der Browser nimmt seine ' +
+    'eigene (in WebKit deutlich heller). Die App nimmt #726E7A (4,55:1 auf der Fläche).',
+};
+
 const FIXES: Record<string, { css: string; reason: string }[]> = {
+  'Bibliothek.dc.html': [SEARCH_PLACEHOLDER],
   'Erstellen.dc.html': [
     {
       css: 'textarea::placeholder, input::placeholder { color: #726E7A }',
@@ -20,6 +28,7 @@ const FIXES: Record<string, { css: string; reason: string }[]> = {
     },
   ],
   'iPadStapel.dc.html': [
+    SEARCH_PLACEHOLDER,
     {
       css:
         'a[aria-label="Stapel teilen"], a[href="iPad.dc.html"] { flex-shrink: 0 } ' +

@@ -38,6 +38,9 @@ export function Testdaten() {
                     : `${String(added.decks)} Stapel mit ${String(added.cards)} Karten hinzugefügt.`,
                 );
               })
+              .catch(() => {
+                setMessage('Das Hinzufügen hat nicht geklappt.');
+              })
               .finally(() => {
                 setBusy(false);
               });

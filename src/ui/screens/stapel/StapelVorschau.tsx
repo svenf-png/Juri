@@ -33,7 +33,7 @@ export function StapelVorschau({ screen }: { screen: 'liste' | 'detail' | 'ipad'
         <StapelDetail
           model={pad ? padDeck : phoneDeck}
           onToggleArea={noop}
-          areaHint={false}
+          notice={null}
           onEdit={noop}
           onDelete={noop}
           onPickAreas={noop}

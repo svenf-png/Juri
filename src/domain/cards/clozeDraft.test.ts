@@ -14,7 +14,7 @@ import {
 const TEXT = 'Wegnahme ist der Bruch fremden und die Begründung neuen Gewahrsams.';
 
 function draftWith(text: string, ...words: string[]): ClozeDraft {
-  let draft: ClozeDraft = { text, gaps: [] };
+  let draft: ClozeDraft = { text, gaps: [], used: 0 };
   for (const word of words) {
     const start = text.indexOf(word);
     const result = addGap(draft, start, start + word.length);
@@ -54,32 +54,47 @@ describe('addGap', () => {
           { n: 1, start: 17, end: 30 },
           { n: 2, start: 52, end: 60 },
         ],
+        used: 2,
       },
     });
   });
 
   it('nimmt Leerraum am Rand der Auswahl nicht mit', () => {
-    const result = addGap({ text: 'a  Wort  b', gaps: [] }, 1, 9);
-    expect(result).toEqual({ draft: { text: 'a  Wort  b', gaps: [{ n: 1, start: 3, end: 7 }] } });
+    const result = addGap({ text: 'a  Wort  b', gaps: [], used: 0 }, 1, 9);
+    expect(result).toEqual({
+      draft: { text: 'a  Wort  b', gaps: [{ n: 1, start: 3, end: 7 }], used: 1 },
+    });
   });
 
   it('lehnt leere, überlappende und ungültige Auswahl ab', () => {
     expect(addGap(EMPTY_DRAFT, 0, 0)).toEqual({ error: 'leer' });
-    expect(addGap({ text: '   ', gaps: [] }, 0, 3)).toEqual({ error: 'leer' });
+    expect(addGap({ text: '   ', gaps: [], used: 0 }, 0, 3)).toEqual({ error: 'leer' });
     const one = draftWith(TEXT, 'Bruch fremden');
     expect(addGap(one, 20, 40)).toEqual({ error: 'ueberlappt' });
-    expect(addGap({ text: 'a {{ b', gaps: [] }, 0, 6)).toEqual({ error: 'ungueltig' });
-    expect(addGap({ text: 'a }} b', gaps: [] }, 0, 6)).toEqual({ error: 'ungueltig' });
+    expect(addGap({ text: 'a {{ b', gaps: [], used: 0 }, 0, 6)).toEqual({ error: 'ungueltig' });
+    expect(addGap({ text: 'a }} b', gaps: [], used: 0 }, 0, 6)).toEqual({ error: 'ungueltig' });
+    expect(addGap({ text: 'f(a}', gaps: [], used: 0 }, 2, 4)).toEqual({ error: 'ungueltig' });
   });
 
   it('begrenzt die Nummern auf 99', () => {
-    const draft: ClozeDraft = { text: 'ab', gaps: [{ n: 99, start: 0, end: 1 }] };
+    const draft: ClozeDraft = { text: 'ab', gaps: [{ n: 99, start: 0, end: 1 }], used: 99 };
     expect(addGap(draft, 1, 2)).toEqual({ error: 'zu-viele' });
   });
 
   it('klemmt die Auswahl auf den Text', () => {
-    const result = addGap({ text: 'abc', gaps: [] }, -5, 99);
-    expect(result).toEqual({ draft: { text: 'abc', gaps: [{ n: 1, start: 0, end: 3 }] } });
+    const result = addGap({ text: 'abc', gaps: [], used: 0 }, -5, 99);
+    expect(result).toEqual({ draft: { text: 'abc', gaps: [{ n: 1, start: 0, end: 3 }], used: 1 } });
+  });
+});
+
+describe('Nummern bleiben unverwechselbar', () => {
+  it('eine entfernte höchste Nummer kommt in derselben Bearbeitung nicht wieder', () => {
+    const loaded = draftFromMarkup('{{c1::a}} {{c2::b}} {{c3::c}}');
+    expect(loaded.used).toBe(3);
+    const removed = removeGap(loaded, 3);
+    expect(nextGapNumber(removed)).toBe(4);
+    const again = addGap(removed, 4, 5);
+    expect('draft' in again && Math.max(...again.draft.gaps.map((g) => g.n))).toBe(4);
   });
 });
 
@@ -143,9 +158,27 @@ describe('editText', () => {
     expect(next.gaps.map((g) => g.n)).toEqual([2]);
   });
 
+  it('ordnet mehrdeutige Änderungen mit dem Cursor richtig zu', () => {
+    // Erstes „abc“ gelöscht, die Lücke liegt auf dem zweiten.
+    const two = draftWith('abcabc', 'abc');
+    const both = { ...two, gaps: [{ n: 1, start: 3, end: 6 }] };
+    expect(editText(both, 'abc').gaps).toEqual([]);
+    expect(editText(both, 'abc', 0).gaps).toEqual([{ n: 1, start: 0, end: 3 }]);
+    // „a“ direkt vor der Lücke getippt: die Lücke bleibt bei „ab“.
+    const near = draftFromMarkup('x {{c1::ab}}');
+    const typed = editText(near, 'x aab', 3);
+    expect(draftToMarkup(typed)).toBe('x a{{c1::ab}}');
+    // Rückwärts löschen vor der Lücke.
+    expect(
+      draftToMarkup(
+        editText(draftFromMarkup('ab {{c1::b}}'), 'a {{c1::b}}'.replace('{{c1::b}}', 'b'), 1),
+      ),
+    ).toBe('a {{c1::b}}');
+  });
+
   it('kommt mit leerem Text und Text ohne Lücken zurecht', () => {
-    expect(editText(EMPTY_DRAFT, 'neu')).toEqual({ text: 'neu', gaps: [] });
-    expect(editText(draft, '')).toEqual({ text: '', gaps: [] });
+    expect(editText(EMPTY_DRAFT, 'neu')).toEqual({ text: 'neu', gaps: [], used: 0 });
+    expect(editText(draft, '')).toEqual({ text: '', gaps: [], used: 2 });
   });
 });
 

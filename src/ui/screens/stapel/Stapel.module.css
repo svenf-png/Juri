@@ -200,6 +200,11 @@
   justify-content: center;
 }
 
+/* Rund und schmal: Trefferfläche 44 × 44 px. */
+.chipIcon::after {
+  inset: -3px;
+}
+
 .groups {
   display: flex;
   flex-direction: column;
@@ -450,6 +455,10 @@
   .chipIcon {
     width: 34px;
     padding: 0;
+  }
+
+  .chipIcon::after {
+    inset: -5px;
   }
 
   .groups {

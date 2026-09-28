@@ -35,9 +35,9 @@ export function sortAreas<T extends Pick<Area, 'code' | 'createdAt' | 'id'>>(
   );
 }
 
-/** Kürzel aus freier Eingabe: Großbuchstaben, ohne Leerraum, höchstens vier Zeichen. */
+/** Kürzel aus freier Eingabe: Großbuchstaben, ohne Leerraum. Die Länge prüft `checkArea`. */
 export function normalizeAreaCode(input: string): string {
-  return input.replace(/\s+/gu, '').toLocaleUpperCase('de-DE').slice(0, AREA_CODE_MAX);
+  return input.replace(/\s+/gu, '').toLocaleUpperCase('de-DE');
 }
 
 export type AreaErrors = Partial<Record<'code' | 'name', string>>;
@@ -48,12 +48,14 @@ export function checkArea(
   others: readonly Pick<Area, 'code' | 'name'>[],
 ): { ok: true; code: string; name: string } | { ok: false; errors: AreaErrors } {
   const code = normalizeAreaCode(input.code);
-  const name = tidyLine(input.name, AREA_NAME_MAX);
+  const name = tidyLine(input.name, Infinity);
   const errors: AreaErrors = {};
   if (!AREA_CODE.test(code)) errors.code = 'Zwei bis vier Zeichen, Buchstaben oder Ziffern.';
   else if (others.some((a) => a.code === code)) errors.code = 'Dieses Kürzel gibt es schon.';
   if (name === '') errors.name = 'Der Name fehlt.';
-  else if (
+  else if (name.length > AREA_NAME_MAX) {
+    errors.name = `Der Name ist zu lang (höchstens ${AREA_NAME_MAX} Zeichen).`;
+  } else if (
     others.some((a) => a.name.toLocaleLowerCase('de-DE') === name.toLocaleLowerCase('de-DE'))
   ) {
     errors.name = 'Dieses Rechtsgebiet gibt es schon.';
@@ -73,9 +75,9 @@ export function missingSuggestions(areas: readonly Pick<Area, 'code'>[]): AreaSu
 export function areaDeletion(
   areaId: string,
   decks: readonly Deck[],
-): { ok: true; alsoElsewhere: Deck[]; empty: boolean } | { ok: false; blockedBy: Deck[] } {
+): { ok: true; alsoElsewhere: Deck[] } | { ok: false; blockedBy: Deck[] } {
   const inArea = decks.filter((d) => d.areaIds.includes(areaId));
   const blockedBy = inArea.filter((d) => d.areaIds.length === 1);
   if (blockedBy.length > 0) return { ok: false, blockedBy };
-  return { ok: true, alsoElsewhere: inArea, empty: inArea.length === 0 };
+  return { ok: true, alsoElsewhere: inArea };
 }

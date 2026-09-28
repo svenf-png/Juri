@@ -1,4 +1,5 @@
-const KEY = 'juri:lastDeck';
+// Pro Instanz: die echte App und die Testinstanz teilen sich den Speicher der Origin (ADR-005).
+const KEY = `juri:${__JURI_INSTANCE__}:lastDeck`;
 
 /** Zuletzt betrachteter oder benutzter Stapel; nur eine Bequemlichkeit, fehlt der Speicher, gibt es keinen. */
 export function readLastDeck(): string | null {

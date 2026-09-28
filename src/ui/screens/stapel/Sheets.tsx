@@ -20,8 +20,8 @@ import { cx } from '../../cx';
 import stapel from './Stapel.module.css';
 import styles from './Sheets.module.css';
 
-/** Meldung, wenn das Speichern scheitert; Eingaben bleiben stehen. */
-const SAVE_FAILED = 'Das Speichern hat nicht geklappt. Bitte versuche es noch einmal.';
+/** Meldung, wenn Speichern oder Löschen scheitert; Eingaben bleiben stehen. */
+const SAVE_FAILED = 'Das hat nicht geklappt. Bitte versuche es noch einmal.';
 
 function useBusy() {
   const [busy, setBusy] = useState(false);
@@ -149,6 +149,7 @@ export function StapelSheet({
   const [custom, setCustom] = useState<{ code: string; name: string } | null>(null);
   const [errors, setErrors] = useState<{
     name?: string | undefined;
+    norm?: string | undefined;
     areas?: string | undefined;
     code?: string | undefined;
     area?: string | undefined;
@@ -179,7 +180,11 @@ export function StapelSheet({
     const ids = editing ? deck.areaIds : [...areaIds, ...newAreas.map((a) => a.id)];
     const checked = checkDeck({ name, norm, areaIds: ids }, others);
     if (!checked.ok) {
-      setErrors({ name: checked.errors.name, areas: checked.errors.areas });
+      setErrors({
+        name: checked.errors.name,
+        norm: checked.errors.norm,
+        areas: checked.errors.areas,
+      });
       return;
     }
     setErrors({});
@@ -212,7 +217,6 @@ export function StapelSheet({
         onChange={setName}
         error={errors.name}
         autoFocus
-        maxLength={120}
         enterKeyHint="next"
       />
       <TextField
@@ -220,7 +224,7 @@ export function StapelSheet({
         value={norm}
         onChange={setNorm}
         placeholder="§§ 929 ff. BGB"
-        maxLength={240}
+        error={errors.norm}
         enterKeyHint="done"
       />
       {editing ? (
@@ -271,7 +275,6 @@ export function StapelSheet({
                   setCustom({ ...custom, code });
                 }}
                 placeholder="AR"
-                maxLength={6}
                 autoCapitalize="characters"
                 error={errors.code}
               />
@@ -465,7 +468,6 @@ function AreaForm({
           value={code}
           onChange={setCode}
           placeholder="AR"
-          maxLength={6}
           autoCapitalize="characters"
           error={errors.code}
         />
@@ -559,7 +561,10 @@ function AreaDelete({
       confirmLabel="Rechtsgebiet löschen"
       onClose={onBack}
       onConfirm={async () => {
-        await removeArea(area.id);
+        const result = await removeArea(area.id);
+        // Hat sich der Stand geändert (ein Stapel liegt jetzt nur noch hier), zeigt die Ansicht
+        // gleich die Sperre; die Bestätigung gilt dann nicht als erledigt.
+        if (!result.ok) throw new Error('Rechtsgebiet enthält Stapel');
         onBack();
       }}
     />

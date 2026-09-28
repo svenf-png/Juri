@@ -6,7 +6,7 @@ import type { CardFields } from '@/domain/cards/card';
 import { newId } from '@/platform/id';
 import { createArea, deleteArea, updateArea } from '@/data/repositories/areas';
 import { createCard, deleteCard, updateCard } from '@/data/repositories/cards';
-import { createDeck, deleteDeck, updateDeck } from '@/data/repositories/decks';
+import { createDeck, deleteDeck, toggleDeckArea, updateDeck } from '@/data/repositories/decks';
 import { database } from '../app/database';
 
 export function addCard(deckId: string, fields: CardFields) {
@@ -52,4 +52,9 @@ export function changeArea(id: string, input: { code: string; name: string }) {
 
 export function removeArea(id: string) {
   return deleteArea(database(), id, Date.now());
+}
+
+/** Schaltet ein Rechtsgebiet des Stapels um; `last`, wenn es das einzige war. */
+export function switchDeckArea(deckId: string, areaId: string) {
+  return toggleDeckArea(database(), deckId, areaId, Date.now());
 }

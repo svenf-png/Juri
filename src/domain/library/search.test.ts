@@ -102,6 +102,17 @@ describe('searchCards', () => {
   });
 });
 
+describe('Zwischenspeicher der Suchtexte', () => {
+  it('folgt einem umbenannten Stapel und einer verschobenen Karte', () => {
+    expect(searchCards('deliktsrecht', cards, decks).map((h) => h.id)).toEqual(['c']);
+    const renamed = decks.map((d) => (d.id === 'd2' ? { ...d, name: 'Haftung' } : d));
+    expect(searchCards('deliktsrecht', cards, renamed)).toEqual([]);
+    expect(searchCards('haftung', cards, renamed).map((h) => h.id)).toEqual(['c']);
+    const moved = cards.map((c) => (c.id === 'c' ? { ...c, deckId: 'd1' } : c));
+    expect(searchCards('haftung', moved, renamed)).toEqual([]);
+  });
+});
+
 describe('highlight', () => {
   it('markiert Fundstellen im Original', () => {
     expect(highlight('Was ist Gewahrsam?', searchTokens('gewahrsam'))).toEqual([

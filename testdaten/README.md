@@ -20,4 +20,4 @@ Alle 35 Karten stehen auf `pruefung: offen`. Die Texte sind ohne Abgleich mit de
 
 ## Laden
 
-Nur in der Testinstanz: Einstellungen, Testdaten, „Demo-Stapel laden“ (fügt hinzu, ohne vorhandene Daten zu ändern) oder „Demo-Profil laden“ (ersetzt alles). Einzeln löschbar über den Stapel selbst.
+Nur in der Testinstanz: Einstellungen, Testdaten, „Demo-Stapel hinzufügen“ (fügt hinzu, ohne vorhandene Daten zu ändern) oder „Demo-Profil laden“ (ersetzt alles). Einzeln löschbar über den Stapel selbst.

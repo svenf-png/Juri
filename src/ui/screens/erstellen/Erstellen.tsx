@@ -6,6 +6,7 @@ import { readLastDeck, rememberDeck } from '@/platform/lastDeck';
 import { addCard } from '@/features/library/actions';
 import { useCreateData, useLibraryData } from '@/features/library/queries';
 import { useLearningDayKey } from '@/features/today/useToday';
+import { StorageError } from '../../components/StorageError';
 import { useGoBack } from '../../useGoBack';
 import { StapelSheet, StapelWaehlenSheet } from '../stapel/Sheets';
 import { CardScreen } from './CardScreen';
@@ -48,6 +49,7 @@ export function Erstellen() {
     return known(chosen) ?? known(params.get('stapel')) ?? known(readLastDeck()) ?? newest;
   }, [decks, chosen, params]);
 
+  if (library.status === 'error' || counts.status === 'error') return <StorageError />;
   if (library.status !== 'ready' || counts.status !== 'ready') return null;
   const { areas, cardCounts } = library.value;
   const deck = library.value.decks.find((d) => d.id === deckId);

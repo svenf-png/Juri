@@ -14,11 +14,16 @@ export async function addDemoDecks(
     'rw',
     [db.areas, db.decks, db.cards, db.reviewItems, db.events, db.meta],
     async () => {
-      const [areas, deckIds] = await Promise.all([
+      const [areas, deckIds, cardIds] = await Promise.all([
         db.areas.toArray(),
         db.decks.toCollection().primaryKeys(),
+        db.cards.toCollection().primaryKeys(),
       ]);
-      const demo = demoDecks(now, { areas, deckIds: new Set(deckIds) });
+      const demo = demoDecks(now, {
+        areas,
+        deckIds: new Set(deckIds),
+        cardIds: new Set(cardIds),
+      });
       await db.areas.bulkAdd(demo.areas);
       await db.decks.bulkAdd(demo.decks);
       await db.cards.bulkAdd(demo.cards);

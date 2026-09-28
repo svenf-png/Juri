@@ -7,6 +7,7 @@ import { deckLabel } from '@/domain/library/library';
 import { changeCard, removeCard } from '@/features/library/actions';
 import { useEditData } from '@/features/library/queries';
 import { BackLink, Screen, ScreenTitle } from '../../components/Screen';
+import { StorageError } from '../../components/StorageError';
 import { useGoBack } from '../../useGoBack';
 import { ConfirmSheet, StapelSheet, StapelWaehlenSheet } from '../stapel/Sheets';
 import { CardScreen } from './CardScreen';
@@ -21,15 +22,7 @@ export function KarteBearbeiten() {
   const [sheet, setSheet] = useState<'pick' | 'new' | 'delete' | null>(null);
   const goBack = useGoBack('/stapel');
 
-  if (data.status === 'error') {
-    return (
-      <Screen>
-        <ScreenTitle lead="Bitte schließe Juri und öffne es erneut.">
-          Kein Zugriff auf die Karte
-        </ScreenTitle>
-      </Screen>
-    );
-  }
+  if (data.status === 'error') return <StorageError />;
   if (data.status !== 'ready') return null;
   const { card, areas, decks, cardCounts } = data.value;
   if (!card) {
@@ -109,7 +102,8 @@ export function KarteBearbeiten() {
           onConfirm={async () => {
             await removeCard(card.id);
             close();
-            void navigate(`/stapel/${deckId}`, { replace: true });
+            // Zum Stapel, in dem die Karte lag (nicht zu einem nur gewählten, ungespeicherten).
+            void navigate(`/stapel/${card.deckId}`, { replace: true });
           }}
         />
       ) : null}

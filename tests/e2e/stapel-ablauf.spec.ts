@@ -353,7 +353,7 @@ test.describe('Master-Detail auf dem iPad', () => {
       if (page.viewportSize()!.width < 768) {
         await expect(page.getByRole('navigation', { name: 'Hauptnavigation' })).toBeHidden();
       }
-      await page.getByRole('link', { name: 'Stapel', exact: true }).click();
+      await page.getByRole('main').getByRole('link', { name: 'Stapel', exact: true }).click();
       await expect(page.getByRole('heading', { name: 'Stapel', level: 1 })).toBeVisible();
     }
   });

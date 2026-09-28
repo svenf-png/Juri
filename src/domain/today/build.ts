@@ -5,7 +5,7 @@
 import { addDays, dayKey, learningDay, type Day } from '../calendar/day';
 import { sortAreas } from '../library/areas';
 import type { Area, Deck } from '../model/records';
-import { DEFAULT_DAILY_GOAL, WEEK_DAYS, type TodayInput } from './today';
+import { emptyToday, WEEK_DAYS, type TodayInput } from './today';
 
 export interface TodayData {
   readonly areas: readonly Area[];
@@ -45,16 +45,12 @@ export function dueByArea(
 }
 
 export function todayInputFrom(today: Day, data: TodayData): TodayInput {
+  // Ziele, Verlauf, Fristen und High five kommen mit M7, M8 und M10; bis dahin gilt der Leerwert.
   return {
-    today,
+    ...emptyToday(today),
     totalCards: data.cardTotal,
     due: Object.values(data.dueByDeck).reduce((a, b) => a + b, 0),
     dueByArea: dueByArea(data.areas, data.decks, data.dueByDeck),
-    goal: { done: 0, target: DEFAULT_DAILY_GOAL },
-    levels: {},
-    recordDay: null,
     createdThisWeek: createdWithin(today, data.createdAt, WEEK_DAYS),
-    deadlines: [],
-    highFive: null,
   };
 }

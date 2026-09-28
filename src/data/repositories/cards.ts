@@ -1,30 +1,6 @@
-import { contentOf, reviewItemId, reviewSubs, type CardFields } from '@/domain/cards/card';
-import type { Card, NewEvent, ReviewItem } from '@/domain/model/records';
+import { buildCard, buildItems, type CardFields } from '@/domain/cards/card';
+import type { Card, NewEvent } from '@/domain/model/records';
 import type { JuriDb } from '../db';
-
-export function buildCard(
-  id: string,
-  deckId: string,
-  fields: CardFields,
-  createdAt: number,
-  updatedAt: number,
-): Card {
-  const base = { id, deckId, norm: fields.norm, tags: fields.tags, createdAt, updatedAt };
-  const { content } = fields;
-  return content.type === 'qa'
-    ? { ...base, type: 'qa', front: content.front, back: content.back }
-    : { ...base, type: 'cloze', text: content.text };
-}
-
-export function buildItems(card: Card, now: number): ReviewItem[] {
-  return reviewSubs(contentOf(card)).map((sub) => ({
-    id: reviewItemId(card.id, sub),
-    cardId: card.id,
-    deckId: card.deckId,
-    sub,
-    createdAt: now,
-  }));
-}
 
 /**
  * Legt eine Karte an: Karte, ihre Abfragen (ein Lückentext mit drei Lücken ergibt drei),

@@ -69,7 +69,8 @@ export function ClozeEditor({
             value={draft.text}
             onChange={(e) => {
               setMessage(null);
-              onChange(editText(draft, e.target.value));
+              // Der Cursor nach der Änderung sagt, wo getippt oder gelöscht wurde.
+              onChange(editText(draft, e.target.value, e.target.selectionStart));
             }}
             aria-label="Text"
             aria-invalid={error ? true : undefined}

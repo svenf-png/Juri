@@ -1,3 +1,4 @@
+import { toggleArea } from '@/domain/library/deckRules';
 import type { Deck } from '@/domain/model/records';
 import type { JuriDb } from '../db';
 
@@ -68,5 +69,25 @@ export async function deleteDeck(
     await db.cards.bulkDelete(cards);
     await db.decks.delete(id);
     return { cards: cards.length, items: items.length };
+  });
+}
+
+/**
+ * Schaltet ein Rechtsgebiet des Stapels um, gerechnet auf dem gespeicherten Stand innerhalb der
+ * Transaktion (zwei schnelle Antippen überschreiben sich so nicht). Das letzte Rechtsgebiet bleibt.
+ */
+export async function toggleDeckArea(
+  db: JuriDb,
+  id: string,
+  areaId: string,
+  now: number,
+): Promise<'ok' | 'last' | 'missing'> {
+  return db.transaction('rw', db.decks, async () => {
+    const deck = await db.decks.get(id);
+    if (!deck) return 'missing';
+    const areaIds = toggleArea(deck.areaIds, areaId);
+    if (areaIds === null) return 'last';
+    await db.decks.put({ ...deck, areaIds, updatedAt: now });
+    return 'ok';
   });
 }

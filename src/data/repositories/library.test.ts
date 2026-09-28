@@ -5,7 +5,7 @@ import { exportBackup, prepareRestore, readTables, restoreBackup } from '../back
 import { testDb } from '../testDb';
 import { createArea, deleteArea, readAreas, updateArea } from './areas';
 import { createCard, deleteCard, readCard, readCards, updateCard } from './cards';
-import { createDeck, deleteDeck, readDeck, readDecks, updateDeck } from './decks';
+import { createDeck, deleteDeck, readDeck, readDecks, toggleDeckArea, updateDeck } from './decks';
 import {
   readCreateSnapshot,
   readDeckDetail,
@@ -113,6 +113,20 @@ describe('Stapel', () => {
       areaIds: ['zr'],
     });
     expect(await updateDeck(db, 'weg', { name: 'x' }, T)).toBeNull();
+  });
+
+  it('schalten Rechtsgebiete auf dem gespeicherten Stand um, das letzte bleibt', async () => {
+    const { db } = await setup();
+    expect(await toggleDeckArea(db, 'delikt', 'oer', T + 1)).toBe('ok');
+    expect((await readDeck(db, 'delikt'))?.areaIds).toEqual(['zr', 'oer']);
+    // Zwei schnelle Umschaltungen hintereinander rechnen nacheinander, nicht auf altem Stand.
+    const both = await Promise.all([
+      toggleDeckArea(db, 'delikt', 'zr', T + 2),
+      toggleDeckArea(db, 'delikt', 'oer', T + 3),
+    ]);
+    expect(both.sort()).toEqual(['last', 'ok']);
+    expect((await readDeck(db, 'delikt'))?.areaIds).toHaveLength(1);
+    expect(await toggleDeckArea(db, 'weg', 'zr', T)).toBe('missing');
   });
 
   it('löschen sich mit Karten und Abfragen, andere Stapel bleiben', async () => {

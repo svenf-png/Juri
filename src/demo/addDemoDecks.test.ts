@@ -35,4 +35,16 @@ describe('Demo-Stapel hinzufügen', () => {
     await deleteDeck(db, 'demo-diebstahl-betrug');
     expect(await addDemoDecks(db, now)).toEqual({ decks: 1, cards: 8 });
   });
+
+  it('übersteht ein umbenanntes Demo-Rechtsgebiet und verschobene Karten ohne Fehler', async () => {
+    const { db } = testDb();
+    await addDemoDecks(db, now);
+    await db.areas.update('demo-zr', { code: 'ZIV' });
+    await db.cards.update('demo-deliktsrecht-01', { deckId: 'demo-amtshaftung' });
+    await db.reviewItems.update('demo-deliktsrecht-01', { deckId: 'demo-amtshaftung' });
+    await deleteDeck(db, 'demo-deliktsrecht');
+    expect(await addDemoDecks(db, now + 1)).toEqual({ decks: 1, cards: 6 });
+    expect(await db.areas.count()).toBe(3);
+    expect((await db.cards.get('demo-deliktsrecht-01'))?.deckId).toBe('demo-amtshaftung');
+  });
 });

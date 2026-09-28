@@ -18,8 +18,8 @@ export interface StapelDetailProps {
   model: DeckModel;
   /** Ein Rechtsgebiet ist umzuschalten (das letzte lässt der Bildschirm nicht abwählen). */
   onToggleArea: (areaId: string) => void;
-  /** Hinweis „mindestens ein Rechtsgebiet“ sichtbar. */
-  areaHint: boolean;
+  /** Kurzer Hinweis unter den Rechtsgebieten, z. B. „mindestens ein Rechtsgebiet“; sonst `null`. */
+  notice: string | null;
   onEdit: () => void;
   onDelete: () => void;
   /** iPad: Rechtsgebiete hinzufügen. */
@@ -86,7 +86,7 @@ function DeckMenu({
 export function StapelDetail({
   model,
   onToggleArea,
-  areaHint,
+  notice,
   onEdit,
   onDelete,
   onPickAreas,
@@ -135,9 +135,9 @@ export function StapelDetail({
               </button>
             ))}
           </div>
-          {areaHint ? (
+          {notice ? (
             <p className={styles.hint} role="status">
-              Ein Stapel braucht mindestens ein Rechtsgebiet.
+              {notice}
             </p>
           ) : null}
         </section>
@@ -238,9 +238,7 @@ export function StapelDetail({
             + Rechtsgebiet
           </button>
         </div>
-        {areaHint ? (
-          <p className={styles.hint}>Ein Stapel braucht mindestens ein Rechtsgebiet.</p>
-        ) : null}
+        {notice ? <p className={styles.hint}>{notice}</p> : null}
 
         {model.bar.length > 0 ? (
           <div className={styles.padProgress} aria-hidden="true">

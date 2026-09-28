@@ -21,7 +21,7 @@ describe('Kürzel und Name', () => {
   it('bereinigt das Kürzel', () => {
     expect(normalizeAreaCode(' zr ')).toBe('ZR');
     expect(normalizeAreaCode('ö r')).toBe('ÖR');
-    expect(normalizeAreaCode('abcdef')).toBe('ABCD');
+    expect(normalizeAreaCode('abcdef')).toBe('ABCDEF');
   });
 
   it('prüft Kürzel und Name', () => {
@@ -52,6 +52,17 @@ describe('Kürzel und Name', () => {
     });
   });
 
+  it('meldet zu lange Kürzel und Namen, statt sie zu kürzen', () => {
+    expect(checkArea({ code: 'ARBEIT', name: 'x' }, [])).toEqual({
+      ok: false,
+      errors: { code: 'Zwei bis vier Zeichen, Buchstaben oder Ziffern.' },
+    });
+    expect(checkArea({ code: 'AR', name: 'x'.repeat(61) }, [])).toEqual({
+      ok: false,
+      errors: { name: 'Der Name ist zu lang (höchstens 60 Zeichen).' },
+    });
+  });
+
   it('schlägt nur fehlende Rechtsgebiete vor', () => {
     expect(missingSuggestions([{ code: 'SR' }]).map((s) => s.code)).toEqual(['ZR', 'ÖR']);
     expect(missingSuggestions([])).toHaveLength(3);
@@ -78,9 +89,9 @@ describe('areaDeletion', () => {
   it('erlaubt, wenn alle Stapel auch anderswo liegen oder es keine gibt', () => {
     const decks = [deck('b', ['zr', 'oer']), deck('c', ['sr'])];
     const result = areaDeletion('zr', decks);
-    expect(result).toMatchObject({ ok: true, empty: false });
+    expect(result.ok).toBe(true);
     expect(result.ok && result.alsoElsewhere.map((d) => d.id)).toEqual(['b']);
-    expect(areaDeletion('leer', decks)).toMatchObject({ ok: true, empty: true });
+    expect(areaDeletion('leer', decks)).toEqual({ ok: true, alsoElsewhere: [] });
   });
 });
 
@@ -103,6 +114,17 @@ describe('checkDeck und toggleArea', () => {
     ).toEqual({
       ok: false,
       errors: { name: 'Diesen Stapel gibt es schon.' },
+    });
+  });
+
+  it('meldet zu lange Namen und Normen, statt sie zu kürzen', () => {
+    expect(checkDeck({ name: 'x'.repeat(81), norm: '', areaIds: ['zr'] }, [])).toEqual({
+      ok: false,
+      errors: { name: 'Der Name ist zu lang (höchstens 80 Zeichen).' },
+    });
+    expect(checkDeck({ name: 'x', norm: 'n'.repeat(201), areaIds: ['zr'] }, [])).toEqual({
+      ok: false,
+      errors: { norm: 'Die Normen sind zu lang (höchstens 200 Zeichen).' },
     });
   });
 

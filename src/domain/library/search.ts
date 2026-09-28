@@ -51,6 +51,38 @@ function body(card: Card): string {
   return card.type === 'qa' ? `${card.front}\n${card.back}` : clozePlain(card.text);
 }
 
+/** Ganzer Text auf einmal gefaltet (ohne Herkunftstabelle); für die Suche, nicht fürs Hervorheben. */
+function foldPlain(text: string): string {
+  return text
+    .toLocaleLowerCase('de-DE')
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replaceAll('ß', 'ss');
+}
+
+/**
+ * Gefaltete Suchtexte je Karte, solange das Kartenobjekt unverändert ist: Beim Tippen ändern sich
+ * die Karten nicht, also faltet nur die erste Eingabe alle Karten, die folgenden lesen den Zwischenspeicher.
+ */
+const indexed = new WeakMap<
+  Card,
+  { title: string; hay: string; deckId: string; deckName: string }
+>();
+
+function indexOf(card: Card, deckName: string) {
+  const hit = indexed.get(card);
+  if (hit && hit.deckId === card.deckId && hit.deckName === deckName) return hit;
+  const tags = card.tags.map((t) => `#${t}`).join(' ');
+  const entry = {
+    title: foldPlain(cardTitle(card)),
+    hay: foldPlain(`${body(card)}\n${card.norm}\n${tags}\n${deckName}`),
+    deckId: card.deckId,
+    deckName,
+  };
+  indexed.set(card, entry);
+  return entry;
+}
+
 export function searchCards(
   query: string,
   cards: readonly Card[],
@@ -62,10 +94,7 @@ export function searchCards(
   const hits: { hit: SearchHit; score: number; createdAt: number }[] = [];
   for (const card of cards) {
     const name = deckName.get(card.deckId) ?? '';
-    const title = fold(cardTitle(card)).folded;
-    const hay = fold(
-      `${body(card)}\n${card.norm}\n${card.tags.map((t) => `#${t}`).join(' ')}\n${name}`,
-    ).folded;
+    const { title, hay } = indexOf(card, name);
     if (!tokens.every((t) => hay.includes(t))) continue;
     const score = tokens.filter((t) => title.includes(t)).length;
     const extra = card.norm !== '' ? card.norm : card.tags.map((t) => `#${t}`).join(' ');

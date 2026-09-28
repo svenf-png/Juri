@@ -5,22 +5,26 @@ import { tidyLine } from '../cards/card';
 export const DECK_NAME_MAX = 80;
 export const DECK_NORM_MAX = 200;
 
-export type DeckErrors = Partial<Record<'name' | 'areas', string>>;
+export type DeckErrors = Partial<Record<'name' | 'norm' | 'areas', string>>;
 
 /** Prüft Name, Normen und Rechtsgebiete; `others` sind die übrigen Stapel (ohne den bearbeiteten). */
 export function checkDeck(
   input: { name: string; norm: string; areaIds: readonly string[] },
   others: readonly Pick<Deck, 'name'>[],
 ): { ok: true; name: string; norm: string; areaIds: string[] } | { ok: false; errors: DeckErrors } {
-  const name = tidyLine(input.name, DECK_NAME_MAX);
-  const norm = tidyLine(input.norm, DECK_NORM_MAX);
+  const name = tidyLine(input.name, Infinity);
+  const norm = tidyLine(input.norm, Infinity);
   const errors: DeckErrors = {};
   if (name === '') errors.name = 'Der Name fehlt.';
-  else if (
+  else if (name.length > DECK_NAME_MAX) {
+    errors.name = `Der Name ist zu lang (höchstens ${DECK_NAME_MAX} Zeichen).`;
+  } else if (
     others.some((d) => d.name.toLocaleLowerCase('de-DE') === name.toLocaleLowerCase('de-DE'))
   ) {
     errors.name = 'Diesen Stapel gibt es schon.';
   }
+  if (norm.length > DECK_NORM_MAX)
+    errors.norm = `Die Normen sind zu lang (höchstens ${DECK_NORM_MAX} Zeichen).`;
   if (input.areaIds.length === 0) errors.areas = 'Wähle mindestens ein Rechtsgebiet.';
   return Object.keys(errors).length > 0
     ? { ok: false, errors }

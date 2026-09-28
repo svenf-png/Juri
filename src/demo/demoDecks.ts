@@ -1,6 +1,5 @@
 import type { BackupTables } from '@/domain/backup/codec';
-import { buildCard, buildItems } from '@/data/repositories/cards';
-import { checkCard } from '@/domain/cards/card';
+import { buildCard, buildItems, checkCard } from '@/domain/cards/card';
 import type { Area, Card, Deck, NewEvent, ReviewItem } from '@/domain/model/records';
 import data from '../../testdaten/demo-stapel.json';
 
@@ -33,22 +32,24 @@ interface DemoCard {
 const KARTEN_PRO_STAPEL_ABSTAND = 60_000;
 
 /**
- * Datensätze der Demo-Stapel. `existing` sind die vorhandenen Rechtsgebiete und Stapel-IDs;
- * vorhandene Rechtsgebiete werden benutzt, vorhandene Stapel übersprungen. Die Stapel entstehen
+ * Datensätze der Demo-Stapel. `existing` sind die vorhandenen Rechtsgebiete, Stapel- und Karten-IDs;
+ * vorhandene Rechtsgebiete werden benutzt, vorhandene Stapel und Karten übersprungen. Die Stapel entstehen
  * zu den Zeitpunkten `starts` (der letzte Stapel jung, damit Heute „+N Karten angelegt“ zeigt).
  */
 export function demoDecks(
   now: number,
-  existing: { areas: readonly Area[]; deckIds: ReadonlySet<string> } = {
-    areas: [],
-    deckIds: new Set(),
-  },
+  existing: {
+    areas: readonly Area[];
+    deckIds: ReadonlySet<string>;
+    cardIds?: ReadonlySet<string>;
+  } = { areas: [], deckIds: new Set() },
   starts?: readonly number[],
 ): DemoDecks {
   const areaId = new Map<string, string>();
   const areas: Area[] = [];
   data.rechtsgebiete.forEach((r, i) => {
-    const found = existing.areas.find((a) => a.code === r.kuerzel);
+    // Auch nach Umbenennen bleibt das Demo-Rechtsgebiet über seine feste ID erkennbar.
+    const found = existing.areas.find((a) => a.code === r.kuerzel || a.id === r.id);
     if (found) {
       areaId.set(r.id, found.id);
     } else {
@@ -97,6 +98,8 @@ export function demoDecks(
         at,
         at,
       );
+      // Eine Demo-Karte, die schon woanders liegt (Stapel gelöscht, Karte verschoben), bleibt dort.
+      if (existing.cardIds?.has(card.id)) return;
       result.cards.push(card);
       result.items.push(...buildItems(card, at));
       result.events.push({ at, type: 'cardCreated', cardId: card.id, deckId: s.id });

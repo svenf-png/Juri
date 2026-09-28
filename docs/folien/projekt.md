@@ -233,5 +233,5 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M1 fertig:** Datenbank mit Migrationen, Onboarding, Install-Anleitung im Safari-Tab, Speicheranzeige, Backup erstellen und einspielen
 - **M2 fertig:** Tab-Bar und Sidebar, Heute-Screen pixelgleich zum Design, Lerntag ab 4 Uhr
 - **M3 fertig:** Rechtsgebiete, Stapel (in mehreren Rechtsgebieten), Frage und Lückentext, Suche, Bearbeiten und Löschen, Master-Detail auf dem iPad, Demo-Stapel
-- Automatische Prüfung bei jeder Änderung: 300 Unit-Tests, 46 E2E-Szenarien auf iPhone- und iPad-Größen
+- Automatische Prüfung bei jeder Änderung: 309 Unit-Tests, 46 E2E-Szenarien auf iPhone- und iPad-Größen
 - Nächster Schritt: Gerätetest von M0 bis M3 auf iPhone und iPad, dann M4 (Lern-Engine)

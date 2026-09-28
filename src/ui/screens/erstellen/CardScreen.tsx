@@ -92,6 +92,7 @@ export function CardScreen({
     });
     if (!checked.ok) {
       setErrors(checked.errors);
+      if (checked.errors.norm) setMore(true);
       (checked.errors.front ? frontRef : checked.errors.back ? backRef : textRef).current?.focus();
       return;
     }
@@ -219,10 +220,15 @@ export function CardScreen({
                 set({ norm: e.target.value });
               }}
               placeholder="§ 242 StGB"
-              maxLength={240}
               autoComplete="off"
               spellCheck={false}
+              aria-invalid={errors.norm ? true : undefined}
             />
+            {errors.norm ? (
+              <span className={styles.errorText} role="alert">
+                {errors.norm}
+              </span>
+            ) : null}
           </label>
           <label className={styles.mini}>
             <span className={styles.miniLabel}>Tags</span>
@@ -289,7 +295,7 @@ export function CardScreen({
         ) : null}
         {failed ? (
           <p className={styles.failed} role="alert">
-            Das Speichern hat nicht geklappt. Bitte versuche es noch einmal.
+            Das hat nicht geklappt. Bitte versuche es noch einmal.
           </p>
         ) : null}
         <Button block disabled={busy || coming !== undefined} onClick={() => void submit()}>

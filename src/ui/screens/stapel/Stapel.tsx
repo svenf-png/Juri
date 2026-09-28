@@ -1,12 +1,13 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { toggleArea } from '@/domain/library/deckRules';
 import { ALL_AREAS, deckModel, libraryModel } from '@/domain/library/library';
 import { searchCards, searchTokens } from '@/domain/library/search';
 import { rememberDeck } from '@/platform/lastDeck';
-import { changeDeck, removeDeck } from '@/features/library/actions';
+import { removeDeck, switchDeckArea } from '@/features/library/actions';
 import { useDeckDetail, useLibraryData, useSearchData } from '@/features/library/queries';
-import { BackLink, Screen, ScreenTitle } from '../../components/Screen';
+import { BackLink, ScreenTitle } from '../../components/Screen';
+import { StorageError } from '../../components/StorageError';
+import { useMediaQuery } from '../../useMediaQuery';
 import { Bibliothek } from './Bibliothek';
 import { AreaPickSheet, ConfirmSheet, GebieteSheet, StapelSheet } from './Sheets';
 import { StapelDetail } from './StapelDetail';
@@ -26,7 +27,7 @@ export function Stapel() {
   const [filter, setFilter] = useState(ALL_AREAS);
   const [query, setQuery] = useState('');
   const [sheet, setSheet] = useState<SheetState>(null);
-  const [areaHint, setAreaHint] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const hintTimer = useRef<number | undefined>(undefined);
 
   const searchText = useDeferredValue(query).trim();
@@ -58,7 +59,9 @@ export function Stapel() {
     [searching, searchText, searchData],
   );
 
-  const selectedId = deckId ?? model?.groups[0]?.stacks[0]?.id;
+  // Ab 1100 px ist ohne Auswahl der erste Stapel offen; auf dem iPhone bleibt die Liste allein.
+  const wide = useMediaQuery('(min-width: 1100px)');
+  const selectedId = deckId ?? (wide ? model?.groups[0]?.stacks[0]?.id : undefined);
   const detail = useDeckDetail(selectedId);
   const deckReady = detail.status === 'ready' ? detail.value : null;
 
@@ -67,15 +70,7 @@ export function Stapel() {
   }, [deckReady]);
   useEffect(() => () => window.clearTimeout(hintTimer.current), []);
 
-  if (library.status === 'error' || detail.status === 'error') {
-    return (
-      <Screen>
-        <ScreenTitle lead="Bitte schließe Juri und öffne es erneut.">
-          Kein Zugriff auf die Stapel
-        </ScreenTitle>
-      </Screen>
-    );
-  }
+  if (library.status === 'error' || detail.status === 'error') return <StorageError />;
   if (!model || library.status !== 'ready') return null;
 
   const { areas, decks } = library.value;
@@ -89,19 +84,25 @@ export function Stapel() {
       })
     : null;
 
+  function say(message: string) {
+    setNotice(message);
+    window.clearTimeout(hintTimer.current);
+    hintTimer.current = window.setTimeout(() => {
+      setNotice(null);
+    }, 3500);
+  }
+
   function onToggleArea(areaId: string) {
     if (!deckReady) return;
-    const next = toggleArea(deckReady.deck.areaIds, areaId);
-    if (next === null) {
-      setAreaHint(true);
-      window.clearTimeout(hintTimer.current);
-      hintTimer.current = window.setTimeout(() => {
-        setAreaHint(false);
-      }, 3500);
-      return;
-    }
-    setAreaHint(false);
-    void changeDeck(deckReady.deck.id, { areaIds: next });
+    setNotice(null);
+    switchDeckArea(deckReady.deck.id, areaId).then(
+      (result) => {
+        if (result === 'last') say('Ein Stapel braucht mindestens ein Rechtsgebiet.');
+      },
+      () => {
+        say('Das hat nicht geklappt. Bitte versuche es noch einmal.');
+      },
+    );
   }
 
   const close = () => {
@@ -130,7 +131,7 @@ export function Stapel() {
         <StapelDetail
           model={deckModelValue}
           onToggleArea={onToggleArea}
-          areaHint={areaHint}
+          notice={notice}
           onEdit={() => {
             setSheet('deck-edit');
           }}

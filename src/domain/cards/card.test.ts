@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest';
 import type { Card } from '../model/records';
 import {
   cardTitle,
+  buildCard,
+  buildItems,
   checkCard,
   contentOf,
-  formFromCard,
   formatTags,
   normalizeTags,
   reviewItemId,
@@ -128,23 +129,76 @@ describe('Karte und Formular', () => {
     expect(cardTitle({ type: 'qa' })).toBe('');
     expect(cardTitle({ type: 'cloze' })).toBe('');
   });
+});
 
-  it('füllt das Formular aus der Karte', () => {
-    expect(formFromCard(qaCard)).toEqual({
-      type: 'qa',
-      front: 'F',
-      back: 'B',
-      text: '',
-      norm: '§ 1',
-      tags: '#A',
+describe('Grenzen', () => {
+  it('meldet zu lange Felder, statt sie zu kürzen', () => {
+    expect(checkCard({ ...qa, front: 'a'.repeat(2001) })).toEqual({
+      ok: false,
+      errors: { front: 'Die Vorderseite ist zu lang (höchstens 2.000 Zeichen).' },
     });
-    expect(formFromCard(clozeCard)).toEqual({
+    expect(checkCard({ ...qa, back: 'a'.repeat(4001) })).toEqual({
+      ok: false,
+      errors: { back: 'Die Rückseite ist zu lang (höchstens 4.000 Zeichen).' },
+    });
+    expect(checkCard({ ...cloze, text: `{{c1::a}}${'a'.repeat(4000)}` })).toEqual({
+      ok: false,
+      errors: { text: 'Der Text mit den Lücken ist zu lang (höchstens 4.000 Zeichen).' },
+    });
+    expect(checkCard({ ...qa, front: 'a'.repeat(2000), back: 'b'.repeat(4000) }).ok).toBe(true);
+  });
+
+  it('meldet eine zu lange Norm und prüft alle Felder zugleich', () => {
+    expect(checkCard({ ...qa, norm: 'n'.repeat(201) })).toEqual({
+      ok: false,
+      errors: { norm: 'Die Norm ist zu lang (höchstens 200 Zeichen).' },
+    });
+    expect(checkCard({ ...qa, front: '', norm: 'n'.repeat(201) })).toMatchObject({
+      ok: false,
+      errors: { front: 'Die Vorderseite fehlt.', norm: expect.any(String) as string },
+    });
+    expect(checkCard({ ...cloze, text: 'ohne Lücke', norm: 'n'.repeat(201) })).toMatchObject({
+      ok: false,
+      errors: {
+        text: 'Markiere mindestens ein Wort als Lücke.',
+        norm: expect.any(String) as string,
+      },
+    });
+  });
+});
+
+describe('buildCard und buildItems', () => {
+  it('bauen Karte und Abfragen aus den Feldern', () => {
+    const fields = {
+      content: { type: 'cloze' as const, text: '{{c1::a}} {{c2::b}}' },
+      norm: '§ 1',
+      tags: ['A'],
+    };
+    const card = buildCard('k1', 'd1', fields, 5, 6);
+    expect(card).toEqual({
+      id: 'k1',
+      deckId: 'd1',
+      norm: '§ 1',
+      tags: ['A'],
+      createdAt: 5,
+      updatedAt: 6,
       type: 'cloze',
-      front: '',
-      back: '',
-      text: 'x {{c1::y}}',
-      norm: '§ 1',
-      tags: '#A',
+      text: '{{c1::a}} {{c2::b}}',
     });
+    expect(buildItems(card, 7)).toEqual([
+      { id: 'k1:c1', cardId: 'k1', deckId: 'd1', sub: 'c1', createdAt: 7 },
+      { id: 'k1:c2', cardId: 'k1', deckId: 'd1', sub: 'c2', createdAt: 7 },
+    ]);
+    const qaCard = buildCard(
+      'k2',
+      'd1',
+      { content: { type: 'qa', front: 'F', back: 'B' }, norm: '', tags: [] },
+      1,
+      1,
+    );
+    expect(qaCard).toMatchObject({ type: 'qa', front: 'F', back: 'B' });
+    expect(buildItems(qaCard, 1)).toEqual([
+      { id: 'k2', cardId: 'k2', deckId: 'd1', sub: '', createdAt: 1 },
+    ]);
   });
 });
