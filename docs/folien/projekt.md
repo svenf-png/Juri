@@ -149,6 +149,16 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - Abhängigkeiten minimal, fest versioniert und überwacht
 - Schutz gegen Einbetten in fremde Seiten in der App selbst
 
+## Testen
+
+- Automatische Tests für Fachlogik, Abläufe und Aussehen
+- Geprüft auf iPhone 14, iPhone 16 Pro Max und iPad Air 11 Zoll
+- **Testinstanz** „Juri Test“ unter `svenf-png.github.io/Juri/test/`, getrennt von echten Daten
+- Dort per Knopfdruck: 26 Wochen Lernverlauf, Fristen, High fives, 5.000 Karten
+- **Demo-Stapel** mit echten juristischen Inhalten, als Demo gekennzeichnet
+
+> **Notizen:** Erfolge, Heatmap und Fristen sieht man sonst erst nach Wochen echter Nutzung. Die Testinstanz macht alle Screens sofort prüfbar, ohne die eigenen Lerndaten anzufassen. Normtexte in den Demo-PDFs sind als amtliche Werke nach § 5 UrhG gemeinfrei.
+
 # Entscheidungen
 
 ## Getroffene Entscheidungen
@@ -160,8 +170,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 | Lückentext | Lücken einer Karte gebündelt, eine Bewertung |
 | Schema | Eine Abfrage pro Schema, mit Inhalt je Punkt |
 | Serie | Anlegen zählt, leere Tage brechen nicht, Gerätezeitzone |
-| Mindestversion | iOS und iPadOS 18 |
-| Lizenz | MIT |
+| Mindestversion, Lizenz | iOS und iPadOS 18, MIT |
+| Testdaten | Demo-Stapel, Demo-Profil, großer Datensatz in eigener Testinstanz |
 
 > **Notizen:** Alle Entscheidungen mit Begründung stehen in docs/ARCHITEKTUR.md, Abschnitt 2.
 

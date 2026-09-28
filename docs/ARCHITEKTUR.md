@@ -51,6 +51,7 @@ platform/   Web Share, Datei-Input, persist/estimate,    -> Browser-APIs
 | 7 | Mindestversion | **iOS/iPadOS 18+** | Testgeräte: iPhone 14 (390 × 844), iPhone 16 Pro Max (440 × 956), iPad Air M4 11 Zoll (1180 × 820 quer, 820 × 1180 hoch), älteres iPad (Modell und iPadOS-Version liefert der Geräte-Check in M0). |
 | 8 | Lizenz | **MIT** | `LICENSE` im Repo (Rechteinhaber vorerst `svenf-png`); Font-Lizenzen (OFL) bleiben daneben bestehen. |
 | 9 | Dokumentation | **Doku und Handbuch als folienfähiges Markdown** | `docs/folien/projekt.md` und `docs/folien/handbuch.md` nach `docs/folien/KONVENTION.md`, per KI in PowerPoint umwandelbar; Screenshots ab M2 automatisch aus der App. Pflege in jedem Meilenstein. |
+| 10 | Testdaten | **Demo-Stapel, Demo-Profil mit Verlauf, großer Datensatz; eigene Testinstanz; echte juristische Inhalte** | Siehe Abschnitt „Testdaten“ unten. Demo-Profil und großer Datensatz nur in der Testinstanz `svenf-png.github.io/Juri/test/`; Demo-Stapel als normale `.juri`-Dateien. |
 
 ### Ursprüngliche Fragen
 
@@ -89,7 +90,7 @@ platform/   Web Share, Datei-Input, persist/estimate,    -> Browser-APIs
 - **A8 iPad-Breiten:** unter 768 px iPhone-Layout, 768 bis 1099 px Sidebar mit einspaltigem Inhalt, ab 1100 px die iPad-Designs. Nicht eigens gestaltete Screens stehen auf dem iPad mittig in der Inhaltsspalte.
 - **A9 Erfolgs-Snapshot und High fives** reisen standardmäßig in jeder `.juri`-Datei mit, abschaltbar in den Einstellungen.
 - **A10 Import-Dialog ohne `accept`-Filter:** iOS graut Dateien mit unbekannter Endung sonst aus. Die Prüfung erfolgt nach der Auswahl (ZIP-Signatur, manifest, zod).
-- **A11 Keine Seed-Daten:** Beispielinhalte aus den Designs nur als Test-Fixtures.
+- **A11 Keine Seed-Daten in der echten App:** Die Produktiv-App startet leer. Testdaten gibt es nach Entscheidung 10: Demo-Stapel zum Import und Demo-Profil nur in der Testinstanz.
 - **A12 Referenz-Screenshots** rendere ich selbst aus `design/` mit festen Fixture-Daten. Vergleich mit Toleranz, dazu exakte Prüfung der Tokens über berechnete Styles.
 - **A13 Safari-Tab vs. installierte App:** Auf iPhone und iPad haben Safari und die Home-Bildschirm-App getrennte Speicher. Im Safari-Tab zeigt Juri deshalb zuerst die Install-Anleitung und legt dort keine Daten an.
 - **A14 Statusleiste:** `apple-mobile-web-app-status-bar-style = default` (dunkle Schrift). `black-translucent` scheidet aus, weil die Schrift dann weiß ist und auf dem hellen Design unlesbar wäre. Ob sich der Hintergrund der Lern-Screens (`#F6F4FB`) per `theme-color` bis in die Statusleiste ziehen lässt, prüfe ich im Geräte-Check; sonst bleibt oben ein weißer Streifen.
@@ -104,7 +105,7 @@ Hinweis: Lighthouse hat die PWA-Kategorie mit Version 12 (April 2024) entfernt. 
 
 | # | Meilenstein | Inhalt | Abnahme | PT (Briefing → neu) |
 |---|---|---|---|---|
-| M0 | Fundament + Geräte-Check | Toolchain, CI, ADR-001 bis 005, Tokens, Fonts, `/styleguide`, Deploy-Pipeline (GitHub Pages), Seite `/geraetecheck` (persist, estimate, standalone, Web Share mit `.juri`, Dateiauswahl, 50-MB-Blob in IndexedDB, HEIC, `.ics`, Statusleiste) | leere App installierbar und offline startbar; Geräte-Check-Ergebnisse von deinem iPhone/iPad | 0,5 → 1,5 |
+| M0 | Fundament + Geräte-Check | Toolchain, CI, ADR-001 bis 005, Tokens, Fonts, `/styleguide`, Deploy-Pipeline (GitHub Pages) für App und Testinstanz `/Juri/test/`, Seite `/geraetecheck` in der Testinstanz (persist, estimate, standalone, Web Share mit `.juri`, Dateiauswahl, 50-MB-Blob in IndexedDB, HEIC, `.ics`, Statusleiste) | leere App installierbar und offline startbar; Geräte-Check-Ergebnisse von deinem iPhone/iPad | 0,5 → 1,5 |
 | M1 | Daten, Profil, Backup | Dexie-Schema, Repositories, Migrationstest, Onboarding, persist(), Speicheranzeige, Backup Export/Import | Daten überleben Neustart; Backup-Roundtrip identisch | 1 → 2 |
 | M2 | Shell, UI-Kit, Heute | Tab-Bar, Sidebar, Routing, Safe Areas, alle Basiskomponenten, Motion, Reduced Motion | Heute auf iPhone/iPad pixelnah zu Main/iPadHeute (Screenshot-Test) | 1,5 → 2,5 |
 | M3 | Karten und Stapel | Areas, Decks m:n, Tags, Frage/Antwort und Lückentext, Einfach/Mehr, Bibliothek, Stapel-Detail, iPad Master-Detail; Ereignis-Log ab hier | Stapel in ZR und ÖR in beiden Gruppen; Cloze mit 3 Lücken ergibt 3 reviewItems | 2 → 3 |
@@ -118,7 +119,21 @@ Hinweis: Lighthouse hat die PWA-Kategorie mit Version 12 (April 2024) entfernt. 
 | M11 | Feinschliff, QA, Deployment | Update-Flow, Install-Hinweis, VoiceOver-Grundcheck, Kontraste, 5.000-Karten-Performance, README, Geräte-Testliste | manuelle Testliste auf iPhone und iPad abgehakt | 1,5 → 3 |
 | | **Summe** | | | **19 → 31,5** |
 
-Dazu rund 2 PT für die fehlenden Screens, falls ich sie entwerfe (Frage 2). **Realistisch: etwa 33 PT.** Mehraufwand gegenüber dem Briefing entsteht vor allem durch Pixelnähe auf 23 Screens plus rund 15 ungestaltete Zustände, ≥ 90 % Testabdeckung in `domain/`, Screenshot-Tests mit Referenzen, PDF und Abdeckung unter iOS-Speichergrenzen sowie Merge mit Konflikten. Der Engpass sind deine Freigaben und die Gerätetests, nicht die Implementierung.
+Dazu rund 2 PT für die fehlenden Screens (Entscheidung 2) und rund 1,5 PT für Testdaten und Testinstanz (Entscheidung 10). **Realistisch: etwa 35 PT.** Mehraufwand gegenüber dem Briefing entsteht vor allem durch Pixelnähe auf 23 Screens plus rund 15 ungestaltete Zustände, ≥ 90 % Testabdeckung in `domain/`, Screenshot-Tests mit Referenzen, PDF und Abdeckung unter iOS-Speichergrenzen sowie Merge mit Konflikten. Der Engpass sind deine Freigaben und die Gerätetests, nicht die Implementierung.
+
+### Testdaten
+
+**Drei Arten, alle aus einem deterministischen Generator** (gleiche Eingabe ergibt immer dieselben Daten). Derselbe Generator speist Unit-Tests, E2E- und Screenshot-Tests, die Doku-Bilder und die Testinstanz.
+
+| Testdaten | Inhalt | Wo | ab |
+|---|---|---|---|
+| **Demo-Stapel** | Je Rechtsgebiet 1 bis 2 Stapel mit Karten aller vier Typen, ohne Lernfortschritt; ein Stapel in zwei Rechtsgebieten (m:n) | `.juri`-Dateien, normal importierbar in jede Instanz, einzeln löschbar | M3 (Frage, Lücke), M5 (Schema), M6 (Abdeckung), M9 (als `.juri`) |
+| **Demo-Profil mit Verlauf** | 26 Wochen Lernhistorie mit Rekordtag und Pausentagen, laufende Serie, freigeschaltete und fast erreichte Meilensteine, Fristen (eine im Endspurt, eine ohne Datum), Kontakte mit High fives | nur Testinstanz, Menü „Testdaten laden / zurücksetzen“ | M1 (Grundgerüst), ausgebaut in M7, M8, M10 |
+| **Großer Datensatz** | 5.000 Karten über viele Stapel, 50-seitiges PDF | nur Testinstanz | M6 (PDF), M11 (5.000 Karten) |
+
+**Testinstanz** `svenf-png.github.io/Juri/test/`: Build derselben App mit eigener Datenbank, eigenem Service-Worker-Bereich (die echte App schließt `/Juri/test/` von ihrem Offline-Fallback aus), Name „Juri Test“, abgewandeltem Icon und dauerhaftem Hinweisband. Als zweites Icon installierbar; die echten Lerndaten bleiben unberührt. Die Geräte-Check-Seite aus M0 zieht dorthin um. Aufbau ab M0, Menü ab M1.
+
+**Inhalte:** Echte juristische Inhalte, als Demo gekennzeichnet. Definitionen und Prüfungsschemata nach den Beispielen aus den Designs (u. a. Gewahrsam, Betrug, Anfechtungsklage, Amtshaftung, Versäumnisurteil, gutgläubiger Erwerb). Normtexte und Demo-PDFs aus Gesetzestexten, die als amtliche Werke nach § 5 Abs. 1 UrhG gemeinfrei sind. Alle Inhalte liegen als lesbare Dateien in `testdaten/`, damit du sie fachlich prüfen kannst, bevor sie in Demo-Stapel übernommen werden.
 
 ### Risiken
 
@@ -135,6 +150,8 @@ Dazu rund 2 PT für die fehlenden Screens, falls ich sie entwerfe (Frage 2). **R
 | Übernahme des GitHub-Kontos | ein manipuliertes Update könnte lokale Daten aller Nutzer auslesen | Zwei-Faktor bzw. Passkey, Regel für `main` (nur per PR, kein Force-Push) |
 | Lieferkette (npm-Pakete, Actions) | fremder Code in der App | wenige Abhängigkeiten, Lockfile, Dependabot, Actions auf Commit-Hashes gepinnt, minimale Workflow-Rechte |
 | Einbetten in fremde Seiten | Pages erlaubt keine Header, `frame-ancestors` wirkt per Meta-Tag nicht | App prüft selbst, ob sie eingebettet ist, und rendert dann nicht |
+| Fachliche Fehler in Demo-Inhalten | falsches Lernen, wenn jemand Demo-Stapel ernst nimmt | als Demo gekennzeichnet, Normtexte wörtlich aus amtlichen Quellen, Inhalte als prüfbare Dateien in `testdaten/`, Stichprobe durch dich |
+| Verwechslung von Testinstanz und echter App | Lernen in der falschen App | eigener Name „Juri Test“, abgewandeltes Icon, dauerhaftes Hinweisband, getrennte Datenbank |
 | Absender in `.juri` nicht authentifiziert | gefälschte High fives möglich | für V1 akzeptiert (reine Anzeige, kein Zugriff), dokumentiert |
 | Screenshot-Vergleich täuscht Präzision vor | Abweichungen fallen durch | feste Fixtures, Toleranz, zusätzlich Token-Prüfung per berechnetem Style |
 
@@ -145,7 +162,7 @@ Dazu rund 2 PT für die fehlenden Screens, falls ich sie entwerfe (Frage 2). **R
 - **Keine Push-Erinnerungen:** (1) `.ics`-Export: Fristen als Kalendertermine mit Erinnerung, optional eine wiederkehrende „Lernzeit“. Der Kalender erinnert, ganz ohne Server. (2) App-Badge (Badging API, iOS 16.4+ für Home-Bildschirm-Apps): zeigt die Zahl fälliger Karten am Icon, braucht aber die Mitteilungs-Erlaubnis und aktualisiert sich nur, während Juri offen ist. Daher nur optional. Ob `.ics` aus der installierten App sauber in den Kalender geht, prüft der Geräte-Check.
 - **FSRS-Optimierung:** Anki verlangt seit Version 24.06 keine Mindestzahl mehr; Benchmarks im Anki-Tracker deuten darauf hin, dass sich Optimierung schon ab wenigen Dutzend Wiederholungen lohnt. Vorschlag: Das reviewLog enthält ab Tag 1 alle nötigen Felder. Die Optimierung (WASM-Paket `fsrs-browser`, lazy geladen) biete ich nach V1 an, zuerst ab 400 Wiederholungen, dann bei jeder Verdopplung, und übernehme neue Parameter nur, wenn sie auf den eigenen Daten besser vorhersagen.
 - **HEIC:** Safari 17 dekodiert HEIC nativ (`<img>`, `createImageBitmap`). Juri dekodiert daher mit Bordmitteln und speichert als JPEG (max. 2000 px Kante); WebP nur, wenn der Browser es beim Kodieren nachweislich liefert. Gelingt das Dekodieren nicht, erscheint ein Hinweis.
-- **Beispielinhalte:** Werden nicht ausgeliefert (A11).
+- **Beispielinhalte:** Die Platzhalter aus den Designs werden nicht in die echte App eingebaut (A11). Auf deinen Wunsch gibt es stattdessen gezielte Testdaten (Entscheidung 10, Abschnitt „Testdaten“).
 
 ---
 
@@ -164,7 +181,8 @@ Juri/
 │   │                       004-scheduler-zustaende, 005-hosting
 │   └── geraete-testliste.md
 ├── public/                 App-Icons, apple-touch-icon, Lizenzen (OFL)
-├── scripts/                render-design-refs.ts (Referenz-Screenshots), build-icons.ts
+├── scripts/                render-design-refs.ts (Referenz-Screenshots), build-icons.ts, build-testdaten.ts
+├── testdaten/              Inhalte der Demo-Stapel als prüfbare JSON-Dateien, Quellen der Normtexte, Demo-Bilder
 ├── src/
 │   ├── app/                Einstieg, Router, Provider, Layouts (Tab-Bar/Sidebar), Fehlergrenzen
 │   ├── ui/
@@ -184,6 +202,7 @@ Juri/
 │   │                       text/ (markdown-lite); Unit-Tests jeweils daneben (*.test.ts)
 │   ├── data/               db.ts, migrations/, repositories/, blob-store.ts, backup/
 │   ├── platform/           share, file-input, storage, install, clock, image, pdf/
+│   ├── demo/               Generator für Demo-Profil und großen Datensatz, Menü der Testinstanz (nur im Test-Build)
 │   └── sw/                 service-worker.ts
 ├── tests/
 │   ├── e2e/                Playwright (WebKit): iPhone 14, iPhone 16 Pro Max, iPad Air 11 quer und hoch

@@ -40,6 +40,16 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 - Vollbild, schneller Start, funktioniert ohne Internet
 - Im Safari-Tab zeigt Juri deshalb zuerst diese Anleitung
 
+## Ausprobieren mit Beispielstapeln
+
+<!-- status: entwurf, Demo-Stapel entstehen ab M3, pruefen in M9 -->
+- Für einen schnellen Einstieg gibt es **Demo-Stapel** zu ZR, SR und ÖR
+- Import wie jeder geteilte Stapel (Kapitel „Teilen“)
+- Die Inhalte sind als **Demo** gekennzeichnet; sie ersetzen kein Skript
+- Du kannst sie jederzeit wieder löschen
+
+> **Notizen:** Wer alle Funktionen mit Beispielverlauf sehen will, nutzt die Testinstanz „Juri Test“ unter svenf-png.github.io/Juri/test/. Sie ist eine eigene App mit eigenen Daten und berührt deine echten Lerndaten nicht.
+
 ## Der erste Start
 
 <!-- status: entwurf, Screen wird im Canvas entworfen, pruefen in M1 -->
