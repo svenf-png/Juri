@@ -66,6 +66,23 @@ const CASES: Case[] = [
 /** Spielraum für Kantenglättung je Engine, wie in stapel.spec.ts. */
 const MAX_DIFF_RATIO = { chromium: 0.001, webkit: 0.002 };
 
+/** Lage aller Textstücke (Text, x, y, Breite, Höhe), für die Fehlersuche bei Abweichungen. */
+async function textRects(page: Page): Promise<Record<string, string>> {
+  return page.evaluate(() => {
+    const out: Record<string, string> = {};
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      const text = n.textContent?.trim();
+      if (!text) continue;
+      const range = document.createRange();
+      range.selectNodeContents(n);
+      const r = range.getBoundingClientRect();
+      out[text] = [r.x, r.y, r.width, r.height].map((v) => v.toFixed(1)).join(' ');
+    }
+    return out;
+  });
+}
+
 async function openPreview(page: Page, c: Case) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(c.route);
@@ -99,6 +116,7 @@ test.describe('Lernen: pixelnah zum Design', () => {
       await page.setViewportSize({ width: c.width, height: c.height });
       await showDesign(page, c.design);
       const design = await page.screenshot({ animations: 'disabled' });
+      const designRects = await textRects(page);
       await openPreview(page, c);
       const app = await page.screenshot({ animations: 'disabled' });
 
@@ -108,6 +126,12 @@ test.describe('Lernen: pixelnah zum Design', () => {
       }
       const diff = await pixelDiff(context, design, app);
       if (diff.differing > 0) {
+        const appRects = await textRects(page);
+        for (const [text, rect] of Object.entries(designRects)) {
+          if (appRects[text] !== rect) {
+            console.log(`Lage ${c.image} "${text}": Design ${rect}, App ${appRects[text] ?? '-'}`);
+          }
+        }
         mkdirSync('test-results/diff', { recursive: true });
         writeFileSync(`test-results/diff/${c.image}-${browserName}-design.png`, design);
         writeFileSync(`test-results/diff/${c.image}-${browserName}-app.png`, app);
