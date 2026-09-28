@@ -45,3 +45,10 @@ Manuelle Prüfungen auf echten Geräten. Testgeräte (Entscheidung 7): iPhone 14
 8. **Suche:** „Gewahrsam“ eintippen; Treffer öffnen die Karte. Umlaute tippen („Verjährung“).
 9. **iPad:** Liste links, Stapel rechts. Hochkant und Split View: Liste und Stapel nacheinander.
 10. **Backup:** Karten anlegen, Backup erstellen, App löschen, neu installieren, einspielen: Stapel, Karten und Lücken sind wieder da.
+
+## Updates (pro Gerät, ab Version 0.4.1)
+
+1. Nach einem neuen Deploy die App im App-Umschalter schließen und neu öffnen, dann etwa 20 Sekunden auf Heute bleiben: Unten erscheint „Neue Version verfügbar“. „Neu laden“ tippen, unter Einstellungen steht die neue Versionsnummer.
+2. Die App im Hintergrund lassen, während ein neuer Deploy läuft, dann zurück in die App wechseln: Der Hinweis erscheint auch ohne Neustart (höchstens einmal pro Minute wird nachgefragt).
+3. Ohne Netz öffnen: kein Fehler, kein Hinweis.
+   Version 0.3.0 und 0.4.0 fragen nicht aktiv nach; dort entscheidet allein der Browser, wann er eine neue Version bemerkt.
