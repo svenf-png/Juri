@@ -15,6 +15,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 ## Juri auf dem iPhone installieren
 
 <!-- status: entwurf, auf iPhone 14 und 16 Pro Max pruefen in M0 und M11; Wortlaut der iOS-Menues je Version pruefen -->
+
 1. In **Safari** die Adresse `svenf-png.github.io/Juri` öffnen
 2. Auf das **Teilen-Symbol** tippen (Quadrat mit Pfeil nach oben)
 3. **„Zum Home-Bildschirm“** wählen
@@ -26,6 +27,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 ## Juri auf dem iPad installieren
 
 <!-- status: entwurf, auf iPad Air 11 Zoll pruefen in M0 und M11 -->
+
 1. In **Safari** `svenf-png.github.io/Juri` öffnen
 2. Oben rechts auf das **Teilen-Symbol** tippen
 3. **„Zum Home-Bildschirm“**, dann **„Hinzufügen“**
@@ -43,6 +45,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 ## Ausprobieren mit Beispielstapeln
 
 <!-- status: entwurf, Demo-Stapel entstehen ab M3, pruefen in M9 -->
+
 - Für einen schnellen Einstieg gibt es **Demo-Stapel** zu ZR, SR und ÖR
 - Import wie jeder geteilte Stapel (Kapitel „Teilen“)
 - Die Inhalte sind als **Demo** gekennzeichnet; sie ersetzen kein Skript
@@ -53,6 +56,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 ## Der erste Start
 
 <!-- status: entwurf, Screen wird im Canvas entworfen, pruefen in M1 -->
+
 - Juri fragt nach deinem **Vornamen** (für Initiale und High fives)
 - Kein Passwort, keine E-Mail, kein Konto
 - Die Rechtsgebiete **ZR, SR und ÖR** sind schon angelegt
@@ -65,6 +69,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Deine erste Karte
 
 <!-- status: entwurf nach Erstellen.dc.html, pruefen in M3 -->
+
 - Unten in der Mitte auf **+** tippen
 - Typ wählen: **Frage**, **Lücke**, **Schema** oder **Abdeckung**
 - Vorderseite und Rückseite ausfüllen, Stapel wählen
@@ -76,6 +81,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Lückentext
 
 <!-- status: entwurf nach Erstellen.dc.html und Luecke.dc.html, pruefen in M3 und M4 -->
+
 - Typ **Lücke** wählen und den Satz eingeben
 - Wort oder Wortgruppe markieren, **„Markierung wird Lücke“** tippen
 - Mehrere Lücken pro Karte sind möglich
@@ -84,6 +90,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Prüfungsschema
 
 <!-- status: entwurf nach SchemaEditor.dc.html, Feld Inhalt wird im Canvas ergaenzt, pruefen in M5 -->
+
 - Typ **Schema** wählen, Titel eingeben, **„Gliederung bearbeiten“**
 - Punkte anlegen, mit den Pfeilen **ein- und ausrücken** (1., a), aa))
 - Zu jedem Punkt Norm und **Inhalt** eintragen
@@ -92,6 +99,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Aus PDF oder Foto
 
 <!-- status: entwurf nach Erstellen.dc.html und iPadErstellen.dc.html, pruefen in M6 -->
+
 - **PDF** oder **Foto** wählen, z. B. eine Skriptseite
 - **Abdeckung:** Felder aufziehen, die beim Lernen verdeckt sind
 - Auf dem iPad: Text im PDF markieren, dann **„Als Frage“**, **„Als Antwort“** oder **„Als Lücke“**
@@ -109,6 +117,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Eine Lernrunde
 
 <!-- status: entwurf nach Main.dc.html und Lernen.dc.html, pruefen in M4 -->
+
 - Auf **Heute** siehst du, wie viele Karten warten
 - **„Lernen starten“** tippen
 - Frage lesen, antworten (im Kopf), Karte **antippen** zum Umdrehen
@@ -120,12 +129,13 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Die vier Bewertungen
 
 <!-- layout: tabelle -->
-| Knopf | Bedeutung | Folge |
-|---|---|---|
-| **Nochmal** | Nicht gewusst | Kommt in dieser Runde erneut |
-| **Schwer** | Mit Mühe gewusst | Kurzer Abstand |
-| **Gut** | Gewusst | Normaler Abstand |
-| **Leicht** | Sofort gewusst | Langer Abstand |
+
+| Knopf       | Bedeutung        | Folge                        |
+| ----------- | ---------------- | ---------------------------- |
+| **Nochmal** | Nicht gewusst    | Kommt in dieser Runde erneut |
+| **Schwer**  | Mit Mühe gewusst | Kurzer Abstand               |
+| **Gut**     | Gewusst          | Normaler Abstand             |
+| **Leicht**  | Sofort gewusst   | Langer Abstand               |
 
 > **Notizen:** Unter jedem Knopf steht, wann die Karte wiederkommt, z. B. „10 min“ oder „5 T“ für fünf Tage.
 
@@ -148,6 +158,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Stapel ordnen
 
 <!-- status: entwurf nach Bibliothek.dc.html und Stapel.dc.html, pruefen in M3 -->
+
 - Unter **Stapel** siehst du alle Stapel, gruppiert nach Rechtsgebiet
 - Ein Stapel kann in **mehreren Rechtsgebieten** liegen, z. B. Amtshaftung in ZR und ÖR
 - Im Stapel die Rechtsgebiete einfach an- und abwählen
@@ -158,6 +169,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Lernrhythmus einstellen
 
 <!-- status: entwurf nach Einstellungen.dc.html, pruefen in M4 -->
+
 - Auf **Heute** oben rechts auf deine Initiale tippen
 - **FSRS (empfohlen)** oder **Leitner-Kasten** wählen
 - Voreinstellungen: **Entspannt 85 %**, **Standard 90 %**, **Examen 95 %**
@@ -168,6 +180,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Fristen anlegen
 
 <!-- status: entwurf nach Fristen.dc.html, pruefen in M7 -->
+
 - **„+ Frist hinzufügen“**: Examen, Klausur, LL.M. oder Eigene
 - Name und Datum eintragen (das Datum kann auch später folgen)
 - **Umfang** wählen: Rechtsgebiete, Stapel oder Tags
@@ -179,6 +192,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Einen Stapel verschicken
 
 <!-- status: entwurf nach Teilen.dc.html, pruefen in M9 -->
+
 - Im Stapel oben rechts auf **Teilen** tippen
 - Optional **„Eigene Notizen mitschicken“** einschalten
 - **„AirDrop, Nachrichten, Mail …“** öffnet das Teilen-Menü von iOS
@@ -187,6 +201,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Einen Stapel empfangen
 
 <!-- status: entwurf, Anleitung wird im Canvas entworfen, pruefen in M9 -->
+
 1. Die `.juri`-Datei in AirDrop oder Nachrichten **„In Dateien sichern“**
 2. Juri öffnen, **Teilen**, dann **„Datei öffnen“**
 3. Datei auswählen (sie steht unter „Zuletzt“ oben)
@@ -199,6 +214,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Serie, Heatmap, Meilensteine
 
 <!-- status: entwurf nach Erfolge.dc.html, pruefen in M8 -->
+
 - **Serie:** Tage in Folge mit Lernen oder Anlegen; ein Pausentag pro Woche ist frei
 - **Heatmap:** Wie viel du an jedem Tag gelernt oder angelegt hast
 - Der **Rekordtag** ist mit einem Ring markiert
@@ -207,6 +223,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## High fives
 
 <!-- status: entwurf nach HighFive.dc.html, pruefen in M10 -->
+
 - Unter **Erfolge** siehst du neue Erfolge deiner Lernpartner
 - Mit einem Tipp ein **High five** geben, oder einfach so
 - **„Per Nachricht senden“** verschickt ein Bild, z. B. über WhatsApp
@@ -226,6 +243,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Backup
 
 <!-- status: entwurf, Screen wird im Canvas entworfen, pruefen in M1 -->
+
 - **Backup exportieren** sichert alle Karten, Medien und deinen Fortschritt
 - Am besten **„In Dateien sichern“** und dort **iCloud Drive** wählen
 - Juri erinnert dich nach 14 Tagen oder 50 neuen Karten

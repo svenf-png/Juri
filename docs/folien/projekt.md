@@ -23,6 +23,7 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 ## Was Juri kann
 
 <!-- layout: zwei-spalten -->
+
 - **Vier Kartentypen:** Frage und Antwort, Lückentext, Prüfungsschema, PDF oder Bild mit Abdeckung
 - **Lernrhythmus:** FSRS (modernes Wiederholungsverfahren) oder klassischer Leitner-Kasten
 - **Fristen:** Examen, Klausur, LL.M. oder eigene; der Rhythmus endet rechtzeitig davor
@@ -64,13 +65,14 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 ## Farben
 
 <!-- layout: tabelle -->
-| Rolle | Farbe | Wert |
-|---|---|---|
-| Aktion, Akzent | Veilchen | `#6A3FE0` |
-| Text, Auswahl | Tinte | `#17141F` |
-| Sekundärtext | Grau-Violett | `#6B6678` |
-| Flächen | Hell | `#F6F4FB` |
-| Linien | Sehr hell | `#EFECF5` |
+
+| Rolle          | Farbe        | Wert      |
+| -------------- | ------------ | --------- |
+| Aktion, Akzent | Veilchen     | `#6A3FE0` |
+| Text, Auswahl  | Tinte        | `#17141F` |
+| Sekundärtext   | Grau-Violett | `#6B6678` |
+| Flächen        | Hell         | `#F6F4FB` |
+| Linien         | Sehr hell    | `#EFECF5` |
 
 > **Notizen:** Nur helles Design, kein Dark Mode. Alle Textfarben erreichen mindestens ein Kontrastverhältnis von 4,5 zu 1. Die Bewertungsknöpfe unterscheiden sich über Helligkeit statt über Ampelfarben.
 
@@ -103,13 +105,14 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 ## Aufbau in Schichten
 
 <!-- layout: tabelle -->
-| Schicht | Aufgabe |
-|---|---|
-| Oberfläche | Screens, Komponenten, Animationen |
-| Anwendungsfälle | Lernen, Erstellen, Teilen, Fristen, Fortschritt |
-| Fachlogik | Lernalgorithmus, Fristen, Serie, Merge; vollständig getestet |
-| Daten | Lokale Datenbank (IndexedDB), Sicherung |
-| Plattform | Teilen, Dateien, Speicher, PDF |
+
+| Schicht         | Aufgabe                                                      |
+| --------------- | ------------------------------------------------------------ |
+| Oberfläche      | Screens, Komponenten, Animationen                            |
+| Anwendungsfälle | Lernen, Erstellen, Teilen, Fristen, Fortschritt              |
+| Fachlogik       | Lernalgorithmus, Fristen, Serie, Merge; vollständig getestet |
+| Daten           | Lokale Datenbank (IndexedDB), Sicherung                      |
+| Plattform       | Teilen, Dateien, Speicher, PDF                               |
 
 > **Notizen:** Die Fachlogik hängt nicht vom Browser ab und wird mit automatischen Tests zu mindestens 90 Prozent abgedeckt.
 
@@ -164,14 +167,15 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 ## Getroffene Entscheidungen
 
 <!-- layout: tabelle -->
-| Thema | Entscheidung |
-|---|---|
-| Hosting | GitHub Pages unter `svenf-png.github.io/Juri` |
-| Lückentext | Lücken einer Karte gebündelt, eine Bewertung |
-| Schema | Eine Abfrage pro Schema, mit Inhalt je Punkt |
-| Serie | Anlegen zählt, leere Tage brechen nicht, Gerätezeitzone |
-| Mindestversion, Lizenz | iOS und iPadOS 18, MIT |
-| Testdaten | Demo-Stapel, Demo-Profil, großer Datensatz in eigener Testinstanz |
+
+| Thema                  | Entscheidung                                                      |
+| ---------------------- | ----------------------------------------------------------------- |
+| Hosting                | GitHub Pages unter `svenf-png.github.io/Juri`                     |
+| Lückentext             | Lücken einer Karte gebündelt, eine Bewertung                      |
+| Schema                 | Eine Abfrage pro Schema, mit Inhalt je Punkt                      |
+| Serie                  | Anlegen zählt, leere Tage brechen nicht, Gerätezeitzone           |
+| Mindestversion, Lizenz | iOS und iPadOS 18, MIT                                            |
+| Testdaten              | Demo-Stapel, Demo-Profil, großer Datensatz in eigener Testinstanz |
 
 > **Notizen:** Alle Entscheidungen mit Begründung stehen in docs/ARCHITEKTUR.md, Abschnitt 2.
 
@@ -180,11 +184,12 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 ## Meilensteine
 
 <!-- layout: tabelle -->
-| Phase | Inhalt |
-|---|---|
-| M0 bis M2 | Fundament, Daten und Backup, Oberfläche und Heute-Screen |
-| M3 bis M5 | Karten und Stapel, Lern-Engine, Prüfungsschemata |
-| M6 bis M8 | PDF und Abdeckung, Fristen, Erfolge |
+
+| Phase      | Inhalt                                                          |
+| ---------- | --------------------------------------------------------------- |
+| M0 bis M2  | Fundament, Daten und Backup, Oberfläche und Heute-Screen        |
+| M3 bis M5  | Karten und Stapel, Lern-Engine, Prüfungsschemata                |
+| M6 bis M8  | PDF und Abdeckung, Fristen, Erfolge                             |
 | M9 bis M11 | Teilen und Import, High fives, Feinschliff und Veröffentlichung |
 
 > **Notizen:** Geschätzt rund 33 Personentage. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
@@ -192,7 +197,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 ## Stand heute
 
 <!-- status: bei jedem Meilenstein aktualisieren -->
-- Planung abgeschlossen, Entscheidungen getroffen
-- Design liegt vollständig als Referenz im Projekt
-- Nächster Schritt: M0, das technische Fundament
-- Getestet wird auf iPhone 14, iPhone 16 Pro Max und iPad Air 11 Zoll
+
+- **M0 fertig:** Grundgerüst, Design-Tokens, Schriften, App-Icon, Styleguide
+- Installierbar und offline startbar, Testinstanz „Juri Test“ mit Geräte-Check
+- Automatische Prüfung bei jeder Änderung: 72 Unit-Tests, E2E-Tests auf iPhone- und iPad-Größen
+- Nächster Schritt: Geräte-Check auf echten Geräten, dann M1 (Daten, Profil, Backup)

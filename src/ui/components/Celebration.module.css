@@ -1,0 +1,70 @@
+/* Erfolg: Ring 1,1 s → Haken-Pop → 10 Funken radial (Lernen.dc.html, Fertig.dc.html). */
+.wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ring {
+  animation: ring var(--dur-ring) var(--ease-ring) 0.15s both;
+}
+
+@keyframes ring {
+  from {
+    stroke-dashoffset: 465;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.pop {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--violet);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pop var(--dur-pop) var(--ease-standard) 1.05s both;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0);
+  }
+  60% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.spark {
+  position: absolute;
+  border-radius: 50%;
+  animation: burst var(--dur-spark) var(--ease-burst) both;
+}
+
+@keyframes burst {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    stroke-dashoffset: 0;
+  }
+  .spark {
+    display: none;
+  }
+}

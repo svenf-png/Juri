@@ -1,0 +1,27 @@
+/* Wortmarke „Jurı“ mit gedrehtem Quadrat als i-Punkt (AppIcon.dc.html). */
+.mark {
+  display: inline-flex;
+  align-items: flex-end;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: var(--ink);
+}
+
+.i {
+  position: relative;
+  display: inline-block;
+}
+
+.dot {
+  position: absolute;
+  left: 50%;
+  top: 0.027em;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: -0.1em;
+  border-radius: 0.06em;
+  background: var(--violet);
+  transform: rotate(8deg);
+}

@@ -2,10 +2,10 @@
 
 Die Dateien in `docs/folien/` sind normales Markdown, das auf GitHub gut lesbar ist und sich gleichzeitig ohne Nacharbeit von einer KI in eine PowerPoint-Präsentation umwandeln lässt. Jede Datei ist genau eine Präsentation.
 
-| Datei | Präsentation | Zielgruppe |
-|---|---|---|
-| `projekt.md` | Juri: Idee, Design, Technik, Entscheidungen, Fahrplan | Interessierte, Mitwirkende, Entscheider |
-| `handbuch.md` | Juri benutzen: Installation, Karten, Lernen, Teilen, Daten | Referendarinnen und Referendare |
+| Datei         | Präsentation                                               | Zielgruppe                              |
+| ------------- | ---------------------------------------------------------- | --------------------------------------- |
+| `projekt.md`  | Juri: Idee, Design, Technik, Entscheidungen, Fahrplan      | Interessierte, Mitwirkende, Entscheider |
+| `handbuch.md` | Juri benutzen: Installation, Karten, Lernen, Teilen, Daten | Referendarinnen und Referendare         |
 
 ## Regeln für die Markdown-Dateien
 
