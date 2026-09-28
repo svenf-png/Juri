@@ -2,8 +2,14 @@
  * Lernrhythmus nach Einstellungen.dc.html, Werte exakt aus dem Design: 54 px oben, Rand 24 px,
  * Abstand 20 px. Die Bedienelemente, die das Design nicht zeigt (Fach ändern), stehen in einem Sheet.
  */
+/* Wie das Design: Grundzeilenhöhe „normal“ (nicht 1,4), Zurück-Link 44 px hoch ohne Überlappung. */
 .screen {
   --screen-top: 54px;
+  line-height: normal;
+}
+
+.back {
+  margin: 0 0 0 -10px;
 }
 
 .title {
@@ -70,15 +76,12 @@
   border: 1.5px solid var(--track);
   background: var(--bg);
   color: var(--ink);
-  box-sizing: content-box;
-  margin: -1.5px;
 }
 
 .presetOn {
   border-width: 0;
   background: var(--violet);
   color: var(--bg);
-  margin: 0;
 }
 
 .presetName {
@@ -222,6 +225,8 @@
 }
 
 .row {
+  /* Im Design ohne border-box: Die Trennlinie kommt zur Mindesthöhe dazu. */
+  box-sizing: content-box;
   min-height: 58px;
   display: flex;
   align-items: center;

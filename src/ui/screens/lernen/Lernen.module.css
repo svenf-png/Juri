@@ -178,7 +178,8 @@
   font-weight: 700;
   display: flex;
   align-items: center;
-  box-sizing: border-box;
+  /* Im Design ohne border-box: Der Rand kommt zur Höhe dazu (29 px). */
+  box-sizing: content-box;
 }
 
 .norm {
@@ -404,6 +405,14 @@
   100% {
     background-size: 100% 100%;
   }
+}
+
+/* Im Bündel-Design ohne box-decoration-break: Bricht die Lücke um, trägt jedes Stück nur einen Rand. */
+.bundleChip {
+  background: var(--violet-100);
+  color: var(--violet-700);
+  border-radius: 8px;
+  padding: 1px 6px;
 }
 
 .steps {

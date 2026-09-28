@@ -46,6 +46,25 @@ Manuelle Prüfungen auf echten Geräten. Testgeräte (Entscheidung 7): iPhone 14
 9. **iPad:** Liste links, Stapel rechts. Hochkant und Split View: Liste und Stapel nacheinander.
 10. **Backup:** Karten anlegen, Backup erstellen, App löschen, neu installieren, einspielen: Stapel, Karten und Lücken sind wieder da.
 
+## M4: Lernen (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/` installieren oder öffnen, Einstellungen → Testdaten → „Demo-Stapel hinzufügen“. In der echten App vorher ein paar eigene Karten anlegen.
+
+1. **Heute:** zeigt „N Karten warten heute“ (höchstens 20 neue plus fällige). „Lernen starten“ öffnet die Lernansicht; oben stehen Statusleiste und Zähler ohne Überlappung.
+2. **Umdrehen und bewerten:** Karte antippen oder „Antwort zeigen“. Die Karte dreht sich, unten stehen vier Knöpfe mit „1 min“, „6 min“, „10 min“ und einer Zahl in Tagen. „Leicht“ tippen: Die Karte fliegt nach rechts weg, die nächste erscheint.
+3. **Wischen:** Antwort aufdecken, mit dem Finger nach links ziehen: „Nochmal“, die Karte kommt nach etwa drei anderen wieder. Nach rechts: „Gut“. Ein kurzes Wischen unter etwa einem Daumenbreit springt zurück. Notieren: Stört das Wischen das Scrollen oder die Rand-Geste von Safari?
+4. **Rückgängig:** Nach einer Bewertung erscheint unter „Antwort zeigen“ „Letzte Bewertung zurücknehmen“. Tippen: Die vorige Karte steht mit Antwort wieder da.
+5. **Lückentext mit mehreren Lücken:** „Nächste Lücke“ deckt der Reihe nach auf, „Alle zeigen“ alles; danach eine Bewertung.
+6. **Notiz:** Eine Karte mit Notiz (Erstellen → „Mehr“ → Notiz) zeigt sie unter der Antwort.
+7. **Abbrechen:** Nach einer Bewertung das X tippen: „Schon aufhören?“. „Beenden“ führt zurück, Heute zeigt weniger fällige Karten.
+8. **Ende:** Alles bewerten: „Geschafft.“ mit Bilanz. „Zurück zu Heute“ zeigt „Alles erledigt für heute.“
+9. **Stapel:** Im Stapel-Detail lernt „N fällige lernen“ nur diesen Stapel; die Fortschrittsleiste zeigt „neu“, „im Lernen“ und „sicher“.
+10. **Lernrhythmus:** Einstellungen → „Lernrhythmus“ (iPad: Sidebar). Voreinstellung Examen wählen, Regler bewegen, „Neue Karten pro Tag“ ändern. Zu „Leitner-Kasten“ wechseln, Fach antippen, Tage ändern, zurück zu FSRS: Karten bleiben bewertet.
+11. **Tastatur (iPad mit Tastatur):** Leertaste dreht, 1 bis 4 bewerten, Strg/Cmd+Z nimmt zurück, Esc beendet.
+12. **Entwicklungsstand:** Einstellungen → „Entwicklungsstand“ aufklappen: M0 bis M4 mit Haken und Version, M5 „in Arbeit“.
+13. **Backup:** Nach dem Lernen ein Backup erstellen, App löschen, neu installieren, einspielen: Fälligkeiten und Lernstand sind wie vorher.
+14. **Bewegung:** Bei „Bewegung reduzieren“ (Bedienungshilfen) drehen und wechseln die Karten ohne Animation.
+
 ## Updates (pro Gerät, ab Version 0.4.1)
 
 1. Nach einem neuen Deploy die App im App-Umschalter schließen und neu öffnen, dann etwa 20 Sekunden auf Heute bleiben: Unten erscheint „Neue Version verfügbar“. „Neu laden“ tippen, unter Einstellungen steht die neue Versionsnummer.

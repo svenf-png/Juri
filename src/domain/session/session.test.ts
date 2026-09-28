@@ -153,7 +153,7 @@ describe('gebündelte Lücken', () => {
     const out = rate(s, 'good')!;
     expect(out.effect.itemIds).toEqual(['c:c1', 'c:c2', 'c:c3']);
     expect(out.state.ratedItems).toBe(3);
-    expect(out.state.counts.good).toBe(1);
+    expect(out.state.counts.good).toBe(3);
   });
 });
 

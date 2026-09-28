@@ -63,7 +63,16 @@ function Pieces({ pieces, look }: { pieces: readonly Piece[]; look: 'front' | 'b
           );
         }
         return (
-          <span key={i} className={piece.look === 'current' ? styles.ring : styles.chip}>
+          <span
+            key={i}
+            className={
+              piece.look === 'current'
+                ? styles.ring
+                : look === 'bundle'
+                  ? styles.bundleChip
+                  : styles.chip
+            }
+          >
             {piece.text}
           </span>
         );

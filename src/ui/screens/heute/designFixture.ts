@@ -36,3 +36,18 @@ export const designInput: TodayInput = {
 };
 
 export const designModel = todayModel(designInput);
+
+/**
+ * HeuteErledigt.dc.html: nichts mehr fällig, das Tagesziel ist voll (24 von 24), der heutige Tag
+ * leuchtet in der höchsten Stufe; keine Fristen, kein High five.
+ */
+export const erledigtModel = todayModel({
+  ...designInput,
+  due: 0,
+  dueByArea: [],
+  goal: { done: 24, target: 24 },
+  levels: { ...designInput.levels, '2026-09-28': 4 },
+  createdThisWeek: 3,
+  deadlines: [],
+  highFive: null,
+});

@@ -18,6 +18,17 @@ const Styleguide = lazy(() =>
 const HeuteVorschau = lazy(() =>
   import('@/ui/screens/heute/HeuteVorschau').then((m) => ({ default: m.HeuteVorschau })),
 );
+const HeuteErledigtVorschau = lazy(() =>
+  import('@/ui/screens/heute/HeuteVorschau').then((m) => ({ default: m.HeuteErledigtVorschau })),
+);
+const LernenVorschau = lazy(() =>
+  import('@/ui/screens/lernen/LernenVorschau').then((m) => ({ default: m.LernenVorschau })),
+);
+const LernrhythmusVorschau = lazy(() =>
+  import('@/ui/screens/einstellungen/LernrhythmusVorschau').then((m) => ({
+    default: m.LernrhythmusVorschau,
+  })),
+);
 const StapelVorschau = lazy(() =>
   import('@/ui/screens/stapel/StapelVorschau').then((m) => ({ default: m.StapelVorschau })),
 );
@@ -111,6 +122,31 @@ export function routes(
       element: (
         <Lazy>
           <HeuteVorschau />
+        </Lazy>
+      ),
+    },
+    {
+      path: '/styleguide/heute-erledigt',
+      element: (
+        <Lazy>
+          <HeuteErledigtVorschau />
+        </Lazy>
+      ),
+    },
+    // Lernen und Lernrhythmus mit den Beispieldaten der Designs (Bildvergleich, A12).
+    ...(['frage', 'luecke'] as const).map((variant) => ({
+      path: `/styleguide/lernen/${variant}`,
+      element: (
+        <Lazy>
+          <LernenVorschau variant={variant} />
+        </Lazy>
+      ),
+    })),
+    {
+      path: '/styleguide/lernrhythmus',
+      element: (
+        <Lazy>
+          <LernrhythmusVorschau />
         </Lazy>
       ),
     },

@@ -1,6 +1,6 @@
 # ADR-004: Zustände des Lernalgorithmus
 
-Status: angenommen · 28.09.2026 (Umsetzung in M4 und M7)
+Status: angenommen · 28.09.2026 (Umsetzung in M4 (ADR-008) und M7)
 
 ## Kontext
 

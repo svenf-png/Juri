@@ -22,7 +22,7 @@
     "test:coverage": "vitest run --coverage",
     "e2e": "playwright test",
     "icons": "node scripts/build-icons.mjs",
-    "docs:bilder": "JURI_BILDER=1 playwright test tests/e2e/heute.spec.ts tests/e2e/stapel.spec.ts -g Bildschirmfoto",
+    "docs:bilder": "JURI_BILDER=1 playwright test tests/e2e/heute.spec.ts tests/e2e/stapel.spec.ts tests/e2e/lernen.spec.ts -g Bildschirmfoto",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build && npm run e2e"
   },
   "dependencies": {

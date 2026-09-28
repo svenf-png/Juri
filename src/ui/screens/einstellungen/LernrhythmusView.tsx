@@ -73,7 +73,7 @@ export function LernrhythmusView({
 
   return (
     <Screen className={styles.screen}>
-      <BackLink to={back.to} label={back.label} />
+      <BackLink to={back.to} label={back.label} className={styles.back} />
       <h1 className={styles.title}>Lernrhythmus</h1>
 
       <div className={styles.algos} role="group" aria-label="Lernalgorithmus">

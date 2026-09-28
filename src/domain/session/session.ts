@@ -80,7 +80,7 @@ export interface SessionState {
   readonly flipped: boolean;
   /** Gebündelte Lücken: wie viele der Lücken schon aufgedeckt sind. */
   readonly revealed: number;
-  /** Bewertungen je Stufe, jede Wiederholung zählt (auch wiederholte „Nochmal“). */
+  /** Bewertungen je Stufe, jede Wiederholung einer Abfrage zählt (auch wiederholte „Nochmal“). */
   readonly counts: Readonly<Record<RatingKey, number>>;
   /** Bewertete Abfragen insgesamt (Lücken einer Bündel-Station einzeln). */
   readonly ratedItems: number;
@@ -164,7 +164,8 @@ export function rate(state: SessionState, rating: RatingKey): RateResult | null 
       ]
     : rest;
   const finished = again ? state.finished : state.finished + 1;
-  const counts = { ...state.counts, [rating]: state.counts[rating] + 1 };
+  // Jede Abfrage zählt einzeln: Ein Bündel aus drei Lücken sind drei Bewertungen.
+  const counts = { ...state.counts, [rating]: state.counts[rating] + station.itemIds.length };
   const ratedItems = state.ratedItems + station.itemIds.length;
   const entry: HistoryEntry = {
     station,

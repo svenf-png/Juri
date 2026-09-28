@@ -3,10 +3,10 @@ titel: Juri benutzen
 untertitel: Das Handbuch für iPhone und iPad
 zielgruppe: Referendarinnen und Referendare
 stand: 2026-09-28
-version: 0.3 (Karten und Stapel gegen die App geprüft, übrige Kapitel Entwurf nach Design)
+version: 0.5 (Lernen und Lernrhythmus gegen die App geprüft, übrige Kapitel Entwurf nach Design)
 ---
 
-<!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke) und Stapel sind gegen die App geprüft (bis M3). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
+<!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke, Notiz), Lernen, Lernrhythmus und Stapel sind gegen die App geprüft (bis M4). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
 
 # Loslegen
 
@@ -66,7 +66,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 ## Heute
 
 <!-- layout: bild-gross -->
-<!-- status: M2 umgesetzt (Main.dc.html, iPadHeute.dc.html); Inhalte füllen sich ab M3 (Karten), M4 (Fälligkeit), M7 (Fristen), M8 (Ziele, Verlauf), M10 (High fives). Bild mit Beispieldaten. -->
+<!-- status: M2 umgesetzt (Main.dc.html, iPadHeute.dc.html); Karten (M3) und Fälligkeit (M4) sind echt; Fristen (M7), Ziele und Verlauf (M8) und High fives (M10) folgen. Bild mit Beispieldaten. -->
 
 ![Heute auf dem iPhone: 18 Karten warten, nächste Frist, Tagesziel, letzte 7 Tage](../bilder/heute-iphone.png)
 
@@ -75,7 +75,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 - **Letzte 7 Tage:** je dunkler, desto mehr gelernt; der Ring markiert deinen Rekordtag
 - Ein neuer Tag beginnt um **4 Uhr** morgens, nicht um Mitternacht
 
-> **Notizen:** Ohne Karten zeigt Heute „Noch keine Karten.“ und einen Knopf zum Anlegen. Wer nach Mitternacht noch lernt, lernt für den Vortag.
+> **Notizen:** Ohne Karten zeigt Heute „Noch keine Karten.“ und einen Knopf zum Anlegen. Ist alles gelernt, steht dort „Alles erledigt für heute.“ Wer nach Mitternacht noch lernt, lernt für den Vortag.
 
 ## Navigation
 
@@ -109,13 +109,13 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Lückentext
 
-<!-- status: M3 umgesetzt (Erstellen.dc.html), Lernen mit Lücken ab M4 -->
+<!-- status: M3 umgesetzt (Erstellen.dc.html), Lernen mit Lücken M4 umgesetzt (Luecke.dc.html) -->
 
 - Typ **Lücke** wählen und den Satz eingeben
 - Wort oder Wortgruppe markieren, **„Markierung wird Lücke“** tippen
 - Unter dem Text stehen die Lücken; **✕** entfernt eine, der Text bleibt
 - **Jede Lücke wird eine eigene Abfrage:** drei Lücken sind drei Abfragen
-- Beim Lernen (ab M4) bekommt jede Lücke ihren eigenen Rhythmus
+- Beim Lernen bekommt jede Lücke ihren eigenen Rhythmus
 
 ## Prüfungsschema
 
@@ -137,53 +137,76 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Einfach und Mehr
 
-<!-- status: M3 umgesetzt, Notiz kommt mit M4 -->
+<!-- status: M3 umgesetzt, Notiz M4 umgesetzt (ErstellenNotiz, AntwortNotiz) -->
 
 - Standard ist **Einfach**: nur das Nötigste
 - **Mehr** blendet **Norm** und **Tags** ein, z. B. „§ 242 StGB“ und „#Klausur #AG“
 - Tags und Normen findest du später mit der Suche
-- Das Feld **Notiz** kommt mit dem Lernen (M4)
+- **Notiz** für Merksätze und Eselsbrücken: Sie erscheint beim Lernen unter der Antwort
 
 # Lernen
 
 ## Eine Lernrunde
 
-<!-- status: entwurf nach Main.dc.html und Lernen.dc.html, pruefen in M4 -->
+<!-- layout: bild-gross -->
+<!-- status: M4 umgesetzt (Lernen.dc.html), Bild mit Beispieldaten aus der App -->
 
-- Auf **Heute** siehst du, wie viele Karten warten
-- **„Lernen starten“** tippen
-- Frage lesen, antworten (im Kopf), Karte **antippen** zum Umdrehen
+![Lernen auf dem iPhone: Frage, Fortschritt oben, „Antwort zeigen“ unten](../bilder/lernen-frage-iphone.png)
+
+- Auf **Heute** siehst du, wie viele Karten warten; **„Lernen starten“** öffnet die Runde
+- Frage lesen, im Kopf antworten, Karte **antippen** oder **„Antwort zeigen“**
 - Ehrlich bewerten, die nächste Karte kommt von selbst
+- Oben zeigen Leiste und Zähler, wie weit du bist; das **X** beendet die Runde
 - Am Ende: kurze Feier und Zusammenfassung
 
-![Lernen](../bilder/lernen-iphone.png)
+> **Notizen:** In einer Runde stehen fällige Karten und bis zu 20 neue am Tag (einstellbar). Überfällige kommen zuerst, neue zuletzt.
 
 ## Die vier Bewertungen
 
 <!-- layout: tabelle -->
+<!-- status: M4 umgesetzt, Abstände nach FSRS -->
 
-| Knopf       | Bedeutung        | Folge                        |
-| ----------- | ---------------- | ---------------------------- |
-| **Nochmal** | Nicht gewusst    | Kommt in dieser Runde erneut |
-| **Schwer**  | Mit Mühe gewusst | Kurzer Abstand               |
-| **Gut**     | Gewusst          | Normaler Abstand             |
-| **Leicht**  | Sofort gewusst   | Langer Abstand               |
+| Knopf       | Bedeutung        | Folge                                              |
+| ----------- | ---------------- | -------------------------------------------------- |
+| **Nochmal** | Nicht gewusst    | Kommt in dieser Runde nach etwa drei Karten wieder |
+| **Schwer**  | Mit Mühe gewusst | Kurzer Abstand                                     |
+| **Gut**     | Gewusst          | Normaler Abstand                                   |
+| **Leicht**  | Sofort gewusst   | Langer Abstand                                     |
 
-> **Notizen:** Unter jedem Knopf steht, wann die Karte wiederkommt, z. B. „10 min“ oder „5 T“ für fünf Tage.
+> **Notizen:** Unter jedem Knopf steht, wann die Karte wiederkommt, z. B. „10 min“ oder „5 T“ für fünf Tage. Die Zahl ist genau der Abstand, der nach dem Tippen gilt. Eine Karte mit „Nochmal“ kommt so lange wieder, bis du mindestens „Schwer“ wählst. Kein Abstand ist länger als 180 Tage.
 
 ## Gesten und Tastatur
 
+<!-- status: M4 umgesetzt -->
+
 - **Tippen:** Karte umdrehen
 - **Nach links wischen:** Nochmal, **nach rechts wischen:** Gut
-- Mit iPad-Tastatur: **Leertaste** umdrehen, **1 bis 4** bewerten
-- **⌘ Z** macht die letzte Bewertung rückgängig
+- **„Letzte Bewertung zurücknehmen“** unter „Antwort zeigen“ macht Bewertungen rückgängig, auch mehrere nacheinander
+- Mit iPad-Tastatur: **Leertaste** umdrehen, **1 bis 4** bewerten, **Pfeile** links und rechts, **⌘ Z** zurücknehmen, **Esc** beenden
+- Das **X** oben fragt nach, ob du aufhören willst; alle Bewertungen sind schon gespeichert
 
 ## Lückentext, Schema und Abdeckung
 
-- **Lückentext:** Lücke für Lücke aufdecken oder **„Alle zeigen“**, dann einmal bewerten
-- **Schema:** Punkt für Punkt mit Inhalt aufdecken, dann einmal bewerten
-- Verknüpfte Karten öffnen sich unten als Blatt, **„Karte lernen“** möglich
-- **Abdeckung:** Das gefragte Feld pulsiert, antippen deckt es auf
+<!-- layout: bild-gross -->
+<!-- status: Lückentext M4 umgesetzt (Luecke.dc.html), Schema M5, Abdeckung M6 -->
+
+![Lückentext auf dem iPhone: Lücke 3 von 4, „Alle zeigen“ und „Nächste Lücke“](../bilder/lernen-luecke-iphone.png)
+
+- **Lückentext:** Sind mehrere Lücken einer Karte fällig, deckst du sie mit **„Nächste Lücke“** der Reihe nach auf oder mit **„Alle zeigen“** alle; dann bewertest du einmal
+- Die Bewertung gilt für jede fällige Lücke einzeln
+- **Schema** (M5): Punkt für Punkt mit Inhalt aufdecken, dann einmal bewerten
+- **Abdeckung** (M6): Das gefragte Feld pulsiert, antippen deckt es auf
+
+## Das Ende einer Runde
+
+<!-- status: M4 umgesetzt (Lernen.dc.html, „Geschafft.“) -->
+
+- **„Geschafft.“** mit Ring, Funken und Bilanz: wie oft Nochmal, Schwer, Gut und Leicht
+- Darunter, wann die nächste Runde ansteht („Nächste Runde: morgen“)
+- Kommen Karten noch heute wieder (kurze Lernschritte), bietet Juri **„N Karten noch einmal lernen“** an
+- Danach zeigt **Heute** „Alles erledigt für heute.“
+
+> **Notizen:** Die große Feier „Tagesziel erreicht“ mit Serie und Meilensteinen kommt mit den Erfolgen (M8).
 
 # Stapel und Rechtsgebiete
 
@@ -247,14 +270,27 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Lernrhythmus einstellen
 
-<!-- status: entwurf nach Einstellungen.dc.html, pruefen in M4 -->
+<!-- layout: bild-gross -->
+<!-- status: M4 umgesetzt (Einstellungen.dc.html), Bild mit Beispieldaten aus der App -->
 
-- Auf **Heute** oben rechts auf deine Initiale tippen
+![Lernrhythmus: FSRS, Voreinstellungen, Behaltensquote, Beispiel und neue Karten pro Tag](../bilder/lernrhythmus-iphone.png)
+
+- **iPhone:** Initiale oben rechts, dann **„Lernrhythmus“**; **iPad:** Seitenleiste **„Lernrhythmus“**
 - **FSRS (empfohlen)** oder **Leitner-Kasten** wählen
-- Voreinstellungen: **Entspannt 85 %**, **Standard 90 %**, **Examen 95 %**
-- Außerdem: neue Karten pro Tag, längster Abstand, Lernschritte
+- Voreinstellungen: **Entspannt 85 %**, **Standard 90 %**, **Examen 95 %**, dazwischen mit dem Regler
+- Das Beispiel zeigt die Abstände, wenn du immer „Gut“ wählst
+- **Neue Karten pro Tag:** in Fünferschritten von 0 bis 100
 
-> **Notizen:** Die Prozentzahl ist die Wahrscheinlichkeit, eine Karte bei Fälligkeit noch zu wissen. Höher heißt kürzere Abstände und mehr Wiederholungen pro Tag.
+> **Notizen:** Die Prozentzahl ist die Wahrscheinlichkeit, eine Karte bei Fälligkeit noch zu wissen. Höher heißt kürzere Abstände und mehr Wiederholungen pro Tag. Der längste Abstand ist 180 Tage, „Nochmal“ führt über Lernschritte von 1 und 10 Minuten.
+
+## Leitner-Kasten
+
+<!-- status: M4 umgesetzt (Einstellungen.dc.html, LeitnerFach) -->
+
+- Fünf Fächer mit festen Abständen: 1, 3, 7, 14 und 30 Tage
+- **Gewusst** (Gut oder Leicht) rückt ein Fach weiter, **Schwer** lässt die Karte, **Nochmal** schickt sie zurück in Fach 1
+- **Fach antippen**, um die Tage zu ändern; die Fächer bleiben aufsteigend
+- **Wechsel jederzeit:** Juri rechnet beide Verfahren mit, dabei geht nichts verloren
 
 ## Fristen anlegen
 
@@ -329,3 +365,13 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - Wiederherstellen: **Backup einspielen**, Datei wählen, bestätigen. Das Backup **ersetzt** alle Daten auf dem Gerät
 
 > **Notizen:** Das Backup ist eine Datei mit der Endung .juri-backup. Juri prüft sie vollständig, bevor etwas überschrieben wird; eine falsche oder beschädigte Datei ändert nichts. Unter „Speicher“ zeigen die Einstellungen, ob iOS die Daten dauerhaft aufbewahrt und wie viel Platz sie belegen.
+
+## Version und Entwicklungsstand
+
+<!-- status: M4 umgesetzt (Artboard Entwicklungsstand) -->
+
+- Unten in den **Einstellungen** steht die **Version** der App
+- **Entwicklungsstand** zeigt die Schritte M0 bis M11: fertig mit Haken und Version, der nächste „in Arbeit“, die übrigen „ab“ ihrer Version
+- Zugeklappt siehst du nur „5 von 12 Schritten fertig“ und einen Balken
+
+> **Notizen:** Die Versionen der kommenden Schritte sind vorläufig. Die Liste folgt der Versionsnummer der App und braucht keine Pflege.
