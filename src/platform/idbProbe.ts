@@ -48,36 +48,58 @@ export function deleteValue(db: IDBDatabase, key: string): Promise<undefined> {
   return withStore(db, 'readwrite', (s) => s.delete(key));
 }
 
-export interface BlobRoundtrip {
+export type StorageKind = 'arraybuffer' | 'blob';
+
+export interface BytesRoundtrip {
+  kind: StorageKind;
   bytes: number;
   writeMs: number;
   readMs: number;
   intact: boolean;
 }
 
-/** Schreibt einen Blob der gewünschten Größe, liest ihn zurück, prüft Stichproben und löscht ihn. */
-export async function blobRoundtrip(dbName: string, bytes: number): Promise<BlobRoundtrip> {
+/**
+ * Schreibt Daten der gewünschten Größe, liest sie zurück, prüft Stichproben und löscht sie.
+ *
+ * `arraybuffer` ist der Weg, den Juri für Medien nutzt (ADR-002): WebKit kann Blobs in
+ * flüchtigen Sitzungen (privates Surfen, headless) nicht in IndexedDB speichern
+ * (WebKit-Bug 198278). `blob` wird zum Vergleich mitgemessen.
+ */
+export async function bytesRoundtrip(
+  dbName: string,
+  bytes: number,
+  kind: StorageKind,
+): Promise<BytesRoundtrip> {
   const data = new Uint8Array(bytes);
   for (let i = 0; i < bytes; i += 4096) data[i] = i % 251;
-  const blob = new Blob([data], { type: 'application/octet-stream' });
+  const value =
+    kind === 'blob' ? new Blob([data], { type: 'application/octet-stream' }) : data.buffer;
 
   const db = await openProbeDb(dbName);
   try {
     const t0 = performance.now();
-    await putValue(db, 'blob', blob);
+    await putValue(db, kind, value);
     const t1 = performance.now();
-    const stored = await getValue(db, 'blob');
+    const stored = await getValue(db, kind);
     const t2 = performance.now();
-    let intact = false;
-    if (stored instanceof Blob && stored.size === bytes) {
-      const back = new Uint8Array(await stored.arrayBuffer());
-      intact = true;
+    let back: Uint8Array | null = null;
+    if (kind === 'blob' && stored instanceof Blob && stored.size === bytes) {
+      back = new Uint8Array(await stored.arrayBuffer());
+    } else if (
+      kind === 'arraybuffer' &&
+      stored instanceof ArrayBuffer &&
+      stored.byteLength === bytes
+    ) {
+      back = new Uint8Array(stored);
+    }
+    let intact = back !== null;
+    if (back) {
       for (let i = 0; i < bytes; i += 4096 * 97) {
         if (back[i] !== i % 251) intact = false;
       }
     }
-    await deleteValue(db, 'blob');
-    return { bytes, writeMs: t1 - t0, readMs: t2 - t1, intact };
+    await deleteValue(db, kind);
+    return { kind, bytes, writeMs: t1 - t0, readMs: t2 - t1, intact };
   } finally {
     db.close();
   }

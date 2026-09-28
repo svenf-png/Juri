@@ -9,7 +9,7 @@ import {
   majorVersion,
   readSafeAreaInsets,
 } from '@/platform/device';
-import { blobRoundtrip, getValue, openProbeDb, putValue, deleteValue } from '@/platform/idbProbe';
+import { bytesRoundtrip, getValue, openProbeDb, putValue, deleteValue } from '@/platform/idbProbe';
 import { decodeImage, encodeImage } from '@/platform/image';
 import { canShareFiles, downloadFile, shareFiles } from '@/platform/share';
 import { readStorageStatus, requestPersistentStorage } from '@/platform/storage';
@@ -229,18 +229,25 @@ export function useDeviceCheck(instanceId: 'app' | 'test') {
       },
 
       async runBlobTest() {
-        set('blob', 'datenbank', '50-MB-Datei schreiben und lesen', 'läuft …', 'läuft');
-        try {
-          const r = await blobRoundtrip(probeDb, BLOB_BYTES);
-          set(
-            'blob',
-            'datenbank',
-            '50-MB-Datei schreiben und lesen',
-            `${r.intact ? 'intakt' : 'BESCHÄDIGT'}, schreiben ${ms(r.writeMs)}, lesen ${ms(r.readMs)}`,
-            r.intact ? 'ok' : 'fehlt',
-          );
-        } catch (error) {
-          set('blob', 'datenbank', '50-MB-Datei schreiben und lesen', errorText(error), 'fehlt');
+        const tests = [
+          ['speicher-bytes', '50 MB als ArrayBuffer (so speichert Juri)', 'arraybuffer'],
+          ['speicher-blob', '50 MB als Blob (Vergleich)', 'blob'],
+        ] as const;
+        for (const [id, label, kind] of tests) {
+          set(id, 'datenbank', label, 'läuft …', 'läuft');
+          try {
+            const r = await bytesRoundtrip(probeDb, BLOB_BYTES, kind);
+            set(
+              id,
+              'datenbank',
+              label,
+              `${r.intact ? 'intakt' : 'BESCHÄDIGT'}, schreiben ${ms(r.writeMs)}, lesen ${ms(r.readMs)}`,
+              r.intact ? 'ok' : 'fehlt',
+            );
+          } catch (error) {
+            // Blob-Fehler in flüchtigen WebKit-Sitzungen sind bekannt (ADR-002), daher nur Hinweis.
+            set(id, 'datenbank', label, errorText(error), kind === 'blob' ? 'hinweis' : 'fehlt');
+          }
         }
       },
 

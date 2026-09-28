@@ -8,7 +8,7 @@ Manuelle Prüfungen auf echten Geräten. Testgeräte (Entscheidung 7): iPhone 14
 2. Teilen-Symbol → „Zum Home-Bildschirm“ → „Hinzufügen“. „Juri Test“ vom Home-Bildschirm öffnen.
 3. „Geräte-Check starten“.
 4. **Speicher:** „persist() anfordern“.
-5. **Datenbank:** „50-MB-Test starten“, warten bis „intakt“.
+5. **Datenbank:** „50-MB-Test starten“, warten bis beide Zeilen (ArrayBuffer und Blob) ein Ergebnis zeigen.
 6. **Teilen:** jede Variante einmal teilen und abbrechen. Bei „Stapel.juri (application/octet-stream)“ einmal „In Dateien sichern“ wählen. Frage zu AirDrop/Nachrichten beantworten.
 7. **Datei öffnen:** die eben gesicherte Datei einmal ohne und einmal mit Filter wählen. Frage beantworten.
 8. **Fotos:** ein aktuelles Kamera-Foto wählen (HEIC).

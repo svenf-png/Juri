@@ -39,11 +39,22 @@ test.describe('Testinstanz (/Juri/test/)', () => {
     expect(watch.foreign).toEqual([]);
   });
 
-  test('Datenbank-Test schreibt und liest 50 MB', async ({ page }) => {
-    test.setTimeout(60_000);
+  test('Datenbank-Test schreibt und liest 50 MB', async ({ page, browserName }) => {
+    test.setTimeout(90_000);
     await page.goto('/Juri/test/geraetecheck');
     await page.getByRole('button', { name: '50-MB-Test starten' }).click();
-    await expect(page.getByTestId('check-blob')).toContainText('intakt', { timeout: 45_000 });
+    // So speichert Juri Medien (ADR-002): muss überall funktionieren.
+    await expect(page.getByTestId('check-speicher-bytes')).toContainText('intakt', {
+      timeout: 45_000,
+    });
+    const blob = page.getByTestId('check-speicher-blob');
+    if (browserName === 'webkit') {
+      // Headless WebKit ist eine flüchtige Sitzung: Blobs in IndexedDB schlagen dort bekannt
+      // fehl (WebKit-Bug 198278). Der Check muss das sauber melden, nicht hängen bleiben.
+      await expect(blob).toContainText(/intakt|Blob\/File/, { timeout: 45_000 });
+    } else {
+      await expect(blob).toContainText('intakt', { timeout: 45_000 });
+    }
   });
 
   test('Marker übersteht einen Neustart der Seite', async ({ page }) => {

@@ -8,7 +8,7 @@ Keine Accounts, keine Server für Nutzerdaten. Auf iOS entscheidet WebKit über 
 
 ## Entscheidung
 
-- Alle Daten in **IndexedDB** (ab M1 über Dexie), Medien als Blobs.
+- Alle Daten in **IndexedDB** (ab M1 über Dexie). **Medien (PDF, Bilder) als ArrayBuffer plus MIME-Typ, nicht als Blob:** WebKit kann Blobs in flüchtigen Sitzungen (privates Surfen, headless WebKit) nicht in IndexedDB speichern und wirft „Error preparing Blob/File data to be stored in object store“ (WebKit-Bug 198278, in der CI am 28.09.2026 reproduziert). ArrayBuffer funktioniert in allen Modi; zur Anzeige wird bei Bedarf ein Blob erzeugt.
 - Pro Instanz eine eigene Datenbank (`juri`, `juri-test`), siehe ADR-005.
 - Nach der Installation `navigator.storage.persist()` anfordern, Status und `estimate()` in den Einstellungen anzeigen.
 - **Backup** als Datei (`.juri-backup`), Erinnerung nach 14 Tagen oder 50 neuen Karten, bevorzugt „In Dateien sichern“ (iCloud Drive).

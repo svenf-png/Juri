@@ -38,7 +38,8 @@ export const SECTIONS: readonly Section[] = [
   {
     id: 'datenbank',
     title: 'Datenbank',
-    intro: 'Schreibt eine 50-MB-Datei in die lokale Datenbank, liest sie zurück und löscht sie.',
+    intro:
+      'Schreibt 50 MB in die lokale Datenbank, liest sie zurück und löscht sie: einmal als ArrayBuffer (so speichert Juri Medien), einmal als Blob zum Vergleich.',
   },
   {
     id: 'marker',
