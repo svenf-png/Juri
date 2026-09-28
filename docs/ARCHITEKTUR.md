@@ -1,12 +1,12 @@
 # Juri: Architektur, Rückfragen, Plan
 
-Stand: 28.09.2026 · Status: **Rückfragen entschieden (siehe Abschnitt 2), offen: Domain und Testgeräte** · Grundlage: Technisches Briefing und die 23 Screens in `design/` (Quelle: Design-Canvas „Juri“)
+Stand: 28.09.2026 · Status: **Rückfragen entschieden (siehe Abschnitt 2); M0 startet nach Merge dieses Planungs-PRs** · Grundlage: Technisches Briefing und die 23 Screens in `design/` (Quelle: Design-Canvas „Juri“)
 
 ---
 
 ## 1. Architektur-Zusammenfassung
 
-**Grundsatz.** Statische, offline-first PWA. Der Host liefert nur Code, Nutzerdaten liegen ausschließlich in IndexedDB auf dem Gerät und verlassen es nur als Datei, die der Nutzer selbst teilt. Die Origin (Domain) ist Teil der Datenidentität: IndexedDB, Service Worker und der persist()-Status hängen an ihr. Ein späterer Domainwechsel bedeutet für jeden Nutzer Export und Re-Import. Die Domain wird deshalb vor dem ersten echten Einsatz festgelegt (Frage 1).
+**Grundsatz.** Statische, offline-first PWA. Der Host liefert nur Code, Nutzerdaten liegen ausschließlich in IndexedDB auf dem Gerät und verlassen es nur als Datei, die der Nutzer selbst teilt. Die Origin (Domain) ist Teil der Datenidentität: IndexedDB, Service Worker und der persist()-Status hängen an ihr. Ein späterer Domainwechsel bedeutet für jeden Nutzer Export und Re-Import. Entschieden ist deshalb von Anfang an eine feste Adresse: `https://svenf-png.github.io/Juri/` (Frage 1).
 
 **Schichten** (Abhängigkeiten nur in Pfeilrichtung, per ESLint-Importregeln erzwungen):
 
@@ -42,14 +42,15 @@ platform/   Web Share, Datei-Input, persist/estimate,    -> Browser-APIs
 
 | # | Thema | Entscheidung | Folge für die Umsetzung |
 |---|---|---|---|
-| 1 | Hosting | **GitHub Pages mit eigener Domain** | Deploy per GitHub Actions, CNAME auf die Domain, CSP per Meta-Tag. Domain muss vor dem ersten echten Einsatz feststehen (offen). ADR-005. |
+| 1 | Hosting | **GitHub Pages unter `svenf-png.github.io/Juri`** (zunächst mit eigener Domain gewählt; da keine vorhanden ist, die kostenlose github.io-Adresse) | Deploy per GitHub Actions ohne gespeichertes Secret, Basis-Pfad `/Juri/` für App, Manifest und Service Worker, CSP per Meta-Tag. Bedingung: keine weiteren GitHub-Pages-Projekte im Account `svenf-png`, weil sie sich die Origin (Gerätespeicher) mit Juri teilen würden. ADR-005. |
 | 2 | Fehlende Screens | **Ich entwerfe sie im Canvas** | Neue Artboards aus dem bestehenden System, gebaut wird erst nach Freigabe, pro Meilenstein. |
 | 3 | Lückentext | **Bündeln, eine Bewertung** | Fällige Lücken einer Karte in einer Ansicht wie Luecke.dc.html; eine Bewertung wird auf jede fällige Lücke einzeln angewendet. |
 | 4 | Schema | **Eine Abfrage pro Schema, Lernziel ist auch der Inhalt, nicht nur die Abfolge** | Knoten bekommen neben Text und Norm ein optionales Feld „Inhalt“ (Definition, Prüfungsinhalt). Im Lernmodus wird jeder Punkt mit seinem Inhalt aufgedeckt. Die Editor-Erweiterung wird im Canvas entworfen. |
 | 5 | Notizen | **Notiz pro Karte** | Feld `cards.note` im Mehr-Modus, im Lernen unter der Antwort, beim Export nur mit Schalter. |
 | 6 | Serie | **Alle drei Regeln** | Anlegen-Ziel zählt für die Serie; Tage ohne verfügbare Karten brechen sie nicht; Tageswechsel 04:00 in der Gerätezeitzone. |
-| 7 | Mindestversion | **iOS/iPadOS 18+** | Getestet zusätzlich auf dem jeweils aktuellen iOS. Testgeräte noch offen. |
-| 8 | Lizenz | **MIT** | `LICENSE` im Repo; Font-Lizenzen (OFL) bleiben daneben bestehen. |
+| 7 | Mindestversion | **iOS/iPadOS 18+** | Testgeräte: iPhone 14 (390 × 844), iPhone 16 Pro Max (440 × 956), iPad Air M4 11 Zoll (1180 × 820 quer, 820 × 1180 hoch), älteres iPad (Modell und iPadOS-Version liefert der Geräte-Check in M0). |
+| 8 | Lizenz | **MIT** | `LICENSE` im Repo (Rechteinhaber vorerst `svenf-png`); Font-Lizenzen (OFL) bleiben daneben bestehen. |
+| 9 | Dokumentation | **Doku und Handbuch als folienfähiges Markdown** | `docs/folien/projekt.md` und `docs/folien/handbuch.md` nach `docs/folien/KONVENTION.md`, per KI in PowerPoint umwandelbar; Screenshots ab M2 automatisch aus der App. Pflege in jedem Meilenstein. |
 
 ### Ursprüngliche Fragen
 
@@ -97,7 +98,7 @@ platform/   Web Share, Datei-Input, persist/estimate,    -> Browser-APIs
 
 ## 3. Verfeinerter Plan
 
-Aufwand in Personentagen (PT) für eine erfahrene Einzelperson. Jeder Meilenstein endet mit: Tests grün, kurze Demo-Notiz, Commit, Liste offener Punkte.
+Aufwand in Personentagen (PT) für eine erfahrene Einzelperson. Jeder Meilenstein endet mit: Tests grün, kurze Demo-Notiz, Doku und Folien aktualisiert (inkl. Screenshots), Commit, Liste offener Punkte. Ein PR pro Meilenstein.
 
 Hinweis: Lighthouse hat die PWA-Kategorie mit Version 12 (April 2024) entfernt. Den „Lighthouse-PWA-Check“ ersetze ich durch eigene Playwright-Prüfungen (Manifest, Icons, Service Worker, Offline-Start) plus Lighthouse für Performance, Accessibility und Best Practices.
 
@@ -129,7 +130,11 @@ Dazu rund 2 PT für die fehlenden Screens, falls ich sie entwerfe (Frage 2). **R
 | Dateiauswahl graut `.juri` aus | Import unmöglich | A10: kein `accept`-Filter |
 | pdf.js-Speicher auf iOS (Canvas-Grenzen) | Abstürze bei großen PDFs | nur sichtbare Seiten rendern, Canvas freigeben, Pixeldichte begrenzen, Test mit 50 Seiten auf iPad |
 | ts-fsrs 6 ist in Beta | Breaking Changes | 5.x pinnen, Zugriff nur über eigenen Adapter |
-| Domainwechsel nach Start | Datenverlust für alle | Frage 1 vor dem ersten echten Einsatz klären |
+| Adresswechsel nach Start (z. B. später eigene Domain) | Nutzer müssen Backup exportieren und neu importieren | feste github.io-Adresse gewählt; ein Wechsel nur mit Umzugshinweis in der App |
+| Weitere Pages-Projekte im Account `svenf-png` | teilen sich Gerätespeicher und persist()-Status mit Juri | keine weiteren GitHub-Pages-Projekte in diesem Account |
+| Übernahme des GitHub-Kontos | ein manipuliertes Update könnte lokale Daten aller Nutzer auslesen | Zwei-Faktor bzw. Passkey, Regel für `main` (nur per PR, kein Force-Push) |
+| Lieferkette (npm-Pakete, Actions) | fremder Code in der App | wenige Abhängigkeiten, Lockfile, Dependabot, Actions auf Commit-Hashes gepinnt, minimale Workflow-Rechte |
+| Einbetten in fremde Seiten | Pages erlaubt keine Header, `frame-ancestors` wirkt per Meta-Tag nicht | App prüft selbst, ob sie eingebettet ist, und rendert dann nicht |
 | Absender in `.juri` nicht authentifiziert | gefälschte High fives möglich | für V1 akzeptiert (reine Anzeige, kein Zugriff), dokumentiert |
 | Screenshot-Vergleich täuscht Präzision vor | Abweichungen fallen durch | feste Fixtures, Toleranz, zusätzlich Token-Prüfung per berechnetem Style |
 
@@ -151,7 +156,10 @@ Juri/
 ├── .github/workflows/      ci.yml (Lint, Typecheck, Unit, E2E, Build), deploy.yml
 ├── design/                 Referenz: .dc.html-Screens und canvas.json, unverändert aus dem Canvas
 ├── docs/
+│   ├── README.md           Übersicht über alle Dokumente
 │   ├── ARCHITEKTUR.md      dieses Dokument
+│   ├── folien/             projekt.md, handbuch.md, KONVENTION.md (folienfähig, per KI zu PowerPoint)
+│   ├── bilder/             Screenshots für Doku und Folien, ab M2 automatisch
 │   ├── adr/                001-stack, 002-speicher-ohne-server, 003-dateiformat-juri,
 │   │                       004-scheduler-zustaende, 005-hosting
 │   └── geraete-testliste.md
@@ -178,7 +186,7 @@ Juri/
 │   ├── platform/           share, file-input, storage, install, clock, image, pdf/
 │   └── sw/                 service-worker.ts
 ├── tests/
-│   ├── e2e/                Playwright, Projekte „iPhone“ (390 × 844) und „iPad“ (1180 × 820)
+│   ├── e2e/                Playwright (WebKit): iPhone 14, iPhone 16 Pro Max, iPad Air 11 quer und hoch
 │   ├── visual/             Referenz-Screenshots aus design/
 │   └── fixtures/           Test-Stapel, gültige und manipulierte .juri-Dateien
 ├── index.html, vite.config.ts, tsconfig.json, eslint.config.js,
