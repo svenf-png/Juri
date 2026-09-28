@@ -20,15 +20,6 @@ const SEARCH_PLACEHOLDER = {
 };
 
 const FIXES: Record<string, { css: string; reason: string }[]> = {
-  'Lernen.dc.html': [
-    {
-      css: '.face[style*="rotateY(180deg)"] { visibility: hidden }',
-      reason:
-        'In WebKit zeichnet die Design-Seite die Rückseite der Karte (Antworttext, gespiegelt) ' +
-        'durch die Vorderseite, obwohl backface-visibility hidden gesetzt ist. Die App zeigt ' +
-        'die Rückseite erst nach dem Umdrehen, der Vergleich blendet sie im Design aus.',
-    },
-  ],
   'Luecke.dc.html': [
     {
       css: 'a[aria-label="Lernen beenden"] + div + div { min-width: 34px; text-align: right }',
