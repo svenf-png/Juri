@@ -13,15 +13,19 @@ import {
   type BackupPreview,
 } from '@/features/backup/backup';
 import { renameProfile } from '@/features/profile/profile';
+import { useLearningSettings } from '@/features/study/settings';
 import { useStorageStatus } from '@/features/storage/useStorageStatus';
+import { Link } from 'react-router';
 import { Avatar } from '../../components/Avatar';
 import { Button } from '../../components/Button';
 import field from '../../components/Field.module.css';
+import { ChevronRightIcon } from '../../components/icons';
 import { BackLink, Screen } from '../../components/Screen';
 import { Sheet } from '../../components/Sheet';
 import { cx } from '../../cx';
 import styles from './Einstellungen.module.css';
 import { Entwicklung } from './Entwicklung';
+import { Entwicklungsstand } from './Entwicklungsstand';
 
 // Nur in der Testinstanz; der Build der echten App enthält das Testdaten-Menü nicht.
 const Testdaten =
@@ -38,6 +42,7 @@ export function Einstellungen({ data }: { data: ProfileData }) {
       <BackLink to="/" label="Heute" />
       <h1 className={styles.title}>Einstellungen</h1>
       <ProfileForm key={data.profile.name} name={data.profile.name} />
+      <RhythmSection />
       <StorageSection />
       <BackupSection data={data} />
       {Testdaten ? (
@@ -45,6 +50,7 @@ export function Einstellungen({ data }: { data: ProfileData }) {
           <Testdaten />
         </Suspense>
       ) : null}
+      <Entwicklungsstand />
       <Entwicklung />
       <p className={styles.footer}>
         {__JURI_INSTANCE__ === 'test' ? 'Juri Test' : 'Juri'} · Version {buildLabel(BUILD)}
@@ -100,6 +106,35 @@ function ProfileForm({ name }: { name: string }) {
         </p>
       ) : null}
     </form>
+  );
+}
+
+/** Zeile zum Lernrhythmus mit dem gewählten Algorithmus. */
+function RhythmSection() {
+  const settings = useLearningSettings();
+  const value = settings.status === 'ready' ? settings.value : null;
+  const detail = !value
+    ? '…'
+    : value.algorithm === 'fsrs'
+      ? `FSRS, ${value.retention} % Behaltensquote`
+      : 'Leitner-Kasten';
+  return (
+    <section className={styles.section} aria-labelledby="rhythmus">
+      <h2 id="rhythmus" className={styles.sectionLabel}>
+        Lernen
+      </h2>
+      <div className={styles.list}>
+        <Link to="/einstellungen/lernrhythmus" className={cx(styles.row, styles.linkRow)}>
+          <span className={styles.rowText}>
+            <span className={styles.linkLabel}>Lernrhythmus</span>
+            <span className={styles.linkSub}>{detail}</span>
+          </span>
+          <span className={styles.chevron}>
+            <ChevronRightIcon size={16} strokeWidth={2.2} />
+          </span>
+        </Link>
+      </div>
+    </section>
   );
 }
 

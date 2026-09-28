@@ -89,7 +89,12 @@ describe('FSRS-Adapter', () => {
   });
 
   it('Nochmal auf eine Wiederholung führt ins Wiederlernen und zählt einen Fehler', () => {
-    const grad = fsrsReview(fsrsReview(undefined, 4, NOW, fsrsSettings).state, 1, NOW + 5 * DAY, fsrsSettings);
+    const grad = fsrsReview(
+      fsrsReview(undefined, 4, NOW, fsrsSettings).state,
+      1,
+      NOW + 5 * DAY,
+      fsrsSettings,
+    );
     expect(grad.state.state).toBe(FSRS_STATE.relearning);
     expect(grad.state.lapses).toBe(1);
     expect(grad.state.due - (NOW + 5 * DAY)).toBe(10 * MIN);

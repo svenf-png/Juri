@@ -1,0 +1,288 @@
+/*
+ * Lernrhythmus nach Einstellungen.dc.html, Werte exakt aus dem Design: 54 px oben, Rand 24 px,
+ * Abstand 20 px. Die Bedienelemente, die das Design nicht zeigt (Fach ändern), stehen in einem Sheet.
+ */
+.screen {
+  --screen-top: 54px;
+}
+
+.title {
+  margin-top: -8px;
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.algos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-field-lg);
+  background: var(--surface);
+}
+
+.algo {
+  position: relative;
+  height: 42px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  background: transparent;
+  color: var(--muted);
+}
+
+/* Trefferfläche 44 px: 42 px hoch plus 1 px. */
+.algo::after {
+  content: '';
+  position: absolute;
+  inset: -1px 0;
+}
+
+.algoOn {
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: var(--shadow-segment);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.preset {
+  height: 104px;
+  border-radius: var(--radius-button);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1.5px solid var(--track);
+  background: var(--bg);
+  color: var(--ink);
+  box-sizing: content-box;
+  margin: -1.5px;
+}
+
+.presetOn {
+  border-width: 0;
+  background: var(--violet);
+  color: var(--bg);
+  margin: 0;
+}
+
+.presetName {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.presetValue {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.presetLoad {
+  font-size: 11.5px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sliderHead {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sliderValue {
+  font-weight: 800;
+  color: var(--violet);
+}
+
+.range {
+  width: 100%;
+  height: 28px;
+  accent-color: var(--violet);
+}
+
+.help {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.example {
+  border-radius: var(--radius-field-xl);
+  background: var(--surface);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exampleLabel {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 15px;
+  background: var(--bg);
+  font-size: 13.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.leitnerLead {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.boxes {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.box {
+  height: 96px;
+  border: 0;
+  border-radius: var(--radius-field-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  color: var(--violet-900);
+}
+
+.boxLast {
+  color: var(--bg);
+}
+
+.boxName {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.boxDays {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 750;
+}
+
+.boxUnit {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.hintSmall {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.row {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.rowLink {
+  min-height: 72px;
+}
+
+.rowBorderless {
+  border-bottom: 0;
+  margin-top: -8px;
+}
+
+.rowLabel {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rowSub {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.rowValue {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.rowChevron {
+  color: var(--chevron);
+  display: flex;
+}
+
+/* Sheet: Fach ändern */
+.sheetText {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.sheetControl {
+  display: flex;
+  justify-content: center;
+}
+
+.sheetRange {
+  width: 100%;
+  height: 28px;
+  accent-color: var(--violet);
+}

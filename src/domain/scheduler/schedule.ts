@@ -3,11 +3,7 @@
  * jede Bewertung aktualisiert beide, `due` ist der Index des aktiven Algorithmus. Alle Funktionen
  * sind rein; die Uhr kommt als Parameter.
  */
-import type {
-  ItemSnapshot,
-  NewReviewLogEntry,
-  ReviewItem,
-} from '../model/records';
+import type { ItemSnapshot, NewReviewLogEntry, ReviewItem } from '../model/records';
 import { fsrsPreview, fsrsReview, FSRS_STATE } from './fsrs';
 import { formatInterval } from './intervals';
 import { boxDays, leitnerPreviewDays, leitnerReview } from './leitner';

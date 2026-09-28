@@ -104,8 +104,11 @@ export function sessionItems(
 ): ReviewItem[] {
   const due = dueReviews(items, ctx.endOfDay);
   const dueNow = due.filter((i) => (i.due ?? 0) <= ctx.now);
-  const later = due.filter((i) => (i.due ?? 0) > ctx.now).sort((a, b) => (a.due ?? 0) - (b.due ?? 0));
-  const byTime = (a: ReviewItem, b: ReviewItem) => (a.due ?? 0) - (b.due ?? 0) || a.id.localeCompare(b.id);
+  const later = due
+    .filter((i) => (i.due ?? 0) > ctx.now)
+    .sort((a, b) => (a.due ?? 0) - (b.due ?? 0));
+  const byTime = (a: ReviewItem, b: ReviewItem) =>
+    (a.due ?? 0) - (b.due ?? 0) || a.id.localeCompare(b.id);
   const learning = dueNow.filter(isLearningState).sort(byTime);
   const reviews = dueNow.filter((i) => !isLearningState(i)).sort(byTime);
   // Nach Lerntag bündeln, den ältesten zuerst; innerhalb eines Tages mischen.
@@ -114,6 +117,8 @@ export function sessionItems(
     const key = dayKey(learningDay(new Date(item.due ?? 0)));
     days.set(key, [...(days.get(key) ?? []), item]);
   }
-  const mixed = [...days.keys()].sort().flatMap((key) => shuffle([...(days.get(key) ?? [])], random));
+  const mixed = [...days.keys()]
+    .sort()
+    .flatMap((key) => shuffle([...(days.get(key) ?? [])], random));
   return [...learning, ...mixed, ...later, ...newToStart(items, ctx.newRemaining)];
 }

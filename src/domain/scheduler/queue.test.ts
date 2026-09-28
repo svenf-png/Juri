@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import type { ReviewItem } from '../model/records';
-import { dueReviews, dueSummary, endOfLearningDay, isDue, newRemaining, newToStart, sessionItems, shuffle } from './queue';
+import {
+  dueReviews,
+  dueSummary,
+  endOfLearningDay,
+  isDue,
+  newRemaining,
+  newToStart,
+  sessionItems,
+  shuffle,
+} from './queue';
 import { reviewItem } from './schedule';
 import { DEFAULT_LEARNING } from './settings';
 
@@ -133,7 +142,10 @@ describe('Reihenfolge der Session', () => {
 
   it('die Reihenfolge beachtet das Tageslimit für Neue', () => {
     const items = [item('a', 'd', 1), item('b', 'd', 2), item('c', 'd', 3)];
-    expect(sessionItems(items, { ...ctx, newRemaining: 2 }, none).map((i) => i.id)).toEqual(['a', 'b']);
+    expect(sessionItems(items, { ...ctx, newRemaining: 2 }, none).map((i) => i.id)).toEqual([
+      'a',
+      'b',
+    ]);
   });
 
   it('bewertete Abfragen ergeben nach dem Lernen einen anderen Platz', () => {

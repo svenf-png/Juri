@@ -64,6 +64,21 @@ export async function readStudy(db: JuriDb, todayStart: number): Promise<StudySn
   return { items, settings, startedToday };
 }
 
+/** Wie `readStudy`, aber nur die Abfragen eines Stapels (`deckId`), für eine Lernsession dazu. */
+export async function readStudyOf(
+  db: JuriDb,
+  deckId: string | undefined,
+  todayStart: number,
+): Promise<StudySnapshot> {
+  if (deckId === undefined) return readStudy(db, todayStart);
+  const [items, settings, startedToday] = await Promise.all([
+    db.reviewItems.where('deckId').equals(deckId).toArray(),
+    readSettings(db),
+    startedSince(db, todayStart),
+  ]);
+  return { items, settings, startedToday };
+}
+
 /** Karten zu Karten-IDs; Unbekannte fehlen im Ergebnis. */
 export async function readCardsById(db: JuriDb, ids: readonly string[]): Promise<Card[]> {
   const cards = await db.cards.bulkGet([...ids]);

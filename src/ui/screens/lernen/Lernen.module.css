@@ -1,0 +1,654 @@
+/*
+ * Lernen nach Lernen.dc.html, Antwort.dc.html und Luecke.dc.html, Werte exakt aus dem Design.
+ * Das Design setzt alles absolut auf 390 × 844 px; hier steht dieselbe Anordnung in einer Spalte:
+ * Kopfzeile (oben 54 px), Karte ab 118 px, Knöpfe ab 682 px, darunter 52 px. Höhere Bildschirme
+ * bekommen eine höhere Karte, breitere eine mittige Spalte (A8).
+ */
+.screen {
+  min-height: 100dvh;
+  height: 100dvh;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  line-height: normal;
+  display: flex;
+  flex-direction: column;
+  padding: calc(54px + var(--top-shift)) 0 max(52px, calc(var(--bottom-inset) + 18px));
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@media (min-width: 768px) {
+  .screen {
+    padding-top: calc(54px + var(--top-inset));
+  }
+}
+
+.top {
+  height: 44px;
+  flex-shrink: 0;
+  margin: 0 20px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Beenden: 44 px Trefferfläche, Icon 22 px. */
+.close {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 22px;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+
+.track {
+  flex-grow: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--track);
+  overflow: hidden;
+}
+
+.fill {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--violet);
+  transition: width 0.5s var(--ease-standard);
+}
+
+.counter {
+  min-width: 34px;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Zwischen Kopfzeile (bis 98 px) und Knöpfen (ab 682 px): Karte ab 118 px, 520 px hoch. */
+.stage {
+  flex: 1;
+  min-height: 0;
+  margin: 0 20px;
+  padding: 20px 0 44px;
+  display: flex;
+  flex-direction: column;
+}
+
+.frame {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  max-height: 640px;
+}
+
+.behind {
+  position: absolute;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  top: 14px;
+  bottom: -14px;
+}
+
+.behind1 {
+  left: 8px;
+  right: 8px;
+  opacity: 0.75;
+  transform: translateY(14px) scale(0.95);
+}
+
+.behind2 {
+  left: 16px;
+  right: 16px;
+  top: 32px;
+  opacity: 0.45;
+  transform: translateY(26px) scale(0.9);
+}
+
+.wrap {
+  position: absolute;
+  inset: 0;
+  touch-action: pan-y;
+  transition:
+    transform var(--dur-out) var(--ease-standard),
+    opacity var(--dur-out) ease;
+}
+
+.dragging {
+  transition: none;
+}
+
+.outR {
+  transform: translateX(118%) rotate(9deg);
+  opacity: 0;
+}
+
+.outL {
+  transform: translateX(-118%) rotate(-9deg);
+  opacity: 0;
+}
+
+.outD {
+  transform: translateY(46px) scale(0.9);
+  opacity: 0;
+}
+
+.enter {
+  transform: translateY(22px) scale(0.95);
+  opacity: 0;
+  transition: none;
+}
+
+/* Beim Wechsel der Karte ohne Drehung: die nächste Karte steht sofort vorn. */
+.instant :global(*) {
+  transition: none !important;
+}
+
+/* Kopf einer Karte: Rechtsgebiet, Typ, Norm. */
+.head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.area {
+  height: 26px;
+  padding: 0 9px;
+  border-radius: var(--radius-tag);
+  background: var(--surface);
+  color: var(--violet-700);
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+}
+
+.type {
+  height: 26px;
+  padding: 0 10px;
+  border-radius: var(--radius-tag);
+  border: 1.5px solid var(--track);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.norm {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--violet);
+}
+
+.frontBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.middle {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  min-height: 0;
+}
+
+.question {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.18;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.clozeText {
+  font-family: var(--font-display);
+  font-size: 25px;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.blank {
+  display: inline-block;
+  width: 150px;
+  height: 28px;
+  vertical-align: -6px;
+  border-radius: 9px;
+  background: var(--violet-100);
+  border: 1.5px dashed var(--dash-cloze);
+  box-sizing: border-box;
+}
+
+.flipHint {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.backBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow: auto;
+}
+
+.answerLabel {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.backNorm {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.answerBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.answerQuestion {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.answer {
+  font-size: 20px;
+  line-height: 1.45;
+  font-weight: 500;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.backCloze {
+  font-family: var(--font-display);
+  font-size: 25px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+/* Aufgedeckte oder heute nicht gefragte Lücke. */
+.chip {
+  background: var(--violet-100);
+  color: var(--violet-700);
+  border-radius: 8px;
+  padding: 1px 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+/* Notiz unter der Antwort (Entscheidung 5; Annahme A22). */
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.noteIcon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--violet);
+}
+
+.noteText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.noteLabel {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.noteBody {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Gebündelte Lücken (Luecke.dc.html). */
+.bundle {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-card);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  color: var(--ink);
+}
+
+.bundleText {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 25px;
+  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.bundleBlank {
+  display: inline-block;
+  width: 130px;
+  height: 30px;
+  vertical-align: -7px;
+  border-radius: 9px;
+  background: var(--surface);
+  border: 1.5px dashed var(--dash-cloze);
+  box-sizing: border-box;
+}
+
+.ring {
+  color: var(--violet-700);
+  border-radius: 8px;
+  padding: 1px 6px;
+  box-shadow: 0 0 0 2px var(--violet);
+  background-image: linear-gradient(var(--violet-100), var(--violet-100));
+  background-repeat: no-repeat;
+  animation: fill 0.6s var(--ease-standard) 0.2s both;
+}
+
+@keyframes fill {
+  0% {
+    background-size: 0% 100%;
+  }
+  100% {
+    background-size: 100% 100%;
+  }
+}
+
+.steps {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.step {
+  flex-grow: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--violet-100);
+}
+
+.stepOn {
+  background: var(--violet);
+}
+
+/* Knöpfe unten: 110 px Platz ab 682 px. */
+.bottom {
+  height: 110px;
+  flex-shrink: 0;
+  margin: 0 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.flipButton {
+  width: 100%;
+  height: 60px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: var(--radius-button);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pairButton {
+  height: 60px;
+  border-radius: var(--radius-button);
+  font-size: 16px;
+  font-weight: 700;
+  border: 0;
+}
+
+.pairAll {
+  background: var(--bg);
+  border: 1.5px solid var(--border-soft);
+  color: var(--ink);
+}
+
+.pairNext {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.hint {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Rückgängig: sichtbar ein Text, Trefferfläche 44 px hoch (A1). */
+.undo {
+  margin-top: 6px;
+  height: 44px;
+  border: 0;
+  background: none;
+  align-self: center;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--link);
+}
+
+.undo:active {
+  color: var(--link-hover);
+}
+
+/* Leer: nichts fällig. */
+.empty {
+  flex: 1;
+  margin: 0 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.emptyText {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.emptyAction {
+  margin-top: 12px;
+  width: 100%;
+}
+
+/* Ende (Lernen.dc.html „Geschafft.“) */
+.done {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  overflow: auto;
+}
+
+.doneInner {
+  min-height: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: calc(150px + var(--top-shift)) 28px max(40px, calc(var(--bottom-inset) + 20px)) 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  line-height: normal;
+}
+
+.doneText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.doneTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  animation: rise var(--dur-rise) var(--ease-standard) 0.5s both;
+}
+
+.doneLead {
+  margin: 0;
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.45;
+  animation: rise var(--dur-rise) var(--ease-standard) 0.6s both;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 334px;
+  animation: rise var(--dur-rise) var(--ease-standard) 0.7s both;
+}
+
+.stat {
+  height: 76px;
+  border-radius: var(--radius-button-sm);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.statNumber {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 750;
+}
+
+.statLabel {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.statAgain {
+  background: var(--rating-again-bg);
+  border: 1.5px solid var(--rating-again-border);
+  color: var(--rating-again-fg);
+}
+
+.statHard {
+  background: var(--rating-hard-bg);
+  color: var(--rating-hard-fg);
+}
+
+.statGood {
+  background: var(--rating-good-bg);
+  color: var(--rating-good-fg);
+}
+
+.statEasy {
+  background: var(--rating-easy-bg);
+  color: var(--rating-easy-fg);
+}
+
+.doneActions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 334px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    animation: none;
+    background-size: 100% 100%;
+  }
+}

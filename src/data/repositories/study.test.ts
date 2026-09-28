@@ -75,9 +75,7 @@ describe('Einstellungen', () => {
       expect(item.leitner).toEqual(old.leitner);
       expect(item.due).toBe(old.leitner?.due ?? undefined);
     }
-    expect(after.find((i) => i.id === 'k1')?.due).toBe(
-      new Date(2026, 8, 28 + 3, 4).getTime(),
-    );
+    expect(after.find((i) => i.id === 'k1')?.due).toBe(new Date(2026, 8, 28 + 3, 4).getTime());
     await writeSettings(db, DEFAULT_LEARNING);
     expect(await db.reviewItems.toArray()).toEqual(before);
   });
@@ -164,9 +162,9 @@ describe('Undo', () => {
     const { db } = await setup();
     await rateItems(db, ['k2:c1', 'k2:c2'], 'good', T);
     await undoRating(db, ['k2:c1', 'k2:c2'], T);
-    expect((await db.reviewItems.bulkGet(['k2:c1', 'k2:c2'])).every((i) => i?.fsrs === undefined)).toBe(
-      true,
-    );
+    expect(
+      (await db.reviewItems.bulkGet(['k2:c1', 'k2:c2'])).every((i) => i?.fsrs === undefined),
+    ).toBe(true);
   });
 
   it('bei gewechseltem Algorithmus gilt nach dem Undo der Index des aktiven', async () => {
@@ -207,7 +205,10 @@ describe('Backup mit Lernzustand', () => {
     await restoreBackup(target, decodeBackup(first));
     expect(await exportBackup(target, T, app)).toEqual(first);
     expect(await target.reviewLog.count()).toBe(3);
-    expect(await readSettings(target)).toMatchObject({ retention: 93, leitnerDays: [1, 2, 6, 10, 20] });
+    expect(await readSettings(target)).toMatchObject({
+      retention: 93,
+      leitnerDays: [1, 2, 6, 10, 20],
+    });
     expect(await target.reviewItems.get('k1')).toEqual(await db.reviewItems.get('k1'));
   });
 

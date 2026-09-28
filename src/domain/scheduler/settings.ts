@@ -65,16 +65,13 @@ export function stepNewPerDay(current: number, direction: 1 | -1): number {
  * Tage eines Leitner-Fachs setzen. Die Fächer bleiben aufsteigend: Ein Fach liegt nie unter dem
  * davor und nie über dem danach, sonst rückte „gewusst“ eine Karte nach vorn.
  */
-export function setLeitnerDays(
-  days: LeitnerDays,
-  box: number,
-  value: number,
-): LeitnerDays {
+export function setLeitnerDays(days: LeitnerDays, box: number, value: number): LeitnerDays {
   const index = box - 1;
   if (index < 0 || index >= LEITNER_BOXES) return days;
   const next = [...days];
   const lower = index === 0 ? 1 : (next[index - 1] ?? 1);
-  const upper = index === LEITNER_BOXES - 1 ? LEITNER_DAYS_MAX : (next[index + 1] ?? LEITNER_DAYS_MAX);
+  const upper =
+    index === LEITNER_BOXES - 1 ? LEITNER_DAYS_MAX : (next[index + 1] ?? LEITNER_DAYS_MAX);
   next[index] = clamp(value, lower, upper);
   return next as LeitnerDays;
 }

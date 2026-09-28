@@ -10,6 +10,11 @@ interface CardFlipProps {
   width?: number | string;
   height?: number | string;
   flipLabel?: string;
+  /**
+   * Der Knopf heißt nach `flipLabel` (Standard). Mit `false` liest ein Screenreader stattdessen den
+   * Inhalt der Vorderseite und danach „Antwort zeigen“ (Lernen: die Frage muss vorlesbar sein).
+   */
+  labelled?: boolean;
 }
 
 /**
@@ -24,6 +29,7 @@ export function CardFlip({
   width = '100%',
   height = 520,
   flipLabel = 'Antwort zeigen',
+  labelled = true,
 }: CardFlipProps) {
   return (
     <div className={styles.wrap} style={{ width, height }}>
@@ -32,11 +38,12 @@ export function CardFlip({
           type="button"
           className={styles.face}
           onClick={onFlip}
-          aria-label={flipLabel}
+          aria-label={labelled ? flipLabel : undefined}
           aria-hidden={flipped}
           tabIndex={flipped ? -1 : 0}
         >
           {front}
+          {labelled ? null : <span className="visually-hidden">{flipLabel}</span>}
         </button>
         <div className={cx(styles.face, styles.back)} aria-hidden={!flipped}>
           {back}

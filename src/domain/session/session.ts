@@ -157,7 +157,11 @@ export function rate(state: SessionState, rating: RatingKey): RateResult | null 
   const rest = state.queue.slice(1);
   const again = rating === 'again';
   const queue = again
-    ? [...rest.slice(0, againPosition(rest.length)), station, ...rest.slice(againPosition(rest.length))]
+    ? [
+        ...rest.slice(0, againPosition(rest.length)),
+        station,
+        ...rest.slice(againPosition(rest.length)),
+      ]
     : rest;
   const finished = again ? state.finished : state.finished + 1;
   const counts = { ...state.counts, [rating]: state.counts[rating] + 1 };

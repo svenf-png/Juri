@@ -68,7 +68,9 @@ export function CardScreen({
 }: CardScreenProps) {
   const editing = mode === 'edit';
   const [form, setForm] = useState<FormState>(initial);
-  const [more, setMore] = useState(editing && (initial.norm !== '' || initial.tags !== ''));
+  const [more, setMore] = useState(
+    editing && (initial.norm !== '' || initial.tags !== '' || initial.note !== ''),
+  );
   const [errors, setErrors] = useState<CardErrors>({});
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -93,7 +95,7 @@ export function CardScreen({
     });
     if (!checked.ok) {
       setErrors(checked.errors);
-      if (checked.errors.norm) setMore(true);
+      if (checked.errors.norm || checked.errors.note) setMore(true);
       (checked.errors.front ? frontRef : checked.errors.back ? backRef : textRef).current?.focus();
       return;
     }
@@ -110,8 +112,8 @@ export function CardScreen({
     }
     setBusy(false);
     if (saved && !editing) {
-      // Nächste Karte: Inhalt und Norm leeren, Typ, Stapel und Tags bleiben für die nächste stehen.
-      setForm((f) => ({ ...f, front: '', back: '', draft: EMPTY_DRAFT, norm: '' }));
+      // Nächste Karte: Inhalt, Norm und Notiz leeren, Typ, Stapel und Tags bleiben stehen.
+      setForm((f) => ({ ...f, front: '', back: '', draft: EMPTY_DRAFT, norm: '', note: '' }));
       (form.tab === 'cloze' ? textRef : frontRef).current?.focus();
     }
   }
@@ -244,6 +246,24 @@ export function CardScreen({
               autoCapitalize="none"
               spellCheck={false}
             />
+          </label>
+          <label className={styles.mini}>
+            <span className={styles.miniLabel}>Notiz</span>
+            <textarea
+              className={cx(styles.miniInput, styles.miniArea)}
+              value={form.note}
+              onChange={(e) => {
+                set({ note: e.target.value });
+              }}
+              placeholder="Merksatz, Eselsbrücke oder Fundstelle. Erscheint beim Lernen unter der Antwort."
+              rows={3}
+              aria-invalid={errors.note ? true : undefined}
+            />
+            {errors.note ? (
+              <span className={styles.errorText} role="alert">
+                {errors.note}
+              </span>
+            ) : null}
           </label>
         </div>
       ) : null}

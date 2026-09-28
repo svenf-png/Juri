@@ -105,7 +105,13 @@ describe('libraryModel', () => {
 });
 
 describe('Fortschritt', () => {
-  const item = (id: string): ReviewItem => ({ id, cardId: id, deckId: 'amt', sub: '', createdAt: 1 });
+  const item = (id: string): ReviewItem => ({
+    id,
+    cardId: id,
+    deckId: 'amt',
+    sub: '',
+    createdAt: 1,
+  });
   const learned = (id: string, rating: 3 | 4, reviews: number): ReviewItem => {
     let it = item(id);
     let now = 0;
@@ -178,7 +184,9 @@ describe('deckModel', () => {
     });
     expect(deckModel({ ...base, due: 1 }).cta.label).toBe('1 fällige Karte lernen');
     expect(deckModel({ ...base, due: 0 }).cta.kind).toBe('idle');
-    expect(deckModel({ ...base, cards: [], progress: { secure: 0, learning: 0, fresh: 0 }, due: 0 }).cta).toMatchObject({
+    expect(
+      deckModel({ ...base, cards: [], progress: { secure: 0, learning: 0, fresh: 0 }, due: 0 }).cta,
+    ).toMatchObject({
       kind: 'create',
       label: 'Erste Karte anlegen',
     });

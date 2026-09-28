@@ -17,6 +17,7 @@ describe('routes', () => {
       '/teilen',
       '/fristen',
       '/high-fives',
+      '/einstellungen/lernrhythmus',
       '/einstellungen',
       '/neu',
       '/karte/:cardId',
