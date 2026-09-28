@@ -1,0 +1,58 @@
+/* Bewertungsleiste: Helligkeit statt Ampel (System.dc.html, Lernen.dc.html). */
+.bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.button {
+  height: 72px;
+  border-radius: var(--radius-button-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 0;
+  transition: transform var(--dur-tap) var(--ease-standard);
+}
+
+.button:active {
+  transform: scale(0.96);
+}
+
+.label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.interval {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.again {
+  background: var(--rating-again-bg);
+  color: var(--rating-again-fg);
+  border: 1.5px solid var(--rating-again-border);
+}
+
+.hard {
+  background: var(--rating-hard-bg);
+  color: var(--rating-hard-fg);
+}
+
+.good {
+  background: var(--rating-good-bg);
+  color: var(--rating-good-fg);
+}
+
+.easy {
+  background: var(--rating-easy-bg);
+  color: var(--rating-easy-fg);
+}
+
+.easy .interval {
+  opacity: 0.85;
+}

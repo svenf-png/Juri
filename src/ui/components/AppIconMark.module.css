@@ -1,0 +1,63 @@
+/*
+ * App-Icon als CSS (AppIcon.dc.html, 200 × 200 px Referenz).
+ * Die Referenzgrößen bleiben unverändert, skaliert wird über --scale.
+ */
+.frame {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 200px;
+  height: 200px;
+  border-radius: 45px;
+  overflow: hidden;
+  transform: scale(var(--scale));
+  transform-origin: 0 0;
+  background: var(--violet);
+}
+
+.test {
+  background: var(--ink);
+}
+
+.back {
+  position: absolute;
+  left: 52px;
+  top: 40px;
+  width: 110px;
+  height: 130px;
+  border-radius: 18px;
+  background: var(--violet-400);
+  transform: rotate(8deg);
+}
+
+.test .back {
+  background: var(--violet);
+}
+
+.front {
+  position: absolute;
+  left: 40px;
+  top: 36px;
+  width: 110px;
+  height: 130px;
+  border-radius: 18px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.letter {
+  font-family: var(--font-display);
+  font-size: 96px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-top: -6px;
+}

@@ -1,0 +1,8 @@
+design/
+dist/
+coverage/
+playwright-report/
+test-results/
+package-lock.json
+public/licenses/
+src/ui/tokens/tokens.css

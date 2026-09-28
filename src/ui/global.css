@@ -1,0 +1,107 @@
+/*
+ * Grundstile. Werte kommen aus tokens.css (erzeugt aus tokens.ts).
+ * Nur helles Design (Briefing 2), deshalb color-scheme: light.
+ */
+:root {
+  color-scheme: light;
+  /*
+   * Die iPhone-Designs sind 390 × 844 inklusive 47 px Statusleiste gezeichnet.
+   * Bildschirme setzen ihren oberen Abstand als calc(<Designwert> + var(--top-shift)).
+   * --sim-safe-top simuliert die Statusleiste in Screenshot-Tests.
+   */
+  --top-inset: max(env(safe-area-inset-top, 0px), var(--sim-safe-top, 0px));
+  --bottom-inset: max(env(safe-area-inset-bottom, 0px), var(--sim-safe-bottom, 0px));
+  --top-shift: calc(var(--top-inset) - 47px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+.display {
+  font-family: var(--font-display);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Reduzierte Bewegung: alle Animationen aus (Briefing 3.1). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Unter dem Hinweisband der Testinstanz ist die Safe Area schon verbraucht. */
+.after-banner {
+  --top-inset: 0px;
+  --top-shift: -47px;
+}

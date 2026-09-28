@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Neue Karte</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button,input,textarea{font-family:inherit}
+button{cursor:pointer}
+textarea::placeholder,input::placeholder{color:#8E8A99}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s}
+.tap:active{transform:scale(.96)}
+.field{transition:box-shadow .2s}
+.field:focus-within{box-shadow:0 0 0 2px #6A3FE0}
+@keyframes toast{0%{opacity:0;transform:translateY(-24px) scale(.9)}14%{opacity:1;transform:translateY(0) scale(1.03)}20%{transform:none}85%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-12px)}}
+.toast{animation:toast 2.4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes plus{0%{transform:scale(.4);opacity:0}50%{transform:scale(1.2);opacity:1}100%{transform:none}}
+.plus{animation:plus .5s cubic-bezier(.2,.8,.2,1) .1s both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise{animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 54px 20px 0 20px; display: flex; flex-direction: column; gap: 16px">
+  <div style="display: flex; justify-content: space-between; align-items: center; height: 44px">
+    <a href="Main.dc.html" style="font-size: 16px; font-weight: 600; height: 44px; display: flex; align-items: center">Schließen</a>
+    <span style="font-size: 16px; font-weight: 700">Neue Karte</span>
+    <button class="tap" onClick="{{toggleMore}}" aria-pressed="{{moreOn}}" style="height: 34px; padding: 0 12px; border-radius: 17px; border: 1.5px solid #E4DDF7; background: #FFFFFF; font-size: 13px; font-weight: 700; color: #17141F">{{moreLabel}}</button>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: #F6F4FB">
+    <sc-for list="{{types}}" as="t" hint-placeholder-count="4">
+      <button class="tap" onClick="{{t.pick}}" aria-pressed="{{t.on}}" style="{{t.style}}">{{t.label}}</button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{isQA}}" hint-placeholder-val="{{ true }}">
+    <div class="rise" style="display: flex; flex-direction: column; gap: 12px">
+      <label class="field" style="border-radius: 20px; background: #F6F4FB; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Vorderseite</span>
+        <textarea rows="3" placeholder="Frage, z. B. Was ist Gewahrsam?" style="border: 0; background: transparent; resize: none; font-size: 18px; line-height: 1.4; color: #17141F; outline: none"></textarea>
+      </label>
+      <label class="field" style="border-radius: 20px; background: #F6F4FB; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Rückseite</span>
+        <textarea rows="4" placeholder="Antwort" style="border: 0; background: transparent; resize: none; font-size: 17px; line-height: 1.45; color: #17141F; outline: none"></textarea>
+      </label>
+    </div>
+  </sc-if>
+  <sc-if value="{{isCloze}}" hint-placeholder-val="{{ false }}">
+    <div class="rise" style="display: flex; flex-direction: column; gap: 10px">
+      <div style="border-radius: 20px; background: #F6F4FB; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Text</span>
+        <p style="margin: 0; font-size: 18px; line-height: 1.55">Wegnahme ist der <span style="background: #6A3FE0; color: #FFFFFF; border-radius: 6px; padding: 1px 5px">Bruch fremden</span> und die Begründung neuen, nicht notwendig tätereigenen Gewahrsams.</p>
+      </div>
+      <button class="tap" style="height: 48px; border-radius: 16px; border: 0; background: #17141F; color: #FFFFFF; font-size: 15px; font-weight: 700">Markierung wird Lücke</button>
+      <span style="font-size: 13px; color: #6B6678; font-weight: 500; text-align: center">Wort markieren, antippen, fertig. Jede Lücke wird eine eigene Abfrage.</span>
+    </div>
+  </sc-if>
+  <sc-if value="{{isSchema}}" hint-placeholder-val="{{ false }}">
+    <div class="rise" style="display: flex; flex-direction: column; gap: 12px">
+      <label class="field" style="border-radius: 20px; background: #F6F4FB; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Titel des Schemas</span>
+        <input placeholder="z. B. Amtshaftungsanspruch" style="border: 0; background: transparent; font-size: 18px; color: #17141F; outline: none">
+      </label>
+      <a href="SchemaEditor.dc.html" class="tap" style="height: 56px; border-radius: 18px; background: #17141F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700">Gliederung bearbeiten
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+    </div>
+  </sc-if>
+  <sc-if value="{{isCover}}" hint-placeholder-val="{{ false }}">
+    <div class="rise" style="height: 220px; border-radius: 22px; border: 2px dashed #C9B8F7; background: #FBFAFE; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 0 30px">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6A3FE0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M21 16l-5-5-8 8"></path></svg>
+      <span style="font-size: 17px; font-weight: 700">PDF-Seite oder Foto wählen</span>
+      <span style="font-size: 14px; color: #6B6678">Danach Felder aufziehen, die beim Lernen verdeckt sind.</span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{more}}" hint-placeholder-val="{{ false }}">
+    <div class="rise" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <label class="field" style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Norm</span>
+        <input placeholder="§ 242 StGB" style="border: 0; background: transparent; font-size: 15px; color: #17141F; outline: none">
+      </label>
+      <label class="field" style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Tags</span>
+        <input placeholder="#Klausur #AG" style="border: 0; background: transparent; font-size: 15px; color: #17141F; outline: none">
+      </label>
+    </div>
+  </sc-if>
+
+  <div style="display: flex; gap: 10px">
+    <button class="tap" style="flex-grow: 1; height: 50px; border-radius: 16px; border: 1.5px solid #EFECF5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700; color: #17141F">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6A3FE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path></svg>PDF</button>
+    <button class="tap" style="flex-grow: 1; height: 50px; border-radius: 16px; border: 1.5px solid #EFECF5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700; color: #17141F">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6A3FE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M21 16l-5-5-8 8"></path></svg>Foto / Bild</button>
+  </div>
+
+  <a href="Bibliothek.dc.html" style="height: 52px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #EFECF5; border-bottom: 1px solid #EFECF5; color: #17141F">
+    <span style="font-size: 15px; font-weight: 600; color: #6B6678">Stapel</span>
+    <span style="font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px">Diebstahl &amp; Betrug · SR
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B3AEC0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></span>
+  </a>
+
+  <div style="position: absolute; left: 20px; right: 20px; bottom: 34px; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #6B6678">
+      <div style="flex-grow: 1; height: 6px; border-radius: 3px; background: #EEE8FD; overflow: hidden"><div style="height: 6px; border-radius: 3px; background: #6A3FE0; width: {{goalPct}}; transition: width .5s cubic-bezier(.2,.8,.2,1)"></div></div>
+      <span>{{goalText}}</span>
+    </div>
+    <button class="tap" onClick="{{save}}" style="height: 60px; border-radius: 20px; border: 0; background: #6A3FE0; color: #FFFFFF; font-size: 18px; font-weight: 700; box-shadow: 0 10px 24px -10px rgba(106,63,224,.55)">Speichern &amp; nächste</button>
+  </div>
+
+  <sc-if value="{{toast}}" hint-placeholder-val="{{ false }}">
+    <div class="toast" style="{{toastStyle}}">
+      <span class="plus d" style="width: 44px; height: 44px; border-radius: 22px; background: #6A3FE0; color: #FFFFFF; font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">+1</span>
+      <div style="display: flex; flex-direction: column; gap: 1px">
+        <span style="font-size: 16px; font-weight: 700">{{toastTitle}}</span>
+        <span style="font-size: 13px; color: #6B6678; font-weight: 600">{{toastSub}}</span>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { type: 'qa', more: false, made: 3, toastKey: 0 }; }
+  componentWillUnmount() { clearTimeout(this._t); }
+  renderVals() {
+    const s = this.state;
+    const defs = [['qa', 'Frage'], ['cloze', 'Lücke'], ['schema', 'Schema'], ['cover', 'Abdeckung']];
+    const types = defs.map((d) => {
+      const on = s.type === d[0];
+      return { label: d[1], on: on ? 'true' : 'false', pick: () => this.setState({ type: d[0] }), style: 'height: 40px; border: 0; border-radius: 12px; font-size: 13.5px; font-weight: 700; background: ' + (on ? '#FFFFFF' : 'transparent') + '; color: ' + (on ? '#17141F' : '#6B6678') + '; box-shadow: ' + (on ? '0 2px 8px -3px rgba(46,26,115,.3)' : 'none') };
+    });
+    const goal = 5;
+    const made = s.made;
+    const reached = made >= goal;
+    return {
+      types,
+      isQA: s.type === 'qa', isCloze: s.type === 'cloze', isSchema: s.type === 'schema', isCover: s.type === 'cover',
+      more: s.more, moreOn: s.more ? 'true' : 'false', moreLabel: s.more ? 'Einfach' : 'Mehr',
+      toggleMore: () => this.setState({ more: !s.more }),
+      goalPct: Math.min(100, Math.round((made / goal) * 100)) + '%',
+      goalText: reached ? made + ' heute angelegt' : made + ' von ' + goal + ' heute',
+      toast: s.toastKey > 0,
+      toastStyle: 'position: absolute; left: 20px; right: 20px; top: 56px; border-radius: 22px; background: #FFFFFF; box-shadow: 0 18px 40px -16px rgba(46,26,115,.45); padding: 12px 16px; display: flex; align-items: center; gap: 12px; z-index: 5',
+      toastTitle: made === goal ? 'Tagesziel Anlegen erreicht' : 'Karte gespeichert',
+      toastSub: made === goal ? 'Meilenstein rückt näher: 150 angelegt' : made + ' heute angelegt · ' + (146 + made - 3) + ' insgesamt',
+      save: () => {
+        clearTimeout(this._t);
+        this.setState({ made: s.made + 1, toastKey: 0 });
+        setTimeout(() => this.setState({ toastKey: Date.now() }), 10);
+        this._t = setTimeout(() => this.setState({ toastKey: 0 }), 2450);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

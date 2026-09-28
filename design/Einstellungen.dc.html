@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Lernrhythmus</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input[type=range]{accent-color:#6A3FE0}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s,border-color .2s}
+.tap:active{transform:scale(.97)}
+.chip{transition:all .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise{animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 1060px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 54px 24px 40px 24px; display: flex; flex-direction: column; gap: 20px">
+  <a href="Main.dc.html" style="height: 44px; display: flex; align-items: center; gap: 2px; font-size: 16px; font-weight: 600; margin-left: -10px">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Heute</a>
+  <h1 class="d" style="margin: -8px 0 0 0; font-size: 38px; font-weight: 750; letter-spacing: -0.03em">Lernrhythmus</h1>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: #F6F4FB">
+    <sc-for list="{{algos}}" as="a" hint-placeholder-count="2">
+      <button class="tap" onClick="{{a.pick}}" aria-pressed="{{a.on}}" style="{{a.style}}">{{a.label}}</button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{isFsrs}}" hint-placeholder-val="{{ true }}">
+    <div class="rise" style="display: flex; flex-direction: column; gap: 16px">
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{presets}}" as="p" hint-placeholder-count="3">
+          <button class="tap" onClick="{{p.pick}}" aria-pressed="{{p.on}}" style="{{p.style}}">
+            <span style="font-size: 14px; font-weight: 700">{{p.name}}</span>
+            <span class="d" style="font-size: 26px; font-weight: 750; letter-spacing: -0.02em">{{p.ret}}</span>
+            <span style="font-size: 11.5px; font-weight: 600; opacity: .8">{{p.load}}</span>
+          </button>
+        </sc-for>
+      </div>
+      <label style="display: flex; flex-direction: column; gap: 8px">
+        <span style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 600"><span>Ziel-Behaltensquote</span><span style="font-weight: 800; color: #6A3FE0">{{retLabel}}</span></span>
+        <input type="range" min="80" max="97" step="1" value="{{ret}}" onChange="{{onRet}}" style="width: 100%; height: 28px">
+        <span style="font-size: 13px; color: #6B6678; line-height: 1.4">Wahrscheinlichkeit, eine Karte bei Fälligkeit noch zu wissen. Höher heißt: kürzere Abstände, mehr Wiederholungen pro Tag.</span>
+      </label>
+      <div style="border-radius: 20px; background: #F6F4FB; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Beispiel: immer „Gut“ (ca.)</span>
+        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap">
+          <sc-for list="{{ivls}}" as="v" hint-placeholder-count="5">
+            <span class="chip" style="height: 30px; padding: 0 10px; border-radius: 15px; background: #FFFFFF; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">{{v.t}}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isLeitner}}" hint-placeholder-val="{{ false }}">
+    <div class="rise" style="display: flex; flex-direction: column; gap: 12px">
+      <span style="font-size: 14px; color: #6B6678; line-height: 1.4">Klassisches Karteikasten-System: gewusst rückt ein Fach weiter, nicht gewusst zurück in Fach 1.</span>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{boxes}}" as="b" hint-placeholder-count="5">
+          <div style="{{b.style}}">
+            <span style="font-size: 12px; font-weight: 700; opacity: .85">Fach {{b.n}}</span>
+            <span class="d" style="font-size: 22px; font-weight: 750">{{b.d}}</span>
+            <span style="font-size: 11px; font-weight: 600; opacity: .85">Tage</span>
+          </div>
+        </sc-for>
+      </div>
+      <span style="font-size: 13px; color: #6B6678">Fach antippen, um Tage zu ändern.</span>
+    </div>
+  </sc-if>
+
+  <div style="display: flex; flex-direction: column; border-top: 1px solid #EFECF5">
+    <div style="min-height: 58px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EFECF5">
+      <span style="font-size: 16px; font-weight: 600">Neue Karten pro Tag</span>
+      <div style="display: flex; align-items: center; gap: 4px">
+        <button class="tap" onClick="{{dec}}" aria-label="Weniger" style="width: 36px; height: 36px; border-radius: 12px; border: 0; background: #F6F4FB; font-size: 20px; font-weight: 600; color: #17141F">−</button>
+        <span style="min-width: 36px; text-align: center; font-size: 17px; font-weight: 800">{{newPerDay}}</span>
+        <button class="tap" onClick="{{inc}}" aria-label="Mehr" style="width: 36px; height: 36px; border-radius: 12px; border: 0; background: #F6F4FB; font-size: 20px; font-weight: 600; color: #17141F">+</button>
+      </div>
+    </div>
+    <div style="min-height: 58px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EFECF5">
+      <span style="font-size: 16px; font-weight: 600">Längster Abstand</span>
+      <span style="font-size: 16px; font-weight: 700; color: #6B6678">180 Tage</span>
+    </div>
+    <a href="Fristen.dc.html" style="min-height: 72px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EFECF5; gap: 12px; color: #17141F">
+      <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Fristen</span><span style="font-size: 13px; color: #6B6678">Examen, Klausuren, LL.M.: Abstände enden rechtzeitig davor</span></span>
+      <span style="display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; color: #6A3FE0">3
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B3AEC0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></span>
+    </a>
+    <div style="min-height: 58px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EFECF5">
+      <span style="font-size: 16px; font-weight: 600">Lernschritte bei „Nochmal“</span>
+      <span style="font-size: 16px; font-weight: 700; color: #6B6678">1 min · 10 min</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1060}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { algo: 'fsrs', ret: 90, newPerDay: 20 }; }
+  renderVals() {
+    const s = this.state;
+    const algos = [['fsrs', 'FSRS (empfohlen)'], ['leitner', 'Leitner-Kasten']].map((a) => {
+      const on = s.algo === a[0];
+      return { label: a[1], on: on ? 'true' : 'false', pick: () => this.setState({ algo: a[0] }), style: 'height: 42px; border: 0; border-radius: 12px; font-size: 14px; font-weight: 700; background: ' + (on ? '#FFFFFF' : 'transparent') + '; color: ' + (on ? '#17141F' : '#6B6678') + '; box-shadow: ' + (on ? '0 2px 8px -3px rgba(46,26,115,.3)' : 'none') };
+    });
+    const pdefs = [['Entspannt', 85, 'weniger Last'], ['Standard', 90, 'ausgewogen'], ['Examen', 95, 'mehr Last']];
+    const presets = pdefs.map((p) => {
+      const on = s.ret === p[1];
+      return { name: p[0], ret: p[1] + ' %', load: p[2], on: on ? 'true' : 'false', pick: () => this.setState({ ret: p[1] }), style: 'height: 104px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: ' + (on ? '0' : '1.5px solid #E4DDF7') + '; background: ' + (on ? '#6A3FE0' : '#FFFFFF') + '; color: ' + (on ? '#FFFFFF' : '#17141F') };
+    });
+    const R = s.ret / 100;
+    const k = (81 / 19) * (1 / (R * R) - 1);
+    const fmt = (d) => d < 1.5 ? '1 T' : d < 45 ? Math.round(d) + ' T' : d < 365 ? Math.round(d / 30) + ' Mon' : (d / 365).toFixed(1).replace('.', ',') + ' J';
+    const ivls = [3, 9, 25, 60, 130].map((S, i) => ({ t: (i ? '→ ' : '') + fmt(Math.min(180, S * k)) }));
+    const days = [1, 3, 7, 14, 30];
+    const fills = ['#EEE8FD', '#DCD1FB', '#C9B8F7', '#9A7BEF', '#6A3FE0'];
+    const boxes = days.map((d, i) => ({ n: i + 1, d, style: 'height: 96px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; background: ' + fills[i] + '; color: ' + (i >= 4 ? '#FFFFFF' : '#2E1A73') }));
+    return {
+      algos, presets, ivls, boxes,
+      isFsrs: s.algo === 'fsrs', isLeitner: s.algo === 'leitner',
+      ret: s.ret, retLabel: s.ret + ' %',
+      onRet: (e) => this.setState({ ret: Number(e.target.value) }),
+      newPerDay: s.newPerDay,
+      dec: () => this.setState({ newPerDay: Math.max(0, s.newPerDay - 5) }),
+      inc: () => this.setState({ newPerDay: Math.min(100, s.newPerDay + 5) })
+    };
+  }
+}
+</script>
+</body>
+</html>

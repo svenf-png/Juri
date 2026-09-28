@@ -1,0 +1,84 @@
+/* Knöpfe nach Main, Lernen, Teilen, Fertig (design/). Antippen: 180 ms, Skalierung .97. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition:
+    transform var(--dur-tap) var(--ease-standard),
+    background-color var(--dur-tap),
+    box-shadow var(--dur-tap);
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.lg {
+  height: 60px;
+  padding: 0 24px;
+  border-radius: var(--radius-button);
+  font-size: 18px;
+}
+
+.md {
+  height: 52px;
+  padding: 0 20px;
+  border-radius: var(--radius-button-sm);
+  font-size: 16px;
+}
+
+.sm {
+  min-height: var(--touch-target);
+  padding: 0 16px;
+  border-radius: var(--radius-field);
+  font-size: 15px;
+}
+
+.primary,
+.primary:hover {
+  background: var(--violet);
+  color: var(--bg);
+  box-shadow: var(--shadow-primary);
+}
+
+.ink,
+.ink:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.soft,
+.soft:hover {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.outline,
+.outline:hover {
+  background: var(--bg);
+  color: var(--ink);
+  border: 1.5px solid var(--border-soft);
+}
+
+.ghost,
+.ghost:hover {
+  background: transparent;
+  color: var(--muted);
+}
+
+.block {
+  display: flex;
+  width: 100%;
+}

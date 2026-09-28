@@ -1,0 +1,54 @@
+/*
+ * Grundlayout eines Bildschirms. Oberer Abstand wie im Design (z. B. 64 px inkl. 47 px
+ * Statusleiste), korrigiert um die tatsächliche Safe Area (--top-shift, global.css).
+ */
+.screen {
+  min-height: 100dvh;
+  padding: calc(var(--screen-top, 64px) + var(--top-shift)) max(24px, env(safe-area-inset-right))
+    calc(40px + var(--bottom-inset)) max(24px, env(safe-area-inset-left));
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.narrow {
+  max-width: 560px;
+}
+
+.wide {
+  max-width: 1280px;
+}
+
+@media (min-width: 768px) {
+  .screen {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+.back {
+  align-self: flex-start;
+  min-height: var(--touch-target);
+  margin: -8px 0 -8px -10px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.lead {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.45;
+  max-width: 60ch;
+}

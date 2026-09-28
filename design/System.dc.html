@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Design-System</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1}a:hover{color:#4B2AA8}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+</style>
+</helmet>
+<div style="width: 1200px; height: 820px; box-sizing: border-box; background: #FFFFFF; padding: 56px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px">
+
+  <section style="display: flex; flex-direction: column; gap: 18px">
+    <h2 style="margin: 0; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6B6678">Farbe · Tinte + Veilchen</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <div style="height: 120px; border-radius: 20px; background: #6A3FE0; color: #FFFFFF; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end"><span style="font-weight: 700">Veilchen</span><span style="font-size: 12.5px; opacity: .9">#6A3FE0 · Aktion</span></div>
+      <div style="height: 120px; border-radius: 20px; background: #17141F; color: #FFFFFF; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end"><span style="font-weight: 700">Tinte</span><span style="font-size: 12.5px; opacity: .9">#17141F · Text, Auswahl</span></div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px">
+      <div style="height: 54px; border-radius: 12px; background: #F6F4FB"></div>
+      <div style="height: 54px; border-radius: 12px; background: #EEE8FD"></div>
+      <div style="height: 54px; border-radius: 12px; background: #C9B8F7"></div>
+      <div style="height: 54px; border-radius: 12px; background: #9A7BEF"></div>
+      <div style="height: 54px; border-radius: 12px; background: #4B2AA8"></div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; font-size: 11px; font-weight: 600; color: #6B6678">
+      <span>F6F4FB Fläche</span><span>EEE8FD 100</span><span>C9B8F7 300</span><span>9A7BEF 400</span><span>4B2AA8 700</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px">
+      <span style="display: flex; justify-content: space-between"><span>Grund</span><span style="font-weight: 700">#FFFFFF</span></span>
+      <span style="display: flex; justify-content: space-between"><span style="color: #6B6678">Sekundärtext</span><span style="font-weight: 700">#6B6678 · 5,5:1</span></span>
+      <span style="display: flex; justify-content: space-between"><span>Weiß auf Veilchen</span><span style="font-weight: 700">6,2:1</span></span>
+      <span style="display: flex; justify-content: space-between"><span>Linien</span><span style="font-weight: 700">#EFECF5</span></span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 6px">
+      <span style="font-size: 13px; font-weight: 700">Heatmap-Stufen</span>
+      <div style="display: flex; gap: 5px">
+        <span style="width: 26px; height: 26px; border-radius: 7px; background: #F1EEF7"></span>
+        <span style="width: 26px; height: 26px; border-radius: 7px; background: #EEE8FD"></span>
+        <span style="width: 26px; height: 26px; border-radius: 7px; background: #C9B8F7"></span>
+        <span style="width: 26px; height: 26px; border-radius: 7px; background: #9A7BEF"></span>
+        <span style="width: 26px; height: 26px; border-radius: 7px; background: #6A3FE0"></span>
+        <span style="width: 26px; height: 26px; border-radius: 7px; background: #6A3FE0; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #17141F; margin-left: 8px"></span>
+        <span style="font-size: 12.5px; color: #6B6678; font-weight: 600; align-self: center; padding-left: 6px">Rekord</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 18px">
+    <h2 style="margin: 0; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6B6678">Schrift</h2>
+    <div class="d" style="font-size: 64px; font-weight: 750; letter-spacing: -0.035em; line-height: .95">Aa<br><span style="color: #6A3FE0">18 Karten</span></div>
+    <span style="font-size: 14px; color: #6B6678">Bricolage Grotesque · Headlines, Zahlen, Kartenfragen · 500–800</span>
+    <p style="margin: 0; font-size: 18px; line-height: 1.5">Die von einem natürlichen Herrschaftswillen getragene tatsächliche Sachherrschaft.</p>
+    <span style="font-size: 14px; color: #6B6678">Figtree · Antworten, UI, Fließtext · 400–700</span>
+    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; border-top: 1px solid #EFECF5; padding-top: 14px">
+      <span style="display: flex; justify-content: space-between"><span>Display</span><span style="font-weight: 700">46 / 1.0 / −3 %</span></span>
+      <span style="display: flex; justify-content: space-between"><span>Kartenfrage</span><span style="font-weight: 700">28 / 1.18 / −2 %</span></span>
+      <span style="display: flex; justify-content: space-between"><span>Antwort</span><span style="font-weight: 700">20 / 1.45</span></span>
+      <span style="display: flex; justify-content: space-between"><span>UI</span><span style="font-weight: 700">15–17</span></span>
+      <span style="display: flex; justify-content: space-between"><span>Label</span><span style="font-weight: 700">12–13 · Versal · +6 %</span></span>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 18px">
+    <h2 style="margin: 0; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6B6678">Bewertung · Helligkeit statt Ampel</h2>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+      <div style="height: 72px; border-radius: 18px; background: #FFFFFF; border: 1.5px solid #DCD6EA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><span style="font-size: 14px; font-weight: 700">Nochmal</span><span style="font-size: 12px; opacity: .8">10 min</span></div>
+      <div style="height: 72px; border-radius: 18px; background: #EEE8FD; color: #2E1A73; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><span style="font-size: 14px; font-weight: 700">Schwer</span><span style="font-size: 12px; opacity: .8">2 T</span></div>
+      <div style="height: 72px; border-radius: 18px; background: #C9B8F7; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><span style="font-size: 14px; font-weight: 700">Gut</span><span style="font-size: 12px; opacity: .8">5 T</span></div>
+      <div style="height: 72px; border-radius: 18px; background: #6A3FE0; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><span style="font-size: 14px; font-weight: 700">Leicht</span><span style="font-size: 12px; opacity: .85">12 T</span></div>
+    </div>
+    <h2 style="margin: 12px 0 0 0; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6B6678">Form</h2>
+    <div style="display: flex; gap: 12px; align-items: flex-end">
+      <div style="width: 84px; height: 100px; border-radius: 28px; background: #F6F4FB; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; box-sizing: border-box; font-size: 12px; font-weight: 700">Karte 28</div>
+      <div style="width: 84px; height: 60px; border-radius: 20px; background: #F6F4FB; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">Button 20</div>
+      <div style="width: 84px; height: 46px; border-radius: 14px; background: #F6F4FB; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">Feld 14</div>
+      <div style="width: 60px; height: 30px; border-radius: 15px; background: #F6F4FB; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">Chip</div>
+    </div>
+    <h2 style="margin: 12px 0 0 0; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6B6678">Bewegung</h2>
+    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px">
+      <span style="display: flex; justify-content: space-between"><span>Karte umdrehen</span><span style="font-weight: 700">620 ms · leichter Nachschwung</span></span>
+      <span style="display: flex; justify-content: space-between"><span>Karte wegfliegen</span><span style="font-weight: 700">420 ms · rechts / nach hinten</span></span>
+      <span style="display: flex; justify-content: space-between"><span>Antippen</span><span style="font-weight: 700">180 ms · Skalierung 0,96</span></span>
+      <span style="display: flex; justify-content: space-between"><span>Erfolg</span><span style="font-weight: 700">Ring 1,1 s → Haken → Funken</span></span>
+      <span style="display: flex; justify-content: space-between"><span>Kurve</span><span style="font-weight: 700">cubic-bezier(.2,.8,.2,1)</span></span>
+      <span style="display: flex; justify-content: space-between"><span style="color: #6B6678">Reduzierte Bewegung</span><span style="font-weight: 700">alles aus</span></span>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
