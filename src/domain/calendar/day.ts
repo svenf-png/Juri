@@ -70,3 +70,8 @@ export function parseDayKey(key: string): Day {
   }
   throw new RangeError(`Ungültiger Tag: ${key}`);
 }
+
+/** Beginn des Lerntags `d`: 04:00 Ortszeit. */
+export function dayStart(d: Day): Date {
+  return new Date(d.year, d.month - 1, d.day, DAY_START_HOUR);
+}

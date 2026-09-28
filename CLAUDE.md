@@ -2,7 +2,7 @@
 
 Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, Safari/WebKit), ohne Server für Nutzerdaten. Dieses Dokument ist die Übergabe für neue Sessions. Maßgeblich sind:
 
-- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 10**, Annahmen A1 bis A14, Plan M0 bis M11, Risiken
+- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 11**, Annahmen A1 bis A18, Plan M0 bis M11, Risiken
 - `docs/adr/`: Architekturentscheidungen (Stack, Speicher, .juri, Scheduler, Hosting)
 - `design/*.dc.html`: verbindliches Design (HTML mit Inline-Styles; `support.js` und der Script-Block am Ende gehören zum Design-Tool)
 - `docs/folien/`: Projekt-Präsentation und Handbuch, per KI in PowerPoint umwandelbar (`KONVENTION.md`)
@@ -17,7 +17,7 @@ Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, 
 
 ## Budget und Chats
 
-- Budget: rund 100 $ Guthaben für das ganze Projekt (nach M0 verbraucht: 28,44 $). Testbarer Prototyp = M1 bis M4 (Entscheidung 11).
+- Budget: rund 100 $ Guthaben für das ganze Projekt (verbraucht: nach M0 28,44 $, nach M1 offen, nach M2 offen; Sven trägt die Beträge aus der Abrechnung nach). Testbarer Prototyp = M1 bis M4 (Entscheidung 11).
 - **Ein neuer Chat pro Meilenstein**, damit der Kontext klein bleibt. Am Ende jedes Meilensteins den Kostenstand melden und in `docs/ARCHITEKTUR.md` (Entscheidung 11) nachtragen. `get_session` liefert keinen Kostenwert (in M1 geprüft): den Betrag nicht schätzen, sondern Sven fragen, der ihn aus der Abrechnung abliest.
 - Sparsam arbeiten: wenige Screenshots und Bild-Reads, gezielte Datei-Ausschnitte statt ganzer Dateien, keine breite Web-Recherche ohne Anlass. Designs nur für den jeweiligen Meilenstein lesen.
 - Routine-Meilensteine mit `/effort high`, M4 (Lernalgorithmus) und M9 (Merge) mit höherer Stufe.

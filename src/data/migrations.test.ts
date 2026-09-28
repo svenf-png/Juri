@@ -71,3 +71,25 @@ describe('Migrationen', () => {
     expect(migrateTables(tables, 2, [v1, v2])).toEqual(tables);
   });
 });
+
+describe('Version 2 (M3)', () => {
+  it('hebt eine Datenbank aus M1 an, ohne Profil und Metadaten anzutasten', async () => {
+    const { db, reopen } = testDb([MIGRATIONS[0]!]);
+    await writeProfileName(db, 'Sven', 1);
+    await db.meta.put({ key: 'onboardedAt', value: 1 });
+    db.close();
+    const upgraded = reopen(MIGRATIONS);
+    expect((await readProfile(upgraded))?.name).toBe('Sven');
+    expect(await upgraded.meta.get('onboardedAt')).toEqual({ key: 'onboardedAt', value: 1 });
+    expect(upgraded.tables.map((t) => t.name).sort()).toEqual([
+      'areas',
+      'cards',
+      'decks',
+      'events',
+      'meta',
+      'profile',
+      'reviewItems',
+    ]);
+    expect(await upgraded.cards.count()).toBe(0);
+  });
+});

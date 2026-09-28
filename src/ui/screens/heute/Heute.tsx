@@ -4,5 +4,6 @@ import { HeuteView } from './HeuteView';
 
 /** Startseite der App: Heute mit den Daten dieses Geräts. */
 export function Heute({ data }: { data: ProfileData }) {
-  return <HeuteView model={useToday()} name={data.profile.name} />;
+  const model = useToday();
+  return model ? <HeuteView model={model} name={data.profile.name} /> : null;
 }

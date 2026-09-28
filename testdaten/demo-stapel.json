@@ -1,0 +1,375 @@
+{
+  "hinweis": "Demo-Inhalte zur fachlichen Prüfung. Jede Karte hat pruefung: offen, bis sie geprüft ist. Karten mit wortlaut: true zitieren eine Norm und müssen Zeichen für Zeichen mit der Quelle übereinstimmen (Lückentext: ohne die Lückenmarkierung). Die Quellen sind gesetze-im-internet.de (amtliches Werk, § 5 UrhG). Die Texte wurden ohne Abgleich mit der Quelle geschrieben, weil der Zugriff in der Entwicklungsumgebung gesperrt war.",
+  "rechtsgebiete": [
+    {
+      "id": "demo-zr",
+      "kuerzel": "ZR",
+      "name": "Zivilrecht"
+    },
+    {
+      "id": "demo-sr",
+      "kuerzel": "SR",
+      "name": "Strafrecht"
+    },
+    {
+      "id": "demo-oer",
+      "kuerzel": "ÖR",
+      "name": "Öffentliches Recht"
+    }
+  ],
+  "stapel": [
+    {
+      "id": "demo-deliktsrecht",
+      "name": "Deliktsrecht (Demo)",
+      "normen": "§§ 823 ff. BGB",
+      "rechtsgebiete": ["ZR"],
+      "karten": [
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Rechtsgüter nennt § 823 Abs. 1 BGB ausdrücklich?",
+          "rueckseite": "Das Leben, den Körper, die Gesundheit, die Freiheit und das Eigentum. Dazu kommt „ein sonstiges Recht“.",
+          "norm": "§ 823 I BGB",
+          "tags": ["Demo", "Definition"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__823.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "luecke",
+          "text": "Wer {{c1::vorsätzlich oder fahrlässig}} das Leben, den Körper, die Gesundheit, die Freiheit, das Eigentum oder ein sonstiges Recht eines anderen {{c2::widerrechtlich}} verletzt, ist dem anderen zum {{c3::Ersatz des daraus entstehenden Schadens}} verpflichtet.",
+          "norm": "§ 823 I BGB",
+          "tags": ["Demo", "Wortlaut"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__823.html",
+          "wortlaut": true,
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Wie ist der Anspruch aus § 823 Abs. 1 BGB aufgebaut?",
+          "rueckseite": "Tatbestand: Rechtsgutverletzung, Verletzungshandlung, haftungsbegründende Kausalität. Dann Rechtswidrigkeit und Verschulden. Rechtsfolge: Schaden und haftungsausfüllende Kausalität.",
+          "norm": "§ 823 I BGB",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__823.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Was ist ein „sonstiges Recht“ im Sinne des § 823 Abs. 1 BGB?",
+          "rueckseite": "Ein absolutes, eigentumsähnliches Recht mit Zuweisungsgehalt und Ausschlussfunktion, zum Beispiel das Anwartschaftsrecht, der berechtigte Besitz oder das Namensrecht.",
+          "norm": "§ 823 I BGB",
+          "tags": ["Demo", "Definition"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__823.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "luecke",
+          "text": "Reine {{c1::Vermögensschäden}} ersetzt § 823 Abs. 1 BGB grundsätzlich nicht. Sie können über {{c2::§ 823 Abs. 2 BGB}} in Verbindung mit einem {{c3::Schutzgesetz}} ersetzt werden.",
+          "norm": "§ 823 I, II BGB",
+          "tags": ["Demo", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__823.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Wann haftet der Geschäftsherr für einen Verrichtungsgehilfen nach § 831 BGB nicht?",
+          "rueckseite": "Wenn er bei Auswahl und Überwachung des Gehilfen die im Verkehr erforderliche Sorgfalt beachtet hat oder der Schaden auch dann entstanden wäre (§ 831 I 2 BGB).",
+          "norm": "§ 831 I BGB",
+          "tags": ["Demo", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__831.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Verjährungsfrist gilt regelmäßig für deliktische Ansprüche?",
+          "rueckseite": "Drei Jahre (§ 195 BGB). Sie beginnt mit dem Schluss des Jahres, in dem der Anspruch entstanden ist und der Gläubiger Kenntnis erlangt oder ohne grobe Fahrlässigkeit hätte erlangen müssen (§ 199 I BGB).",
+          "norm": "§§ 195, 199 I BGB",
+          "tags": ["Demo", "Frist"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__199.html",
+          "pruefung": "offen"
+        }
+      ]
+    },
+    {
+      "id": "demo-zpo-versaeumnisurteil",
+      "name": "ZPO: Versäumnisurteil (Demo)",
+      "normen": "§§ 330 ff. ZPO",
+      "rechtsgebiete": ["ZR"],
+      "karten": [
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Arten des Versäumnisurteils gibt es?",
+          "rueckseite": "Das Versäumnisurteil gegen den Kläger (§ 330 ZPO) und gegen den Beklagten (§ 331 ZPO).",
+          "norm": "§§ 330, 331 ZPO",
+          "tags": ["Demo", "Definition"],
+          "quelle": "https://www.gesetze-im-internet.de/zpo/__330.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "luecke",
+          "text": "Gegen ein Versäumnisurteil ist der {{c1::Einspruch}} statthaft. Die Frist beträgt {{c2::zwei Wochen}} und beginnt mit der {{c3::Zustellung}} des Versäumnisurteils.",
+          "norm": "§§ 338, 339 ZPO",
+          "tags": ["Demo", "Frist", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/zpo/__339.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Wirkung hat ein zulässiger Einspruch gegen ein Versäumnisurteil?",
+          "rueckseite": "Der Prozess wird in die Lage zurückversetzt, in der er sich vor der Säumnis befand (§ 342 ZPO).",
+          "norm": "§ 342 ZPO",
+          "tags": ["Demo", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/zpo/__342.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Voraussetzungen hat ein Versäumnisurteil gegen den Beklagten?",
+          "rueckseite": "Der Beklagte ist im Termin säumig, der Kläger beantragt das Versäumnisurteil, die Klage ist zulässig und das Vorbringen des Klägers schlüssig. Hinderungsgründe nach §§ 335, 337 ZPO liegen nicht vor.",
+          "norm": "§ 331 ZPO",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/zpo/__331.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "luecke",
+          "text": "Beantragt der Kläger gegen den im Verhandlungstermin nicht erschienenen Beklagten das Versäumnisurteil, so ist {{c1::das tatsächliche mündliche Vorbringen des Klägers}} {{c2::als zugestanden}} anzunehmen.",
+          "norm": "§ 331 I 1 ZPO",
+          "tags": ["Demo", "Wortlaut"],
+          "quelle": "https://www.gesetze-im-internet.de/zpo/__331.html",
+          "wortlaut": true,
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Was ist ein zweites Versäumnisurteil?",
+          "rueckseite": "Erscheint die säumige Partei auch im Einspruchstermin nicht, wird der Einspruch verworfen (§ 345 ZPO). Dagegen hilft nur die Berufung, gestützt auf das Fehlen der Säumnis (§ 514 II ZPO).",
+          "norm": "§§ 345, 514 II ZPO",
+          "tags": ["Demo", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/zpo/__345.html",
+          "pruefung": "offen"
+        }
+      ]
+    },
+    {
+      "id": "demo-amtshaftung",
+      "name": "Amtshaftung (Demo)",
+      "normen": "§ 839 BGB i. V. m. Art. 34 GG",
+      "rechtsgebiete": ["ZR", "ÖR"],
+      "karten": [
+        {
+          "typ": "frage",
+          "vorderseite": "Wer haftet nach Art. 34 S. 1 GG im Außenverhältnis?",
+          "rueckseite": "Grundsätzlich der Staat oder die Körperschaft, in deren Dienst der Amtsträger steht.",
+          "norm": "Art. 34 S. 1 GG",
+          "tags": ["Demo", "Definition"],
+          "quelle": "https://www.gesetze-im-internet.de/gg/art_34.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "luecke",
+          "text": "Verletzt ein Beamter {{c1::vorsätzlich oder fahrlässig}} die ihm einem Dritten gegenüber obliegende {{c2::Amtspflicht}}, so hat er dem Dritten den daraus entstehenden Schaden zu ersetzen.",
+          "norm": "§ 839 I 1 BGB",
+          "tags": ["Demo", "Wortlaut"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__839.html",
+          "wortlaut": true,
+          "pruefung": "offen"
+        },
+        {
+          "typ": "luecke",
+          "text": "Fällt dem Beamten nur {{c1::Fahrlässigkeit}} zur Last, so kann er nur dann in Anspruch genommen werden, wenn der Verletzte nicht {{c2::auf andere Weise Ersatz}} zu erlangen vermag.",
+          "norm": "§ 839 I 2 BGB",
+          "tags": ["Demo", "Wortlaut", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__839.html",
+          "wortlaut": true,
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Wann ist eine Amtspflicht drittbezogen?",
+          "rueckseite": "Wenn sie nach ihrem Zweck auch den Schutz des konkret Geschädigten bezweckt und nicht nur dem Interesse der Allgemeinheit dient.",
+          "norm": "§ 839 I 1 BGB",
+          "tags": ["Demo", "Definition", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__839.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Folge hat die schuldhafte Nichteinlegung eines Rechtsmittels?",
+          "rueckseite": "Die Ersatzpflicht entfällt (§ 839 III BGB).",
+          "norm": "§ 839 III BGB",
+          "tags": ["Demo", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__839.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Was gilt für den Rückgriff des Staates beim Amtsträger?",
+          "rueckseite": "Bei Vorsatz oder grober Fahrlässigkeit bleibt der Rückgriff vorbehalten (Art. 34 S. 2 GG).",
+          "norm": "Art. 34 S. 2 GG",
+          "tags": ["Demo", "Wortlaut"],
+          "quelle": "https://www.gesetze-im-internet.de/gg/art_34.html",
+          "wortlaut": true,
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Vor welchem Gericht sind Amtshaftungsansprüche geltend zu machen?",
+          "rueckseite": "Vor den ordentlichen Gerichten (Art. 34 S. 3 GG), erstinstanzlich vor dem Landgericht ohne Rücksicht auf den Streitwert (§ 71 II Nr. 2 GVG).",
+          "norm": "Art. 34 S. 3 GG, § 71 II Nr. 2 GVG",
+          "tags": ["Demo", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/gvg/__71.html",
+          "pruefung": "offen"
+        }
+      ]
+    },
+    {
+      "id": "demo-diebstahl-betrug",
+      "name": "Diebstahl und Betrug (Demo)",
+      "normen": "§§ 242, 263 StGB",
+      "rechtsgebiete": ["SR"],
+      "karten": [
+        {
+          "typ": "frage",
+          "vorderseite": "Was ist Gewahrsam?",
+          "rueckseite": "Die von einem Herrschaftswillen getragene tatsächliche Sachherrschaft eines Menschen. Ihre Reichweite bestimmt sich nach der Verkehrsauffassung.",
+          "norm": "§ 242 StGB",
+          "tags": ["Demo", "Definition", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__242.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "luecke",
+          "text": "Wegnahme ist der {{c1::Bruch fremden}} und die {{c2::Begründung neuen}}, nicht notwendig {{c3::tätereigenen}} Gewahrsams.",
+          "norm": "§ 242 StGB",
+          "tags": ["Demo", "Definition", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__242.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Woraus besteht die Zueignungsabsicht des § 242 StGB?",
+          "rueckseite": "Aus der Aneignungsabsicht (die Sache wenigstens vorübergehend dem eigenen Vermögen einverleiben) und dem Enteignungsvorsatz (dem Eigentümer die Sache dauerhaft entziehen).",
+          "norm": "§ 242 StGB",
+          "tags": ["Demo", "Definition", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__242.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Wie ist der Diebstahl nach § 242 StGB aufgebaut?",
+          "rueckseite": "Tatbestand: fremde bewegliche Sache, Wegnahme, Vorsatz, Zueignungsabsicht und Rechtswidrigkeit der erstrebten Zueignung. Danach Rechtswidrigkeit und Schuld.",
+          "norm": "§ 242 StGB",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__242.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Strafe droht im Grundtatbestand des Diebstahls?",
+          "rueckseite": "Freiheitsstrafe bis zu fünf Jahren oder Geldstrafe.",
+          "norm": "§ 242 I StGB",
+          "tags": ["Demo", "Wortlaut"],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__242.html",
+          "wortlaut": true,
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Wie ist der Betrug nach § 263 Abs. 1 StGB aufgebaut?",
+          "rueckseite": "Täuschung über Tatsachen, Irrtum, Vermögensverfügung, Vermögensschaden als kausale Kette. Subjektiv: Vorsatz und Bereicherungsabsicht (rechtswidriger Vermögensvorteil, Stoffgleichheit).",
+          "norm": "§ 263 I StGB",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__263.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "luecke",
+          "text": "Beim Betrug folgt auf die {{c1::Täuschung}} ein {{c2::Irrtum}}, dann eine {{c3::Vermögensverfügung}} und schließlich ein {{c4::Vermögensschaden}}.",
+          "norm": "§ 263 I StGB",
+          "tags": ["Demo", "Aufbau"],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__263.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Wodurch unterscheiden sich Diebstahl und Betrug bei der Vermögensverschiebung?",
+          "rueckseite": "Beim Diebstahl nimmt der Täter die Sache weg. Beim Betrug gibt das Opfer sie aufgrund eines Irrtums selbst her (Vermögensverfügung).",
+          "norm": "§§ 242, 263 StGB",
+          "tags": ["Demo", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__263.html",
+          "pruefung": "offen"
+        }
+      ]
+    },
+    {
+      "id": "demo-vwgo-anfechtungsklage",
+      "name": "VwGO: Anfechtungsklage (Demo)",
+      "normen": "§ 42 I Alt. 1 VwGO",
+      "rechtsgebiete": ["ÖR"],
+      "karten": [
+        {
+          "typ": "frage",
+          "vorderseite": "Was ist Gegenstand der Anfechtungsklage?",
+          "rueckseite": "Die Aufhebung eines Verwaltungsakts (§ 42 I Alt. 1 VwGO).",
+          "norm": "§ 42 I Alt. 1 VwGO",
+          "tags": ["Demo", "Definition"],
+          "quelle": "https://www.gesetze-im-internet.de/vwgo/__42.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "luecke",
+          "text": "Die Klage ist nur zulässig, wenn der Kläger geltend macht, durch den Verwaltungsakt in seinen {{c1::Rechten}} verletzt zu sein. Das nennt man {{c2::Klagebefugnis}}. Es genügt, dass die Verletzung {{c3::möglich}} ist.",
+          "norm": "§ 42 II VwGO",
+          "tags": ["Demo", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/vwgo/__42.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Frist gilt für die Anfechtungsklage?",
+          "rueckseite": "Einen Monat nach Zustellung des Widerspruchsbescheids. Ist kein Widerspruchsbescheid nötig, einen Monat nach Bekanntgabe des Verwaltungsakts (§ 74 I VwGO).",
+          "norm": "§ 74 I VwGO",
+          "tags": ["Demo", "Frist", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/vwgo/__74.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Wann ist die Anfechtungsklage begründet?",
+          "rueckseite": "Soweit der Verwaltungsakt rechtswidrig ist und den Kläger dadurch in seinen Rechten verletzt (§ 113 I 1 VwGO).",
+          "norm": "§ 113 I 1 VwGO",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/vwgo/__113.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Sachurteilsvoraussetzungen prüft man bei der Anfechtungsklage?",
+          "rueckseite": "Verwaltungsrechtsweg (§ 40 I VwGO), Statthaftigkeit, Klagebefugnis, Vorverfahren (§§ 68 ff. VwGO), Klagefrist, Beteiligten- und Prozessfähigkeit (§§ 61, 62 VwGO), richtiger Beklagter (§ 78 VwGO) und Zuständigkeit des Gerichts.",
+          "norm": "§§ 40 ff. VwGO",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/vwgo/__42.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Was ist ein Verwaltungsakt?",
+          "rueckseite": "Jede Verfügung, Entscheidung oder andere hoheitliche Maßnahme, die eine Behörde zur Regelung eines Einzelfalls auf dem Gebiet des öffentlichen Rechts trifft und die auf unmittelbare Rechtswirkung nach außen gerichtet ist.",
+          "norm": "§ 35 S. 1 VwVfG",
+          "tags": ["Demo", "Definition", "Wortlaut"],
+          "quelle": "https://www.gesetze-im-internet.de/vwvfg/__35.html",
+          "wortlaut": true,
+          "pruefung": "offen"
+        },
+        {
+          "typ": "frage",
+          "vorderseite": "Welche Wirkung hat der Widerspruch grundsätzlich?",
+          "rueckseite": "Aufschiebende Wirkung (§ 80 I VwGO), soweit nichts anderes gilt (§ 80 II VwGO).",
+          "norm": "§ 80 I VwGO",
+          "tags": ["Demo", "Klausur"],
+          "quelle": "https://www.gesetze-im-internet.de/vwgo/__80.html",
+          "pruefung": "offen"
+        }
+      ]
+    }
+  ]
+}

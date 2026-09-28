@@ -18,6 +18,17 @@ export interface Migration {
  */
 export const MIGRATIONS: readonly Migration[] = [
   { version: 1, stores: { profile: 'id', meta: 'key' } },
+  {
+    // M3: Rechtsgebiete, Stapel (m:n über den Mehrfach-Index areaIds), Karten, Abfragen, Ereignisse.
+    version: 2,
+    stores: {
+      areas: 'id, code',
+      decks: 'id, *areaIds',
+      cards: 'id, deckId, createdAt, *tags',
+      reviewItems: 'id, cardId, deckId',
+      events: '++seq, at, type',
+    },
+  },
 ];
 
 export function schemaVersion(migrations: readonly Migration[] = MIGRATIONS): number {

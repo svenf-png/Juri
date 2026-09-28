@@ -1,12 +1,27 @@
 import { Dexie, type DexieOptions, type EntityTable, type Table } from 'dexie';
 import type { BackupRecord } from '@/domain/backup/codec';
-import type { MetaEntry, MetaKey, Profile } from '@/domain/model/records';
+import type {
+  AppEvent,
+  Area,
+  Card,
+  Deck,
+  MetaEntry,
+  MetaKey,
+  NewEvent,
+  Profile,
+  ReviewItem,
+} from '@/domain/model/records';
 import { MIGRATIONS, type Migration } from './migrations';
 
 /** Datenbank einer Instanz: `juri` oder `juri-test` (ADR-005), Schema aus MIGRATIONS. */
 export class JuriDb extends Dexie {
   declare profile: EntityTable<Profile, 'id'>;
   declare meta: Table<MetaEntry, MetaKey>;
+  declare areas: EntityTable<Area, 'id'>;
+  declare decks: EntityTable<Deck, 'id'>;
+  declare cards: EntityTable<Card, 'id'>;
+  declare reviewItems: EntityTable<ReviewItem, 'id'>;
+  declare events: Table<AppEvent, number, NewEvent>;
 
   constructor(
     name: string,

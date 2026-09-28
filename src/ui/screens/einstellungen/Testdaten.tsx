@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { loadDemoProfile, resetAllData } from '@/features/demo/demo';
+import { loadDemoDecks, loadDemoProfile, resetAllData } from '@/features/demo/demo';
 import { Button } from '../../components/Button';
 import styles from './Einstellungen.module.css';
 
-/** Testdaten-Menü der Testinstanz (Entscheidung 10): Demo-Profil laden oder alles löschen. */
+/** Testdaten-Menü der Testinstanz (Entscheidung 10): Demo-Stapel, Demo-Profil oder alles löschen. */
 export function Testdaten() {
   const [busy, setBusy] = useState(false);
 
@@ -27,6 +27,20 @@ export function Testdaten() {
           block
           disabled={busy}
           onClick={() => {
+            setBusy(true);
+            void loadDemoDecks().finally(() => {
+              setBusy(false);
+            });
+          }}
+        >
+          Demo-Stapel hinzufügen
+        </Button>
+        <Button
+          variant="soft"
+          size="md"
+          block
+          disabled={busy}
+          onClick={() => {
             run('Demo-Profil laden? Alle Daten der Testinstanz werden ersetzt.', loadDemoProfile);
           }}
         >
@@ -44,7 +58,10 @@ export function Testdaten() {
           Alles zurücksetzen
         </Button>
       </div>
-      <p className={styles.help}>Nur in der Testinstanz. Die echte App bleibt unberührt.</p>
+      <p className={styles.help}>
+        Die Demo-Stapel kommen zu deinen Daten dazu (5 Stapel, 35 Karten, Inhalte in testdaten/).
+        Nur in der Testinstanz, die echte App bleibt unberührt.
+      </p>
     </section>
   );
 }
