@@ -95,7 +95,8 @@ test.describe('Lernen', () => {
     // Wieder aufrufen: nichts mehr fällig.
     await page.goto('/Juri/lernen');
     await expect(page.getByRole('heading', { name: 'Nichts fällig.' })).toBeVisible();
-    expect(watch.errors).toEqual([]);
+    // WebKit meldet gelegentlich die Update-Suche des Service Workers („sw.js due to access control checks“).
+    expect(watch.errors.filter((e) => !e.includes('/sw.js'))).toEqual([]);
   });
 
   test('Nochmal: die Karte kommt wieder, bis sie mindestens „Schwer“ bekommt; Undo nimmt zurück', async ({
