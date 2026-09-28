@@ -10,7 +10,7 @@ Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, 
 ## Arbeitsweise
 
 - Nutzer: Sven. Sprache Deutsch. **Keine Gedankenstriche** (Em-Dash, En-Dash) in Texten für ihn, in UI-Texten und Doku. Bei unklaren Anforderungen nachfragen, Entscheidungen per Auswahl-Popup mit Empfehlung.
-- Fakten zu iOS/WebKit nur mit Quelle (WebKit-Blog, MDN, caniuse), nichts erfinden.
+- Fakten zu iOS/WebKit nur mit Quelle (WebKit-Blog, MDN, caniuse), nichts erfinden. Normtexte nur wörtlich aus gesetze-im-internet.de; die Cloud-Umgebung sperrt diese Adresse (Netzwerkrichtlinie), sie muss in den Umgebungseinstellungen freigegeben sein, sonst bleiben Demo-Inhalte „ungeprüft“ (`testdaten/README.md`).
 - **Ein PR pro Meilenstein** gegen `main`. Nach jedem Meilenstein: Tests grün, Demo-Notiz, Doku und Folien aktualisiert, offene Punkte.
 - Design exakt übernehmen (Farben, Radien, Größen, Kurven), Werte aus `src/ui/tokens/tokens.ts`, nicht runden.
 - Touch-Ziele mindestens 44 px (sichtbare Größe darf kleiner sein, Trefferfläche erweitern), Text-Kontrast mindestens 4,5:1, echte Buttons/Links/Labels, reduzierte Bewegung respektieren.
@@ -60,7 +60,9 @@ WebKit läuft in der GitHub-CI.
 - Tokens: `tokens.ts` → `tokens.css` (Vite-Plugin), Gleichstand und Kontraste in `tokens.test.ts`.
 - Bildschirm-Abstände oben: iPhone Designwert + `var(--top-shift)` (Designs enthalten 47 px Statusleiste), iPad Designwert + `var(--top-inset)`.
 - Shell (M2): `AppShell` als Layout-Route, Tab-Bar unter 768 px, Sidebar ab 768 px, iPad-Designs ab 1100 px (A8). Bildschirme sind reine Ansichten eines Modells aus `domain/` (z. B. `todayModel`), Beispieldaten der Designs unter `/styleguide/heute`.
-- Pixelnähe: `tests/e2e/design.ts` rendert `design/*.dc.html` im Testbrowser; `heute.spec.ts` vergleicht Bild und Lage mit der App (auch WebKit). Neue Screens so absichern.
+- Pixelnähe: `tests/e2e/design.ts` rendert `design/*.dc.html` im Testbrowser (mit Vorlagen `sc-for`, `sc-if`, verschachtelt); `heute.spec.ts` und `stapel.spec.ts` vergleichen Bild und Lage mit der App (auch WebKit). Bewusste Abweichungen stehen mit Grund in `FIXES`. Neue Screens so absichern.
+- Karten und Stapel (M3, ADR-007): Tabellen `areas`, `decks` (m:n über `areaIds`), `cards` (qa, cloze), `reviewItems` (Lücke = Abfrage), `events` (Ereignis-Log). Reine Logik in `domain/cards`, `domain/library`, `domain/today/build.ts`; Schreiben in `data/repositories`, Hooks in `features/library`. Route `/stapel/:deckId?` (Master-Detail ab 1100 px), `/neu`, `/karte/:cardId`. Warn-Rot `danger` nur für Löschen und Fehler. Demo-Stapel: `testdaten/demo-stapel.json`.
+- Beim Design-Vergleich: Elemente, die im Design ohne `border-box` mit Rand gezeichnet sind, bekommen `box-sizing: content-box`, damit die Größe auf jeder Bildschirmdichte stimmt.
 
 ## Stand
 

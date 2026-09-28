@@ -3,10 +3,10 @@ titel: Juri benutzen
 untertitel: Das Handbuch für iPhone und iPad
 zielgruppe: Referendarinnen und Referendare
 stand: 2026-09-28
-version: 0.2 (Entwurf nach Design; Loslegen und Heute gegen die App geprüft)
+version: 0.3 (Karten und Stapel gegen die App geprüft, übrige Kapitel Entwurf nach Design)
 ---
 
-<!-- status: alle Kapitel sind Entwürfe nach den Design-Screens. Jedes Kapitel wird im genannten Meilenstein gegen die fertige App geprüft und bekommt echte Screenshots. -->
+<!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke) und Stapel sind gegen die App geprüft (bis M3). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
 
 # Loslegen
 
@@ -44,23 +44,24 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 
 ## Ausprobieren mit Beispielstapeln
 
-<!-- status: entwurf, Demo-Stapel entstehen ab M3, pruefen in M9 -->
+<!-- status: M3 in der Testinstanz umgesetzt, als Datei zum Importieren ab M9 -->
 
-- Für einen schnellen Einstieg gibt es **Demo-Stapel** zu ZR, SR und ÖR
-- Import wie jeder geteilte Stapel (Kapitel „Teilen“)
+- Die Testinstanz „Juri Test“ hat **5 Demo-Stapel** mit 35 Karten zu ZR, SR und ÖR
+- In den Einstellungen unter „Testdaten“: **„Demo-Stapel hinzufügen“**
 - Die Inhalte sind als **Demo** gekennzeichnet; sie ersetzen kein Skript
-- Du kannst sie jederzeit wieder löschen
+- Jeden Stapel kannst du einzeln wieder löschen
+- Als Datei zum Importieren kommen sie mit dem Teilen (Kapitel „Teilen“)
 
-> **Notizen:** Wer alle Funktionen mit Beispielverlauf sehen will, nutzt die Testinstanz „Juri Test“ unter svenf-png.github.io/Juri/test/. Sie ist eine eigene App mit eigenen Daten und berührt deine echten Lerndaten nicht.
+> **Notizen:** Die Testinstanz liegt unter svenf-png.github.io/Juri/test/. Sie ist eine eigene App mit eigenen Daten und berührt deine echten Lerndaten nicht. Die Karteninhalte sind noch nicht fachlich geprüft (testdaten/README.md).
 
 ## Der erste Start
 
-<!-- status: M1 umgesetzt (Onboarding.dc.html); Rechtsgebiete ab M3 -->
+<!-- status: M1 umgesetzt (Onboarding.dc.html), Rechtsgebiete M3 -->
 
 - Juri fragt nach deinem **Vornamen** (für Initiale und High fives)
 - Kein Passwort, keine E-Mail, kein Konto
 - Oben rechts steht danach deine **Initiale**: Tippen öffnet die Einstellungen
-- Die Rechtsgebiete **ZR, SR und ÖR** sind schon angelegt (ab M3)
+- Rechtsgebiete legst du mit dem ersten Stapel an: Juri schlägt **ZR, SR und ÖR** vor
 
 ## Heute
 
@@ -93,24 +94,28 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Deine erste Karte
 
-<!-- status: entwurf nach Erstellen.dc.html, pruefen in M3 -->
+<!-- status: M3 umgesetzt (Erstellen.dc.html), Schema und Abdeckung inaktiv bis M5 und M6 -->
 
 - Unten in der Mitte auf **+** tippen
-- Typ wählen: **Frage**, **Lücke**, **Schema** oder **Abdeckung**
-- Vorderseite und Rückseite ausfüllen, Stapel wählen
+- Typ wählen: **Frage** oder **Lücke** (Schema und Abdeckung kommen später)
+- Vorderseite und Rückseite ausfüllen, unten den **Stapel** wählen
 - **„Speichern & nächste“**: die nächste Karte ist sofort bereit
-- Jede gespeicherte Karte zählt für dein Tagesziel „Anlegen“
+- Fehlt etwas, steht der Hinweis direkt am Feld
+- Jede gespeicherte Karte zählt für dein Tagesziel „Anlegen“ (5 pro Tag)
 
-![Karte erstellen](../bilder/erstellen-iphone.png)
+![Neue Karte auf dem iPhone: Typ, Vorderseite, Rückseite, Stapel und Tagesziel](../bilder/erstellen-iphone.png)
+
+> **Notizen:** Noch kein Stapel? Beim Speichern öffnet sich die Stapelwahl mit „Neuer Stapel“. Nach „Speichern & nächste“ bleiben Typ, Stapel und Tags stehen, Inhalt und Norm sind leer.
 
 ## Lückentext
 
-<!-- status: entwurf nach Erstellen.dc.html und Luecke.dc.html, pruefen in M3 und M4 -->
+<!-- status: M3 umgesetzt (Erstellen.dc.html), Lernen mit Lücken ab M4 -->
 
 - Typ **Lücke** wählen und den Satz eingeben
 - Wort oder Wortgruppe markieren, **„Markierung wird Lücke“** tippen
-- Mehrere Lücken pro Karte sind möglich
-- Jede Lücke hat ihren eigenen Lernrhythmus
+- Unter dem Text stehen die Lücken; **✕** entfernt eine, der Text bleibt
+- **Jede Lücke wird eine eigene Abfrage:** drei Lücken sind drei Abfragen
+- Beim Lernen (ab M4) bekommt jede Lücke ihren eigenen Rhythmus
 
 ## Prüfungsschema
 
@@ -132,10 +137,12 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Einfach und Mehr
 
+<!-- status: M3 umgesetzt, Notiz kommt mit M4 -->
+
 - Standard ist **Einfach**: nur das Nötigste
-- **Mehr** blendet zusätzliche Felder ein: **Norm**, **Tags**, **Notiz**
-- Tags helfen beim Suchen und beim Umfang von Fristen
-- Die Notiz ist privat, außer du schickst sie beim Teilen bewusst mit
+- **Mehr** blendet **Norm** und **Tags** ein, z. B. „§ 242 StGB“ und „#Klausur #AG“
+- Tags und Normen findest du später mit der Suche
+- Das Feld **Notiz** kommt mit dem Lernen (M4)
 
 # Lernen
 
@@ -182,12 +189,59 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Stapel ordnen
 
-<!-- status: entwurf nach Bibliothek.dc.html und Stapel.dc.html, pruefen in M3 -->
+<!-- status: M3 umgesetzt (Bibliothek.dc.html, Stapel.dc.html, iPadStapel.dc.html) -->
 
 - Unter **Stapel** siehst du alle Stapel, gruppiert nach Rechtsgebiet
+- **„+ Stapel“** legt einen an: Name, Normen (optional), mindestens ein Rechtsgebiet
 - Ein Stapel kann in **mehreren Rechtsgebieten** liegen, z. B. Amtshaftung in ZR und ÖR
-- Im Stapel die Rechtsgebiete einfach an- und abwählen
+- Im Stapel die Rechtsgebiete an- und abwählen; das letzte bleibt
 - Der Balken zeigt: **sicher**, **im Lernen**, **neu**
+- Auf dem iPad stehen Liste und Stapel nebeneinander
+
+![Stapel-Übersicht auf dem iPhone, gruppiert nach Rechtsgebiet](../bilder/stapel-iphone.png)
+
+> **Notizen:** Die Zahl rechts an jedem Stapel sind die heute fälligen Karten. Bis zum Lernen (M4) zählt jede neue Karte als fällig.
+
+## Ein Stapel im Detail
+
+<!-- status: M3 umgesetzt (Stapel.dc.html) -->
+
+- Oben: Name, Normen und die Rechtsgebiete zum Umschalten
+- Der große Knopf startet das Lernen (ab M4) oder legt die erste Karte an
+- Darunter alle Karten; antippen öffnet sie zum Bearbeiten
+- **„⋯“** neben dem Namen: Stapel bearbeiten oder löschen
+- Löschen entfernt alle Karten und den Lernfortschritt und lässt sich nicht rückgängig machen
+
+![Stapel-Detail auf dem iPhone mit Rechtsgebieten, Fortschrittsbalken und Karten](../bilder/stapel-detail-iphone.png)
+
+## Karte bearbeiten und löschen
+
+<!-- status: M3 umgesetzt (Erstellen.dc.html im Bearbeiten-Modus) -->
+
+- Eine Karte im Stapel oder in den Suchtreffern antippen
+- Inhalt, Norm, Tags und Stapel lassen sich ändern; der Kartentyp bleibt
+- Bei Lückentexten bleiben die Abfragen der behaltenen Lücken erhalten
+- **„Karte löschen“** fragt nach und nennt, wie viele Abfragen entfallen
+
+## Suchen
+
+<!-- status: M3 umgesetzt -->
+
+- Die Suche oben in der Stapel-Übersicht findet Karten in Vorderseite, Rückseite, Lücken, Normen, Tags und Stapelnamen
+- Groß- und Kleinschreibung und Umlaute spielen keine Rolle
+- Mehrere Wörter müssen alle vorkommen
+- Ohne Treffer sagt Juri, wo gesucht wurde
+
+## Rechtsgebiete verwalten
+
+<!-- status: M3 umgesetzt -->
+
+- Der **Stift** hinter den Filtern öffnet die Liste der Rechtsgebiete
+- Anlegen mit Kürzel und Name; ZR, SR und ÖR gibt es als Vorschläge
+- Umbenennen ändert alles sofort, weil die Stapel auf das Rechtsgebiet verweisen
+- Löschen geht nur, wenn kein Stapel ausschließlich dort liegt; Juri nennt sie dir
+
+![Stapel auf dem iPad: Liste links, Stapel rechts](../bilder/stapel-ipad.png)
 
 # Lernrhythmus und Fristen
 

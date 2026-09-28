@@ -3,7 +3,7 @@ titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
 stand: 2026-09-28
-version: 0.2 (nach M2)
+version: 0.3 (nach M3)
 ---
 
 # Die Idee
@@ -125,6 +125,18 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 > **Notizen:** Die Fachlogik hängt nicht vom Browser ab und wird mit automatischen Tests zu mindestens 90 Prozent abgedeckt.
 
+## Karten, Stapel und Rechtsgebiete
+
+<!-- status: M3 umgesetzt, Modell in docs/adr/007-karten-stapel-und-luecken.md -->
+
+- Ein **Rechtsgebiet** ist ein Etikett; ein Stapel liegt in mindestens einem, gern in mehreren
+- Eine **Karte** ist eine Frage oder ein Lückentext, später Schema und Abdeckung
+- Jede Lücke wird eine **Abfrage** mit fester Kennung: drei Lücken ergeben drei Abfragen
+- Jede neue Karte schreibt ein Ereignis; daraus entstehen Tagesziel und Verlauf
+- Stapel löschen und Rechtsgebiet löschen folgen Regeln, damit nichts ins Leere zeigt
+
+> **Notizen:** Ein Backup prüft vor dem Einspielen alle Verweise zwischen Rechtsgebieten, Stapeln, Karten und Abfragen. Bis zur Lern-Engine (M4) zählt jede neue Abfrage als fällig.
+
 ## Wie der Lernrhythmus funktioniert
 
 - **FSRS** schätzt für jede Karte, wie sicher sie noch sitzt
@@ -206,8 +218,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 | Phase      | Inhalt                                                          |
 | ---------- | --------------------------------------------------------------- |
-| M0 bis M2  | Fundament, Daten und Backup, Oberfläche und Heute-Screen        |
-| M3 bis M5  | Karten und Stapel, Lern-Engine, Prüfungsschemata                |
+| M0 bis M3  | Fundament, Daten und Backup, Oberfläche, Karten und Stapel      |
+| M4 bis M5  | Lern-Engine, Prüfungsschemata                                   |
 | M6 bis M8  | PDF und Abdeckung, Fristen, Erfolge                             |
 | M9 bis M11 | Teilen und Import, High fives, Feinschliff und Veröffentlichung |
 
@@ -220,5 +232,6 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M0 fertig:** Grundgerüst, Design-Tokens, Schriften, App-Icon, Styleguide, Testinstanz mit Geräte-Check
 - **M1 fertig:** Datenbank mit Migrationen, Onboarding, Install-Anleitung im Safari-Tab, Speicheranzeige, Backup erstellen und einspielen
 - **M2 fertig:** Tab-Bar und Sidebar, Heute-Screen pixelgleich zum Design, Lerntag ab 4 Uhr
-- Automatische Prüfung bei jeder Änderung: 191 Unit-Tests, 29 E2E-Szenarien auf iPhone- und iPad-Größen
-- Nächster Schritt: Gerätetest von M0 bis M2 auf iPhone und iPad, dann M3 (Karten und Stapel)
+- **M3 fertig:** Rechtsgebiete, Stapel (in mehreren Rechtsgebieten), Frage und Lückentext, Suche, Bearbeiten und Löschen, Master-Detail auf dem iPad, Demo-Stapel
+- Automatische Prüfung bei jeder Änderung: 300 Unit-Tests, 46 E2E-Szenarien auf iPhone- und iPad-Größen
+- Nächster Schritt: Gerätetest von M0 bis M3 auf iPhone und iPad, dann M4 (Lern-Engine)
