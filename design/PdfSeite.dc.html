@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>PDF-Seite: Markierung zur Karte</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#F6F4FB;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button,input,textarea{font-family:inherit}
+button{cursor:pointer}
+textarea::placeholder,input::placeholder{color:#8E8A99}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s}
+.tap:active{transform:scale(.96)}
+.field{transition:box-shadow .2s}
+.field:focus-within{box-shadow:0 0 0 2px #6A3FE0}
+@keyframes toast{0%{opacity:0;transform:translateY(-24px) scale(.9)}14%{opacity:1;transform:translateY(0) scale(1.03)}20%{transform:none}85%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-12px)}}
+.toast{animation:toast 2.4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes plus{0%{transform:scale(.4);opacity:0}50%{transform:scale(1.2);opacity:1}100%{transform:none}}
+.plus{animation:plus .5s cubic-bezier(.2,.8,.2,1) .1s both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise{animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F4FB; position: relative; overflow: hidden; padding: 54px 20px 30px 20px; display: flex; flex-direction: column; gap: 12px">
+  <div style="display: flex; align-items: center; gap: 12px; height: 44px; flex-shrink: 0">
+    <a href="ErstellenAbdeckungBild.dc.html" style="font-size: 16px; font-weight: 600; height: 44px; display: flex; align-items: center">Schließen</a>
+    <span style="flex-grow: 1; min-width: 0; text-align: center; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Skript Sachenrecht.pdf</span>
+    <div style="display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: #FFFFFF">
+      <button aria-pressed="true" style="height: 34px; padding: 0 12px; border: 0; border-radius: 9px; background: #17141F; color: #FFFFFF; font-size: 13px; font-weight: 700">Text</button>
+      <button aria-pressed="false" style="height: 34px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; color: #6B6678; font-size: 13px; font-weight: 700">Abdecken</button>
+    </div>
+  </div>
+  <div style="position: relative; flex-grow: 1; min-height: 0; border-radius: 10px; background: #FFFFFF; box-shadow: 0 16px 40px -24px rgba(46,26,115,.35); padding: 28px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 11px; overflow: hidden">
+    <span style="font-size: 12px; color: #8E8A99; font-weight: 600">§ 5 Gutgläubiger Erwerb beweglicher Sachen</span>
+    <span style="width: 70%; height: 12px; border-radius: 4px; background: #CFCAD9; margin-top: 6px; flex-shrink: 0"></span>
+    <span style="width: 100%; height: 8px; border-radius: 4px; background: #E6E2EE; flex-shrink: 0"></span><span style="width: 96%; height: 8px; border-radius: 4px; background: #E6E2EE; flex-shrink: 0"></span><span style="width: 91%; height: 8px; border-radius: 4px; background: #E6E2EE; flex-shrink: 0"></span>
+    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #17141F; font-family: Georgia, 'Times New Roman', serif"><span style="background: rgba(106,63,224,.18); box-shadow: 0 0 0 2px rgba(106,63,224,.18); border-radius: 2px">Der Erwerber ist nicht in gutem Glauben, wenn ihm bekannt oder infolge grober Fahrlässigkeit unbekannt ist, dass die Sache nicht dem Veräußerer gehört.</span> (§ 932 II BGB)</p>
+    <span style="width: 100%; height: 8px; border-radius: 4px; background: #E6E2EE; flex-shrink: 0"></span><span style="width: 94%; height: 8px; border-radius: 4px; background: #E6E2EE; flex-shrink: 0"></span><span style="width: 98%; height: 8px; border-radius: 4px; background: #E6E2EE; flex-shrink: 0"></span><span style="width: 60%; height: 8px; border-radius: 4px; background: #E6E2EE; flex-shrink: 0"></span>
+    <div style="position: absolute; left: 24px; top: 250px; border-radius: 14px; background: #17141F; color: #FFFFFF; padding: 4px; display: flex; gap: 2px; box-shadow: 0 12px 28px -12px rgba(0,0,0,.5)">
+      <button style="height: 38px; padding: 0 12px; border: 0; border-radius: 10px; background: #6A3FE0; color: #FFFFFF; font-size: 13.5px; font-weight: 700">Als Antwort</button>
+      <button style="height: 38px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; color: #FFFFFF; font-size: 13.5px; font-weight: 700">Als Frage</button>
+      <button style="height: 38px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; color: #FFFFFF; font-size: 13.5px; font-weight: 700">Als Lücke</button>
+    </div>
+  </div>
+  <div style="text-align: center; font-size: 12px; color: #6B6678; font-weight: 600">Markieren mit dem Finger</div>
+  <div style="display: flex; gap: 10px; flex-shrink: 0">
+    <button aria-label="Vorige Seite" style="width: 52px; height: 52px; border-radius: 18px; border: 1.5px solid #DCD6EA; background: #FFFFFF; color: #17141F; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+    <button style="flex-grow: 1; height: 52px; border-radius: 18px; border: 1.5px solid #DCD6EA; background: #FFFFFF; color: #17141F; font-size: 16px; font-weight: 700">S. 14 / 62</button>
+    <button aria-label="Nächste Seite" style="width: 52px; height: 52px; border-radius: 18px; border: 1.5px solid #DCD6EA; background: #FFFFFF; color: #17141F; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+  </div>
+  <button style="height: 60px; flex-shrink: 0; border-radius: 20px; border: 0; background: #6A3FE0; color: #FFFFFF; font-size: 18px; font-weight: 700; box-shadow: 0 10px 24px -10px rgba(106,63,224,.55)">Zur Karte</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

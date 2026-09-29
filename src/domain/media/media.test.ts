@@ -120,6 +120,10 @@ describe('problemText', () => {
       { code: 'unbekannt' },
       { code: 'zu-gross', limit: 50_000_000, size: 80_000_000 },
       { code: 'zu-viele-pixel', pixels: 200_000_000 },
+      { code: 'speicher-voll' },
+      { code: 'pdf-passwort' },
+      { code: 'pdf-unlesbar' },
+      { code: 'pdf-zu-viele-seiten', limit: 1000 },
     ] as const;
 
   it('nennt Grund und Zahlen ohne Gedankenstriche', () => {

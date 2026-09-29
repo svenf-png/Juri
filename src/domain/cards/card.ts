@@ -211,6 +211,15 @@ export function sourceLabel(source: Source): string {
   return source.page === undefined ? source.name : `${source.name}, S. ${String(source.page)}`;
 }
 
+/**
+ * Marke unten rechts im Bild einer Abdeckung (Abdeckung.dc.html): „PDF · Skript Sachenrecht S. 14“,
+ * der Dateiname ohne `.pdf`.
+ */
+export function sourceCoverChip(source: Source): string {
+  const stem = source.name.replace(/\.pdf$/iu, '');
+  return source.page === undefined ? `PDF · ${stem}` : `PDF · ${stem} S. ${String(source.page)}`;
+}
+
 /** Kurzform für Chips: „PDF S. 14“ (Artboard iPadErstellen), ohne Seite der Dateiname. */
 export function sourceChip(source: Source): string {
   return source.page === undefined ? source.name : `PDF S. ${String(source.page)}`;

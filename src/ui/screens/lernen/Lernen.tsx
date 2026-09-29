@@ -6,9 +6,11 @@ import { endSummary, faceOf, plural } from '@/domain/session/present';
 import type { RatingKey } from '@/domain/scheduler/rating';
 import { setSurfaceColor } from '@/platform/theme';
 import { useCard } from '@/features/library/queries';
+import { useMediaUrl } from '@/features/media/media';
 import { areaCodeOf, useStudySession, type SessionEnd } from '@/features/study/useSession';
 import { Button } from '../../components/Button';
 import { Celebration } from '../../components/Celebration';
+import { SurfaceImage, SurfaceMissing } from '../../components/CoverSurface';
 import { Sheet } from '../../components/Sheet';
 import { StorageError } from '../../components/StorageError';
 import { cx } from '../../cx';
@@ -48,6 +50,7 @@ export function Lernen() {
   const touch = useRef<{ x: number; y: number } | null>(null);
 
   const { state, station } = session;
+  const coverMedia = useMediaUrl(session.card?.type === 'cover' ? session.card.mediaId : null);
   const flipped = state.flipped;
   const bundle = isBundle(station);
 
@@ -224,6 +227,18 @@ export function Lernen() {
         onUndo={() => {
           if (!busy.current) undo();
         }}
+        coverImage={
+          coverMedia.status === 'ready' ? (
+            <SurfaceImage src={coverMedia.url} />
+          ) : coverMedia.status === 'missing' ? (
+            <SurfaceMissing />
+          ) : null
+        }
+        coverRatio={
+          coverMedia.status === 'ready' && coverMedia.record.width && coverMedia.record.height
+            ? coverMedia.record.width / coverMedia.record.height
+            : 1
+        }
         onOpenLink={setLinked}
         cardEvents={cardEvents}
       />

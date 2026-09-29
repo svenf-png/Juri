@@ -12,6 +12,8 @@ export interface CreateGoal {
   /** „3 von 5 heute“ oder, wenn erreicht, „5 heute angelegt“. */
   readonly text: string;
   readonly reached: boolean;
+  /** „noch 2 bis zum Tagesziel“ (iPadErstellen.dc.html) oder, wenn erreicht, „Tagesziel erreicht“. */
+  readonly remaining: string;
 }
 
 export function createGoal(made: number, goal = DEFAULT_CREATE_GOAL): CreateGoal {
@@ -22,6 +24,7 @@ export function createGoal(made: number, goal = DEFAULT_CREATE_GOAL): CreateGoal
       ? `${groupDigits(made)} heute angelegt`
       : `${groupDigits(made)} von ${goal} heute`,
     reached,
+    remaining: reached ? 'Tagesziel erreicht' : `noch ${String(goal - made)} bis zum Tagesziel`,
   };
 }
 

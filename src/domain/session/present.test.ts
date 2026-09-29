@@ -203,7 +203,8 @@ describe('Abdeckung (M6)', () => {
       typeLabel: 'Abdeckung 2 von 3',
       question: 'Was steht unter Feld 2?',
       asked: 2,
-      source: 'PDF S. 14',
+      chip: 'PDF · Skript S. 14',
+      openable: false,
       mediaId: 'i1',
     });
     expect(face.kind === 'cover' && face.masks.map((m) => `${String(m.label)}:${m.look}`)).toEqual([
@@ -222,9 +223,32 @@ describe('Abdeckung (M6)', () => {
     ]);
   });
 
+  it('nennt Öffnen nur, wenn das PDF gespeichert ist', () => {
+    const stored = { ...cover, source: { name: 'Skript.pdf', page: 14, mediaId: 'p1' } } as Card;
+    expect(faceOf(stored, ['m2'], 0)).toMatchObject({
+      openable: true,
+      sourceMediaId: 'p1',
+      sourcePage: 14,
+    });
+  });
+
+  it('gibt die Herkunft anderer Karten als Anhang mit', () => {
+    const withSource = {
+      ...qa,
+      source: { name: 'Skript ZPO.pdf', page: 42, mediaId: 'p1' },
+    } as Card;
+    expect(faceOf(withSource, [''], 0)).toMatchObject({
+      kind: 'qa',
+      source: { label: 'Skript ZPO.pdf, S. 42', mediaId: 'p1', page: 42 },
+    });
+    expect(faceOf(qa, [''], 0).source).toBeUndefined();
+    const plain = { ...qa, source: { name: 'Buch' } } as Card;
+    expect(faceOf(plain, [''], 0).source).toEqual({ label: 'Buch', mediaId: null, page: null });
+  });
+
   it('kommt ohne Herkunft mit leerer Marke aus', () => {
     const rest = { ...cover } as Record<string, unknown>;
     delete rest.source;
-    expect(faceOf(rest as unknown as Card, ['m2'], 0)).toMatchObject({ source: '', asked: 1 });
+    expect(faceOf(rest as unknown as Card, ['m2'], 0)).toMatchObject({ chip: '', asked: 1 });
   });
 });

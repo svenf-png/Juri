@@ -1,0 +1,35 @@
+.cover {
+  position: absolute;
+  inset: 0;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.wait {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Zusatz zum Design: Feld löschen, wenn eines gewählt ist. */
+.remove {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 22px;
+  border: 1.5px solid var(--border-soft);
+  background: var(--bg);
+  color: var(--danger);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

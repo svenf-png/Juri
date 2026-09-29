@@ -1,0 +1,48 @@
+.option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  border-radius: 20px;
+  border: 1.5px solid var(--track);
+  background: var(--bg);
+  padding: 12px 16px;
+  color: var(--ink);
+}
+
+.optionIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: var(--violet-100);
+  color: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.optionText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.optionTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.optionSub {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+}

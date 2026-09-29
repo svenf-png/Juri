@@ -1,0 +1,143 @@
+/*
+ * Bild mit Feldern (Abdeckung.dc.html, AbdeckungEditor.dc.html): Die Fläche passt ins Rahmenmaß,
+ * die Felder liegen in Prozent des Bildes und sitzen dadurch bei jeder Größe und jedem Zoom exakt.
+ */
+.stage {
+  container-type: size;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frame {
+  position: relative;
+  flex-shrink: 0;
+  width: min(100cqw, calc(100cqh * var(--ratio)));
+  aspect-ratio: var(--ratio);
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.inner {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.mask {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  overflow: hidden;
+  line-height: normal;
+}
+
+.covered {
+  background: var(--violet-300);
+  color: var(--violet-900);
+}
+
+.asked {
+  background: var(--violet);
+  color: var(--bg);
+}
+
+.pulse {
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(106, 63, 224, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(106, 63, 224, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}
+
+.revealed {
+  border: 2.5px solid var(--violet);
+  background: rgba(106, 63, 224, 0.08);
+}
+
+.selected {
+  background: var(--violet);
+  color: var(--bg);
+  box-shadow: var(--shadow-record);
+  overflow: visible;
+  cursor: move;
+}
+
+.editable {
+  cursor: pointer;
+}
+
+.editable:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.draft {
+  border: 2px dashed var(--violet);
+  background: rgba(106, 63, 224, 0.18);
+  pointer-events: none;
+}
+
+/* Ecke zum Ziehen: 14 px sichtbar, Trefferfläche 44 px (A1). */
+.handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  box-sizing: border-box;
+  border-radius: 7px;
+  background: var(--bg);
+  border: 2px solid var(--violet);
+  touch-action: none;
+  cursor: nwse-resize;
+}
+
+.handle::after {
+  content: '';
+  position: absolute;
+  inset: -15px;
+}
+
+.missing {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}

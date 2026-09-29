@@ -1,17 +1,40 @@
 import { useRef, useState, type ReactNode } from 'react';
-import { checkCard, type CardErrors, type CardFields } from '@/domain/cards/card';
+import {
+  checkCard,
+  sourceChip,
+  sourceLabel,
+  type CardErrors,
+  type CardFields,
+} from '@/domain/cards/card';
 import { draftToMarkup, EMPTY_DRAFT } from '@/domain/cards/clozeDraft';
 import type { CreateGoal } from '@/domain/cards/goal';
+import { ordinals } from '@/domain/cards/occlusion';
+import { formatBytes } from '@/domain/format/bytes';
+import type { MediaRecord } from '@/domain/model/records';
+import { useBlobUrl, useMediaUrl } from '@/features/media/media';
 import { Button } from '../../components/Button';
+import {
+  CoverSurface,
+  SurfaceImage,
+  SurfaceMissing,
+  type SurfaceMask,
+} from '../../components/CoverSurface';
 import { ChevronRightIcon, FileIcon, ImageIcon, TrashIcon } from '../../components/icons';
 import { plural } from '@/domain/session/present';
 import { TextField } from '../../components/TextField';
 import { cx } from '../../cx';
+import { useMediaQuery } from '../../useMediaQuery';
 import rise from '../../motion/rise.module.css';
 import tap from '../../motion/tap.module.css';
+import { PdfWorkspace } from '../pdf/PdfWorkspace';
 import { ClozeEditor } from './ClozeEditor';
+import { CoverDrop, CoverPanel, CoverWorking } from './CoverPanel';
+import { CoverEditor } from './CoverEditor';
+import { ProblemSheet, SourceSheet } from './MediaSheets';
 import { SchemaEditor } from './SchemaEditor';
-import type { FormState, Tab } from './form';
+import { EMPTY_COVER, type FormState, type Tab } from './form';
+import { SplitForm } from './SplitForm';
+import { useCardMedia } from './useCardMedia';
 import styles from './Erstellen.module.css';
 
 const TABS: readonly { value: Tab; label: string }[] = [
@@ -20,13 +43,6 @@ const TABS: readonly { value: Tab; label: string }[] = [
   { value: 'schema', label: 'Schema' },
   { value: 'cover', label: 'Abdeckung' },
 ];
-
-const COMING: Partial<Record<Tab, { title: string; text: string }>> = {
-  cover: {
-    title: 'Abdeckungs-Karten kommen mit M6',
-    text: 'Bis dahin lege Fragen und Lückentexte an.',
-  },
-};
 
 export interface CardScreenProps {
   mode: 'new' | 'edit';
@@ -42,7 +58,7 @@ export interface CardScreenProps {
    * Speichert die geprüften Felder: `true` gespeichert, `false` nicht gespeichert und nichts zu
    * melden (z. B. der Stapel wird erst gewählt). Wirft, wenn das Speichern scheitert.
    */
-  onSubmit: (fields: CardFields) => Promise<boolean>;
+  onSubmit: (fields: CardFields, media: MediaRecord[]) => Promise<boolean>;
   onClose: () => void;
   /** Nur beim Anlegen: Tagesziel und Meldung nach dem Speichern. */
   goal?: CreateGoal;
@@ -86,17 +102,42 @@ export function CardScreen({
   const set = (change: Partial<FormState>) => {
     setForm((f) => ({ ...f, ...change }));
   };
-  const coming = COMING[form.tab];
+  const media = useCardMedia(form, setForm, editing);
+  // Geteilte Ansicht: PDF links, Formular rechts (iPad quer, Design ab 1100 px, A8).
+  const wide = useMediaQuery('(min-width: 1100px)');
+  const draftUrl = useBlobUrl(form.cover.draft?.record ?? null);
+  const stored = useMediaUrl(form.cover.draft ? null : form.cover.mediaId);
+  const coverUrl = draftUrl ?? (stored.status === 'ready' ? stored.url : null);
+  const coverRatio =
+    form.cover.ratio > 0
+      ? form.cover.ratio
+      : stored.status === 'ready' && stored.record.width && stored.record.height
+        ? stored.record.width / stored.record.height
+        : 1;
+  const coverMissing =
+    !form.cover.draft && form.cover.mediaId !== null && stored.status === 'missing';
+  const hasCover = form.cover.draft !== null || form.cover.mediaId !== null;
 
-  async function submit() {
-    if (busy || coming) return;
+  async function submit(leave = false) {
+    if (busy) return;
+    const { media: pending, source } = media.forSave();
     const checked = checkCard({
-      type: form.tab === 'cloze' ? 'cloze' : form.tab === 'schema' ? 'schema' : 'qa',
+      type:
+        form.tab === 'cloze'
+          ? 'cloze'
+          : form.tab === 'schema'
+            ? 'schema'
+            : form.tab === 'cover'
+              ? 'cover'
+              : 'qa',
       front: form.front,
       back: form.back,
       text: draftToMarkup(form.draft),
       title: form.title,
       points: form.points,
+      mediaId: form.cover.draft?.record.id ?? form.cover.mediaId ?? undefined,
+      masks: form.cover.masks,
+      source,
       norm: form.norm,
       tags: form.tags,
       note: form.note,
@@ -117,7 +158,7 @@ export function CardScreen({
     setBusy(true);
     let saved: boolean;
     try {
-      saved = await onSubmit(checked.fields);
+      saved = await onSubmit(checked.fields, pending);
     } catch {
       setFailed(true);
       setBusy(false);
@@ -125,6 +166,7 @@ export function CardScreen({
     }
     setBusy(false);
     if (saved && !editing) {
+      media.afterSave();
       // Nächste Karte: Inhalt, Norm und Notiz leeren, Typ, Stapel und Tags bleiben stehen.
       setForm((f) => ({
         ...f,
@@ -133,15 +175,20 @@ export function CardScreen({
         draft: EMPTY_DRAFT,
         title: '',
         points: [],
+        cover: EMPTY_COVER,
         norm: '',
         note: '',
       }));
-      (form.tab === 'cloze'
-        ? textRef
-        : form.tab === 'schema'
-          ? titleRef
-          : frontRef
-      ).current?.focus();
+      if (leave) {
+        onClose();
+      } else {
+        (form.tab === 'cloze'
+          ? textRef
+          : form.tab === 'schema'
+            ? titleRef
+            : frontRef
+        ).current?.focus();
+      }
     }
   }
 
@@ -165,6 +212,242 @@ export function CardScreen({
           setOutline(false);
         }}
       />
+    );
+  }
+
+  const coverImage = coverUrl ? <SurfaceImage src={coverUrl} /> : <SurfaceMissing />;
+  const surfaceMasks: SurfaceMask[] = (() => {
+    const labels = ordinals(form.cover.masks);
+    return form.cover.masks.map((m) => ({
+      ...m,
+      label: labels.get(m.n) ?? 0,
+      look: 'covered' as const,
+    }));
+  })();
+  const draft = form.cover.draft;
+  const clozePanel = (
+    <div className={rise.rise}>
+      <ClozeEditor
+        draft={form.draft}
+        onChange={(draft) => {
+          set({ draft });
+        }}
+        error={errors.text}
+        textRef={textRef}
+      />
+    </div>
+  );
+  const schemaPanel = (
+    <div className={cx(styles.schemaPanel, rise.rise)}>
+      <TextField
+        label="Titel des Schemas"
+        value={form.title}
+        onChange={(title) => {
+          set({ title });
+        }}
+        placeholder="z. B. Amtshaftungsanspruch"
+        error={errors.schema?.title}
+        inputRef={titleRef}
+      />
+      <button
+        type="button"
+        className={cx(styles.outlineButton, tap.tap)}
+        onClick={() => {
+          setOutline(true);
+        }}
+      >
+        Gliederung bearbeiten
+        <ChevronRightIcon size={18} strokeWidth={2.2} />
+      </button>
+      {errors.schema?.points || errors.schema?.point ? (
+        <span className={styles.errorText} role="alert">
+          {errors.schema.points ?? 'Bitte prüfe die markierten Punkte in der Gliederung.'}
+        </span>
+      ) : (
+        <span className={styles.outlineInfo}>
+          {form.points.length === 0
+            ? 'Noch keine Punkte'
+            : plural(form.points.length, 'Punkt', 'Punkte')}
+        </span>
+      )}
+    </div>
+  );
+  const panels = form.tab === 'cloze' ? clozePanel : form.tab === 'schema' ? schemaPanel : null;
+  const coverPanel = media.busy ? (
+    <CoverWorking name={media.busy.name} size={formatBytes(media.busy.size)} />
+  ) : hasCover ? (
+    <CoverPanel
+      preview={
+        <CoverSurface ratio={coverRatio} masks={surfaceMasks} label="Vorschau der Abdeckung">
+          {coverImage}
+        </CoverSurface>
+      }
+      masks={form.cover.masks.length}
+      facts={
+        draft
+          ? `${String(draft.record.width ?? 0)} × ${String(draft.record.height ?? 0)} · ${formatBytes(draft.record.size)}`
+          : stored.status === 'ready'
+            ? `${String(stored.record.width ?? 0)} × ${String(stored.record.height ?? 0)} · ${formatBytes(stored.record.size)}`
+            : ''
+      }
+      origin={
+        form.cover.page !== null
+          ? `Seite ${String(form.cover.page)} aus ${media.pdf?.name ?? 'dem PDF'}`
+          : draft?.resized
+            ? `Verkleinert von ${String(draft.originalWidth)} × ${String(draft.originalHeight)} (${formatBytes(draft.originalSize)})`
+            : form.source
+              ? sourceLabel(form.source)
+              : ''
+      }
+      onEdit={() => {
+        if (form.cover.page !== null && media.pdf) {
+          media.showPdf();
+          media.setMode('cover');
+        } else {
+          media.openEditor();
+        }
+      }}
+      onReplace={
+        editing
+          ? undefined
+          : () => {
+              media.openSourceSheet();
+            }
+      }
+      error={errors.cover ?? (coverMissing ? 'Das Bild fehlt in diesem Backup.' : undefined)}
+    />
+  ) : (
+    <div>
+      <CoverDrop onChoose={media.openSourceSheet} />
+      {errors.cover ? (
+        <p className={styles.errorText} role="alert">
+          {errors.cover}
+        </p>
+      ) : null}
+    </div>
+  );
+
+  if (media.editor && hasCover) {
+    return (
+      <CoverEditor
+        ratio={coverRatio}
+        image={coverImage}
+        initial={form.cover.masks}
+        onDone={(masks) => {
+          setForm((f) => ({
+            ...f,
+            cover: {
+              ...f.cover,
+              masks,
+              everUsed: Math.max(f.cover.everUsed, ...masks.map((m) => m.n)),
+            },
+          }));
+          setErrors({});
+          media.closeEditor();
+        }}
+        onBack={media.closeEditor}
+      />
+    );
+  }
+
+  const sheets = (
+    <>
+      <SourceSheet
+        open={media.sourceSheet}
+        onClose={media.closeSourceSheet}
+        onImage={media.chooseImage}
+        onPdf={() => {
+          media.choosePdf('cover');
+        }}
+      />
+      <ProblemSheet
+        problem={media.problem?.problem ?? null}
+        kind={media.problem?.kind ?? 'image'}
+        onRetry={media.retry}
+        onClose={media.dismissProblem}
+      />
+    </>
+  );
+
+  if (media.pdf && media.pdfOpen && !wide) {
+    return (
+      <>
+        <PdfWorkspace
+          layout="phone"
+          media={media}
+          cover={form.cover}
+          onCover={(patch) => {
+            setForm((f) => ({ ...f, cover: { ...f.cover, ...patch } }));
+          }}
+          onClose={media.hidePdf}
+        />
+        {sheets}
+      </>
+    );
+  }
+
+  if (media.pdf && media.pdfOpen) {
+    const pdfSource =
+      form.tab === 'cover' && form.cover.page !== null ? form.cover.page : media.page;
+    return (
+      <div className={styles.split}>
+        <PdfWorkspace
+          layout="pad"
+          media={media}
+          cover={form.cover}
+          onCover={(patch) => {
+            setForm((f) => ({ ...f, cover: { ...f.cover, ...patch } }));
+          }}
+          onClose={media.hidePdf}
+        />
+        <SplitForm
+          form={form}
+          set={set}
+          errors={errors}
+          onTab={(tab) => {
+            setErrors({});
+            if (tab === 'cover') media.setMode('cover');
+            else if (media.mode === 'cover') media.setMode('text');
+            set({ tab });
+          }}
+          made={goal?.text ?? ''}
+          applied={media.applied}
+          panel={panels}
+          coverSummary={
+            <div className={styles.splitSummary}>
+              <span className={styles.splitSummaryHead}>
+                <span className={styles.splitSummaryLabel}>Abdeckung</span>
+                <span className={styles.splitSummaryChip}>aus PDF übernommen</span>
+              </span>
+              <span className={styles.splitSummaryTitle}>
+                {form.cover.masks.length === 0
+                  ? 'Noch keine Felder'
+                  : `${String(form.cover.masks.length)} ${form.cover.masks.length === 1 ? 'Feld' : 'Felder'} auf S. ${String(pdfSource)}`}
+              </span>
+              <span className={styles.splitSummaryText}>
+                Jedes Feld wird beim Lernen einzeln abgefragt. Ziehe links weitere Felder auf oder
+                wähle ein Feld zum Verschieben.
+              </span>
+              {errors.cover ? (
+                <span className={styles.errorText} role="alert">
+                  {errors.cover}
+                </span>
+              ) : null}
+            </div>
+          }
+          deckLabel={deckLabel}
+          onPickDeck={onPickDeck}
+          source={sourceChip({ name: media.pdf.name, page: pdfSource })}
+          goal={goal ? { pct: goal.pct, text: goal.remaining } : null}
+          busy={busy}
+          failed={failed}
+          onSave={(next) => void submit(!next)}
+          frontRef={frontRef}
+          backRef={backRef}
+          toast={toast}
+        />
+        {sheets}
+      </div>
     );
   }
 
@@ -243,59 +526,9 @@ export function CardScreen({
           />
         </div>
       ) : null}
-      {form.tab === 'cloze' ? (
-        <div className={rise.rise}>
-          <ClozeEditor
-            draft={form.draft}
-            onChange={(draft) => {
-              set({ draft });
-            }}
-            error={errors.text}
-            textRef={textRef}
-          />
-        </div>
-      ) : null}
-      {form.tab === 'schema' ? (
-        <div className={cx(styles.schemaPanel, rise.rise)}>
-          <TextField
-            label="Titel des Schemas"
-            value={form.title}
-            onChange={(title) => {
-              set({ title });
-            }}
-            placeholder="z. B. Amtshaftungsanspruch"
-            error={errors.schema?.title}
-            inputRef={titleRef}
-          />
-          <button
-            type="button"
-            className={cx(styles.outlineButton, tap.tap)}
-            onClick={() => {
-              setOutline(true);
-            }}
-          >
-            Gliederung bearbeiten
-            <ChevronRightIcon size={18} strokeWidth={2.2} />
-          </button>
-          {errors.schema?.points || errors.schema?.point ? (
-            <span className={styles.errorText} role="alert">
-              {errors.schema.points ?? 'Bitte prüfe die markierten Punkte in der Gliederung.'}
-            </span>
-          ) : (
-            <span className={styles.outlineInfo}>
-              {form.points.length === 0
-                ? 'Noch keine Punkte'
-                : plural(form.points.length, 'Punkt', 'Punkte')}
-            </span>
-          )}
-        </div>
-      ) : null}
-      {coming ? (
-        <div className={cx(styles.placeholderPanel, rise.rise)}>
-          <span className={styles.placeholderTitle}>{coming.title}</span>
-          <span className={styles.placeholderText}>{coming.text}</span>
-        </div>
-      ) : null}
+      {form.tab === 'cloze' ? clozePanel : null}
+      {form.tab === 'schema' ? schemaPanel : null}
+      {form.tab === 'cover' ? <div className={rise.rise}>{coverPanel}</div> : null}
 
       {more ? (
         <div className={cx(styles.extra, rise.rise)}>
@@ -357,24 +590,43 @@ export function CardScreen({
         <div className={styles.media}>
           <button
             type="button"
-            className={styles.mediaButton}
-            disabled
-            aria-label="PDF, kommt mit M6"
+            className={cx(styles.mediaButton, tap.tap)}
+            onClick={() => {
+              if (media.pdf) media.showPdf();
+              else media.choosePdf('text');
+            }}
           >
             <FileIcon size={18} />
             PDF
           </button>
           <button
             type="button"
-            className={styles.mediaButton}
-            disabled
-            aria-label="Foto oder Bild, kommt mit M6"
+            className={cx(styles.mediaButton, tap.tap)}
+            onClick={media.chooseImage}
           >
             <ImageIcon size={18} />
             Foto / Bild
           </button>
         </div>
       )}
+      {media.pdf && !editing ? (
+        <div className={styles.sourceRow}>
+          <span className={styles.sourceText}>
+            Quelle: {media.pdf.name}, S. {media.page}
+          </span>
+          <button type="button" className={styles.sourceButton} onClick={media.showPdf}>
+            Öffnen
+          </button>
+          <button type="button" className={styles.sourceButton} onClick={media.removePdf}>
+            Entfernen
+          </button>
+        </div>
+      ) : null}
+      {editing && form.source ? (
+        <div className={styles.sourceRow}>
+          <span className={styles.sourceText}>Quelle: {sourceLabel(form.source)}</span>
+        </div>
+      ) : null}
 
       <button
         type="button"
@@ -404,7 +656,7 @@ export function CardScreen({
             Das hat nicht geklappt. Bitte versuche es noch einmal.
           </p>
         ) : null}
-        <Button block disabled={busy || coming !== undefined} onClick={() => void submit()}>
+        <Button block disabled={busy} onClick={() => void submit()}>
           {editing ? 'Speichern' : 'Speichern & nächste'}
         </Button>
         {editing && onDelete ? (
@@ -415,6 +667,7 @@ export function CardScreen({
         ) : null}
       </div>
       {toast}
+      {sheets}
     </main>
   );
 }

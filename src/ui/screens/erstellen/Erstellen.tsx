@@ -28,7 +28,10 @@ export function CreatedToast({ title, sub }: { title: string; sub: string }) {
   );
 }
 
-/** Neue Karte (`/neu`, optional `?stapel=<ID>`): Frage oder Lückentext, „Speichern & nächste“. */
+/**
+ * Neue Karte (`/neu`, optional `?stapel=<ID>`): Frage, Lückentext, Schema oder Abdeckung (Foto oder
+ * PDF-Seite), „Speichern & nächste“.
+ */
 export function Erstellen() {
   const [params] = useSearchParams();
   const goBack = useGoBack('/');
@@ -67,12 +70,12 @@ export function Erstellen() {
         }}
         onClose={goBack}
         goal={createGoal(made)}
-        onSubmit={async (fields) => {
+        onSubmit={async (fields, mediaRecords) => {
           if (!deck) {
             setSheet('pick');
             return false;
           }
-          await addCard(deck.id, fields);
+          await addCard(deck.id, fields, mediaRecords);
           rememberDeck(deck.id);
           setToast({ key: Date.now(), ...savedToast(made + 1, counts.value.total + 1) });
           window.clearTimeout(timer.current);

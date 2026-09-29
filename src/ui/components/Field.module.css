@@ -42,3 +42,9 @@
 .invalid {
   box-shadow: 0 0 0 2px var(--danger);
 }
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -1,0 +1,125 @@
+/*
+ * Eine PDF-Seite: Zeichenfläche (pdf.js) mit unsichtbarer Textebene darüber, damit sich Text
+ * markieren lässt. Die Textebene folgt den Regeln von pdf.js (web/pdf_viewer.css, Apache-2.0):
+ * jedes Textstück absolut positioniert und transparent, die Größe kommt aus --total-scale-factor.
+ */
+.root {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.frame {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--bg);
+  touch-action: none;
+  /* Rahmen der Seite: hebt die weiße Seite von der weißen Karte ab. */
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.inner {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.text {
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  text-align: initial;
+  line-height: 1;
+  text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  z-index: 0;
+  color-scheme: only light;
+}
+
+.text :global(span),
+.text :global(br) {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+.text > :global(:not(.markedContent)),
+.text :global(.markedContent) :global(span:not(.markedContent)) {
+  z-index: 1;
+  --font-height: 0;
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+  --scale-x: 1;
+  --rotate: 0deg;
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+}
+
+.text :global(.markedContent) {
+  display: contents;
+}
+
+.text ::selection {
+  background: rgba(106, 63, 224, 0.28);
+}
+
+.text :global(br)::selection {
+  background: transparent;
+}
+
+.wait {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.popup {
+  position: absolute;
+  z-index: 3;
+  border-radius: 14px;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 4px;
+  display: flex;
+  gap: 2px;
+  box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.5);
+  transform: translateX(-50%);
+}
+
+.popupButton {
+  height: 38px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--bg);
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.popupPrimary {
+  background: var(--violet);
+}

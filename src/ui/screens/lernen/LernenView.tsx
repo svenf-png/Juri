@@ -5,13 +5,22 @@ import {
   type PointerEventHandler,
   type ReactNode,
 } from 'react';
-import type { Face, Piece, SchemaRow } from '@/domain/session/present';
+import type { Face, Piece, SchemaRow, SourceRef } from '@/domain/session/present';
 import type { IntervalPreview } from '@/domain/scheduler/schedule';
 import type { RatingKey } from '@/domain/scheduler/rating';
 import { CardFlip } from '../../components/CardFlip';
-import { CloseIcon, FlipIcon, LinkIcon, NoteIcon, UndoIcon } from '../../components/icons';
+import { CoverSurface } from '../../components/CoverSurface';
+import {
+  CloseIcon,
+  FileIcon,
+  FlipIcon,
+  LinkIcon,
+  NoteIcon,
+  UndoIcon,
+} from '../../components/icons';
 import { RatingBar } from '../../components/RatingBar';
 import { cx } from '../../cx';
+import { useZoomPan } from '../../useZoomPan';
 import tap from '../../motion/tap.module.css';
 import rise from '../../motion/rise.module.css';
 import styles from './Lernen.module.css';
@@ -43,6 +52,11 @@ export interface LernenViewProps {
   onRevealAll: () => void;
   onRate: (rating: RatingKey) => void;
   onUndo: () => void;
+  /** Abdeckung: das Bild (oder ein Ersatz in der Größe der Fläche) und sein Seitenverhältnis. */
+  coverImage?: ReactNode;
+  coverRatio?: number | undefined;
+  /** Zeile „Anhang“: das gespeicherte PDF an dieser Seite öffnen. */
+  onOpenSource?: ((mediaId: string, page: number | null) => void) | undefined;
   /** Schema: die verknüpfte Karte eines aufgedeckten Punkts anzeigen. */
   onOpenLink?: ((cardId: string) => void) | undefined;
   /** Zeiger-Ereignisse der Karte für die Wischgeste. */
@@ -86,6 +100,86 @@ function Pieces({ pieces, look }: { pieces: readonly Piece[]; look: 'front' | 'b
         );
       })}
     </>
+  );
+}
+
+/** Zeile „Anhang: Skript ZPO, S. 42“ mit „Öffnen“ (Antwort.dc.html). */
+function SourceRow({
+  source,
+  onOpen,
+}: {
+  source: SourceRef;
+  onOpen?: ((mediaId: string, page: number | null) => void) | undefined;
+}) {
+  const mediaId = source.mediaId;
+  return (
+    <div className={styles.attachment}>
+      <FileIcon size={20} className={styles.attachmentIcon} />
+      <span className={styles.attachmentLabel}>Anhang: {source.label}</span>
+      {mediaId !== null ? (
+        <button
+          type="button"
+          data-noswipe=""
+          className={cx(styles.attachmentOpen, tap.tap)}
+          aria-label={`${source.label} öffnen`}
+          onClick={() => {
+            onOpen?.(mediaId, source.page);
+          }}
+        >
+          Öffnen
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+/** Abdeckung (Abdeckung.dc.html): Bild mit Feldern, ein Feld gefragt, alle anderen verdeckt. */
+function CoverCard({
+  view,
+  face,
+}: {
+  view: LernenViewProps;
+  face: Extract<Face, { kind: 'cover' }>;
+}) {
+  const frame = useRef<HTMLDivElement>(null);
+  const zoom = useZoomPan(frame);
+  const zoomed = zoom.viewport.zoom > 1;
+  const masks = face.masks.map((m) => ({ ...m }));
+  return (
+    <div className={styles.cover}>
+      <Head area={view.area} type={face.typeLabel} norm={view.norm} />
+      <div className={styles.coverQuestion}>{face.question}</div>
+      <div className={styles.coverBox} {...(zoomed ? { 'data-noswipe': '' } : {})}>
+        <CoverSurface
+          ratio={view.coverRatio ?? 1}
+          masks={masks}
+          transform={zoom.transform}
+          frameRef={frame}
+          frameProps={zoom.bind}
+          onAskedPress={view.flipped ? undefined : view.onFlip}
+          label="Bild mit Feldern"
+        >
+          {view.coverImage}
+        </CoverSurface>
+        {face.chip !== '' ? (
+          face.openable && face.sourceMediaId !== null ? (
+            <button
+              type="button"
+              data-noswipe=""
+              className={cx(styles.coverSource, styles.coverSourceButton, tap.tap)}
+              aria-label={`${face.chip} öffnen`}
+              onClick={() => {
+                view.onOpenSource?.(face.sourceMediaId ?? '', face.sourcePage);
+              }}
+            >
+              {face.chip}
+            </button>
+          ) : (
+            <span className={styles.coverSource}>{face.chip}</span>
+          )
+        ) : null}
+      </div>
+    </div>
   );
 }
 
@@ -149,6 +243,7 @@ function Back({ view }: { view: LernenViewProps }) {
           </div>
         </div>
       ) : null}
+      {face.source ? <SourceRow source={face.source} onOpen={view.onOpenSource} /> : null}
     </div>
   );
 }
@@ -175,6 +270,9 @@ function Bundle({
             <span className={styles.noteBody}>{view.note}</span>
           </div>
         </div>
+      ) : null}
+      {view.flipped && face.source ? (
+        <SourceRow source={face.source} onOpen={view.onOpenSource} />
       ) : null}
       <div className={styles.steps} role="img" aria-label="Fortschritt der Lücken">
         {Array.from({ length: face.total }, (_, i) => (
@@ -290,6 +388,9 @@ function SchemaCard({
           </div>
         </div>
       ) : null}
+      {view.flipped && face.source ? (
+        <SourceRow source={face.source} onOpen={view.onOpenSource} />
+      ) : null}
     </div>
   );
 }
@@ -302,6 +403,7 @@ function SchemaCard({
 export function LernenView(view: LernenViewProps) {
   const { face } = view;
   const schema = face.kind === 'schema';
+  const cover = face.kind === 'cover';
   const bundle = face.kind === 'bundle' || (schema && face.total > 1);
   const cardStyle: CSSProperties | undefined =
     view.drag === undefined || view.drag === 0
@@ -317,6 +419,8 @@ export function LernenView(view: LernenViewProps) {
     card = <Bundle view={view} face={face} />;
   } else if (face.kind === 'schema') {
     card = <SchemaCard view={view} face={face} />;
+  } else if (face.kind === 'cover') {
+    card = <CoverCard view={view} face={face} />;
   } else {
     card = (
       <CardFlip
@@ -356,7 +460,7 @@ export function LernenView(view: LernenViewProps) {
         </div>
       </div>
 
-      <div className={cx(styles.stage, schema && styles.stageTall)}>
+      <div className={cx(styles.stage, schema && styles.stageTall, cover && styles.stageCover)}>
         <div className={styles.frame}>
           {view.behind >= 2 ? <div className={cx(styles.behind, styles.behind2)} /> : null}
           {view.behind >= 1 ? <div className={cx(styles.behind, styles.behind1)} /> : null}
@@ -405,8 +509,13 @@ export function LernenView(view: LernenViewProps) {
               className={cx(styles.flipButton, tap.tap, rise.rise)}
               onClick={view.onFlip}
             >
-              Antwort zeigen
+              {face.kind === 'cover' ? `Feld ${String(face.asked)} aufdecken` : 'Antwort zeigen'}
             </button>
+            {face.kind === 'cover' ? (
+              <div className={styles.hint}>
+                Zwei Finger zum Zoomen · Feld antippen zum Aufdecken
+              </div>
+            ) : null}
             {view.undoable ? (
               <button type="button" className={styles.undo} onClick={view.onUndo}>
                 <UndoIcon size={16} strokeWidth={2.2} />

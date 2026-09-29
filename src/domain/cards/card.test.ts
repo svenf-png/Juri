@@ -14,6 +14,7 @@ import {
   reviewItemId,
   reviewSubs,
   sourceChip,
+  sourceCoverChip,
   sourceLabel,
   tidyLine,
   type CardForm,
@@ -415,5 +416,9 @@ describe('Abdeckung (M6)', () => {
     expect(sourceChip({ name: 'Skript.pdf', page: 14 })).toBe('PDF S. 14');
     expect(sourceChip({ name: 'Skript.pdf' })).toBe('Skript.pdf');
     expect(sourceLabel({ name: 'Skript.pdf', page: 14 })).toBe('Skript.pdf, S. 14');
+    expect(sourceCoverChip({ name: 'Skript Sachenrecht.pdf', page: 14 })).toBe(
+      'PDF · Skript Sachenrecht S. 14',
+    );
+    expect(sourceCoverChip({ name: 'Buch' })).toBe('PDF · Buch');
   });
 });

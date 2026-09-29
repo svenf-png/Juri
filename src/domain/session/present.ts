@@ -4,7 +4,7 @@
  */
 import { parseCloze } from '../cards/cloze';
 import { ordinals, maskNumber, type Mask } from '../cards/occlusion';
-import { sourceChip } from '../cards/card';
+import { sourceCoverChip, sourceLabel } from '../cards/card';
 import { pointNumbers } from '../cards/schema';
 import type { Card } from '../model/records';
 
@@ -134,7 +134,16 @@ export function coverMasks(
   }));
 }
 
-export type Face =
+/** Herkunft einer Karte für die Zeile „Anhang“ (Antwort.dc.html). */
+export interface SourceRef {
+  /** „Skript ZPO, S. 42“ */
+  readonly label: string;
+  /** Gespeichertes PDF, das „Öffnen“ zeigt. */
+  readonly mediaId: string | null;
+  readonly page: number | null;
+}
+
+type FaceBase =
   | {
       readonly kind: 'qa';
       readonly typeLabel: 'Frage';
@@ -165,7 +174,11 @@ export type Face =
       /** Anzeigenummer des gefragten Feldes. */
       readonly asked: number;
       /** Herkunft für die Marke unten rechts, z. B. „PDF S. 14“; leer ohne Herkunft. */
-      readonly source: string;
+      readonly chip: string;
+      /** Das PDF der Herkunft ist gespeichert und lässt sich öffnen. */
+      readonly openable: boolean;
+      readonly sourcePage: number | null;
+      readonly sourceMediaId: string | null;
     }
   | {
       readonly kind: 'bundle';
@@ -179,7 +192,22 @@ export type Face =
  * Ansicht einer Station: `subs` sind die Kennungen ihrer Abfragen (eine Frage `['']`, eine Lücke
  * `['c2']`, gebündelte Lücken `['c1', 'c3']`), `revealed` die schon aufgedeckten Lücken eines Bündels.
  */
+export type Face = FaceBase & { readonly source?: SourceRef | undefined };
+
 export function faceOf(card: Card, subs: readonly string[], revealed: number): Face {
+  const face = baseFace(card, subs, revealed);
+  if (face.kind === 'cover' || !card.source) return face;
+  return {
+    ...face,
+    source: {
+      label: sourceLabel(card.source),
+      mediaId: card.source.mediaId ?? null,
+      page: card.source.page ?? null,
+    },
+  };
+}
+
+function baseFace(card: Card, subs: readonly string[], revealed: number): FaceBase {
   if (card.type === 'qa') {
     return { kind: 'qa', typeLabel: 'Frage', question: card.front, answer: card.back };
   }
@@ -206,7 +234,10 @@ export function faceOf(card: Card, subs: readonly string[], revealed: number): F
       mediaId: card.mediaId,
       masks,
       asked: label,
-      source: card.source ? sourceChip(card.source) : '',
+      chip: card.source ? sourceCoverChip(card.source) : '',
+      openable: card.source?.mediaId !== undefined,
+      sourcePage: card.source?.page ?? null,
+      sourceMediaId: card.source?.mediaId ?? null,
     };
   }
   const asked = askedNumbers(subs);

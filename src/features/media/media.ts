@@ -2,8 +2,14 @@
  * Bilder und PDFs für Karten (M6): Datei wählen, prüfen, vorbereiten und als Medium-Datensatz
  * bereithalten. Gespeichert wird erst mit der Karte (`addCard`), damit nichts Verwaistes bleibt.
  */
-import { useEffect, useState } from 'react';
-import { checkSize, checkUpload, hasRoom, type UploadProblem } from '@/domain/media/media';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  checkSize,
+  checkUpload,
+  hasRoom,
+  PDF_MAX_PAGES,
+  type UploadProblem,
+} from '@/domain/media/media';
 import type { MediaRecord } from '@/domain/model/records';
 import { readMedia } from '@/data/repositories/media';
 import { newId } from '@/platform/id';
@@ -11,20 +17,15 @@ import { displayName, MediaProblem, prepareImage } from '@/platform/media/prepar
 import { openPdf, PdfError, type PdfDocument } from '@/platform/pdf/pdf';
 import { database } from '../app/database';
 
-export type PickProblem =
-  | UploadProblem
-  | { readonly code: 'speicher-voll' }
-  | { readonly code: 'pdf'; readonly why: 'passwort' | 'unlesbar' | 'zu-viele-seiten' };
-
 async function ensureRoom(bytes: number): Promise<void> {
   const estimate = await navigator.storage.estimate().catch(() => ({}));
   if (!hasRoom(bytes, estimate)) throw new ProblemError({ code: 'speicher-voll' });
 }
 
 export class ProblemError extends Error {
-  readonly problem: PickProblem;
+  readonly problem: UploadProblem;
 
-  constructor(problem: PickProblem) {
+  constructor(problem: UploadProblem) {
     super(problem.code);
     this.name = 'ProblemError';
     this.problem = problem;
@@ -97,7 +98,15 @@ export async function draftPdf(file: File): Promise<PdfDraft> {
       stored: false,
     };
   } catch (error) {
-    if (error instanceof PdfError) throw new ProblemError({ code: 'pdf', why: error.problem });
+    if (error instanceof PdfError) {
+      throw new ProblemError(
+        error.problem === 'passwort'
+          ? { code: 'pdf-passwort' }
+          : error.problem === 'zu-viele-seiten'
+            ? { code: 'pdf-zu-viele-seiten', limit: PDF_MAX_PAGES }
+            : { code: 'pdf-unlesbar' },
+      );
+    }
     throw error;
   }
 }
@@ -166,4 +175,19 @@ export async function openStoredPdf(
   } catch {
     return null;
   }
+}
+
+/** Bild-URL zu einem noch nicht gespeicherten Bild (Entwurf); gibt sie beim Verlassen frei. */
+export function useBlobUrl(record: MediaRecord | null): string | null {
+  const url = useMemo(
+    () => (record ? URL.createObjectURL(new Blob([record.data], { type: record.mime })) : null),
+    [record],
+  );
+  useEffect(
+    () => () => {
+      if (url) URL.revokeObjectURL(url);
+    },
+    [url],
+  );
+  return url;
 }

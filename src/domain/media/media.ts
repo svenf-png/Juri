@@ -53,7 +53,11 @@ export type UploadProblem =
   | { readonly code: 'leer' }
   | { readonly code: 'unbekannt' }
   | { readonly code: 'zu-gross'; readonly limit: number; readonly size: number }
-  | { readonly code: 'zu-viele-pixel'; readonly pixels: number };
+  | { readonly code: 'zu-viele-pixel'; readonly pixels: number }
+  | { readonly code: 'speicher-voll' }
+  | { readonly code: 'pdf-passwort' }
+  | { readonly code: 'pdf-unlesbar' }
+  | { readonly code: 'pdf-zu-viele-seiten'; readonly limit: number };
 
 /** Prüft eine gewählte Datei; `wanted` schränkt die Art ein (Foto oder PDF). */
 export function checkUpload(
@@ -126,6 +130,26 @@ export function problemText(
       return {
         title: 'Bild ist zu groß',
         text: 'Das Bild hat zu viele Bildpunkte für dieses Gerät. Verkleinere es vorher.',
+      };
+    case 'speicher-voll':
+      return {
+        title: 'Speicher voll',
+        text: `Auf diesem Gerät ist nicht genug Platz für ${wanted === 'pdf' ? 'das PDF' : 'das Bild'}. Lösche Karten oder andere Dateien und versuche es noch einmal.`,
+      };
+    case 'pdf-passwort':
+      return {
+        title: 'PDF ist geschützt',
+        text: 'Das PDF ist mit einem Passwort geschützt. Speichere eine Kopie ohne Passwort und wähle sie erneut.',
+      };
+    case 'pdf-unlesbar':
+      return {
+        title: 'PDF nicht lesbar',
+        text: 'Das PDF ist beschädigt oder hat einen Aufbau, den Juri nicht öffnen kann. Wähle eine andere Datei.',
+      };
+    case 'pdf-zu-viele-seiten':
+      return {
+        title: 'PDF ist zu lang',
+        text: `Juri öffnet PDFs bis ${problem.limit.toLocaleString('de-DE')} Seiten. Teile das PDF in kleinere Teile.`,
       };
   }
 }
