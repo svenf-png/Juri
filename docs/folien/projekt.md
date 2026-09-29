@@ -245,14 +245,14 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 <!-- layout: tabelle -->
 
-| Phase      | Inhalt                                                          |
-| ---------- | --------------------------------------------------------------- |
-| M0 bis M3  | Fundament, Daten und Backup, Oberfläche, Karten und Stapel      |
-| M4 bis M5  | Lern-Engine und Prüfungsschemata (fertig)                       |
-| M6 bis M8  | PDF und Abdeckung, Fristen, Erfolge                             |
-| M9 bis M11 | Teilen und Import, High fives, Feinschliff und Veröffentlichung |
+| Phase       | Inhalt                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------ |
+| M0 bis M3   | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                                 |
+| M4 bis M5   | Lern-Engine und Prüfungsschemata (fertig)                                                  |
+| M6 bis M9   | PDF und Abdeckung, Browser-Version, Fristen, Erfolge                                       |
+| M10 bis M13 | Teilen und Import, High fives, Feinschliff und Veröffentlichung, eigene Desktop-Gestaltung |
 
-> **Notizen:** Geschätzt rund 35 Personentage. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
+> **Notizen:** Geschätzt rund 41 Personentage. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
 
 ## Stand heute
 

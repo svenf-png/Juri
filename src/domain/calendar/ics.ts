@@ -1,6 +1,6 @@
 /**
  * Minimaler iCalendar-Erzeuger (RFC 5545) für einzelne Termine mit Erinnerung.
- * Wird für Fristen und Lernzeiten gebraucht (M7) und im Geräte-Check getestet.
+ * Wird für Fristen und Lernzeiten gebraucht (M8) und im Geräte-Check getestet.
  */
 
 export interface IcsEvent {

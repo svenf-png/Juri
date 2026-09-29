@@ -19,7 +19,7 @@ function State({ row }: { row: MilestoneRow }) {
 }
 
 /**
- * Entwicklungsstand: die Meilensteine M0 bis M11 mit ihrer Version, damit sich sehen lässt, wie
+ * Entwicklungsstand: die Meilensteine M0 bis M13 mit ihrer Version, damit sich sehen lässt, wie
  * weit Juri ist. Zugeklappt eine Zeile mit Balken; aufgeklappt die Liste. Folgt der Version der App
  * (domain/roadmap), ohne weitere Pflege.
  */

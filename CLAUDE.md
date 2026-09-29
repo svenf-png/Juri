@@ -2,7 +2,7 @@
 
 Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, Safari/WebKit), ohne Server für Nutzerdaten. Dieses Dokument ist die Übergabe für neue Sessions. Maßgeblich sind:
 
-- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 11**, Annahmen A1 bis A33, Plan M0 bis M11, Risiken
+- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 12**, Annahmen A1 bis A33, Plan M0 bis M13, Risiken
 - `docs/adr/`: Architekturentscheidungen (Stack, Speicher, .juri, Scheduler, Hosting, Datenbank, Karten, Lern-Engine)
 - `design/*.dc.html`: verbindliches Design (HTML mit Inline-Styles; `support.js` und der Script-Block am Ende gehören zum Design-Tool)
 - `docs/folien/`: Projekt-Präsentation und Handbuch, per KI in PowerPoint umwandelbar (`KONVENTION.md`)
@@ -20,7 +20,7 @@ Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, 
 - Kosten: Sven hat ab M4 freigegeben, dass Kosten keine Rolle mehr spielen, alles läuft über das Plan-Abo. Die frühere Budgetgrenze (rund 100 $, verbraucht: nach M0 28,44 $) entfällt, ein Kostenstand muss nicht mehr gemeldet werden. Testbarer Prototyp = M1 bis M4 (Entscheidung 11).
 - **Ein neuer Chat pro Meilenstein**, damit der Kontext klein bleibt.
 - Gezielt arbeiten: Datei-Ausschnitte statt ganzer Dateien, keine breite Web-Recherche ohne Anlass. Designs nur für den jeweiligen Meilenstein lesen.
-- Routine-Meilensteine mit `/effort high`, M4 (Lernalgorithmus) und M9 (Merge) mit höherer Stufe.
+- Routine-Meilensteine mit `/effort high`, M4 (Lernalgorithmus) und M10 (Merge) mit höherer Stufe.
 
 ### Start-Nachricht für einen Meilenstein-Chat
 

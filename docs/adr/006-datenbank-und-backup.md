@@ -12,14 +12,14 @@ Alle Daten liegen in IndexedDB (ADR-002). Das Schema wächst mit jedem Meilenste
 - **Eine Umformung für beides:** `upgrade` wandelt Datensätze der Vorversion um und gilt für die Datenbank (Dexie-Upgrade) und genauso für ältere Backups (`migrateTables`).
 - **Schemas als einzige Quelle:** Jede Tabelle hat ein zod-Schema in `src/domain/model/records.ts`; die TypeScript-Typen werden daraus abgeleitet. Ein Test verlangt für jede Tabelle ein Schema.
 - **Backup-Datei `.juri-backup`:** ZIP (fflate) mit `manifest.json` (Format, Formatversion, Schema-Version, Zeitpunkt, Instanz, App-Version, Tabellen), `tables/<name>.json` und `bin/<n>` für Binärdaten (ArrayBuffer, z. B. Medien). Kodieren ist deterministisch: gleiche Daten und gleicher Zeitpunkt ergeben dieselben Bytes.
-- **Einspielen = Ersetzen**, nach vollständiger Prüfung vor dem ersten Schreibzugriff: ZIP-Signatur, Grenzen (Einträge, Größe), Manifest, Version, Migration, jeder Datensatz gegen sein Schema, eindeutige Schlüssel, genau ein Profil. Geschrieben wird in einer Transaktion; scheitert etwas, bleibt der alte Stand. Zusammenführen ist Sache von `.juri` (M9).
+- **Einspielen = Ersetzen**, nach vollständiger Prüfung vor dem ersten Schreibzugriff: ZIP-Signatur, Grenzen (Einträge, Größe), Manifest, Version, Migration, jeder Datensatz gegen sein Schema, eindeutige Schlüssel, genau ein Profil. Geschrieben wird in einer Transaktion; scheitert etwas, bleibt der alte Stand. Zusammenführen ist Sache von `.juri` (M10).
 - **Gerätedaten reisen nicht mit:** `lastBackupAt` und `newCardsSinceBackup` beschreiben dieses Gerät. Beim Einspielen gilt die Datei selbst als letztes Backup.
 - **Export über das Teilen-Menü in zwei Schritten:** Datei erstellen, dann „Sichern oder teilen“. So läuft `navigator.share` direkt aus einem Tippen heraus, auch wenn das Erstellen dauert.
 - **zod ohne Code-Erzeugung** (`z.config({ jitless: true })`), weil die CSP kein `unsafe-eval` erlaubt. zod wird erst mit den Einstellungen geladen, die Startseite braucht es nicht.
 
 ## Zielmodell (Tabellen kommen mit ihren Meilensteinen)
 
-`profile` und `meta` (M1); `areas`, `decks`, `cards`, `reviewItems` (M3); `reviewLog` (M4); `media` (M6, ArrayBuffer); `deadlines` (M7); `events`, `dayStats`, `milestones` (M8); `contacts`, `kudos` (M10). Felder und Indizes legt der jeweilige Meilenstein fest, mit Migration und Schema.
+`profile` und `meta` (M1); `areas`, `decks`, `cards`, `reviewItems` (M3); `reviewLog` (M4); `media` (M6, ArrayBuffer); `deadlines` (M8); `events`, `dayStats`, `milestones` (M9); `contacts`, `kudos` (M11). Felder und Indizes legt der jeweilige Meilenstein fest, mit Migration und Schema.
 
 ## Konsequenzen
 

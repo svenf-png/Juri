@@ -4,7 +4,7 @@ Status: angenommen · 28.09.2026 (Umsetzung in M3)
 
 ## Kontext
 
-Mit M3 entstehen die Inhalte der App. Sie müssen sich sichern, teilen (M9) und später mit Lernzustand (M4) verbinden lassen, ohne dass Bestehendes umgebaut wird. Ein Lückentext mit drei Lücken soll drei Abfragen ergeben (Entscheidung 3).
+Mit M3 entstehen die Inhalte der App. Sie müssen sich sichern, teilen (M10) und später mit Lernzustand (M4) verbinden lassen, ohne dass Bestehendes umgebaut wird. Ein Lückentext mit drei Lücken soll drei Abfragen ergeben (Entscheidung 3).
 
 ## Entscheidung
 
@@ -22,7 +22,7 @@ Mit M3 entstehen die Inhalte der App. Sie müssen sich sichern, teilen (M9) und 
 
 ## Konsequenzen
 
-- Karten, Stapel und Rechtsgebiete sind ohne weitere Migration teilbar (M9) und um Lernzustand erweiterbar (M4).
+- Karten, Stapel und Rechtsgebiete sind ohne weitere Migration teilbar (M10) und um Lernzustand erweiterbar (M4).
 - Der Mehrfach-Index macht „Stapel je Rechtsgebiet“ und „Rechtsgebiete je Stapel“ ohne Zwischentabelle abfragbar.
-- Stabile Abfrage-Kennungen erlauben den Merge „Aktualisieren“ (M9), der Lernfortschritt behält.
-- Suche läuft im Speicher über alle Karten; für 5.000 Karten wird das in M11 gemessen.
+- Stabile Abfrage-Kennungen erlauben den Merge „Aktualisieren“ (M10), der Lernfortschritt behält.
+- Suche läuft im Speicher über alle Karten; für 5.000 Karten wird das in M12 gemessen.

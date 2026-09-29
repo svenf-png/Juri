@@ -1,6 +1,6 @@
 /**
  * Eingaben für Heute aus den Daten der Bibliothek (ab M3) und dem Lernzustand (ab M4). Ziele
- * kommen mit M8.
+ * kommen mit M9.
  */
 import { addDays, dayKey, learningDay, type Day } from '../calendar/day';
 import { sortAreas } from '../library/areas';
@@ -49,7 +49,7 @@ export function dueByArea(
 }
 
 export function todayInputFrom(today: Day, data: TodayData): TodayInput {
-  // Ziele, Verlauf, Fristen und High five kommen mit M7, M8 und M10; bis dahin gilt der Leerwert.
+  // Ziele, Verlauf, Fristen und High five kommen mit M8, M9 und M11; bis dahin gilt der Leerwert.
   return {
     ...emptyToday(today),
     totalCards: data.cardTotal,

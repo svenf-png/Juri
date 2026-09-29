@@ -4,7 +4,7 @@ import type { DeckModel, LibraryModel } from '@/domain/library/library';
  * Feste Beispieldaten aus Bibliothek.dc.html, Stapel.dc.html und iPadStapel.dc.html für die
  * Design-Vorschau (/styleguide/stapel/…) und den Bildvergleich. Keine Nutzerdaten (A11).
  * Reihenfolge und Beschriftungen wie im Design, auch wo die App sie anders bildet
- * (z. B. „von Mara“ kommt erst mit dem Import in M9).
+ * (z. B. „von Mara“ kommt erst mit dem Import in M10).
  */
 
 const filters = [

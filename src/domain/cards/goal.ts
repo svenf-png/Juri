@@ -1,6 +1,6 @@
 /**
  * Tagesziel „Anlegen“ im Erstellen-Bildschirm (Erstellen.dc.html: „3 von 5 heute“) und die
- * Meldung nach dem Speichern. Das Ziel ist bis M8 (Einstellungen) fest.
+ * Meldung nach dem Speichern. Das Ziel ist bis M9 (Einstellungen) fest.
  */
 import { groupDigits } from '../today/today';
 

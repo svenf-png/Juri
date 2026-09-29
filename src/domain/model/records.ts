@@ -129,7 +129,7 @@ export const SCHEMA_MAX_LEVEL = 3;
 export const SCHEMA_MAX_POINTS = 60;
 
 /**
- * Punkt einer Gliederung. `id` bleibt beim Bearbeiten stehen (Verknüpfungen, Merge in M9);
+ * Punkt einer Gliederung. `id` bleibt beim Bearbeiten stehen (Verknüpfungen, Merge in M10);
  * `level` ist die Einrückung (1 bis 3); `link` ist die verknüpfte Karte (ADR-009).
  */
 export const schemaPointSchema = z.strictObject({
@@ -273,7 +273,7 @@ export const eventSchema = z.discriminatedUnion('type', [
     cardId: id,
     deckId: id,
   }),
-  /** Eine Abfrage wurde bewertet (M4); Grundlage für Tagesziel und Statistik (M8). */
+  /** Eine Abfrage wurde bewertet (M4); Grundlage für Tagesziel und Statistik (M9). */
   z.strictObject({
     seq: z.number().int().positive(),
     at: millis,

@@ -42,7 +42,7 @@ export interface LernrhythmusViewProps {
   settings: LearningSettings;
   /** Beispiel „immer Gut“: die Abstände als Text („3 T“, „→ 9 T“ …). */
   examples: readonly string[];
-  /** Anzahl der Fristen (M7); ohne Angabe steht keine Zahl an der Zeile. */
+  /** Anzahl der Fristen (M8); ohne Angabe steht keine Zahl an der Zeile. */
   deadlines?: number | undefined;
   onChange: (next: LearningSettings) => void;
 }

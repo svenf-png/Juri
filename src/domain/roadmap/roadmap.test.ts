@@ -37,12 +37,14 @@ describe('roadmap', () => {
       'planned',
       'planned',
       'planned',
+      'planned',
+      'planned',
     ]);
     expect(r).toMatchObject({
       done: 5,
-      total: 12,
-      summary: '5 von 12 Schritten fertig',
-      percent: 42,
+      total: 14,
+      summary: '5 von 14 Schritten fertig',
+      percent: 36,
     });
   });
 
@@ -51,7 +53,7 @@ describe('roadmap', () => {
     expect(r.done).toBe(6);
     expect(r.rows[5]?.state).toBe('done');
     expect(r.rows[6]?.state).toBe('current');
-    expect(r.summary).toBe('6 von 12 Schritten fertig');
+    expect(r.summary).toBe('6 von 14 Schritten fertig');
   });
 
   it('eine Zwischenversion zählt noch zum vorigen Meilenstein', () => {
@@ -59,10 +61,17 @@ describe('roadmap', () => {
     expect(roadmap('0.4.1').rows[4]?.state).toBe('current');
   });
 
-  it('vor dem ersten Meilenstein ist M0 in Arbeit; ab 1.0.0 ist alles fertig', () => {
+  it('Version 1.0.0: M12 fertig, nur M13 (Desktop-Gestaltung) in Arbeit', () => {
+    const r = roadmap('1.0.0');
+    expect(r.rows[12]?.state).toBe('done');
+    expect(r.rows[13]?.state).toBe('current');
+    expect(r.summary).toBe('13 von 14 Schritten fertig');
+  });
+
+  it('vor dem ersten Meilenstein ist M0 in Arbeit; ab 1.1.0 ist alles fertig', () => {
     expect(roadmap('0.0.1').rows[0]?.state).toBe('current');
     expect(roadmap('0.0.1').done).toBe(0);
-    const full = roadmap('1.0.0');
+    const full = roadmap('1.1.0');
     expect(full.summary).toBe('Alle Schritte fertig');
     expect(full.percent).toBe(100);
     expect(full.rows.every((x) => x.state === 'done')).toBe(true);

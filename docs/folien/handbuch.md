@@ -26,7 +26,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 
 ## Juri auf dem iPad installieren
 
-<!-- status: entwurf, auf iPad Air 11 Zoll pruefen in M0 und M11 -->
+<!-- status: entwurf, auf iPad Air 11 Zoll pruefen in M0 und M12 -->
 
 1. In **Safari** `svenf-png.github.io/Juri` öffnen
 2. Oben rechts auf das **Teilen-Symbol** tippen
@@ -44,7 +44,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 
 ## Ausprobieren mit Beispielstapeln
 
-<!-- status: M3 in der Testinstanz umgesetzt, als Datei zum Importieren ab M9 -->
+<!-- status: M3 in der Testinstanz umgesetzt, als Datei zum Importieren ab M10 -->
 
 - Die Testinstanz „Juri Test“ hat **6 Demo-Stapel** mit 40 Karten zu ZR, SR und ÖR, darunter einen mit fünf Prüfungsschemata
 - In den Einstellungen unter „Testdaten“: **„Demo-Stapel hinzufügen“**
@@ -66,7 +66,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 ## Heute
 
 <!-- layout: bild-gross -->
-<!-- status: M2 umgesetzt (Main.dc.html, iPadHeute.dc.html); Karten (M3) und Fälligkeit (M4) sind echt; Fristen (M7), Ziele und Verlauf (M8) und High fives (M10) folgen. Bild mit Beispieldaten. -->
+<!-- status: M2 umgesetzt (Main.dc.html, iPadHeute.dc.html); Karten (M3) und Fälligkeit (M4) sind echt; Fristen (M8), Ziele und Verlauf (M9) und High fives (M11) folgen. Bild mit Beispieldaten. -->
 
 ![Heute auf dem iPhone: 18 Karten warten, nächste Frist, Tagesziel, letzte 7 Tage](../bilder/heute-iphone.png)
 
@@ -212,7 +212,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - Kommen Karten noch heute wieder (kurze Lernschritte), bietet Juri **„N Karten noch einmal lernen“** an
 - Danach zeigt **Heute** „Alles erledigt für heute.“
 
-> **Notizen:** Die große Feier „Tagesziel erreicht“ mit Serie und Meilensteinen kommt mit den Erfolgen (M8).
+> **Notizen:** Die große Feier „Tagesziel erreicht“ mit Serie und Meilensteinen kommt mit den Erfolgen (M9).
 
 # Stapel und Rechtsgebiete
 
@@ -300,7 +300,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Fristen anlegen
 
-<!-- status: entwurf nach Fristen.dc.html, pruefen in M7 -->
+<!-- status: entwurf nach Fristen.dc.html, pruefen in M8 -->
 
 - **„+ Frist hinzufügen“**: Examen, Klausur, LL.M. oder Eigene
 - Name und Datum eintragen (das Datum kann auch später folgen)
@@ -312,7 +312,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Einen Stapel verschicken
 
-<!-- status: entwurf nach Teilen.dc.html, pruefen in M9 -->
+<!-- status: entwurf nach Teilen.dc.html, pruefen in M10 -->
 
 - Im Stapel oben rechts auf **Teilen** tippen
 - Optional **„Eigene Notizen mitschicken“** einschalten
@@ -321,7 +321,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Einen Stapel empfangen
 
-<!-- status: entwurf, Anleitung wird im Canvas entworfen, pruefen in M9 -->
+<!-- status: entwurf, Anleitung wird im Canvas entworfen, pruefen in M10 -->
 
 1. Die `.juri`-Datei in AirDrop oder Nachrichten **„In Dateien sichern“**
 2. Juri öffnen, **Teilen**, dann **„Datei öffnen“**
@@ -334,7 +334,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Serie, Heatmap, Meilensteine
 
-<!-- status: entwurf nach Erfolge.dc.html, pruefen in M8 -->
+<!-- status: entwurf nach Erfolge.dc.html, pruefen in M9 -->
 
 - **Serie:** Tage in Folge mit Lernen oder Anlegen; ein Pausentag pro Woche ist frei
 - **Heatmap:** Wie viel du an jedem Tag gelernt oder angelegt hast
@@ -343,7 +343,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## High fives
 
-<!-- status: entwurf nach HighFive.dc.html, pruefen in M10 -->
+<!-- status: entwurf nach HighFive.dc.html, pruefen in M11 -->
 
 - Unter **Erfolge** siehst du neue Erfolge deiner Lernpartner
 - Mit einem Tipp ein **High five** geben, oder einfach so
@@ -377,7 +377,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 <!-- status: M4 umgesetzt (Artboard Entwicklungsstand), Zahlen ab 0.6.0 laufen mit -->
 
 - Unten in den **Einstellungen** steht die **Version** der App
-- **Entwicklungsstand** zeigt die Schritte M0 bis M11: fertig mit Haken und Version, der nächste „in Arbeit“, die übrigen „ab“ ihrer Version
-- Zugeklappt siehst du nur „6 von 12 Schritten fertig“ und einen Balken
+- **Entwicklungsstand** zeigt die Schritte M0 bis M13: fertig mit Haken und Version, der nächste „in Arbeit“, die übrigen „ab“ ihrer Version
+- Zugeklappt siehst du nur „6 von 14 Schritten fertig“ und einen Balken
 
 > **Notizen:** Die Versionen der kommenden Schritte sind vorläufig. Die Liste folgt der Versionsnummer der App und braucht keine Pflege.
