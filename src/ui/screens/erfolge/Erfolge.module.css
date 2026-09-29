@@ -1,0 +1,598 @@
+/*
+ * Erfolge nach Erfolge.dc.html (iPhone) und iPadErfolge.dc.html (iPad), Werte exakt aus dem
+ * Design. Breiten wie bei Heute (A8): unter 768 px iPhone mit Tab-Bar; 768 bis 1099 px Sidebar und
+ * eine Spalte; ab 1100 px die Kennzahlen in einer Zeile und 26 statt 12 Wochen. Die Designs setzen
+ * keine Zeilenhöhe, daher line-height: normal.
+ */
+.erfolge {
+  line-height: normal;
+  min-height: 100dvh;
+  padding: calc(64px + var(--top-shift)) max(24px, env(safe-area-inset-right))
+    calc(var(--tabbar-height, 0px) + 40px) max(24px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  font-size: 16px;
+  color: var(--muted);
+}
+
+/* Ergänzung zum Design (data-addition): das Sheet „Tagesziele“ öffnen. */
+.goalsButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-height: var(--touch-target);
+  padding: 0 14px;
+  border: 0;
+  border-radius: 22px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.top {
+  display: contents;
+}
+
+.streak {
+  border-radius: 24px;
+  background: var(--violet);
+  color: var(--bg);
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.streakNumber {
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.streakText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.streakUnit {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.streakNote {
+  font-size: 13.5px;
+  line-height: 1.35;
+  opacity: 0.9;
+}
+
+.streakNoteShort {
+  display: none;
+  font-size: 12.5px;
+  opacity: 0.9;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stat {
+  border-radius: 20px;
+  background: var(--surface);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--ink);
+}
+
+.statValue {
+  font-size: 30px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.statLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.highFive,
+.highFive:hover {
+  min-height: 60px;
+  border-radius: 20px;
+  border: 1.5px solid var(--line);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+}
+
+.highFiveIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
+  background: var(--violet-100);
+  color: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.highFiveText {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.highFiveTitle {
+  font-size: 15.5px;
+  font-weight: 700;
+}
+
+.highFiveSub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.chevron {
+  color: #b3aec0;
+}
+
+.highFiveTile {
+  display: none;
+}
+
+.heat {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.heatHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.modes {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+/* 32 px sichtbar, Trefferfläche 44 px (A1). */
+.mode {
+  position: relative;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  background: transparent;
+  color: var(--muted);
+}
+
+.mode::after {
+  content: '';
+  position: absolute;
+  inset: -6px -2px;
+}
+
+.modeOn {
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: 0 2px 6px -2px rgba(46, 26, 115, 0.25);
+}
+
+.onlyWide {
+  display: none;
+}
+
+.grid {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 5px;
+}
+
+.gridPhone {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(7, 23px);
+}
+
+.gridWide {
+  grid-template-columns: repeat(26, minmax(0, 1fr));
+  grid-template-rows: repeat(7, 22px);
+}
+
+.cell {
+  border-radius: 6px;
+  animation: cell 0.45s var(--ease-standard) both;
+  transition: background-color 0.35s ease;
+}
+
+@keyframes cell {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.level0 {
+  background: var(--heat-0);
+}
+
+.level1 {
+  background: var(--heat-1);
+}
+
+.level2 {
+  background: var(--heat-2);
+}
+
+.level3 {
+  background: var(--heat-3);
+}
+
+.level4 {
+  background: var(--heat-4);
+}
+
+.future {
+  background: transparent;
+}
+
+.recordCell {
+  box-shadow: var(--shadow-record);
+}
+
+.months {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.record {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1.5px solid var(--line);
+}
+
+.recordSwatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: var(--violet);
+  box-shadow: var(--shadow-record);
+  flex-shrink: 0;
+}
+
+.recordText {
+  font-size: 14px;
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+.legend {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.legendCell {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.emptyCard {
+  border-radius: 24px;
+  border: 1.5px dashed var(--violet-300);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.emptyText {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.emptyAction,
+.emptyAction:hover {
+  align-self: flex-start;
+  margin-top: 6px;
+  height: 48px;
+  padding: 0 20px;
+  border-radius: 16px;
+  background: var(--ink);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.badges {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.badgeGrid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px 10px;
+}
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.badgeText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.badgeName {
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.badgeSub {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.mark {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.markSvg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.markIcon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Frisch freigeschaltet: kurzes Aufpoppen, danach ein sanft pulsierender Hof. */
+.fresh {
+  animation:
+    unlock 0.8s var(--ease-standard) 0.5s both,
+    glow 2.4s ease-in-out 1.3s infinite;
+}
+
+@keyframes unlock {
+  0% {
+    transform: scale(0.6) rotate(-12deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12) rotate(3deg);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(106, 63, 224, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(106, 63, 224, 0.14);
+  }
+}
+
+@media (min-width: 768px) {
+  .erfolge {
+    max-width: 656px;
+    margin: 0 auto;
+    width: 100%;
+    padding: calc(48px + var(--top-inset)) 48px calc(48px + var(--bottom-inset));
+  }
+}
+
+/* Ab 1100 px: Maße aus iPadErfolge.dc.html. */
+@media (min-width: 1100px) {
+  .erfolge {
+    max-width: none;
+    margin: 0;
+    padding: calc(40px + var(--top-inset)) 44px calc(40px + var(--bottom-inset));
+    gap: 26px;
+  }
+
+  .title {
+    font-size: 44px;
+  }
+
+  .lead {
+    display: none;
+  }
+
+  .top {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .streak {
+    border-radius: 22px;
+    padding: 18px 20px;
+    gap: 14px;
+  }
+
+  .streakNumber {
+    font-size: 56px;
+  }
+
+  .streakText {
+    gap: 2px;
+  }
+
+  .streakUnit {
+    font-size: 17px;
+  }
+
+  .streakNote {
+    display: none;
+  }
+
+  .streakNoteShort {
+    display: block;
+  }
+
+  .stats {
+    display: contents;
+  }
+
+  .stat {
+    border-radius: 22px;
+    padding: 18px 20px;
+    justify-content: center;
+  }
+
+  .highFive {
+    display: none;
+  }
+
+  .highFiveTile {
+    display: flex;
+  }
+
+  .heat {
+    gap: 12px;
+  }
+
+  .onlyPhone {
+    display: none;
+  }
+
+  .onlyWide {
+    display: block;
+  }
+
+  .months.onlyWide {
+    display: flex;
+  }
+
+  .mode {
+    padding: 0 14px;
+  }
+
+  .record {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    font-size: 14px;
+  }
+
+  .recordSwatch {
+    width: 16px;
+    height: 16px;
+  }
+
+  .recordText {
+    flex-grow: 0;
+  }
+
+  .legend {
+    display: none;
+  }
+
+  .badgeGrid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .badgeText {
+    display: contents;
+  }
+
+  .badgeSub {
+    margin-top: -6px;
+  }
+
+  .goalsButton {
+    top: 0;
+  }
+}

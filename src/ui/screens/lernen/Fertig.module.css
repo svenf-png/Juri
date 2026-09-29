@@ -1,0 +1,133 @@
+/* Feier nach Fertig.dc.html: 96 px oben (inkl. 47 px Statusleiste), 28 px Rand, Abstand 24 px. */
+.fertig {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  overflow: auto;
+  background: var(--bg);
+  padding: calc(96px + var(--top-shift)) 28px max(40px, calc(var(--bottom-inset) + 20px)) 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  line-height: normal;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.title {
+  font-size: 44px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  animation-delay: 0.4s;
+}
+
+.lead {
+  font-size: 17px;
+  color: var(--muted);
+  animation-delay: 0.5s;
+}
+
+.week {
+  width: 334px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation-delay: 0.7s;
+}
+
+.caption {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--violet-700);
+}
+
+.milestone {
+  width: 334px;
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: 22px;
+  background: var(--surface);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation-delay: 1.9s;
+}
+
+.milestoneIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 26px;
+  background: var(--violet);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.milestoneText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.milestoneEyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.milestoneName {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.milestoneMore {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 334px;
+  max-width: 100%;
+}
+
+.primary,
+.primary:hover {
+  height: 60px;
+  border-radius: var(--radius-button);
+  background: var(--violet);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.secondary {
+  height: 52px;
+  border: 0;
+  border-radius: var(--radius-button-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+}

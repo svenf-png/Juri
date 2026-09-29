@@ -15,6 +15,8 @@ export interface MilestoneDef {
   readonly icon: MilestoneIcon;
   readonly metric: MetricKey;
   readonly target: number;
+  /** Satz für die Feier. */
+  readonly text: string;
 }
 
 /** Kennzahlen, aus denen die Freischaltung folgt. */
@@ -25,24 +27,54 @@ export type Metrics = Readonly<Record<MetricKey, number>>;
  * bis dahin gibt es keine Kennzahl dafür, und „30 Tage am Stück“ steht an seiner Stelle.
  */
 export const MILESTONES: readonly MilestoneDef[] = [
-  { id: 'erste-karte', name: 'Erste Karte', icon: 'pen', metric: 'created', target: 1 },
-  { id: 'angelegt-100', name: '100 angelegt', icon: 'stack', metric: 'created', target: 100 },
+  {
+    id: 'erste-karte',
+    name: 'Erste Karte',
+    icon: 'pen',
+    metric: 'created',
+    target: 1,
+    text: 'Deine erste Karte ist angelegt. Der Anfang ist gemacht.',
+  },
+  {
+    id: 'angelegt-100',
+    name: '100 angelegt',
+    icon: 'stack',
+    metric: 'created',
+    target: 100,
+    text: '100 Karten angelegt. Das ist ein solides Fundament.',
+  },
   {
     id: 'schema-baumeister',
     name: 'Schema-Baumeister',
     icon: 'tree',
     metric: 'schemas',
     target: 10,
+    text: '10 Schemata gebaut. Struktur ist die halbe Miete.',
   },
-  { id: 'serie-7', name: '7 Tage am Stück', icon: 'cal', metric: 'streak', target: 7 },
+  {
+    id: 'serie-7',
+    name: '7 Tage am Stück',
+    icon: 'cal',
+    metric: 'streak',
+    target: 7,
+    text: '7 Tage in Folge dein Tagesziel erreicht.',
+  },
   {
     id: 'wiederholungen-1000',
     name: '1.000 Wiederholungen',
     icon: 'rep',
     metric: 'reviews',
     target: 1000,
+    text: '1.000 Wiederholungen. Das Wissen sitzt.',
   },
-  { id: 'serie-30', name: '30 Tage am Stück', icon: 'cal', metric: 'streak', target: 30 },
+  {
+    id: 'serie-30',
+    name: '30 Tage am Stück',
+    icon: 'cal',
+    metric: 'streak',
+    target: 30,
+    text: '30 Tage in Folge. Das ist eine Gewohnheit.',
+  },
 ];
 
 export const NO_METRICS: Metrics = { created: 0, reviews: 0, schemas: 0, streak: 0 };
@@ -65,6 +97,7 @@ export interface Unlock {
 export interface Badge {
   readonly id: string;
   readonly name: string;
+  readonly text: string;
   readonly icon: MilestoneIcon;
   /** „geschafft“ oder „7 von 10“. */
   readonly sub: string;
@@ -87,6 +120,7 @@ export function badges(
     return {
       id: def.id,
       name: def.name,
+      text: def.text,
       icon: def.icon,
       sub: done ? 'geschafft' : `${groupDigits(value)} von ${groupDigits(def.target)}`,
       fraction: done ? 1 : Math.max(0, Math.min(1, value / def.target)),

@@ -299,7 +299,7 @@ describe('Migration und Backup', () => {
         profile: [{ id: 'me', name: 'Sven', createdAt: 1, updatedAt: 1 }],
         events: [{ seq: 1, at: at(27), type: 'cardCreated', cardId: 'a', deckId: 'd' }],
       },
-    } as never);
+    });
     expect(tables.dayStats).toEqual([
       { day: '2026-09-27', reviews: 0, learned: 0, created: 1, met: false },
     ]);
@@ -316,7 +316,7 @@ describe('Migration und Backup', () => {
           profile: [{ id: 'me', name: 'Sven', createdAt: 1, updatedAt: 1 }],
           dayStats: [{ day: 'gestern', reviews: 1, learned: 1, created: 0, met: true }],
         },
-      } as never),
+      }),
     ).toThrow();
   });
 });

@@ -85,10 +85,7 @@ export const MIGRATIONS: readonly Migration[] = [
     derive: {
       reads: ['events'],
       build: (tables) => ({
-        dayStats: dayRows(
-          (tables.events ?? []) as unknown as StatEvent[],
-          DEFAULT_GOALS,
-        ) as unknown as BackupRecord[],
+        dayStats: dayRows((tables.events ?? []) as unknown as StatEvent[], DEFAULT_GOALS),
       }),
     },
   },

@@ -59,10 +59,11 @@ export async function refreshDays(db: JuriDb, keys: Iterable<string>): Promise<D
     if (s && (s.reviews > 0 || s.created > 0)) {
       const fresh = rowOf(day, s, goals);
       const same =
-        before?.reviews === s.reviews &&
+        before !== undefined &&
+        before.reviews === s.reviews &&
         before.learned === s.learned &&
         before.created === s.created;
-      after = same && before ? before : fresh;
+      after = same ? before : fresh;
       await db.dayStats.put(after);
     } else {
       await db.dayStats.delete(day);
@@ -108,17 +109,17 @@ export async function readStreak(
 ): Promise<StreakResult> {
   const all = rows ?? (await db.dayStats.toArray());
   const met = new Map(all.map((row) => [row.day, row.met]));
-  let asked = false;
+  const probing = { asked: false };
   const probe = streak({
     met,
     today,
     pause: goals.pause,
     available: () => {
-      asked = true;
+      probing.asked = true;
       return true;
     },
   });
-  if (!asked) return probe;
+  if (!probing.asked) return probe;
   const first = [...met.keys()].sort()[0];
   if (first === undefined) return NO_STREAK;
   const days = availableDays((await histories(db)).flatMap(openSpans), parseDayKey(first), today);
@@ -159,7 +160,7 @@ export async function unlockMilestones(
   now: number,
   checkStreak: boolean,
 ): Promise<string[]> {
-  const unlocked = new Set((await db.milestones.toCollection().primaryKeys()) as string[]);
+  const unlocked = new Set(await db.milestones.toCollection().primaryKeys());
   if (MILESTONES.every((m) => unlocked.has(m.id))) return [];
   const streakOpen = MILESTONES.some((m) => m.metric === 'streak' && !unlocked.has(m.id));
   const rows = await db.dayStats.toArray();
@@ -239,4 +240,33 @@ export async function syncMilestones(db: JuriDb, now: number): Promise<string[]>
     [db.cards, db.reviewItems, db.reviewLog, db.dayStats, db.milestones, db.meta],
     async () => await unlockMilestones(db, now, true),
   );
+}
+
+/** Der heutige Stand für die Feier am Ende einer Session. */
+export interface CelebrationSnapshot {
+  rows: DayRow[];
+  goals: Goals;
+  streak: number;
+  /** Meilensteine mit ausstehender Feier. */
+  fresh: string[];
+}
+
+/** Gelernte Abfragen des Tages (Tagesziel „Lernen“) und die Ziele, beim Start einer Session. */
+export async function readGoalStart(
+  db: JuriDb,
+  dayKeyToday: string,
+): Promise<{ learned: number; goals: Goals }> {
+  const [row, goals] = await Promise.all([db.dayStats.get(dayKeyToday), readGoals(db)]);
+  return { learned: row?.learned ?? 0, goals };
+}
+
+/** Stand nach einer Session; die Aggregate sind in derselben Transaktion wie die Bewertungen geschrieben. */
+export async function readCelebration(db: JuriDb, today: Day): Promise<CelebrationSnapshot> {
+  const [rows, goals, records] = await Promise.all([
+    db.dayStats.toArray(),
+    readGoals(db),
+    db.milestones.filter((m) => !m.seen).toArray(),
+  ]);
+  const result = await readStreak(db, today, goals, rows);
+  return { rows, goals, streak: result.current, fresh: records.map((m) => m.id) };
 }
