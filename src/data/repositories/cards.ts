@@ -4,6 +4,8 @@ import type { Card, MediaRecord, NewEvent } from '@/domain/model/records';
 import type { JuriDb } from '../db';
 import { releaseMedia } from './media';
 import { readCounter, writeMeta } from './profile';
+import { recordActivity } from './progress';
+import { ACTIVITY_TABLES } from './study';
 
 /**
  * Legt eine Karte an: Karte, ihre Abfragen (ein Lückentext mit drei Lücken ergibt drei),
@@ -17,13 +19,15 @@ export async function createCard(
   now: number,
 ): Promise<Card> {
   const card = buildCard(input.id, input.deckId, input.fields, now, now);
-  await db.transaction('rw', db.cards, db.reviewItems, db.events, db.meta, db.media, async () => {
+  await db.transaction('rw', [...ACTIVITY_TABLES(db), db.media], async () => {
     if (input.media && input.media.length > 0) await db.media.bulkPut([...input.media]);
     await db.cards.add(card);
     await db.reviewItems.bulkAdd(buildItems(card, now));
     const event: NewEvent = { at: now, type: 'cardCreated', cardId: card.id, deckId: card.deckId };
     await db.events.add(event);
     await writeMeta(db, 'newCardsSinceBackup', (await readCounter(db, 'newCardsSinceBackup')) + 1);
+    // Tagesaggregat „angelegt“ und Meilensteine in derselben Transaktion (ADR-013).
+    await recordActivity(db, [now], now);
   });
   return card;
 }

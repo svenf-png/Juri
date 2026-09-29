@@ -1,11 +1,13 @@
-import type { Area, Card, Deck, ReviewItem } from '@/domain/model/records';
+import type { Area, Card, DayRow, Deck, ReviewItem } from '@/domain/model/records';
+import type { Goals } from '@/domain/progress/goals';
 import type { LearningSettings } from '@/domain/scheduler/settings';
 import type { JuriDb } from '../db';
 import { learningDay } from '@/domain/calendar/day';
 import { todayDeadlines } from '@/domain/deadlines/list';
 import type { DeadlineInput } from '@/domain/today/today';
 import { readDeadlines, readOverlay, readScopeWorld } from './deadlines';
-import { readSettings, readStudy, reviewedSince, startedSince } from './study';
+import { readGoals } from './progress';
+import { readSettings, readStudy, startedSince } from './study';
 
 function countBy(keys: readonly unknown[]): Record<string, number> {
   const counts: Record<string, number> = {};
@@ -76,11 +78,12 @@ export interface TodaySnapshot {
   items: ReviewItem[];
   settings: LearningSettings;
   startedToday: number;
-  /** Abfragen, die heute mindestens einmal bewertet wurden. */
-  reviewedToday: number;
   createdAt: number[];
   /** Kommende Fristen mit „sitzen sicher“ (M8). */
   deadlines: DeadlineInput[];
+  /** Tagesaggregate und Ziele (M9). */
+  days: DayRow[];
+  goals: Goals;
 }
 
 /**
@@ -92,14 +95,15 @@ export async function readTodaySnapshot(
   since: number,
   todayStart: number,
 ): Promise<TodaySnapshot> {
-  const [areas, decks, cardTotal, study, reviewedToday, events, deadlines] = await Promise.all([
+  const [areas, decks, cardTotal, study, events, deadlines, days, goals] = await Promise.all([
     db.areas.toArray(),
     db.decks.toArray(),
     db.cards.count(),
     readStudy(db, todayStart),
-    reviewedSince(db, todayStart),
     db.events.where('at').aboveOrEqual(since).toArray(),
     readDeadlines(db),
+    db.dayStats.toArray(),
+    readGoals(db),
   ]);
   const world = await readScopeWorld(db, deadlines);
   return {
@@ -117,7 +121,8 @@ export async function readTodaySnapshot(
       decks,
       today: learningDay(new Date(todayStart)),
     }),
-    reviewedToday,
+    days,
+    goals,
     createdAt: events.filter((e) => e.type === 'cardCreated').map((e) => e.at),
   };
 }

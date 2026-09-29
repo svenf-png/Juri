@@ -11,6 +11,7 @@ import { Erstellen } from '@/ui/screens/erstellen/Erstellen';
 import { KarteBearbeiten } from '@/ui/screens/erstellen/KarteBearbeiten';
 import type { AbdeckungVariant } from '@/ui/screens/erstellen/AbdeckungVorschau';
 import type { SchemaVariant } from '@/ui/screens/schema/SchemaVorschau';
+import type { ErfolgeVariant } from '@/ui/screens/erfolge/ErfolgeVorschau';
 import type { FristenVariant } from '@/ui/screens/fristen/FristenVorschau';
 import { Stapel } from '@/ui/screens/stapel/Stapel';
 import { ProfileScreen, RequireBrowserTab, RequireNoProfile, RequireProfile } from './gates';
@@ -51,6 +52,20 @@ const FRISTEN_VARIANTS: readonly FristenVariant[] = [
   'umfang',
   'loeschen',
 ];
+const ERFOLGE_VARIANTS: readonly ErfolgeVariant[] = [
+  'liste',
+  'leer',
+  'ziele',
+  'fehler',
+  'meilenstein',
+  'fertig',
+];
+const ErfolgeVorschau = lazy(() =>
+  import('@/ui/screens/erfolge/ErfolgeVorschau').then((m) => ({ default: m.ErfolgeVorschau })),
+);
+const Erfolge = lazy(() =>
+  import('@/ui/screens/erfolge/Erfolge').then((m) => ({ default: m.Erfolge })),
+);
 const FristenVorschau = lazy(() =>
   import('@/ui/screens/fristen/FristenVorschau').then((m) => ({ default: m.FristenVorschau })),
 );
@@ -124,7 +139,14 @@ export function routes(
           children: [
             { path: '/', element: <ProfileScreen screen={Heute} /> },
             { path: '/stapel/:deckId?', element: <Stapel /> },
-            { path: '/erfolge', element: <Platzhalter {...PLATZHALTER.erfolge} /> },
+            {
+              path: '/erfolge',
+              element: (
+                <Lazy>
+                  <Erfolge />
+                </Lazy>
+              ),
+            },
             { path: '/teilen', element: <Platzhalter {...PLATZHALTER.teilen} /> },
             {
               path: '/fristen',
@@ -216,6 +238,15 @@ export function routes(
       element: (
         <Lazy>
           <AbdeckungVorschau variant={variant} />
+        </Lazy>
+      ),
+    })),
+    // Erfolge (Erfolge.dc.html, iPadErfolge.dc.html, Fertig.dc.html und die M9-Ergänzungen).
+    ...ERFOLGE_VARIANTS.map((variant) => ({
+      path: `/styleguide/erfolge/${variant}`,
+      element: (
+        <Lazy>
+          <ErfolgeVorschau variant={variant} />
         </Lazy>
       ),
     })),

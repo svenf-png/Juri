@@ -20,7 +20,7 @@ const ipadHoch = { width: 820, height: 1180 };
 const desktop = { width: 1440, height: 900 };
 
 /** Bildvergleiche mit den Design-Dateien gibt es nur für die Touch-Geräte. */
-const designSpecs = /\/(heute|stapel|lernen|schema|abdeckung|fristen)\.spec\.ts$/;
+const designSpecs = /\/(heute|stapel|lernen|schema|abdeckung|fristen|erfolge)\.spec\.ts$/;
 
 const webkitProjects = [
   {

@@ -132,6 +132,21 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Demo-Profil laden (bringt 
 8. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Die Fristen sind wieder da.
 9. **Rechner:** Taste „F“ auf der Fristen-Seite öffnet „Neue Frist“, Strg (Cmd) + Eingabe im Sheet speichert, „Fristen als Kalenderdatei sichern“ lädt die Datei herunter.
 
+## M9: Erfolge (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Demo-Profil laden (bringt 26 Wochen Verlauf mit).
+
+1. **Erfolge:** Tab „Erfolge“. Oben die Serie (etwa 21 Tage in Folge), darunter Wiederholungen und Karten angelegt, die Heatmap (iPhone 12, iPad quer 26 Wochen) mit einem Ring am Rekordtag („Rekord: … 86 Wiederholungen“), dann die Meilensteine. Beim ersten Öffnen erscheint das Sheet „Neuer Meilenstein“ (1.000 Wiederholungen), danach nicht mehr. Notieren: Springt die Seite beim Umschalten „Gelernt“ und „Angelegt“?
+2. **Heute:** Tagesziel „6 von 24“, die letzten 7 Tage mit Ring am Rekordtag.
+3. **Tagesziele:** In Erfolge „Tagesziele“, Lernen auf 12 stellen, Pausentag ausschalten, speichern. Heute zeigt „6 von 12“. Wieder auf 24 und Pausentag an.
+4. **Feier:** Lernen starten und Karten bewerten, bis das Ziel erreicht ist (ggf. Ziel auf 8 stellen). Am Ende „Geschafft.“, dann „Weiter“, dann „Tagesziel erreicht.“ mit der Serie. Notieren: Stimmen Animation und Text, ist die Tastatur nicht im Weg? Ein zweites Mal am selben Tag lernen: keine zweite Feier.
+5. **Tageswechsel:** Kurz nach 4 Uhr Heute öffnen: Das Tagesziel steht wieder auf 0, der Vortag ist in den letzten 7 Tagen. Nach Mitternacht (vor 4 Uhr) lernen zählt für den Vortag.
+6. **Pausentag:** An einem Tag nichts lernen, am nächsten weiter: Die Serie bleibt stehen (Text „Pausentag diese Woche genutzt“). Zweiter freier Tag in derselben Woche: Die Serie beginnt neu. Notieren: Nachvollziehbar?
+7. **Undo:** Karte bewerten, „Letzte Bewertung zurücknehmen“: Das Tagesziel in Heute sinkt wieder.
+8. **Leerzustand:** Frische App (nicht die Testinstanz): Erfolge zeigt „Noch kein Verlauf“; nach der ersten Karte erscheint die Feier „Erste Karte“.
+9. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Serie, Heatmap und Meilensteine sind wieder da, ohne erneute Feier.
+10. **Rechner:** Erfolge bei 1440 × 900: 26 Wochen, nichts abgeschnitten.
+
 ## Updates (pro Gerät, ab Version 0.4.1)
 
 1. Nach einem neuen Deploy die App im App-Umschalter schließen und neu öffnen, dann etwa 20 Sekunden auf Heute bleiben: Unten erscheint „Neue Version verfügbar“. „Neu laden“ tippen, unter Einstellungen steht die neue Versionsnummer.

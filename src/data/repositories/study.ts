@@ -5,6 +5,18 @@ import { restoreItem, reviewItem, withActiveDue } from '@/domain/scheduler/sched
 import { DEFAULT_LEARNING, withDefaults, type LearningSettings } from '@/domain/scheduler/settings';
 import type { JuriDb } from '../db';
 import { readOverlay, type Overlay } from './deadlines';
+import { recordActivity } from './progress';
+
+/** Tabellen, die eine Aktivität (Bewertung, Undo, neue Karte) in einer Transaktion schreibt. */
+export const ACTIVITY_TABLES = (db: JuriDb) => [
+  db.cards,
+  db.reviewItems,
+  db.reviewLog,
+  db.events,
+  db.meta,
+  db.dayStats,
+  db.milestones,
+];
 
 /** Einstellungen des Lernrhythmus; fehlt der Eintrag, gelten die Voreinstellungen. */
 export async function readSettings(db: JuriDb): Promise<LearningSettings> {
@@ -104,8 +116,9 @@ export async function rateItems(
   rating: RatingKey,
   now: number,
 ): Promise<void> {
-  await db.transaction('rw', db.reviewItems, db.reviewLog, db.events, db.meta, async () => {
+  await db.transaction('rw', ACTIVITY_TABLES(db), async () => {
     const settings = await readSettings(db);
+    let rated = 0;
     for (const id of itemIds) {
       const item = await db.reviewItems.get(id);
       if (!item) continue;
@@ -121,7 +134,10 @@ export async function rateItems(
         rating: outcome.log.rating,
         first: outcome.log.wasNew,
       });
+      rated += 1;
     }
+    // Tagesaggregate und Meilensteine in derselben Transaktion (ADR-013).
+    if (rated > 0) await recordActivity(db, [now], now);
   });
 }
 
@@ -135,8 +151,9 @@ export async function undoRating(
   itemIds: readonly string[],
   now: number,
 ): Promise<void> {
-  await db.transaction('rw', db.reviewItems, db.reviewLog, db.events, db.meta, async () => {
+  await db.transaction('rw', ACTIVITY_TABLES(db), async () => {
     const settings = await readSettings(db);
+    const touched: number[] = [];
     for (const id of itemIds) {
       const entry = await db.reviewLog.where('itemId').equals(id).last();
       const item = await db.reviewItems.get(id);
@@ -152,6 +169,9 @@ export async function undoRating(
         rating: entry.rating,
         first: entry.wasNew,
       });
+      touched.push(entry.at);
     }
+    // Die zurückgenommene Bewertung zählt an ihrem eigenen Tag nicht mehr.
+    if (touched.length > 0) await recordActivity(db, [now, ...touched], now);
   });
 }

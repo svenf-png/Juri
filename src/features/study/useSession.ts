@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { JuriDb } from '@/data/db';
 import { readLibrary } from '@/data/repositories/library';
+import { readGoalStart } from '@/data/repositories/progress';
 import { rateItems, readCardsById, readStudyOf, undoRating } from '@/data/repositories/study';
 import { dayKey as toDayKey, dayStart, learningDay, parseDayKey } from '@/domain/calendar/day';
 import { relativeDays } from '@/domain/format/date';
@@ -9,6 +10,7 @@ import type { Area, Card, Deck, ReviewItem } from '@/domain/model/records';
 import { dueReviews, sessionItems } from '@/domain/scheduler/queue';
 import { ratingValue, type RatingKey } from '@/domain/scheduler/rating';
 import { previewIntervals, reviewItem, type IntervalPreview } from '@/domain/scheduler/schedule';
+import type { Goals } from '@/domain/progress/goals';
 import type { LearningSettings } from '@/domain/scheduler/settings';
 import {
   canUndo,
@@ -34,6 +36,8 @@ interface Loaded {
   dayKey: string;
   /** Alle Abfragen des Umfangs, für die Bilanz am Ende. */
   scope: readonly ReviewItem[];
+  /** Am Anfang der Session schon gelernte Abfragen des Tages und die Tagesziele (Feier). */
+  goalStart: { learned: number; goals: Goals };
   /** Fälligkeit mit Fristen neu rechnen (nach Bewertungen in dieser Session). */
   effective: (items: readonly ReviewItem[]) => ReviewItem[];
 }
@@ -52,9 +56,10 @@ export interface StudyScope {
 
 async function load(db: JuriDb, scope: StudyScope): Promise<Load & { status: 'ready' }> {
   const key = toDayKey(learningDay(new Date()));
-  const [study, library] = await Promise.all([
+  const [study, library, goalStart] = await Promise.all([
     readStudyOf(db, scope.deckId, dayStart(parseDayKey(key)).getTime()),
     readLibrary(db),
+    readGoalStart(db, key),
   ]);
   const ctx = dueContext(key, study);
   const picked =
@@ -77,6 +82,7 @@ async function load(db: JuriDb, scope: StudyScope): Promise<Load & { status: 're
       settings: study.settings,
       dayKey: key,
       scope: study.items,
+      goalStart,
       effective: study.effective,
     },
     initial: startSession(stations),
@@ -105,6 +111,10 @@ export interface StudySession {
   preview: IntervalPreview | null;
   undoable: boolean;
   end: SessionEnd | null;
+  /** Stand der Tagesziele beim Start der Session. */
+  goalStart: { learned: number; goals: Goals } | null;
+  /** Wartet, bis alle Bewertungen geschrieben sind. */
+  flush: () => Promise<void>;
   flip: () => void;
   revealNext: () => void;
   rate: (rating: RatingKey) => void;
@@ -162,6 +172,7 @@ export function useStudySession(scope: StudyScope): StudySession {
   }, []);
 
   const settings = loaded.status === 'ready' ? loaded.loaded.settings : undefined;
+  const flush = useCallback(() => chain.current.then(() => undefined), []);
 
   const rate = useCallback(
     (rating: RatingKey) => {
@@ -241,6 +252,8 @@ export function useStudySession(scope: StudyScope): StudySession {
     preview,
     undoable: canUndo(state),
     end,
+    goalStart: ready?.goalStart ?? null,
+    flush,
     flip: () => {
       setState((s) => flipState(s));
     },

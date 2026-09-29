@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Area, Deck } from '../model/records';
+import { DEFAULT_GOALS } from '../progress/goals';
 import { createdWithin, dueByArea, todayInputFrom } from './build';
 import { todayModel } from './today';
 
@@ -54,16 +55,24 @@ describe('todayInputFrom', () => {
       cardTotal: 7,
       dueByDeck: { amt: 2, delikt: 3, betrug: 4 },
       dueTotal: 9,
-      reviewedToday: 5,
       createdAt: [at(28, 9), at(27, 9), at(1, 9)],
       deadlines: [{ id: 'k', title: 'Klausur ZR', date: '2026-10-09', secureShare: 64 }],
+      days: [
+        { day: '2026-09-26', reviews: 10, learned: 10, created: 0, met: false },
+        { day: '2026-09-27', reviews: 40, learned: 30, created: 0, met: true },
+        { day: '2026-09-28', reviews: 5, learned: 5, created: 0, met: false },
+      ],
+      goals: { ...DEFAULT_GOALS, learn: 30 },
     });
     expect(input).toMatchObject({
       totalCards: 7,
       due: 9,
       createdThisWeek: 2,
-      goal: { done: 5, target: 24 },
+      goal: { done: 5, target: 30 },
+      recordDay: '2026-09-27',
     });
+    expect(input.levels['2026-09-27']).toBe(4);
+    expect(input.levels['2026-09-28']).toBe(1);
     const model = todayModel(input);
     expect(model.headline).toEqual({ accent: '9 Karten', rest: 'warten heute.' });
     expect(model.created).toBe('+2 Karten angelegt');
@@ -85,13 +94,16 @@ describe('todayInputFrom', () => {
         cardTotal: 0,
         dueByDeck: {},
         dueTotal: 0,
-        reviewedToday: 0,
         createdAt: [],
         deadlines: [],
+        days: [],
+        goals: DEFAULT_GOALS,
       }),
     );
     expect(model.headline.accent).toBe('Noch keine Karten.');
     expect(model.areas).toEqual([]);
     expect(model.created).toBeNull();
+    expect(model.week.every((d) => d.level === 0 && !d.record)).toBe(true);
+    expect(model.goal.target).toBe(24);
   });
 });
