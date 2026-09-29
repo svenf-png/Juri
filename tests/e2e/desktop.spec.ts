@@ -93,6 +93,8 @@ test.describe('Zeiger und Tastatur', () => {
   test('„n“ öffnet die neue Karte, in Feldern bleibt „n“ Text', async ({ page }) => {
     await onboard(page);
     await page.goto('/Juri/stapel');
+    // Erst wenn die Seite steht, hört sie auf Tasten.
+    await expect(page.getByRole('heading', { name: 'Stapel', level: 1 })).toBeVisible();
     await page.keyboard.press('n');
     await expect(page).toHaveURL(/\/Juri\/neu$/);
     const front = page.getByLabel('Vorderseite');
@@ -105,6 +107,7 @@ test.describe('Zeiger und Tastatur', () => {
   test('„/“ führt zur Suche der Stapel', async ({ page }) => {
     await onboard(page);
     await page.goto('/Juri/');
+    await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
     await page.keyboard.press('/');
     await expect(page).toHaveURL(/\/Juri\/stapel$/);
   });
