@@ -133,9 +133,33 @@ test.describe('Zeiger und Tastatur', () => {
     await page.getByRole('button', { name: 'Los geht’s' }).click();
     await page.goto('/Juri/test/einstellungen');
     await page.getByRole('button', { name: 'Demo-Profil laden' }).click();
+    // Erst wenn die Karten geschrieben sind, ist das Demo-Profil da.
     await expect
-      .poll(async () => page.evaluate(async () => (await indexedDB.databases()).length))
-      .toBeGreaterThan(0);
+      .poll(() =>
+        page.evaluate(
+          () =>
+            new Promise<number>((resolve) => {
+              const open = indexedDB.open('juri-test');
+              open.onerror = () => {
+                resolve(0);
+              };
+              open.onsuccess = () => {
+                const db = open.result;
+                if (!db.objectStoreNames.contains('cards')) {
+                  db.close();
+                  resolve(0);
+                  return;
+                }
+                const count = db.transaction('cards').objectStore('cards').count();
+                count.onsuccess = () => {
+                  db.close();
+                  resolve(count.result);
+                };
+              };
+            }),
+        ),
+      )
+      .toBeGreaterThan(5);
     await page.goto('/Juri/test/lernen');
     await expect(page.getByText('Klicken zum Umdrehen').first()).toBeVisible();
     await expect(page.getByText(/^1\/\d+$/)).toBeVisible();

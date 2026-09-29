@@ -341,8 +341,8 @@ test.describe('Lernrhythmus', () => {
     const stand = page.getByRole('region', { name: 'Entwicklungsstand' });
     await expect(stand.getByText(/\d+ von 14 Schritten fertig/)).toBeVisible();
     await stand.locator('summary').click();
-    await expect(stand.getByRole('listitem').filter({ hasText: 'M6' })).toContainText('0.7.0');
-    await expect(stand.getByRole('listitem').filter({ hasText: 'M7' })).toContainText('in Arbeit');
+    await expect(stand.getByRole('listitem').filter({ hasText: 'M7' })).toContainText('0.8.0');
+    await expect(stand.getByRole('listitem').filter({ hasText: 'M8' })).toContainText('in Arbeit');
     await expect(stand.getByRole('listitem').filter({ hasText: 'M12' })).toContainText('ab 1.0.0');
   });
 });
