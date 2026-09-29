@@ -41,16 +41,30 @@ type Load =
   | { status: 'error' }
   | { status: 'ready'; loaded: Loaded; initial: SessionState };
 
-async function load(db: JuriDb, deckId: string | undefined): Promise<Load & { status: 'ready' }> {
+/** Umfang einer Session: alle fälligen Abfragen, die eines Stapels oder die einer einzelnen Karte. */
+export interface StudyScope {
+  deckId?: string | undefined;
+  /** Eine Karte lernen, auch wenn sie nicht fällig ist (Verknüpfung „Karte lernen“). */
+  cardId?: string | undefined;
+}
+
+async function load(db: JuriDb, scope: StudyScope): Promise<Load & { status: 'ready' }> {
   const key = toDayKey(learningDay(new Date()));
   const [study, library] = await Promise.all([
-    readStudyOf(db, deckId, dayStart(parseDayKey(key)).getTime()),
+    readStudyOf(db, scope.deckId, dayStart(parseDayKey(key)).getTime()),
     readLibrary(db),
   ]);
   const ctx = dueContext(key, study);
-  const picked = sessionItems(study.items, ctx, Math.random);
-  const stations = stationsFrom(picked);
-  const cards = await readCardsById(db, [...new Set(stations.map((s) => s.cardId))]);
+  const picked =
+    scope.cardId === undefined
+      ? sessionItems(study.items, ctx, Math.random)
+      : study.items.filter((item) => item.cardId === scope.cardId);
+  const cards = await readCardsById(db, [...new Set(picked.map((item) => item.cardId))]);
+  // Ein Schema deckt Punkt für Punkt auf: eine Abfrage, so viele Schritte wie Punkte.
+  const steps = new Map(
+    cards.flatMap((c) => (c.type === 'schema' ? [[c.id, c.points.length] as const] : [])),
+  );
+  const stations = stationsFrom(picked, steps);
   return {
     status: 'ready',
     loaded: {
@@ -102,7 +116,8 @@ const EMPTY = startSession([]);
  * hält den Ablauf; die Bewertung rechnet lokal mit derselben reinen Funktion wie die Datenbank, damit
  * Vorschau und nächste Karte sofort stimmen, und wird der Reihe nach gespeichert.
  */
-export function useStudySession(deckId: string | undefined): StudySession {
+export function useStudySession(scope: StudyScope): StudySession {
+  const { deckId, cardId } = scope;
   const [run, setRun] = useState(0);
   const [loaded, setLoaded] = useState<Load>({ status: 'loading' });
   const [state, setState] = useState<SessionState>(EMPTY);
@@ -116,7 +131,7 @@ export function useStudySession(deckId: string | undefined): StudySession {
     let cancelled = false;
     // Erst was noch geschrieben wird, dann lesen (nach „Weiter lernen“).
     chain.current
-      .then(() => load(database(), deckId))
+      .then(() => load(database(), { deckId, cardId }))
       .then(
         (result) => {
           if (cancelled) return;
@@ -133,7 +148,7 @@ export function useStudySession(deckId: string | undefined): StudySession {
     return () => {
       cancelled = true;
     };
-  }, [deckId, run]);
+  }, [deckId, cardId, run]);
 
   const enqueue = useCallback((task: () => Promise<void>) => {
     chain.current = chain.current.then(task).catch(() => {

@@ -24,6 +24,7 @@
 }
 
 .body {
+  box-sizing: border-box;
   padding: 12px 24px calc(34px + var(--bottom-inset));
   display: flex;
   flex-direction: column;
@@ -40,11 +41,27 @@
 
 .eyebrow {
   margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--violet);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.flush {
+  margin-top: 0;
+}
+
+/* Schema.dc.html: Zeilenhöhe „normal“ statt der Seitenvorgabe. */
+.compact {
+  line-height: normal;
+}
+
+.display {
+  font-family: var(--font-display);
 }
 
 .title {

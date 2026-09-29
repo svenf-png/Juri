@@ -20,13 +20,29 @@ export interface DemoDecks {
   events: NewEvent[];
 }
 
+interface DemoPoint {
+  ebene: number;
+  text: string;
+  norm?: string;
+  inhalt?: string;
+  /** ID einer anderen Demo-Karte; fällt weg, wenn es die Karte nicht (mehr) gibt. */
+  verknuepfung?: string;
+}
+
 interface DemoCard {
-  typ: 'frage' | 'luecke';
+  typ: 'frage' | 'luecke' | 'schema';
   vorderseite?: string;
   rueckseite?: string;
   text?: string;
+  titel?: string;
+  punkte?: DemoPoint[];
   norm: string;
   tags: string[];
+}
+
+/** Feste Kennung einer Demo-Karte: Stapel und Nummer (ab 01). */
+function demoCardId(deckId: string, index: number): string {
+  return `${deckId}-${String(index + 1).padStart(2, '0')}`;
 }
 
 const KARTEN_PRO_STAPEL_ABSTAND = 60_000;
@@ -64,6 +80,12 @@ export function demoDecks(
     }
   });
   const result: DemoDecks = { areas, decks: [], cards: [], items: [], events: [] };
+  // Verknüpfungen zeigen nur auf Karten, die es gibt: vorhandene oder mit diesen Stapeln neue.
+  const known = new Set<string>(existing.cardIds ?? []);
+  for (const s of data.stapel) {
+    if (existing.deckIds.has(s.id)) continue;
+    s.karten.forEach((_, ci) => known.add(demoCardId(s.id, ci)));
+  }
   data.stapel.forEach((s, di) => {
     if (existing.deckIds.has(s.id)) return;
     const start = starts?.[di] ?? now;
@@ -82,23 +104,26 @@ export function demoDecks(
     });
     (s.karten as DemoCard[]).forEach((k, ci) => {
       const checked = checkCard({
-        type: k.typ === 'frage' ? 'qa' : 'cloze',
+        type: k.typ === 'frage' ? 'qa' : k.typ === 'luecke' ? 'cloze' : 'schema',
         front: k.vorderseite ?? '',
         back: k.rueckseite ?? '',
         text: k.text ?? '',
+        title: k.titel ?? '',
+        points: (k.punkte ?? []).map((p, pi) => ({
+          id: `p${String(pi + 1)}`,
+          level: p.ebene,
+          text: p.text,
+          norm: p.norm ?? '',
+          content: p.inhalt ?? '',
+          link: p.verknuepfung !== undefined && known.has(p.verknuepfung) ? p.verknuepfung : null,
+        })),
         norm: k.norm,
         tags: k.tags.join(' '),
         note: '',
       });
       if (!checked.ok) throw new Error(`Ungültige Demo-Karte ${s.id} Nr. ${ci + 1}`);
       const at = start + ci * KARTEN_PRO_STAPEL_ABSTAND;
-      const card = buildCard(
-        `${s.id}-${String(ci + 1).padStart(2, '0')}`,
-        s.id,
-        checked.fields,
-        at,
-        at,
-      );
+      const card = buildCard(demoCardId(s.id, ci), s.id, checked.fields, at, at);
       // Eine Demo-Karte, die schon woanders liegt (Stapel gelöscht, Karte verschoben), bleibt dort.
       if (existing.cardIds?.has(card.id)) return;
       result.cards.push(card);
@@ -111,7 +136,7 @@ export function demoDecks(
 
 /** Tabellen des Demo-Profils: die Demo-Stapel, über 26 Wochen verteilt angelegt. */
 export function demoDeckTables(now: number): BackupTables {
-  const starts = [26 * 7 * DAY, 20 * 7 * DAY, 14 * 7 * DAY, 8 * 7 * DAY, 2 * DAY].map(
+  const starts = [26 * 7 * DAY, 20 * 7 * DAY, 14 * 7 * DAY, 8 * 7 * DAY, 4 * 7 * DAY, 2 * DAY].map(
     (ago) => now - ago,
   );
   const demo = demoDecks(now, undefined, starts);

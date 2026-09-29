@@ -2,8 +2,8 @@
 titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
-stand: 2026-09-28
-version: 0.5 (nach M4)
+stand: 2026-09-29
+version: 0.6 (nach M5)
 ---
 
 # Die Idee
@@ -130,7 +130,7 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 <!-- status: M3 umgesetzt, Modell in docs/adr/007-karten-stapel-und-luecken.md -->
 
 - Ein **Rechtsgebiet** ist ein Etikett; ein Stapel liegt in mindestens einem, gern in mehreren
-- Eine **Karte** ist eine Frage oder ein Lückentext, später Schema und Abdeckung
+- Eine **Karte** ist eine Frage, ein Lückentext oder ein Prüfungsschema, später die Abdeckung
 - Jede Lücke wird eine **Abfrage** mit fester Kennung: drei Lücken ergeben drei Abfragen
 - Jede neue Karte schreibt ein Ereignis; daraus entstehen Tagesziel und Verlauf
 - Stapel löschen und Rechtsgebiet löschen folgen Regeln, damit nichts ins Leere zeigt
@@ -161,6 +161,20 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **Rückgängig** stellt den Zustand aus dem Lernlog her; nichts wird geraten
 
 > **Notizen:** Das Lernlog enthält alle Felder, die eine spätere Optimierung der FSRS-Parameter auf den eigenen Daten braucht. Zufall und Uhr sind Parameter der Logik, damit die Tests deterministisch sind.
+
+## Prüfungsschemata und Verknüpfungen
+
+<!-- status: M5 umgesetzt (ADR-009) -->
+
+![Schema lernen auf dem iPhone: drei von fünf Punkten aufgedeckt, der dritte mit Norm, Inhalt und verknüpfter Karte](../bilder/schema-inhalt-iphone.png)
+
+- Ein **Schema** ist eine Gliederung mit bis zu drei Ebenen (1., a), aa)); jeder Punkt hat Text, Norm und Inhalt
+- Beim Lernen wird **Punkt für Punkt** aufgedeckt, danach gibt es eine Bewertung: das Schema ist eine Abfrage
+- Ein Punkt kann auf eine **andere Karte** verweisen, etwa die Definition der Klagebefugnis
+- Wird eine Karte gelöscht, nennt Juri vorher die betroffenen Schemas und entfernt die Verweise; die Punkte bleiben
+- Das Backup lehnt Verweise ins Leere ab
+
+> **Notizen:** Die Punkte stehen flach in Lesereihenfolge mit ihrer Ebene, die Zählung ist abgeleitet. Verknüpfungen sind Kartenkennungen am Punkt, es gibt keine eigene Tabelle. Schema-Version 4 fügt nur einen Index hinzu, damit die Suche nach Verweisen schnell bleibt. Fachlich sind die Demo-Schemata noch ungeprüft.
 
 ## Fristen
 
@@ -234,7 +248,7 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 | Phase      | Inhalt                                                          |
 | ---------- | --------------------------------------------------------------- |
 | M0 bis M3  | Fundament, Daten und Backup, Oberfläche, Karten und Stapel      |
-| M4 bis M5  | Lern-Engine (fertig), Prüfungsschemata                          |
+| M4 bis M5  | Lern-Engine und Prüfungsschemata (fertig)                       |
 | M6 bis M8  | PDF und Abdeckung, Fristen, Erfolge                             |
 | M9 bis M11 | Teilen und Import, High fives, Feinschliff und Veröffentlichung |
 
@@ -249,5 +263,6 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M2 fertig:** Tab-Bar und Sidebar, Heute-Screen pixelgleich zum Design, Lerntag ab 4 Uhr
 - **M3 fertig:** Rechtsgebiete, Stapel (in mehreren Rechtsgebieten), Frage und Lückentext, Suche, Bearbeiten und Löschen, Master-Detail auf dem iPad, Demo-Stapel
 - **M4 fertig:** Lernen mit FSRS und Leitner, Vorschau der Abstände, Wischen, Rückgängig, Tastatur, gebündelte Lücken, Lernrhythmus einstellen, Notiz an Karten, „Alles erledigt für heute“, Entwicklungsstand in den Einstellungen
-- Automatische Prüfung bei jeder Änderung: 403 Unit-Tests, 59 E2E-Szenarien auf iPhone- und iPad-Größen
-- Nächster Schritt: Gerätetest von M0 bis M4 auf iPhone und iPad, dann M5 (Schema und Verknüpfungen)
+- **M5 fertig:** Prüfungsschemata mit Gliederung in drei Ebenen, Norm und Inhalt je Punkt, Punkt für Punkt lernen, Verknüpfungen zu anderen Karten, Löschen ohne Verweise ins Leere, Demo-Schemata
+- Automatische Prüfung bei jeder Änderung: 459 Unit-Tests, 8 Bildvergleiche und 4 Abläufe für Schema, insgesamt rund 120 E2E-Szenarien auf iPhone- und iPad-Größen
+- Nächster Schritt: Gerätetest von M0 bis M5 auf iPhone und iPad, dann M6 (Bilder, PDF und Abdeckung)

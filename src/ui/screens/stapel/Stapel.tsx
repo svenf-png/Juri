@@ -4,9 +4,11 @@ import { ALL_AREAS, deckModel, deckProgress, libraryModel } from '@/domain/libra
 import { searchCards, searchTokens } from '@/domain/library/search';
 import { dueSummary } from '@/domain/scheduler/queue';
 import { rememberDeck } from '@/platform/lastDeck';
+import { describeLinkUse } from '@/domain/cards/schema';
 import { removeDeck, switchDeckArea } from '@/features/library/actions';
 import {
   useDeckDetail,
+  useLinkUses,
   useLibraryData,
   useSearchData,
   useStudyData,
@@ -81,6 +83,10 @@ export function Stapel() {
   const selectedId = deckId ?? (wide ? model?.groups[0]?.stacks[0]?.id : undefined);
   const detail = useDeckDetail(selectedId, dayKey);
   const deckReady = detail.status === 'ready' ? detail.value : null;
+  const deckUses = useLinkUses(
+    deckReady ? deckReady.cards.map((c) => c.id) : [],
+    sheet === 'deck-delete',
+  );
 
   useEffect(() => {
     if (deckReady) rememberDeck(deckReady.deck.id);
@@ -202,7 +208,16 @@ export function Stapel() {
             ['Abfragen', String(deckReady.itemCount)],
             ['Lernfortschritt', 'geht verloren'],
           ]}
-          text="Das lässt sich nicht rückgängig machen. Ein Backup davor schützt dich."
+          usage={
+            deckUses.status === 'ready' && deckUses.value.length > 0
+              ? describeLinkUse(deckUses.value)
+              : undefined
+          }
+          text={`${
+            deckUses.status === 'ready' && deckUses.value.length > 0
+              ? 'Schemas in anderen Stapeln behalten ihre Punkte, nur die Verknüpfungen zu Karten dieses Stapels entfallen. '
+              : ''
+          }Das lässt sich nicht rückgängig machen. Ein Backup davor schützt dich.`}
           backup
           confirmLabel="Stapel löschen"
           onClose={close}

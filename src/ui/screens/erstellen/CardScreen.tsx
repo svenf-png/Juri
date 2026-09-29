@@ -4,11 +4,13 @@ import { draftToMarkup, EMPTY_DRAFT } from '@/domain/cards/clozeDraft';
 import type { CreateGoal } from '@/domain/cards/goal';
 import { Button } from '../../components/Button';
 import { ChevronRightIcon, FileIcon, ImageIcon, TrashIcon } from '../../components/icons';
+import { plural } from '@/domain/session/present';
 import { TextField } from '../../components/TextField';
 import { cx } from '../../cx';
 import rise from '../../motion/rise.module.css';
 import tap from '../../motion/tap.module.css';
 import { ClozeEditor } from './ClozeEditor';
+import { SchemaEditor } from './SchemaEditor';
 import type { FormState, Tab } from './form';
 import styles from './Erstellen.module.css';
 
@@ -20,10 +22,6 @@ const TABS: readonly { value: Tab; label: string }[] = [
 ];
 
 const COMING: Partial<Record<Tab, { title: string; text: string }>> = {
-  schema: {
-    title: 'Schema-Karten kommen mit M5',
-    text: 'Bis dahin lege Fragen und Lückentexte an.',
-  },
   cover: {
     title: 'Abdeckungs-Karten kommen mit M6',
     text: 'Bis dahin lege Fragen und Lückentexte an.',
@@ -35,6 +33,10 @@ export interface CardScreenProps {
   initial: FormState;
   /** „Diebstahl & Betrug · SR“; `null`, solange kein Stapel gewählt ist. */
   deckLabel: string | null;
+  /** Stapel der Karte für Verknüpfungen im Schema: Kennung, Name und Rechtsgebiete („ZR, ÖR“). */
+  deck?: { id: string; name: string; areaCodes: string } | null;
+  /** Kennung der bearbeiteten Karte (Schema: keine Verknüpfung auf sich selbst). */
+  cardId?: string;
   onPickDeck: () => void;
   /**
    * Speichert die geprüften Felder: `true` gespeichert, `false` nicht gespeichert und nichts zu
@@ -58,6 +60,8 @@ export function CardScreen({
   mode,
   initial,
   deckLabel,
+  deck = null,
+  cardId,
   onPickDeck,
   onSubmit,
   onClose,
@@ -77,6 +81,8 @@ export function CardScreen({
   const frontRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
   const backRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
+  const titleRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
+  const [outline, setOutline] = useState(false);
   const set = (change: Partial<FormState>) => {
     setForm((f) => ({ ...f, ...change }));
   };
@@ -85,10 +91,12 @@ export function CardScreen({
   async function submit() {
     if (busy || coming) return;
     const checked = checkCard({
-      type: form.tab === 'cloze' ? 'cloze' : 'qa',
+      type: form.tab === 'cloze' ? 'cloze' : form.tab === 'schema' ? 'schema' : 'qa',
       front: form.front,
       back: form.back,
       text: draftToMarkup(form.draft),
+      title: form.title,
+      points: form.points,
       norm: form.norm,
       tags: form.tags,
       note: form.note,
@@ -96,6 +104,11 @@ export function CardScreen({
     if (!checked.ok) {
       setErrors(checked.errors);
       if (checked.errors.norm || checked.errors.note) setMore(true);
+      if (checked.errors.schema) {
+        if (checked.errors.schema.title) titleRef.current?.focus();
+        else if (checked.errors.schema.point) setOutline(true);
+        return;
+      }
       (checked.errors.front ? frontRef : checked.errors.back ? backRef : textRef).current?.focus();
       return;
     }
@@ -113,9 +126,46 @@ export function CardScreen({
     setBusy(false);
     if (saved && !editing) {
       // Nächste Karte: Inhalt, Norm und Notiz leeren, Typ, Stapel und Tags bleiben stehen.
-      setForm((f) => ({ ...f, front: '', back: '', draft: EMPTY_DRAFT, norm: '', note: '' }));
-      (form.tab === 'cloze' ? textRef : frontRef).current?.focus();
+      setForm((f) => ({
+        ...f,
+        front: '',
+        back: '',
+        draft: EMPTY_DRAFT,
+        title: '',
+        points: [],
+        norm: '',
+        note: '',
+      }));
+      (form.tab === 'cloze'
+        ? textRef
+        : form.tab === 'schema'
+          ? titleRef
+          : frontRef
+      ).current?.focus();
     }
+  }
+
+  if (outline) {
+    return (
+      <SchemaEditor
+        title={form.title.trim()}
+        norm={form.norm.trim()}
+        areaCodes={deck?.areaCodes ?? ''}
+        initial={form.points}
+        pointErrors={errors.schema?.point}
+        deckId={deck?.id ?? null}
+        deckName={deck?.name ?? null}
+        selfId={cardId}
+        onSave={(points) => {
+          set({ points });
+          setErrors({});
+          setOutline(false);
+        }}
+        onBack={() => {
+          setOutline(false);
+        }}
+      />
+    );
   }
 
   return (
@@ -203,6 +253,41 @@ export function CardScreen({
             error={errors.text}
             textRef={textRef}
           />
+        </div>
+      ) : null}
+      {form.tab === 'schema' ? (
+        <div className={cx(styles.schemaPanel, rise.rise)}>
+          <TextField
+            label="Titel des Schemas"
+            value={form.title}
+            onChange={(title) => {
+              set({ title });
+            }}
+            placeholder="z. B. Amtshaftungsanspruch"
+            error={errors.schema?.title}
+            inputRef={titleRef}
+          />
+          <button
+            type="button"
+            className={cx(styles.outlineButton, tap.tap)}
+            onClick={() => {
+              setOutline(true);
+            }}
+          >
+            Gliederung bearbeiten
+            <ChevronRightIcon size={18} strokeWidth={2.2} />
+          </button>
+          {errors.schema?.points || errors.schema?.point ? (
+            <span className={styles.errorText} role="alert">
+              {errors.schema.points ?? 'Bitte prüfe die markierten Punkte in der Gliederung.'}
+            </span>
+          ) : (
+            <span className={styles.outlineInfo}>
+              {form.points.length === 0
+                ? 'Noch keine Punkte'
+                : plural(form.points.length, 'Punkt', 'Punkte')}
+            </span>
+          )}
         </div>
       ) : null}
       {coming ? (

@@ -15,6 +15,7 @@ import {
   revealNext,
   startSession,
   stationsFrom,
+  stepsOf,
   summary,
   undo,
   type SessionState,
@@ -154,6 +155,43 @@ describe('gebündelte Lücken', () => {
     expect(out.effect.itemIds).toEqual(['c:c1', 'c:c2', 'c:c3']);
     expect(out.state.ratedItems).toBe(3);
     expect(out.state.counts.good).toBe(3);
+  });
+});
+
+describe('Schema-Stationen', () => {
+  const schemaStation: Station = { key: 's', cardId: 's', itemIds: ['s'], steps: 4 };
+
+  it('stationsFrom übernimmt die Schritte einer Karte; ohne Angabe gilt die Zahl der Abfragen', () => {
+    const stations = stationsFrom([item('s'), item('a')], new Map([['s', 4]]));
+    expect(stations[0]).toEqual({ key: 's', cardId: 's', itemIds: ['s'], steps: 4 });
+    expect(stations[1]).toEqual({ key: 'a', cardId: 'a', itemIds: ['a'] });
+    expect(stepsOf(stations[0]!)).toBe(4);
+    expect(stepsOf(stations[1]!)).toBe(1);
+  });
+
+  it('ein Schema mit mehreren Punkten wird schrittweise aufgedeckt, eine Abfrage', () => {
+    expect(isBundle(schemaStation)).toBe(true);
+    expect(isBundle({ ...schemaStation, steps: 1 })).toBe(false);
+    let s = startSession([schemaStation]);
+    s = revealNext(revealNext(s));
+    expect(s.revealed).toBe(2);
+    expect(s.flipped).toBe(false);
+    expect(rate(s, 'good')).toBeNull();
+    s = revealNext(revealNext(revealNext(s)));
+    expect(s.revealed).toBe(4);
+    expect(s.flipped).toBe(true);
+    const out = rate(s, 'good')!;
+    expect(out.effect.itemIds).toEqual(['s']);
+    expect(out.state.ratedItems).toBe(1);
+  });
+
+  it('„Alle zeigen“ und Undo decken alle Punkte auf', () => {
+    const flipped = flip(startSession([schemaStation]));
+    expect(flipped.revealed).toBe(4);
+    const rated = rate(flipped, 'hard')!.state;
+    const back = undo(rated)!.state;
+    expect(back.revealed).toBe(4);
+    expect(back.flipped).toBe(true);
   });
 });
 

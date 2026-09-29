@@ -120,11 +120,11 @@ test.describe('Stapel und Karten', () => {
     await expect(page.getByText('Markiere zuerst ein Wort im Text.')).toBeVisible();
   });
 
-  test('Schema und Abdeckung sagen, wann sie kommen', async ({ page }) => {
+  test('Abdeckung sagt, wann sie kommt', async ({ page }) => {
     await onboard(page);
     await page.goto('/Juri/neu');
-    await page.getByRole('button', { name: 'Schema', exact: true }).click();
-    await expect(page.getByText('Schema-Karten kommen mit M5')).toBeVisible();
+    await page.getByRole('button', { name: 'Abdeckung', exact: true }).click();
+    await expect(page.getByText('Abdeckungs-Karten kommen mit M6')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Speichern & nächste' })).toBeDisabled();
     await expect(page.getByRole('button', { name: /^PDF/ })).toBeDisabled();
   });
@@ -380,9 +380,10 @@ test.describe('Demo-Stapel der Testinstanz', () => {
     await onboard(page, '/Juri/test/');
     await openSettings(page);
     await page.getByRole('button', { name: 'Demo-Stapel hinzufügen' }).click();
-    await expect(page.getByText('5 Stapel mit 35 Karten hinzugefügt.')).toBeVisible();
+    await expect(page.getByText('6 Stapel mit 40 Karten hinzugefügt.')).toBeVisible();
     await page.goto('/Juri/test/stapel');
     await expect(page.getByRole('link', { name: /Amtshaftung \(Demo\)/ })).toHaveCount(2);
+    await expect(page.getByRole('link', { name: /Prüfungsschemata \(Demo\)/ })).toHaveCount(3);
     for (const name of [
       'Deliktsrecht (Demo)',
       'ZPO: Versäumnisurteil (Demo)',

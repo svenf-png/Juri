@@ -103,7 +103,7 @@ describe('Version 3 (M4)', () => {
     await db.reviewItems.add(item);
     db.close();
     const upgraded = reopen(MIGRATIONS);
-    expect(upgraded.verno).toBe(3);
+    expect(upgraded.verno).toBe(4);
     expect(await upgraded.reviewItems.get('k1')).toEqual(item);
     expect(upgraded.tables.map((t) => t.name)).toContain('reviewLog');
     expect(await upgraded.reviewLog.count()).toBe(0);
@@ -119,5 +119,21 @@ describe('Version 3 (M4)', () => {
     ]);
     expect(await db.reviewItems.where('due').below(200).primaryKeys()).toEqual(['k2']);
     expect(await db.reviewItems.where('due').aboveOrEqual(0).count()).toBe(2);
+  });
+});
+
+describe('Version 4 (M5)', () => {
+  const base = { deckId: 'd1', norm: '', tags: [], createdAt: 1, updatedAt: 1 };
+
+  it('hebt eine Datenbank aus M4 an: Karten bleiben unverändert, der Typ ist indiziert', async () => {
+    const { db, reopen } = testDb(MIGRATIONS.slice(0, 3));
+    const qa = { ...base, id: 'k1', type: 'qa' as const, front: 'F', back: 'B' };
+    await db.cards.add(qa);
+    db.close();
+    const upgraded = reopen(MIGRATIONS);
+    expect(upgraded.verno).toBe(4);
+    expect(await upgraded.cards.get('k1')).toEqual(qa);
+    expect(await upgraded.cards.where('type').equals('qa').count()).toBe(1);
+    expect(await upgraded.cards.where('type').equals('schema').count()).toBe(0);
   });
 });

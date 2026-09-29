@@ -43,7 +43,12 @@ const chromiumProjects = [
       ...devices['Desktop Chrome'],
       viewport: iphone14,
       hasTouch: true,
-      ...(chromiumPath ? { launchOptions: { executablePath: chromiumPath } } : {}),
+      launchOptions: {
+        ...(chromiumPath ? { executablePath: chromiumPath } : {}),
+        // Sheets sind <dialog> in eigener Ebene; Chromium zeichnet sie mit Graustufen-Glättung, die
+        // Design-Seiten mit Farbsäumen (LCD). Ohne LCD-Text sind beide gleich (Bildvergleiche).
+        args: ['--disable-lcd-text'],
+      },
     },
   },
   {
@@ -52,7 +57,12 @@ const chromiumProjects = [
       ...devices['Desktop Chrome'],
       viewport: ipadQuer,
       hasTouch: true,
-      ...(chromiumPath ? { launchOptions: { executablePath: chromiumPath } } : {}),
+      launchOptions: {
+        ...(chromiumPath ? { executablePath: chromiumPath } : {}),
+        // Sheets sind <dialog> in eigener Ebene; Chromium zeichnet sie mit Graustufen-Glättung, die
+        // Design-Seiten mit Farbsäumen (LCD). Ohne LCD-Text sind beide gleich (Bildvergleiche).
+        args: ['--disable-lcd-text'],
+      },
     },
   },
 ];

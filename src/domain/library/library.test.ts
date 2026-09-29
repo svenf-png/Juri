@@ -4,6 +4,7 @@ import { reviewItem } from '../scheduler/schedule';
 import { DEFAULT_LEARNING } from '../scheduler/settings';
 import {
   areaDeckCounts,
+  deckAreaCodes,
   deckLabel,
   deckModel,
   deckProgress,
@@ -190,6 +191,13 @@ describe('deckModel', () => {
       kind: 'create',
       label: 'Erste Karte anlegen',
     });
+  });
+});
+
+describe('deckAreaCodes', () => {
+  it('nennt die Kürzel in fester Reihenfolge, leer ohne Rechtsgebiet', () => {
+    expect(deckAreaCodes(decks[0]!, areas)).toBe('ZR, ÖR');
+    expect(deckAreaCodes({ ...decks[0]!, areaIds: [] }, areas)).toBe('');
   });
 });
 

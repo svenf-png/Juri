@@ -3,10 +3,10 @@ titel: Juri benutzen
 untertitel: Das Handbuch für iPhone und iPad
 zielgruppe: Referendarinnen und Referendare
 stand: 2026-09-28
-version: 0.5 (Lernen und Lernrhythmus gegen die App geprüft, übrige Kapitel Entwurf nach Design)
+version: 0.6 (bis M5 gegen die App geprüft, übrige Kapitel Entwurf nach Design)
 ---
 
-<!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke, Notiz), Lernen, Lernrhythmus und Stapel sind gegen die App geprüft (bis M4). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
+<!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke, Schema, Notiz), Lernen, Lernrhythmus und Stapel sind gegen die App geprüft (bis M5). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
 
 # Loslegen
 
@@ -46,7 +46,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 
 <!-- status: M3 in der Testinstanz umgesetzt, als Datei zum Importieren ab M9 -->
 
-- Die Testinstanz „Juri Test“ hat **5 Demo-Stapel** mit 35 Karten zu ZR, SR und ÖR
+- Die Testinstanz „Juri Test“ hat **6 Demo-Stapel** mit 40 Karten zu ZR, SR und ÖR, darunter einen mit fünf Prüfungsschemata
 - In den Einstellungen unter „Testdaten“: **„Demo-Stapel hinzufügen“**
 - Die Inhalte sind als **Demo** gekennzeichnet; sie ersetzen kein Skript
 - Jeden Stapel kannst du einzeln wieder löschen
@@ -119,12 +119,17 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Prüfungsschema
 
-<!-- status: entwurf nach SchemaEditor.dc.html, Feld Inhalt wird im Canvas ergaenzt, pruefen in M5 -->
+<!-- status: M5 umgesetzt (SchemaEditor.dc.html und Artboards SchemaPunkt, SchemaVerknuepfen, SchemaNeueKarte, ADR-009) -->
+
+![Schema bearbeiten auf dem iPhone: Gliederung mit Unterpunkten und der Suche nach einer Karte zum Verknüpfen](../bilder/schema-editor-iphone.png)
 
 - Typ **Schema** wählen, Titel eingeben, **„Gliederung bearbeiten“**
-- Punkte anlegen, mit den Pfeilen **ein- und ausrücken** (1., a), aa))
-- Zu jedem Punkt Norm und **Inhalt** eintragen
-- Mit dem Ketten-Symbol einen Punkt mit einer anderen Karte **verknüpfen**
+- **„+“** legt einen Punkt an; mit den Pfeilen **ein- und ausrücken** (1., a), aa)), bis zu drei Ebenen und 60 Punkte
+- Einen Punkt antippen, um ihn zu wählen, **nochmal antippen**, um Text, Norm und **Inhalt** einzutragen; dort lässt er sich auch nach oben und unten schieben oder löschen
+- Mit dem Ketten-Symbol einen Punkt mit einer anderen Karte **verknüpfen**: Suche, Karte antippen; eine neue Karte lässt sich gleich anlegen
+- **„Sichern“** übernimmt die Gliederung, gespeichert wird die Karte mit „Speichern“
+
+> **Notizen:** Ein Schema ist eine Abfrage, egal wie viele Punkte es hat. Leere Punkte lässt Juri beim Sichern weg. „Zurück“ fragt nach, wenn du etwas geändert hast.
 
 ## Aus PDF oder Foto
 
@@ -188,13 +193,14 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 ## Lückentext, Schema und Abdeckung
 
 <!-- layout: bild-gross -->
-<!-- status: Lückentext M4 umgesetzt (Luecke.dc.html), Schema M5, Abdeckung M6 -->
+<!-- status: Lückentext M4 umgesetzt (Luecke.dc.html), Schema M5 umgesetzt (Schema.dc.html), Abdeckung M6 -->
 
 ![Lückentext auf dem iPhone: Lücke 3 von 4, „Alle zeigen“ und „Nächste Lücke“](../bilder/lernen-luecke-iphone.png)
 
 - **Lückentext:** Sind mehrere Lücken einer Karte fällig, deckst du sie mit **„Nächste Lücke“** der Reihe nach auf oder mit **„Alle zeigen“** alle; dann bewertest du einmal
 - Die Bewertung gilt für jede fällige Lücke einzeln
-- **Schema** (M5): Punkt für Punkt mit Inhalt aufdecken, dann einmal bewerten
+- **Schema:** **„Nächster Punkt“** deckt die Gliederung Punkt für Punkt mit Norm und Inhalt auf, **„Alle zeigen“** alles; erst dann bewertest du einmal
+- Ein Punkt mit dem Chip **„Karte“** zeigt die verknüpfte Karte in einem Blatt; **„Karte lernen“** übt sie einzeln
 - **Abdeckung** (M6): Das gefragte Feld pulsiert, antippen deckt es auf
 
 ## Das Ende einer Runde
@@ -244,7 +250,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - Eine Karte im Stapel oder in den Suchtreffern antippen
 - Inhalt, Norm, Tags und Stapel lassen sich ändern; der Kartentyp bleibt
 - Bei Lückentexten bleiben die Abfragen der behaltenen Lücken erhalten
-- **„Karte löschen“** fragt nach und nennt, wie viele Abfragen entfallen
+- **„Karte löschen“** fragt nach und nennt, wie viele Abfragen entfallen; ist die Karte in Schemas verknüpft, steht dort, in welchen und an wie vielen Punkten. Die Punkte bleiben, nur die Verknüpfung entfällt
 
 ## Suchen
 
@@ -368,10 +374,10 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Version und Entwicklungsstand
 
-<!-- status: M4 umgesetzt (Artboard Entwicklungsstand) -->
+<!-- status: M4 umgesetzt (Artboard Entwicklungsstand), Zahlen ab 0.6.0 laufen mit -->
 
 - Unten in den **Einstellungen** steht die **Version** der App
 - **Entwicklungsstand** zeigt die Schritte M0 bis M11: fertig mit Haken und Version, der nächste „in Arbeit“, die übrigen „ab“ ihrer Version
-- Zugeklappt siehst du nur „5 von 12 Schritten fertig“ und einen Balken
+- Zugeklappt siehst du nur „6 von 12 Schritten fertig“ und einen Balken
 
 > **Notizen:** Die Versionen der kommenden Schritte sind vorläufig. Die Liste folgt der Versionsnummer der App und braucht keine Pflege.

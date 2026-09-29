@@ -3,6 +3,7 @@
  * Karte, gefragten Lücken und Stand der Aufdeckung. Die Oberfläche setzt die Stücke nur ein.
  */
 import { parseCloze } from '../cards/cloze';
+import { pointNumbers } from '../cards/schema';
 import type { Card } from '../model/records';
 
 /** Aussehen einer Lücke: verdeckt, aufgedeckt oder gerade aufgedeckt (mit Ring). */
@@ -59,6 +60,52 @@ export function endSummary(end: {
   return end.next ? `${head} Nächste Runde: ${end.next}.` : head;
 }
 
+/** Zeile eines Schemas in der Lernansicht; verdeckte Zeilen tragen keinen Text (kein Durchscheinen). */
+export interface SchemaRow {
+  readonly id: string;
+  readonly level: number;
+  /** „1“, „a“, „aa“ (Zählung ohne Satzzeichen). */
+  readonly number: string;
+  readonly shown: boolean;
+  /** Zuletzt aufgedeckt, solange noch etwas verdeckt ist (Hervorhebung, Schema.dc.html). */
+  readonly current: boolean;
+  readonly text: string;
+  readonly norm: string;
+  readonly content: string;
+  /** Verknüpfte Karte; nur bei aufgedeckten Zeilen. */
+  readonly link: string | null;
+}
+
+/** Zeilen eines Schemas mit `revealed` aufgedeckten Punkten (in Lesereihenfolge). */
+export function schemaRows(
+  points: readonly {
+    id: string;
+    level: number;
+    text: string;
+    norm?: string | undefined;
+    content?: string | undefined;
+    link?: string | undefined;
+  }[],
+  revealed: number,
+): SchemaRow[] {
+  const numbers = pointNumbers(points);
+  const partial = revealed < points.length;
+  return points.map((p, i) => {
+    const shown = i < revealed;
+    return {
+      id: p.id,
+      level: p.level,
+      number: numbers[i] ?? '',
+      shown,
+      current: shown && partial && i === revealed - 1,
+      text: shown ? p.text : '',
+      norm: shown ? (p.norm ?? '') : '',
+      content: shown ? (p.content ?? '') : '',
+      link: shown ? (p.link ?? null) : null,
+    };
+  });
+}
+
 export type Face =
   | {
       readonly kind: 'qa';
@@ -71,6 +118,14 @@ export type Face =
       readonly typeLabel: 'Lücke';
       readonly front: readonly Piece[];
       readonly back: readonly Piece[];
+    }
+  | {
+      readonly kind: 'schema';
+      readonly typeLabel: 'Schema';
+      readonly title: string;
+      readonly rows: readonly SchemaRow[];
+      readonly revealed: number;
+      readonly total: number;
     }
   | {
       readonly kind: 'bundle';
@@ -87,6 +142,18 @@ export type Face =
 export function faceOf(card: Card, subs: readonly string[], revealed: number): Face {
   if (card.type === 'qa') {
     return { kind: 'qa', typeLabel: 'Frage', question: card.front, answer: card.back };
+  }
+  if (card.type === 'schema') {
+    const total = card.points.length;
+    const shown = Math.min(revealed, total);
+    return {
+      kind: 'schema',
+      typeLabel: 'Schema',
+      title: card.title,
+      rows: schemaRows(card.points, shown),
+      revealed: shown,
+      total,
+    };
   }
   const asked = askedNumbers(subs);
   if (asked.length > 1) {

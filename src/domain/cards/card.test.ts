@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { Card } from '../model/records';
 import {
+  CARD_TYPE_LABEL,
+  cardPreview,
   cardTitle,
   buildCard,
   buildItems,
@@ -224,5 +226,92 @@ describe('buildCard und buildItems', () => {
     expect(buildItems(qaCard, 1)).toEqual([
       { id: 'k2', cardId: 'k2', deckId: 'd1', sub: '', createdAt: 1 },
     ]);
+  });
+});
+
+describe('Schema-Karten', () => {
+  const schemaForm: CardForm = {
+    type: 'schema',
+    front: '',
+    back: '',
+    text: '',
+    title: ' Amtshaftung ',
+    points: [
+      { id: 'p1', level: 1, text: 'Amt', norm: '', content: '', link: null },
+      { id: 'p2', level: 2, text: 'Pflicht', norm: '§ 839 BGB', content: '', link: 'k9' },
+    ],
+    norm: '§ 839 BGB',
+    tags: '',
+    note: 'Merke',
+  };
+
+  it('checkCard prüft Titel und Punkte und liefert die Felder', () => {
+    const out = checkCard(schemaForm);
+    expect(out.ok).toBe(true);
+    if (!out.ok) return;
+    expect(out.fields.content).toEqual({
+      type: 'schema',
+      title: 'Amtshaftung',
+      points: [
+        { id: 'p1', level: 1, text: 'Amt' },
+        { id: 'p2', level: 2, text: 'Pflicht', norm: '§ 839 BGB', link: 'k9' },
+      ],
+    });
+    expect(out.fields.note).toBe('Merke');
+  });
+
+  it('meldet Fehler des Schemas unter „schema“, ohne Titel und Punkte', () => {
+    const out = checkCard({ ...schemaForm, title: '', points: [] });
+    expect(out).toMatchObject({
+      ok: false,
+      errors: {
+        schema: { title: 'Der Titel fehlt.', points: 'Ein Schema braucht mindestens einen Punkt.' },
+      },
+    });
+    expect(checkCard({ ...schemaForm, title: '' }).ok).toBe(false);
+  });
+
+  it('meldet auch zu lange Norm und Notiz neben dem Schema', () => {
+    const out = checkCard({ ...schemaForm, norm: 'x'.repeat(201) });
+    expect(out).toMatchObject({
+      ok: false,
+      errors: { norm: 'Die Norm ist zu lang (höchstens 200 Zeichen).' },
+    });
+  });
+
+  it('eine Schema-Karte hat genau eine Abfrage; Titel dient als Überschrift und Etikett', () => {
+    const out = checkCard(schemaForm);
+    if (!out.ok) throw new Error('ungültig');
+    const card = buildCard('s1', 'd1', out.fields, 5, 5);
+    expect(card).toMatchObject({ type: 'schema', title: 'Amtshaftung', note: 'Merke' });
+    expect(reviewSubs(contentOf(card))).toEqual(['']);
+    expect(buildItems(card, 5)).toEqual([
+      { id: 's1', cardId: 's1', deckId: 'd1', sub: '', createdAt: 5 },
+    ]);
+    expect(cardTitle(card)).toBe('Amtshaftung');
+    expect(CARD_TYPE_LABEL.schema).toBe('Schema');
+    expect(contentOf(card)).toEqual(out.fields.content);
+  });
+});
+
+describe('cardPreview', () => {
+  const base = { id: 'k', deckId: 'd', norm: '', tags: [], createdAt: 1, updatedAt: 1 };
+  it('zeigt die Antwort, den aufgedeckten Text oder die Hauptpunkte eines Schemas', () => {
+    expect(cardPreview({ ...base, type: 'qa', front: 'F', back: ' Antwort. ' })).toBe('Antwort.');
+    expect(cardPreview({ ...base, type: 'cloze', text: 'Ein {{c1::Wort}} fehlt' })).toBe(
+      'Ein Wort fehlt',
+    );
+    expect(
+      cardPreview({
+        ...base,
+        type: 'schema',
+        title: 'T',
+        points: [
+          { id: 'p1', level: 1, text: 'Weg' },
+          { id: 'p2', level: 2, text: 'Unter' },
+          { id: 'p3', level: 1, text: 'Frist' },
+        ],
+      }),
+    ).toBe('1. Weg · 2. Frist');
   });
 });

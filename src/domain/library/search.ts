@@ -47,8 +47,12 @@ export interface SearchHit {
   readonly meta: string;
 }
 
+/** Alles, was die Suche an einer Karte durchsucht (bei Schemas Titel, Punkte, Normen und Inhalte). */
 function body(card: Card): string {
-  return card.type === 'qa' ? `${card.front}\n${card.back}` : clozePlain(card.text);
+  if (card.type === 'qa') return `${card.front}\n${card.back}`;
+  if (card.type === 'cloze') return clozePlain(card.text);
+  const points = card.points.flatMap((p) => [p.text, p.norm ?? '', p.content ?? '']);
+  return [card.title, ...points].join('\n');
 }
 
 /** Ganzer Text auf einmal gefaltet (ohne Herkunftstabelle); für die Suche, nicht fürs Hervorheben. */

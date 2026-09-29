@@ -18,6 +18,16 @@ export interface Station {
   readonly cardId: string;
   /** Abfragen dieser Station, Lücken nach Nummer. Mehr als eine heißt: gebündelte Lücken. */
   readonly itemIds: readonly string[];
+  /**
+   * Schritte des Aufdeckens, wenn sie nicht den Abfragen entsprechen: ein Schema deckt Punkt für
+   * Punkt auf (eine Abfrage, so viele Schritte wie Punkte). Fehlt das Feld, gilt `itemIds.length`.
+   */
+  readonly steps?: number;
+}
+
+/** Wie oft „Weiter“ nötig ist, bis eine Station ganz aufgedeckt und bewertbar ist. */
+export function stepsOf(station: Station): number {
+  return station.steps ?? station.itemIds.length;
 }
 
 /** Nummer aus einer Abfrage-Kennung: `c3` → 3; die ganze Karte (`''`) ist 0. */
@@ -28,8 +38,12 @@ function gapNumber(sub: string): number {
 /**
  * Stationen aus den Abfragen einer Session (in Reihenfolge). Lücken derselben Karte kommen an die
  * Stelle der ersten in eine Station (Entscheidung 3), jede andere Abfrage bildet eine eigene.
+ * `steps` nennt zu Karten-IDs die Zahl der Aufdeck-Schritte (Schema: Punkte), siehe `Station.steps`.
  */
-export function stationsFrom(items: readonly ReviewItem[]): Station[] {
+export function stationsFrom(
+  items: readonly ReviewItem[],
+  steps: ReadonlyMap<string, number> = new Map(),
+): Station[] {
   const stations: { key: string; cardId: string; items: ReviewItem[] }[] = [];
   const byCard = new Map<string, (typeof stations)[number]>();
   for (const item of items) {
@@ -42,11 +56,15 @@ export function stationsFrom(items: readonly ReviewItem[]): Station[] {
     byCard.set(item.cardId, station);
     stations.push(station);
   }
-  return stations.map((s) => ({
-    key: s.key,
-    cardId: s.cardId,
-    itemIds: s.items.sort((a, b) => gapNumber(a.sub) - gapNumber(b.sub)).map((i) => i.id),
-  }));
+  return stations.map((s) => {
+    const own = steps.get(s.cardId);
+    return {
+      key: s.key,
+      cardId: s.cardId,
+      itemIds: s.items.sort((a, b) => gapNumber(a.sub) - gapNumber(b.sub)).map((i) => i.id),
+      ...(own === undefined ? {} : { steps: own }),
+    };
+  });
 }
 
 /** Wie viele Abfragen in der Session stecken (Bündel zählen mit allen Lücken). */
@@ -78,7 +96,7 @@ export interface SessionState {
   readonly finished: number;
   /** Die Antwort ist zu sehen, Bewerten möglich. */
   readonly flipped: boolean;
-  /** Gebündelte Lücken: wie viele der Lücken schon aufgedeckt sind. */
+  /** Gebündelte Lücken oder Schema: wie viele Schritte schon aufgedeckt sind. */
   readonly revealed: number;
   /** Bewertungen je Stufe, jede Wiederholung einer Abfrage zählt (auch wiederholte „Nochmal“). */
   readonly counts: Readonly<Record<RatingKey, number>>;
@@ -109,9 +127,9 @@ export function current(state: SessionState): Station | undefined {
   return state.queue[0];
 }
 
-/** Eine Station mit mehreren fälligen Lücken wird schrittweise aufgedeckt. */
+/** Eine Station mit mehreren fälligen Lücken oder ein Schema wird schrittweise aufgedeckt. */
 export function isBundle(station: Station | undefined): boolean {
-  return (station?.itemIds.length ?? 0) > 1;
+  return station !== undefined && stepsOf(station) > 1;
 }
 
 /** Zähler oben rechts: „9/24“, nie über die Gesamtzahl. */
@@ -128,15 +146,15 @@ export function progressPercent(state: SessionState): number {
 export function flip(state: SessionState): SessionState {
   const station = current(state);
   if (!station || state.flipped) return state;
-  return { ...state, flipped: true, revealed: station.itemIds.length };
+  return { ...state, flipped: true, revealed: stepsOf(station) };
 }
 
-/** „Nächste Lücke“ (Luecke.dc.html): deckt die nächste Lücke auf, nach der letzten ist bewertbar. */
+/** „Nächste Lücke“ / „Nächster Punkt“: deckt den nächsten Schritt auf, nach dem letzten ist bewertbar. */
 export function revealNext(state: SessionState): SessionState {
   const station = current(state);
   if (!station || state.flipped) return state;
-  const revealed = Math.min(state.revealed + 1, station.itemIds.length);
-  return { ...state, revealed, flipped: revealed === station.itemIds.length };
+  const revealed = Math.min(state.revealed + 1, stepsOf(station));
+  return { ...state, revealed, flipped: revealed === stepsOf(station) };
 }
 
 /** Stelle in der Warteschlange für eine Station, die „Nochmal“ bekam. */
@@ -207,7 +225,7 @@ export function undo(
       counts: last.before.counts,
       ratedItems: last.before.ratedItems,
       flipped: true,
-      revealed: last.station.itemIds.length,
+      revealed: stepsOf(last.station),
       history: state.history.slice(0, -1),
       done: false,
     },

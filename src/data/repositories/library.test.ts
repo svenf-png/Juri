@@ -4,7 +4,14 @@ import { decodeBackup } from '@/domain/backup/codec';
 import { exportBackup, prepareRestore, readTables, restoreBackup } from '../backup';
 import { testDb } from '../testDb';
 import { createArea, deleteArea, readAreas, updateArea } from './areas';
-import { createCard, deleteCard, readCard, readCards, updateCard } from './cards';
+import {
+  createCard,
+  deleteCard,
+  readCard,
+  readCards,
+  readSchemasLinkingTo,
+  updateCard,
+} from './cards';
 import { createDeck, deleteDeck, readDeck, readDecks, toggleDeckArea, updateDeck } from './decks';
 import {
   readCreateSnapshot,
@@ -261,6 +268,135 @@ describe('Karten', () => {
     expect(await readCard(db, 'k1')).toBeNull();
     expect(await db.reviewItems.count()).toBe(0);
     expect(await db.events.count()).toBe(1);
+  });
+});
+
+describe('Schema-Karten und Verknüpfungen', () => {
+  const point = (id: string, text: string, link?: string) => ({
+    id,
+    level: 1,
+    text,
+    norm: '',
+    content: '',
+    link: link ?? null,
+  });
+  const schemaFields = (title: string, ...links: (string | undefined)[]) =>
+    fields({
+      type: 'schema',
+      title,
+      points: links.map((link, i) => point(`p${String(i + 1)}`, `Punkt ${String(i + 1)}`, link)),
+    });
+
+  async function withSchemas() {
+    const { db } = await setup();
+    await createCard(db, { id: 'q1', deckId: 'amt', fields: fields() }, T);
+    await createCard(db, { id: 'q2', deckId: 'delikt', fields: fields({ front: 'Zweite' }) }, T);
+    await createCard(
+      db,
+      { id: 's1', deckId: 'amt', fields: schemaFields('Amtshaftung', 'q1', undefined, 'q2') },
+      T,
+    );
+    await createCard(db, { id: 's2', deckId: 'delikt', fields: schemaFields('Delikt', 'q1') }, T);
+    return db;
+  }
+
+  it('eine Schema-Karte hat genau eine Abfrage und speichert Punkte samt Verknüpfung', async () => {
+    const db = await withSchemas();
+    expect(await db.reviewItems.where('cardId').equals('s1').primaryKeys()).toEqual(['s1']);
+    expect(await readCard(db, 's1')).toMatchObject({
+      type: 'schema',
+      title: 'Amtshaftung',
+      points: [
+        { id: 'p1', text: 'Punkt 1', link: 'q1' },
+        { id: 'p2', text: 'Punkt 2' },
+        { id: 'p3', text: 'Punkt 3', link: 'q2' },
+      ],
+    });
+  });
+
+  it('Bearbeiten behält die Abfrage samt Lernzustand', async () => {
+    const db = await withSchemas();
+    await db.reviewItems.update('s1', { due: 500 });
+    await updateCard(db, 's1', { deckId: 'delikt', fields: schemaFields('Neu', 'q1') }, T + 5);
+    expect(await readCard(db, 's1')).toMatchObject({
+      title: 'Neu',
+      deckId: 'delikt',
+      updatedAt: T + 5,
+    });
+    expect(await db.reviewItems.get('s1')).toMatchObject({ due: 500, deckId: 'delikt' });
+  });
+
+  it('readSchemasLinkingTo nennt Schemas und Punkte', async () => {
+    const db = await withSchemas();
+    const uses = await readSchemasLinkingTo(db, new Set(['q1']));
+    expect(uses.map((u) => [u.card.id, u.points]).sort()).toEqual([
+      ['s1', 1],
+      ['s2', 1],
+    ]);
+    expect(await readSchemasLinkingTo(db, new Set(['q1']), new Set(['s2']))).toHaveLength(1);
+  });
+
+  it('Karte löschen entfernt nur die Verweise, die Punkte bleiben (ADR-009)', async () => {
+    const db = await withSchemas();
+    await deleteCard(db, 'q1', T + 9);
+    const s1 = await readCard(db, 's1');
+    expect(s1).toMatchObject({ updatedAt: T + 9 });
+    expect(s1?.type === 'schema' && s1.points).toEqual([
+      { id: 'p1', level: 1, text: 'Punkt 1' },
+      { id: 'p2', level: 1, text: 'Punkt 2' },
+      { id: 'p3', level: 1, text: 'Punkt 3', link: 'q2' },
+    ]);
+    const s2 = await readCard(db, 's2');
+    expect(s2?.type === 'schema' && s2.points.every((p) => p.link === undefined)).toBe(true);
+    // Unberührte Karten behalten ihren Stand.
+    expect(await readCard(db, 'q2')).toMatchObject({ updatedAt: T });
+  });
+
+  it('Stapel löschen nimmt Verweise auf seine Karten aus Schemas anderer Stapel', async () => {
+    const db = await withSchemas();
+    await deleteDeck(db, 'delikt');
+    const s1 = await readCard(db, 's1');
+    expect(s1?.type === 'schema' && s1.points.map((p) => p.link)).toEqual([
+      'q1',
+      undefined,
+      undefined,
+    ]);
+    expect(await readCard(db, 's2')).toBeNull();
+  });
+
+  it('nach dem Löschen besteht das Backup die Prüfung der Verweise', async () => {
+    const db = await withSchemas();
+    await deleteCard(db, 'q2', T + 9);
+    const tables = await readTables(db);
+    expect(() =>
+      prepareRestore({
+        schemaVersion: 4,
+        createdAt: T,
+        app: { instance: 'app', version: '0.6.0' },
+        tables,
+      }),
+    ).not.toThrow();
+    // Ein Verweis ins Leere wäre ein beschädigtes Backup.
+    const broken = structuredClone(tables);
+    broken.cards = broken.cards!.filter((c) => c.id !== 'q1');
+    broken.reviewItems = broken.reviewItems!.filter((i) => i.cardId !== 'q1');
+    expect(() =>
+      prepareRestore({
+        schemaVersion: 4,
+        createdAt: T,
+        app: { instance: 'app', version: '0.6.0' },
+        tables: broken,
+      }),
+    ).toThrow();
+  });
+
+  it('Backup-Roundtrip mit Schema ist byte-identisch', async () => {
+    const db = await withSchemas();
+    const app = { instance: 'app', version: '0.6.0' } as const;
+    const first = await exportBackup(db, T, app);
+    const other = testDb().db;
+    await restoreBackup(other, decodeBackup(first));
+    expect(await exportBackup(other, T, app)).toEqual(first);
   });
 });
 

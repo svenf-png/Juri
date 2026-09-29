@@ -9,13 +9,13 @@ const now = new Date(2026, 8, 28, 12).getTime();
 describe('Demo-Stapel hinzufügen', () => {
   it('legt Rechtsgebiete, Stapel, Karten und Abfragen an', async () => {
     const { db } = testDb();
-    expect(await addDemoDecks(db, now)).toEqual({ decks: 5, cards: 35 });
+    expect(await addDemoDecks(db, now)).toEqual({ decks: 6, cards: 40 });
     expect(await db.areas.count()).toBe(3);
-    expect(await db.decks.count()).toBe(5);
-    expect(await db.cards.count()).toBe(35);
-    expect(await db.reviewItems.count()).toBeGreaterThan(35);
-    expect(await db.events.count()).toBe(35);
-    expect((await readMeta(db)).newCardsSinceBackup).toBe(35);
+    expect(await db.decks.count()).toBe(6);
+    expect(await db.cards.count()).toBe(40);
+    expect(await db.reviewItems.count()).toBeGreaterThan(40);
+    expect(await db.events.count()).toBe(40);
+    expect((await readMeta(db)).newCardsSinceBackup).toBe(40);
   });
 
   it('ist wiederholbar, ohne etwas doppelt anzulegen, und lässt Vorhandenes in Ruhe', async () => {
@@ -25,8 +25,8 @@ describe('Demo-Stapel hinzufügen', () => {
     expect(await addDemoDecks(db, now + 1)).toEqual({ decks: 0, cards: 0 });
     expect(await db.areas.count()).toBe(3);
     expect((await db.decks.get('demo-amtshaftung'))?.areaIds).toEqual(['meins', 'demo-oer']);
-    expect(await db.cards.count()).toBe(35);
-    expect((await readMeta(db)).newCardsSinceBackup).toBe(35);
+    expect(await db.cards.count()).toBe(40);
+    expect((await readMeta(db)).newCardsSinceBackup).toBe(40);
   });
 
   it('lässt einzeln gelöschte Stapel beim erneuten Laden zurückkommen', async () => {

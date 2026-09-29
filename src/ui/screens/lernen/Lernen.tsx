@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react';
-import { useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
+import { cardPreview, cardTitle } from '@/domain/cards/card';
 import { counter, isBundle, progressPercent } from '@/domain/session/session';
 import { endSummary, faceOf, plural } from '@/domain/session/present';
 import type { RatingKey } from '@/domain/scheduler/rating';
 import { setSurfaceColor } from '@/platform/theme';
+import { useCard } from '@/features/library/queries';
 import { areaCodeOf, useStudySession, type SessionEnd } from '@/features/study/useSession';
 import { Button } from '../../components/Button';
 import { Celebration } from '../../components/Celebration';
@@ -14,6 +16,7 @@ import { useMediaQuery } from '../../useMediaQuery';
 import { useGoBack } from '../../useGoBack';
 import { colors } from '../../tokens/tokens';
 import { LernenView, type Exit } from './LernenView';
+import { LinkedCardSheet } from './LinkedCardSheet';
 import styles from './Lernen.module.css';
 
 /** Wie weit der Finger ziehen muss, bis die Karte bewertet wird. */
@@ -22,15 +25,19 @@ const SWIPE_DISTANCE = 90;
 const EXIT_MS = 400;
 
 /**
- * Lernen (`/lernen`, optional `?stapel=<ID>`): die fälligen Abfragen aller Stapel oder eines Stapels.
+ * Lernen (`/lernen`, optional `?stapel=<ID>` oder `?karte=<ID>`): die fälligen Abfragen aller Stapel,
+ * eines Stapels oder eine einzelne Karte (auch wenn sie nicht fällig ist).
  * Flip, Bewertung, Wischen (links Nochmal, rechts Gut), Rückgängig und Tastatur (Leertaste dreht,
  * 1 bis 4 bewerten, Pfeile links/rechts, Strg/Cmd+Z nimmt zurück, Esc beendet).
  */
 export function Lernen() {
   const [params] = useSearchParams();
   const deckId = params.get('stapel') ?? undefined;
-  const session = useStudySession(deckId);
+  const cardId = params.get('karte') ?? undefined;
+  const session = useStudySession({ deckId, cardId });
+  const navigate = useNavigate();
   const goBack = useGoBack(deckId ? `/stapel/${deckId}` : '/');
+  const [linked, setLinked] = useState<string | null>(null);
   const reduced = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [exit, setExit] = useState<Exit>('');
   const [drag, setDrag] = useState(0);
@@ -59,6 +66,7 @@ export function Lernen() {
 
   const { rate, undo, flip, revealNext } = session;
   const leave = goBack;
+  const backLabel = cardId ? 'Zurück' : deckId ? 'Zurück zum Stapel' : 'Zurück zu Heute';
 
   const rateWith = useCallback(
     (rating: RatingKey, by: 'button' | 'swipe') => {
@@ -146,14 +154,9 @@ export function Lernen() {
 
   if (state.done) {
     return session.end && state.ratedItems > 0 ? (
-      <Geschafft
-        end={session.end}
-        back={deckId ? 'Zurück zum Stapel' : 'Zurück zu Heute'}
-        onBack={leave}
-        onMore={session.restart}
-      />
+      <Geschafft end={session.end} back={backLabel} onBack={leave} onMore={session.restart} />
     ) : (
-      <Leer back={deckId ? 'Zurück zum Stapel' : 'Zurück zu Heute'} onBack={leave} />
+      <Leer back={backLabel} onBack={leave} />
     );
   }
 
@@ -167,7 +170,8 @@ export function Lernen() {
 
   const cardEvents = {
     onPointerDown: (event: PointerEvent) => {
-      if (busy.current) return;
+      // Bedienelemente in der Karte (Verknüpfung im Schema) sollen ihr Tippen behalten.
+      if (busy.current || (event.target as Element).closest('[data-noswipe]')) return;
       touch.current = { x: event.clientX, y: event.clientY };
       event.currentTarget.setPointerCapture(event.pointerId);
     },
@@ -220,7 +224,18 @@ export function Lernen() {
         onUndo={() => {
           if (!busy.current) undo();
         }}
+        onOpenLink={setLinked}
         cardEvents={cardEvents}
+      />
+      <LinkedCard
+        cardId={linked}
+        onClose={() => {
+          setLinked(null);
+        }}
+        onStudy={(id) => {
+          setLinked(null);
+          void navigate(`/lernen?karte=${encodeURIComponent(id)}`);
+        }}
       />
       <Sheet
         open={asking}
@@ -248,6 +263,32 @@ export function Lernen() {
         </Button>
       </Sheet>
     </>
+  );
+}
+
+/** Verknüpfte Karte eines Schema-Punkts: liest die Karte und zeigt sie im Sheet. */
+function LinkedCard({
+  cardId,
+  onClose,
+  onStudy,
+}: {
+  cardId: string | null;
+  onClose: () => void;
+  onStudy: (cardId: string) => void;
+}) {
+  const data = useCard(cardId);
+  const card = data.status === 'ready' ? data.value : null;
+  return (
+    <LinkedCardSheet
+      open={cardId !== null}
+      title={card ? [cardTitle(card), card.norm].filter((t) => t !== '').join(', ') : ''}
+      text={card ? cardPreview(card) : ''}
+      missing={cardId !== null && data.status === 'ready' && card === null}
+      onClose={onClose}
+      onStudy={() => {
+        if (card) onStudy(card.id);
+      }}
+    />
   );
 }
 

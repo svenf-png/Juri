@@ -225,3 +225,45 @@ export function NoteIcon(props: IconProps) {
     </Svg>
   );
 }
+
+/** Verknüpfung (SchemaEditor.dc.html, Schema.dc.html). */
+export function LinkIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1" />
+      <path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" />
+    </Svg>
+  );
+}
+
+export function IndentIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M4 6h16M11 12h9M11 18h9M4 10l3 2.5L4 15" />
+    </Svg>
+  );
+}
+
+export function OutdentIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M4 6h16M11 12h9M11 18h9M7 10l-3 2.5L7 15" />
+    </Svg>
+  );
+}
+
+export function ArrowUpIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </Svg>
+  );
+}
+
+export function ArrowDownIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M12 5v14M5 12l7 7 7-7" />
+    </Svg>
+  );
+}

@@ -621,3 +621,31 @@
     transform: none;
   }
 }
+
+/* Schema (Erstellen.dc.html): Titel und „Gliederung bearbeiten“. */
+.schemaPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.outlineButton {
+  height: 56px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--ink);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.outlineInfo {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}

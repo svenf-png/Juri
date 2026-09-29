@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Card } from '../model/records';
-import { askedNumbers, clozePieces, endSummary, faceOf, type Piece } from './present';
+import { askedNumbers, clozePieces, endSummary, faceOf, schemaRows, type Piece } from './present';
 
 const base = { id: 'k', deckId: 'd', norm: '', tags: [], createdAt: 1, updatedAt: 1 };
 const qa: Card = { ...base, type: 'qa', front: 'F?', back: 'A.' };
@@ -99,6 +99,65 @@ describe('faceOf', () => {
     expect(done).toMatchObject({ revealed: 2 });
     if (done.kind === 'bundle')
       expect(looks(done.pieces).some((l) => l.endsWith('current'))).toBe(false);
+  });
+});
+
+describe('Schema in der Lernansicht', () => {
+  const points = [
+    {
+      id: 'p1',
+      level: 1,
+      text: 'Rechtsweg',
+      norm: '§ 40 I VwGO',
+      content: 'Öffentlich-rechtlich.',
+    },
+    { id: 'p2', level: 1, text: 'Klagebefugnis', link: 'k2' },
+    { id: 'p3', level: 2, text: 'Möglichkeitstheorie' },
+    { id: 'p4', level: 1, text: 'Frist' },
+  ];
+  const schema: Card = { ...base, type: 'schema', title: 'Anfechtungsklage', points };
+
+  it('zeigt Titel und Zählung; nichts ist aufgedeckt, solange nichts aufgedeckt ist', () => {
+    const face = faceOf(schema, [''], 0);
+    expect(face).toMatchObject({
+      kind: 'schema',
+      typeLabel: 'Schema',
+      title: 'Anfechtungsklage',
+      revealed: 0,
+      total: 4,
+    });
+    if (face.kind !== 'schema') return;
+    expect(face.rows.map((r) => r.number)).toEqual(['1', '2', 'a', '3']);
+    expect(
+      face.rows.every((r) => !r.shown && r.text === '' && r.content === '' && r.link === null),
+    ).toBe(true);
+  });
+
+  it('deckt Punkt für Punkt auf, der letzte aufgedeckte ist hervorgehoben, verdeckte tragen keinen Text', () => {
+    const face = faceOf(schema, [''], 2);
+    if (face.kind !== 'schema') throw new Error('kein Schema');
+    expect(face.rows.map((r) => [r.shown, r.current])).toEqual([
+      [true, false],
+      [true, true],
+      [false, false],
+      [false, false],
+    ]);
+    expect(face.rows[0]).toMatchObject({
+      text: 'Rechtsweg',
+      norm: '§ 40 I VwGO',
+      content: 'Öffentlich-rechtlich.',
+      link: null,
+    });
+    expect(face.rows[1]).toMatchObject({ link: 'k2' });
+    expect(face.rows[2]).toMatchObject({ text: '', link: null });
+  });
+
+  it('ganz aufgedeckt gibt es keine Hervorhebung; zu große Zähler werden begrenzt', () => {
+    const face = faceOf(schema, [''], 99);
+    if (face.kind !== 'schema') throw new Error('kein Schema');
+    expect(face.revealed).toBe(4);
+    expect(face.rows.every((r) => r.shown && !r.current)).toBe(true);
+    expect(schemaRows(points, 0)).toHaveLength(4);
   });
 });
 

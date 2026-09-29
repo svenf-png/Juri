@@ -3,9 +3,10 @@ import { useNavigate, useParams } from 'react-router';
 import { cardTitle, CARD_TYPE_LABEL } from '@/domain/cards/card';
 import { clozeNumbers } from '@/domain/cards/cloze';
 import { numericDate } from '@/domain/format/date';
-import { deckLabel } from '@/domain/library/library';
+import { deckAreaCodes, deckLabel } from '@/domain/library/library';
+import { describeLinkUse } from '@/domain/cards/schema';
 import { changeCard, removeCard } from '@/features/library/actions';
-import { useEditData } from '@/features/library/queries';
+import { useEditData, useLinkUses } from '@/features/library/queries';
 import { BackLink, Screen, ScreenTitle } from '../../components/Screen';
 import { StorageError } from '../../components/StorageError';
 import { useGoBack } from '../../useGoBack';
@@ -21,6 +22,7 @@ export function KarteBearbeiten() {
   const [chosen, setChosen] = useState<string | null>(null);
   const [sheet, setSheet] = useState<'pick' | 'new' | 'delete' | null>(null);
   const goBack = useGoBack('/stapel');
+  const uses = useLinkUses([cardId], sheet === 'delete');
 
   if (data.status === 'error') return <StorageError />;
   if (data.status !== 'ready') return null;
@@ -46,6 +48,8 @@ export function KarteBearbeiten() {
         mode="edit"
         initial={formFromCard(card)}
         deckLabel={deck ? deckLabel(deck, areas) : null}
+        deck={deck ? { id: deck.id, name: deck.name, areaCodes: deckAreaCodes(deck, areas) } : null}
+        cardId={card.id}
         onPickDeck={() => {
           setSheet('pick');
         }}
@@ -92,10 +96,18 @@ export function KarteBearbeiten() {
           eyebrow="Karte löschen"
           title="Diese Karte löschen?"
           preview={{ type: CARD_TYPE_LABEL[card.type], text: cardTitle(card) }}
+          usage={
+            uses.status === 'ready' && uses.value.length > 0
+              ? describeLinkUse(uses.value)
+              : undefined
+          }
           text={
-            card.type === 'cloze'
+            (uses.status === 'ready' && uses.value.length > 0
+              ? 'Die Punkte bleiben erhalten, nur die Verknüpfung zu dieser Karte entfällt. '
+              : '') +
+            (card.type === 'cloze'
               ? `Damit ${gaps === 1 ? 'entfällt 1 Abfrage' : `entfallen ${String(gaps)} Abfragen`} mit ihrem Lernfortschritt. Das lässt sich nicht rückgängig machen.`
-              : 'Die Karte und ihr Lernfortschritt werden gelöscht. Das lässt sich nicht rückgängig machen.'
+              : 'Die Karte und ihr Lernfortschritt werden gelöscht. Das lässt sich nicht rückgängig machen.')
           }
           confirmLabel="Karte löschen"
           onClose={close}

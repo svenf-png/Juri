@@ -77,7 +77,7 @@ export function Testdaten() {
         </p>
       ) : null}
       <p className={styles.help}>
-        Die Demo-Stapel kommen zu deinen Daten dazu (5 Stapel, 35 Karten, Inhalte in testdaten/).
+        Die Demo-Stapel kommen zu deinen Daten dazu (6 Stapel, 40 Karten, Inhalte in testdaten/).
         Nur in der Testinstanz, die echte App bleibt unberührt.
       </p>
     </section>
