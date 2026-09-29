@@ -30,6 +30,16 @@ Plan-Zeile Mx) und nur die Design-Dateien, die Mx betrifft. Setze Mx um, ein PR 
 Frag mich nur bei kritischen Punkten. Am Ende: Demo-Notiz, offene Punkte, PT-Stand.
 ```
 
+### Fortschrittsmeldung (Pflicht)
+
+In jeder Zwischenmeldung und in der Abschlussmeldung eines Meilensteins stehen drei Werte, auch auf Nachfrage nach dem Stand:
+
+1. **Gesamtfortschritt** in % nach Meilensteinen (Anzahl fertiger von 14).
+2. **Geleistete PT nach Planwerten** (Summe 37, Plan-Spalte in `docs/ARCHITEKTUR.md`) mit %. Weicht die tatsächliche Arbeit vom Planwert ab, kurz sagen und begründen (Einschätzung, nicht gemessen).
+3. **Fortschritt innerhalb des laufenden Meilensteins** in % (Domain, Daten, UI, Artboards, Tests, Doku, CI, Merge, Deploy). Diesen Wert besonders sorgfältig nennen.
+
+Den neuen Stand trägt jeder Meilenstein in die Status-Zeile und den Plan von `docs/ARCHITEKTUR.md` und in die Folie „Stand heute“ von `docs/folien/projekt.md` ein. Stand nach M8: 9 von 14 (64 %), 23 von 37 PT (62 %).
+
 ## Befehle
 
 ```bash
