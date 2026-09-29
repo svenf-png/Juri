@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { decodeBackup } from '@/domain/backup/codec';
 import { checkCard, type CardFields } from '@/domain/cards/card';
 import { dueSummary } from '@/domain/scheduler/queue';
+import { writeGoals } from './progress';
+import { DEFAULT_GOALS } from '@/domain/progress/goals';
 import { DEFAULT_LEARNING } from '@/domain/scheduler/settings';
 import { exportBackup, restoreBackup } from '../backup';
 import { testDb } from '../testDb';
@@ -58,9 +60,29 @@ describe('Einstellungen', () => {
   it('haben Voreinstellungen und bleiben gespeichert', async () => {
     const { db, reopen } = await setup();
     expect(await readSettings(db)).toEqual(DEFAULT_LEARNING);
+    await writeGoals(db, { ...DEFAULT_GOALS, learn: 1 }, T);
     await writeSettings(db, { ...DEFAULT_LEARNING, retention: 95, newPerDay: 5 });
     db.close();
     expect(await readSettings(reopen())).toMatchObject({ retention: 95, newPerDay: 5 });
+  });
+
+  it('das Tageslimit liegt nie unter dem Tagesziel, beim Schreiben und Lesen', async () => {
+    const { db } = await setup();
+    // Standard: Ziel 24, also auch Limit 24; ein niedrigerer Wert wird beim Speichern angehoben.
+    expect((await readSettings(db)).newPerDay).toBe(24);
+    await writeSettings(db, { ...DEFAULT_LEARNING, newPerDay: 5 });
+    expect((await readSettings(db)).newPerDay).toBe(24);
+    // Ein älterer Stand (Limit 20 gespeichert, Ziel 24) liest sich mit dem wirksamen Limit.
+    await db.meta.put({ key: 'learning', value: { ...DEFAULT_LEARNING, newPerDay: 20 } });
+    expect((await readSettings(db)).newPerDay).toBe(24);
+  });
+
+  it('ein höheres Tagesziel hebt das gespeicherte Limit mit an, ein niedrigeres lässt es stehen', async () => {
+    const { db } = await setup();
+    await writeGoals(db, { ...DEFAULT_GOALS, learn: 60 }, T);
+    expect((await readSettings(db)).newPerDay).toBe(60);
+    await writeGoals(db, { ...DEFAULT_GOALS, learn: 30 }, T);
+    expect((await readSettings(db)).newPerDay).toBe(60);
   });
 
   it('Algorithmuswechsel schreibt nur den Index neu und verliert keinen Zustand', async () => {
@@ -121,6 +143,7 @@ describe('Bewerten', () => {
 
   it('das Tageslimit für neue Abfragen wirkt auf die Fälligkeit', async () => {
     const { db } = await setup();
+    await writeGoals(db, { ...DEFAULT_GOALS, learn: 1 }, T);
     await writeSettings(db, { ...DEFAULT_LEARNING, newPerDay: 2 });
     await rateItems(db, ['k1'], 'good', T);
     const study = await readStudy(db, T - 1000);

@@ -16,7 +16,8 @@ export interface Goals {
 export const DEFAULT_GOALS: Goals = { learn: 24, create: 5, pause: true };
 
 export const LEARN_GOAL_MIN = 1;
-export const LEARN_GOAL_MAX = 200;
+/** Wie „Neue Karten pro Tag“ höchstens 100: Das Limit liegt nie unter dem Ziel (`dailyLimits.ts`). */
+export const LEARN_GOAL_MAX = 100;
 export const CREATE_GOAL_MIN = 1;
 export const CREATE_GOAL_MAX = 50;
 

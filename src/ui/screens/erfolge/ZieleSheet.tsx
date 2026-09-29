@@ -23,11 +23,14 @@ export function ZieleForm({
   initial,
   failed,
   busy,
+  newPerDay,
   onSave,
 }: {
   initial: Goals;
   failed: boolean;
   busy: boolean;
+  /** Aktuelles Tageslimit für neue Karten; ein höheres Ziel hebt es mit an (dailyLimits.ts). */
+  newPerDay?: number | undefined;
   onSave: (goals: Goals) => void;
 }) {
   const [draft, setDraft] = useState(initial);
@@ -82,6 +85,12 @@ export function ZieleForm({
           />
         </div>
       </div>
+      {newPerDay !== undefined && draft.learn > newPerDay ? (
+        <p className={styles.hint} role="status" data-addition>
+          Neue Karten pro Tag steigt von {newPerDay} auf {draft.learn}, damit du das Ziel erreichen
+          kannst.
+        </p>
+      ) : null}
       <button
         type="button"
         role="switch"
@@ -115,10 +124,12 @@ export function ZieleForm({
 export function ZieleSheet({
   open,
   goals,
+  newPerDay,
   onClose,
 }: {
   open: boolean;
   goals: Goals;
+  newPerDay?: number | undefined;
   onClose: () => void;
 }) {
   const [busy, setBusy] = useState(false);
@@ -130,6 +141,7 @@ export function ZieleSheet({
           initial={goals}
           busy={busy}
           failed={failed}
+          newPerDay={newPerDay}
           onSave={(next) => {
             setBusy(true);
             setFailed(false);

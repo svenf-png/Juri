@@ -120,7 +120,7 @@ describe('Ziele', () => {
       pause: false,
     });
     expect(clampLearnGoal(Number.NaN)).toBe(1);
-    expect(clampLearnGoal(500)).toBe(200);
+    expect(clampLearnGoal(500)).toBe(100);
     expect(clampCreateGoal(2.6)).toBe(3);
   });
 
@@ -130,7 +130,7 @@ describe('Ziele', () => {
     expect(learnStep(28, -1)).toBe(24);
     expect(learnStep(24, -1)).toBe(23);
     expect(learnStep(1, -1)).toBe(1);
-    expect(learnStep(199, 1)).toBe(200);
+    expect(learnStep(99, 1)).toBe(100);
   });
 
   it('erkennt, ob das Ziel in einer Session neu erreicht wurde', () => {
