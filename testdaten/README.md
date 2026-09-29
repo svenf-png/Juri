@@ -24,6 +24,8 @@ Alle 40 Karten stehen auf `pruefung: offen`. Die Texte sind ohne Abgleich mit de
 
 Das Demo-Profil bringt seit M8 drei Fristen mit (Klausur in 5 Tagen im Endspurt, LL.M.-Modul in 109 Tagen über den Tag „Demo“, Examen ohne Datum), relativ zum Ladetag.
 
+Seit M9 hat es außerdem 26 Wochen Lernverlauf (relativ zum Ladetag): einen Rekordtag vor acht Tagen mit 86 Wiederholungen, in den letzten drei Wochen jeden Tag aktiv bis auf einen Pausentag pro Woche (laufende Serie), davor Lücken, dazu die Meilensteine „Erste Karte“, „7 Tage am Stück“ und „1.000 Wiederholungen“ (der letzte wartet auf die Feier; beim Öffnen von Erfolge erscheint sie) sowie drei fast erreichte („100 angelegt“, „Schema-Baumeister“, „30 Tage am Stück“). Heute zeigt „6 von 24“.
+
 Nur in der Testinstanz: Einstellungen, Testdaten, „Demo-Stapel hinzufügen“ (fügt hinzu, ohne vorhandene Daten zu ändern) oder „Demo-Profil laden“ (ersetzt alles). Einzeln löschbar über den Stapel selbst.
 
 ## Demo-Skript (M6)

@@ -1,7 +1,7 @@
 {
   "name": "juri",
   "private": true,
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Karteikarten-App (PWA) für das juristische Referendariat",
   "license": "MIT",
   "type": "module",
@@ -23,7 +23,7 @@
     "e2e": "playwright test",
     "icons": "node scripts/build-icons.mjs",
     "demo:pdf": "node scripts/build-demo-pdf.mjs",
-    "docs:bilder": "JURI_BILDER=1 playwright test tests/e2e/heute.spec.ts tests/e2e/stapel.spec.ts tests/e2e/lernen.spec.ts tests/e2e/schema.spec.ts tests/e2e/abdeckung.spec.ts tests/e2e/fristen.spec.ts -g Bildschirmfoto",
+    "docs:bilder": "JURI_BILDER=1 playwright test tests/e2e/heute.spec.ts tests/e2e/stapel.spec.ts tests/e2e/lernen.spec.ts tests/e2e/schema.spec.ts tests/e2e/abdeckung.spec.ts tests/e2e/fristen.spec.ts tests/e2e/erfolge.spec.ts -g Bildschirmfoto",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build && npm run e2e"
   },
   "dependencies": {

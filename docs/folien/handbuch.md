@@ -3,10 +3,10 @@ titel: Juri benutzen
 untertitel: Das Handbuch für iPhone, iPad und den Browser am Rechner
 zielgruppe: Referendarinnen und Referendare
 stand: 2026-09-29
-version: 0.8 (bis M7 gegen die App geprüft, übrige Kapitel Entwurf nach Design)
+version: 0.10 (bis M9 gegen die App geprüft, übrige Kapitel Entwurf nach Design)
 ---
 
-<!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke, Schema, Abdeckung, PDF, Notiz), Lernen, Lernrhythmus und Stapel sind gegen die App geprüft (bis M7). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
+<!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke, Schema, Abdeckung, PDF, Notiz), Lernen, Lernrhythmus, Stapel, Fristen, Erfolge und Serie sind gegen die App geprüft (bis M9). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
 
 # Loslegen
 
@@ -66,12 +66,12 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 ## Heute
 
 <!-- layout: bild-gross -->
-<!-- status: M2 umgesetzt (Main.dc.html, iPadHeute.dc.html); Karten (M3) und Fälligkeit (M4) sind echt; Fristen (M8), Ziele und Verlauf (M9) und High fives (M11) folgen. Bild mit Beispieldaten. -->
+<!-- status: M2 umgesetzt (Main.dc.html, iPadHeute.dc.html); Karten (M3) und Fälligkeit (M4) sind echt; Fristen (M8), Ziele und Verlauf (M9) sind echt; High fives (M11) folgen. Bild mit Beispieldaten. -->
 
 ![Heute auf dem iPhone: 18 Karten warten, nächste Frist, Tagesziel, letzte 7 Tage](../bilder/heute-iphone.png)
 
 - Oben: wie viele Karten heute warten, darunter deine **nächste Frist**
-- **Tagesziel** als Leiste, darunter **Lernen starten**
+- **Tagesziel** als Leiste (Standard 24 Karten, einstellbar in Erfolge), darunter **Lernen starten**
 - **Letzte 7 Tage:** je dunkler, desto mehr gelernt; der Ring markiert deinen Rekordtag
 - Ein neuer Tag beginnt um **4 Uhr** morgens, nicht um Mitternacht
 
@@ -234,7 +234,9 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - Kommen Karten noch heute wieder (kurze Lernschritte), bietet Juri **„N Karten noch einmal lernen“** an
 - Danach zeigt **Heute** „Alles erledigt für heute.“
 
-> **Notizen:** Die große Feier „Tagesziel erreicht“ mit Serie und Meilensteinen kommt mit den Erfolgen (M9).
+- Hast du in dieser Runde dein **Tagesziel** erreicht, folgt mit **„Weiter“** die Feier „Tagesziel erreicht.“ mit deiner Serie, der Woche und einem neuen Meilenstein
+
+> **Notizen:** Die Feier kommt einmal pro Runde, in der das Ziel neu erreicht wird, nicht bei jeder weiteren Runde am selben Tag.
 
 # Stapel und Rechtsgebiete
 
@@ -375,12 +377,31 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Serie, Heatmap, Meilensteine
 
-<!-- status: entwurf nach Erfolge.dc.html, pruefen in M9 -->
+<!-- layout: bild-gross -->
+<!-- status: M9 umgesetzt (Erfolge.dc.html, Fertig.dc.html und ergänzte Artboards), Bild mit Beispieldaten -->
 
-- **Serie:** Tage in Folge mit Lernen oder Anlegen; ein Pausentag pro Woche ist frei
-- **Heatmap:** Wie viel du an jedem Tag gelernt oder angelegt hast
+![Erfolge auf dem iPhone: Serie, Zahlen, Heatmap mit Rekordtag, Meilensteine](../bilder/erfolge-iphone.png)
+
+- **Serie:** Tage in Folge, an denen du dein Tagesziel erreicht hast; **Lernen oder Anlegen** zählt
+- **Pausentag:** Ein freier Tag pro Woche (Montag bis Sonntag) bricht die Serie nicht. Tage, an denen keine Karte fällig oder neu war, auch nicht
+- **Heatmap:** Je dunkler, desto mehr; umschaltbar zwischen **Gelernt** und **Angelegt**, 12 Wochen (iPad: 26)
 - Der **Rekordtag** ist mit einem Ring markiert
-- **Meilensteine** wie „Erste Karte“ oder „1.000 Wiederholungen“
+- **Meilensteine** wie „Erste Karte“, „7 Tage am Stück“ oder „1.000 Wiederholungen“; ein neuer erscheint einmal als Feier
+
+> **Notizen:** Ein neuer Tag beginnt um 4 Uhr. Das Zurücknehmen einer Bewertung nimmt sie auch aus dem Tagesziel. Der Meilenstein „Teamplayer“ kommt mit dem Teilen.
+
+## Tagesziele einstellen
+
+<!-- layout: bild-gross -->
+<!-- status: M9 umgesetzt (ergänztes Artboard ErfolgeZiele), Bild mit Beispieldaten -->
+
+![Tagesziele: Karten lernen, Karten anlegen, Pausentag](../bilder/erfolge-ziele-iphone.png)
+
+- In Erfolge auf **„Tagesziele“** tippen
+- **Karten lernen** (Standard 24) und **Karten anlegen** (Standard 5): Ein Tag zählt, sobald eines erreicht ist
+- **Pausentag** an oder aus
+- Neue Ziele gelten ab heute, frühere Tage behalten ihr Ergebnis
+- Ohne Verlauf zeigt Erfolge **„Noch kein Verlauf“**; mit der ersten Karte fängt es an
 
 ## High fives
 

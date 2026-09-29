@@ -3,7 +3,7 @@ titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
 stand: 2026-09-29
-version: 0.8 (nach M7)
+version: 0.10 (nach M9)
 ---
 
 # Die Idee
@@ -191,6 +191,21 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 > **Notizen:** Fristen ändern keine gespeicherten Daten. Das Datum, an dem eine Karte fällig ist, wird beim Lesen aus dem Termin des Lernalgorithmus und den aktiven Fristen berechnet (ADR-012). Löschen oder Ablauf einer Frist stellt den normalen Rhythmus daher ohne Reparatur wieder her. „Sitzen sicher“ bedeutet: Der gespeicherte Termin der Karte liegt nicht vor der Frist. Ob iOS die .ics-Datei als Kalendertermin anbietet, prüft der Gerätetest.
 
+## Erfolge und Serie
+
+<!-- layout: bild-gross -->
+<!-- status: M9 umgesetzt (Erfolge.dc.html, iPadErfolge.dc.html, Fertig.dc.html und vier ergänzte Artboards), Bild mit Beispieldaten aus der App -->
+
+![Erfolge: Serie, Wiederholungen, Heatmap der letzten 12 Wochen mit Rekordtag, Meilensteine](../bilder/erfolge-iphone.png)
+
+- **Serie:** Tage in Folge mit erreichtem Tagesziel; Lernen **oder** Anlegen zählt
+- **Pausentag:** Der erste freie Tag einer Woche bricht die Serie nicht; Tage ohne fällige oder neue Karten auch nicht
+- **Heatmap** der letzten 12 Wochen (iPad: 26) mit Stufen nach Quantilen und Ring am Rekordtag
+- **Tagesziele** einstellbar: Lernen (24), Anlegen (5), Pausentag an oder aus
+- **Meilensteine** werden genau einmal freigeschaltet und einmal gefeiert
+
+> **Notizen:** Alle Zahlen kommen aus einem Tagesaggregat, das dieselbe Transaktion wie die Bewertung schreibt und sich aus dem Ereignis-Log neu aufbauen lässt (ADR-013). Ziele gelten ab der Änderung, die Vergangenheit bleibt unangetastet. Ob an einem Tag Karten bereitlagen, wird aus dem Lernlog rekonstruiert. „Teamplayer“ aus dem Design kommt erst mit dem Teilen (M10 und M11).
+
 ## Daten und Backup
 
 - Alle Daten in der Gerätedatenbank (IndexedDB), jede Tabelle mit geprüftem Schema
@@ -256,10 +271,10 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 | ----------- | ------------------------------------------------------------------------------------------ |
 | M0 bis M3   | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                                 |
 | M4 bis M5   | Lern-Engine und Prüfungsschemata (fertig)                                                  |
-| M6 bis M9   | PDF und Abdeckung, Browser-Version, Fristen (fertig), Erfolge                              |
+| M6 bis M9   | PDF und Abdeckung, Browser-Version, Fristen, Erfolge (fertig)                              |
 | M10 bis M13 | Teilen und Import, High fives, Feinschliff und Veröffentlichung, eigene Desktop-Gestaltung |
 
-> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M8 sind 23 von 37 PT (62 %) eingeplant erledigt. M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht, weil sieben Artboards und ein Umfang-Schritt dazukamen (Einschätzung, nicht gemessen). Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
+> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M9 sind 25,5 von 37 PT (69 %) eingeplant erledigt. M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht (sieben Artboards, Umfang-Schritt), M9 mit rund 3 statt 2,5 PT (sechs Artboards, Verfügbarkeit aus dem Lernlog, Aufbau der Aggregate in Migration und Backup); beides Einschätzungen, nicht gemessen. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
 
 ## Stand heute
 
@@ -274,7 +289,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M6 fertig:** Abdeckung aus Foto oder PDF-Seite mit Feldern, Zoom und Editor, PDF-Ansicht mit Markieren zu Frage, Antwort oder Lücke, Quelle an der Karte, geteilte Ansicht auf dem iPad, Demo-Skript mit 50 Seiten
 - **M7 fertig:** Juri läuft in Chrome, Safari und Firefox am Rechner (1440 × 900), ohne Sperrbild; Backup als Download, Kürzel (n, /, Strg+Eingabe), Zoom per Strg+Rad und Tasten im PDF, installierbar als Desktop-App
 - **M8 fertig:** Fristen mit Art, Datum und Umfang, Deckelung und Endspurt, Countdown und „x % sitzen sicher“, Kalenderdatei (.ics), Fristen in Heute und Lernrhythmus, Demo-Profil mit drei Fristen
-- Automatische Prüfung bei jeder Änderung: 638 Unit-Tests, 8 Bildvergleiche für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
+- **M9 fertig:** Erfolge mit Serie und Pausentag, Heatmap (12 und 26 Wochen) mit Rekordtag, Tagesziele einstellbar, Meilensteine mit Feier, „Tagesziel erreicht“ nach der Lernrunde, Heute mit echtem Ziel und Verlauf, Demo-Profil mit 26 Wochen Verlauf
+- Automatische Prüfung bei jeder Änderung: 717 Unit-Tests, 7 Bildvergleiche für Erfolge, 8 für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
-- Fortschritt: 9 von 14 Meilensteinen (64 %), nach Planwerten 23 von 37 Personentagen (62 %)
-- Nächster Schritt: Gerätetest von M0 bis M8 (iPhone, iPad, Desktop-Browser), dann M9 (Fortschritt)
+- Fortschritt: 10 von 14 Meilensteinen (71 %), nach Planwerten 25,5 von 37 Personentagen (69 %)
+- Nächster Schritt: Gerätetest von M0 bis M9 (iPhone, iPad, Desktop-Browser), dann M10 (Teilen und Import)

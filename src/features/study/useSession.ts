@@ -172,6 +172,7 @@ export function useStudySession(scope: StudyScope): StudySession {
   }, []);
 
   const settings = loaded.status === 'ready' ? loaded.loaded.settings : undefined;
+  const flush = useCallback(() => chain.current.then(() => undefined), []);
 
   const rate = useCallback(
     (rating: RatingKey) => {
@@ -252,7 +253,7 @@ export function useStudySession(scope: StudyScope): StudySession {
     undoable: canUndo(state),
     end,
     goalStart: ready?.goalStart ?? null,
-    flush: () => chain.current.then(() => undefined),
+    flush,
     flip: () => {
       setState((s) => flipState(s));
     },
