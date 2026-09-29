@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { asInstalledApp, onboard, watchPage } from './helpers';
+import { asInstalledApp, onboard, openSettings, watchPage } from './helpers';
 
 /*
  * Abdeckung, Foto und PDF (M6) in der bedienten App: Bild wählen und verkleinern, Felder aufziehen,
@@ -533,5 +533,37 @@ test.describe('PDF-Ansicht: Blättern durch 50 Seiten', () => {
     );
     // Grobe Obergrenze, damit ein Rückschritt auffällt (gemessen wird auf dem Gerät, siehe Testliste).
     expect(seconds).toBeLessThan(90);
+  });
+});
+
+test.describe('Demo-Skript der Testinstanz', () => {
+  test.beforeEach(async ({ page }) => {
+    await asInstalledApp(page);
+  });
+
+  test('bringt ein 50-seitiges PDF, eine Frage und eine Abdeckung, wiederholbar', async ({
+    page,
+  }) => {
+    await onboard(page, '/Juri/test/');
+    await openSettings(page);
+    await page.getByRole('button', { name: 'Demo-Skript (PDF) hinzufügen' }).click();
+    await expect(
+      page.getByText('Demo-Skript mit einer Frage und einer Abdeckung hinzugefügt.'),
+    ).toBeVisible({ timeout: 20_000 });
+    await page.getByRole('button', { name: 'Demo-Skript (PDF) hinzufügen' }).click();
+    await expect(page.getByText('Das Demo-Skript ist schon da.')).toBeVisible();
+
+    await page.goto('/Juri/test/lernen');
+    await expect(
+      page.getByText('Wann ist der Erwerber nach § 932 II BGB nicht in gutem Glauben?').first(),
+    ).toBeVisible();
+    await page.getByRole('button', { name: 'Antwort zeigen', exact: true }).click();
+    await page.getByRole('button', { name: /Demo-Skript Sachenrecht.pdf, S. 14 öffnen/ }).click();
+    const viewer = page.getByRole('dialog', { name: 'PDF' });
+    await expect(viewer.getByRole('button', { name: /S\. 14 \/ 50/ })).toBeVisible();
+    await viewer.getByRole('button', { name: 'Schließen' }).click();
+    await page.getByRole('button', { name: /Gut/ }).click();
+    await expect(page.getByText('Abdeckung 1 von 3')).toBeVisible();
+    await expect(page.getByText('PDF · Demo-Skript Sachenrecht S. 14')).toBeVisible();
   });
 });

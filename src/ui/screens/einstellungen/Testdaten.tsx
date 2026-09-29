@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { loadDemoDecks, loadDemoProfile, resetAllData } from '@/features/demo/demo';
+import { loadDemoDecks, loadDemoProfile, loadDemoSkript, resetAllData } from '@/features/demo/demo';
 import { Button } from '../../components/Button';
 import styles from './Einstellungen.module.css';
 
@@ -54,6 +54,32 @@ export function Testdaten() {
           block
           disabled={busy}
           onClick={() => {
+            setBusy(true);
+            setMessage(null);
+            void loadDemoSkript()
+              .then((added) => {
+                setMessage(
+                  added
+                    ? 'Demo-Skript mit einer Frage und einer Abdeckung hinzugefügt.'
+                    : 'Das Demo-Skript ist schon da.',
+                );
+              })
+              .catch(() => {
+                setMessage('Das Hinzufügen hat nicht geklappt.');
+              })
+              .finally(() => {
+                setBusy(false);
+              });
+          }}
+        >
+          Demo-Skript (PDF) hinzufügen
+        </Button>
+        <Button
+          variant="soft"
+          size="md"
+          block
+          disabled={busy}
+          onClick={() => {
             run('Demo-Profil laden? Alle Daten der Testinstanz werden ersetzt.', loadDemoProfile);
           }}
         >
@@ -78,7 +104,8 @@ export function Testdaten() {
       ) : null}
       <p className={styles.help}>
         Die Demo-Stapel kommen zu deinen Daten dazu (6 Stapel, 40 Karten, Inhalte in testdaten/).
-        Nur in der Testinstanz, die echte App bleibt unberührt.
+        Das Demo-Skript bringt ein 50-seitiges PDF mit. Nur in der Testinstanz, die echte App bleibt
+        unberührt.
       </p>
     </section>
   );
