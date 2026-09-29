@@ -17,6 +17,15 @@ Manuelle Prüfungen auf echten Geräten. Testgeräte (Entscheidung 7): iPhone 14
 11. **App entfernen:** „Marker setzen“. App-Symbol vom Home-Bildschirm entfernen, erneut hinzufügen (Schritt 2), Geräte-Check öffnen: Steht beim Marker „vorhanden“ oder „kein Marker“?
 12. „Ergebnisse kopieren“ und in den Chat einfügen.
 
+### Nachtest M0 (offene Punkte aus dem ersten Lauf)
+
+1. **Datei sichern:** bei „Stapel.juri (application/octet-stream)“ „In Dateien sichern“ wählen (im ersten Lauf abgebrochen).
+2. **Datei öffnen mit Filter:** die gesicherte `.juri`-Datei wählen: Ist sie wählbar? Frage beantworten.
+3. **persist():** „persist() anfordern“ tippen, Ergebnis notieren.
+4. **Statusleiste:** „Lern-Fläche an“, Frage beantworten.
+5. **App entfernen:** Marker setzen, Icon entfernen, neu hinzufügen, Marker prüfen.
+6. **Service Worker:** App vollständig schließen, neu öffnen, Check erneut starten: Steht „Seite vom Service Worker gesteuert“ auf ja?
+
 ## M1: Daten, Profil, Backup (pro Gerät)
 
 1. **Safari-Tab:** `svenf-png.github.io/Juri/` zeigt „Erst installieren, dann lernen.“ Stimmen die drei Schritte mit dem iOS-Menü überein? Abweichenden Wortlaut notieren.

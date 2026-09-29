@@ -265,4 +265,5 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M4 fertig:** Lernen mit FSRS und Leitner, Vorschau der Abstände, Wischen, Rückgängig, Tastatur, gebündelte Lücken, Lernrhythmus einstellen, Notiz an Karten, „Alles erledigt für heute“, Entwicklungsstand in den Einstellungen
 - **M5 fertig:** Prüfungsschemata mit Gliederung in drei Ebenen, Norm und Inhalt je Punkt, Punkt für Punkt lernen, Verknüpfungen zu anderen Karten, Löschen ohne Verweise ins Leere, Demo-Schemata
 - Automatische Prüfung bei jeder Änderung: 459 Unit-Tests, 8 Bildvergleiche und 4 Abläufe für Schema, insgesamt rund 120 E2E-Szenarien auf iPhone- und iPad-Größen
+- Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
 - Nächster Schritt: Gerätetest von M0 bis M5 auf iPhone und iPad, dann M6 (Bilder, PDF und Abdeckung)
