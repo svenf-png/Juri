@@ -3,7 +3,7 @@ titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
 stand: 2026-09-29
-version: 0.7 (nach M6)
+version: 0.8 (nach M7)
 ---
 
 # Die Idee
@@ -265,6 +265,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M4 fertig:** Lernen mit FSRS und Leitner, Vorschau der Abstände, Wischen, Rückgängig, Tastatur, gebündelte Lücken, Lernrhythmus einstellen, Notiz an Karten, „Alles erledigt für heute“, Entwicklungsstand in den Einstellungen
 - **M5 fertig:** Prüfungsschemata mit Gliederung in drei Ebenen, Norm und Inhalt je Punkt, Punkt für Punkt lernen, Verknüpfungen zu anderen Karten, Löschen ohne Verweise ins Leere, Demo-Schemata
 - **M6 fertig:** Abdeckung aus Foto oder PDF-Seite mit Feldern, Zoom und Editor, PDF-Ansicht mit Markieren zu Frage, Antwort oder Lücke, Quelle an der Karte, geteilte Ansicht auf dem iPad, Demo-Skript mit 50 Seiten
-- Automatische Prüfung bei jeder Änderung: 541 Unit-Tests, 12 Bildvergleiche für Abdeckung und PDF, Abläufe mit Foto und PDF, insgesamt rund 180 E2E-Szenarien auf iPhone- und iPad-Größen
+- **M7 fertig:** Juri läuft in Chrome, Safari und Firefox am Rechner (1440 × 900), ohne Sperrbild; Backup als Download, Kürzel (n, /, Strg+Eingabe), Zoom per Strg+Rad und Tasten im PDF, installierbar als Desktop-App
+- Automatische Prüfung bei jeder Änderung: 576 Unit-Tests, 12 Bildvergleiche für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
-- Nächster Schritt: Gerätetest von M0 bis M6 auf iPhone und iPad, dann M7 (Browser-Version)
+- Fortschritt: 8 von 14 Meilensteinen (57 %)
+- Nächster Schritt: Gerätetest von M0 bis M7 (iPhone, iPad, Desktop-Browser), dann M8 (Fristen)

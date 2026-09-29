@@ -1,7 +1,9 @@
 import { useState, type ReactNode } from 'react';
+import { pdfShortcut } from '@/domain/device/shortcuts';
 import { pageLabel, parsePage } from '@/domain/media/pdfPlan';
 import { ChevronLeftIcon, ChevronRightIcon } from '../../components/icons';
 import { cx } from '../../cx';
+import { useKeys } from '../../useKeys';
 import styles from './PdfPane.module.css';
 
 export type PdfMode = 'text' | 'cover';
@@ -121,6 +123,23 @@ export function PdfPane({
   children,
 }: PdfPaneProps) {
   const phone = layout === 'phone';
+  // Bild auf/ab, Pfeile links/rechts, Pos1 und Ende blättern (Desktop).
+  useKeys((input) => {
+    const action = pdfShortcut(input);
+    const target =
+      action === 'previous'
+        ? page - 1
+        : action === 'next'
+          ? page + 1
+          : action === 'first'
+            ? 1
+            : action === 'last'
+              ? pages
+              : null;
+    if (target === null) return false;
+    if (target >= 1 && target <= pages && target !== page) onPage(target);
+    return true;
+  });
   return (
     <section className={cx(styles.pane, phone ? styles.phone : styles.pad)} aria-label="PDF">
       <div className={styles.head}>

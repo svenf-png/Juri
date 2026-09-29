@@ -47,7 +47,7 @@ export function PdfPageView({ doc, page, onSelection, onRendered }: PdfPageViewP
   const [failed, setFailed] = useState(false);
   const [renderZoom, setRenderZoom] = useState(1);
   const [selection, setSelection] = useState<{ x: number; y: number; text: string } | null>(null);
-  const zoom = useZoomPan(frame, { pan1: true });
+  const zoom = useZoomPan(frame, { pan1: true, keys: true });
 
   // Größe des Platzes.
   useLayoutEffect(() => {

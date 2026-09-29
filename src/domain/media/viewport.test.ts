@@ -2,11 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   clampViewport,
   containSize,
+  gestureZoomFactor,
   HOME,
   pan,
   pinch,
   stepZoom,
   toSurface,
+  wheelPixels,
+  wheelZoomFactor,
   zoomAround,
   ZOOM_MAX,
 } from './viewport';
@@ -101,5 +104,32 @@ describe('containSize', () => {
     expect(containSize({ width: 2000, height: 1000 }, frame)).toEqual({ width: 300, height: 150 });
     expect(containSize({ width: 1000, height: 2000 }, frame)).toEqual({ width: 200, height: 400 });
     expect(containSize({ width: 0, height: 0 }, frame)).toEqual({ width: 0, height: 0 });
+  });
+});
+
+describe('Rad und Geste (M7)', () => {
+  it('rechnet Zeilen und Seiten in Pixel um', () => {
+    expect(wheelPixels(3, 0)).toBe(3);
+    expect(wheelPixels(3, 1)).toBe(48);
+    expect(wheelPixels(1, 2)).toBe(800);
+  });
+
+  it('Firefox-Mausrad (3 Zeilen) zoomt so stark wie Chrome (48 Pixel)', () => {
+    expect(wheelZoomFactor(3, 1)).toBeCloseTo(wheelZoomFactor(48, 0));
+  });
+
+  it('Rad nach oben vergrößert, nach unten verkleinert, Ausreißer sind begrenzt', () => {
+    expect(wheelZoomFactor(-10, 0)).toBeGreaterThan(1);
+    expect(wheelZoomFactor(10, 0)).toBeLessThan(1);
+    expect(wheelZoomFactor(0, 0)).toBe(1);
+    expect(wheelZoomFactor(-5000, 0)).toBeCloseTo(Math.exp(1));
+    expect(wheelZoomFactor(5000, 0)).toBeCloseTo(Math.exp(-1));
+  });
+
+  it('Safari-Geste liefert den Faktor seit dem letzten Ereignis', () => {
+    expect(gestureZoomFactor(1, 1.5)).toBeCloseTo(1.5);
+    expect(gestureZoomFactor(1.5, 1.2)).toBeCloseTo(0.8);
+    expect(gestureZoomFactor(0, 1)).toBe(1);
+    expect(gestureZoomFactor(1, Number.NaN)).toBe(1);
   });
 });

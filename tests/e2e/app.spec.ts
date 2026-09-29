@@ -55,9 +55,10 @@ test.describe('Echte App (/Juri/)', () => {
     await expect(demo.getByRole('button', { name: 'Zurückdrehen' })).toBeDisabled();
   });
 
-  test('Deep Link über 404.html landet auf der richtigen Seite', async ({ page }) => {
+  test('Deep Link über 404.html landet auf der richtigen Seite', async ({ page, browserName }) => {
     const response = await page.goto('/Juri/styleguide?x=1#oben');
-    expect(response?.status()).toBe(404);
+    // Firefox liefert für diese Navigation kein Antwortobjekt (in der CI beobachtet).
+    if (browserName !== 'firefox') expect(response?.status()).toBe(404);
     await expect(page.getByRole('heading', { name: 'Styleguide', level: 1 })).toBeVisible();
     expect(new URL(page.url()).pathname).toBe('/Juri/styleguide');
     expect(new URL(page.url()).search).toBe('?x=1');

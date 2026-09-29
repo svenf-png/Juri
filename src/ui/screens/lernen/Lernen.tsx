@@ -4,6 +4,8 @@ import { cardPreview, cardTitle } from '@/domain/cards/card';
 import { counter, isBundle, progressPercent } from '@/domain/session/session';
 import { endSummary, faceOf, plural } from '@/domain/session/present';
 import type { RatingKey } from '@/domain/scheduler/rating';
+import { gestureHints, pointerVerbs } from '@/domain/device/environment';
+import { currentEnvironment } from '@/features/app/install';
 import { setSurfaceColor } from '@/platform/theme';
 import { useCard } from '@/features/library/queries';
 import { useMediaUrl } from '@/features/media/media';
@@ -217,6 +219,8 @@ export function Lernen() {
         exit={exit}
         drag={drag}
         undoable={session.undoable && !animating}
+        coverHint={gestureHints(currentEnvironment()).coverStudy}
+        flipHint={`${pointerVerbs(currentEnvironment()).tap} zum Umdrehen`}
         onClose={close}
         onFlip={advance}
         onRevealNext={advance}

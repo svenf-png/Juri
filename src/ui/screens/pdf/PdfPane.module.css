@@ -228,3 +228,14 @@
   text-align: center;
   outline: none;
 }
+
+/*
+ * Desktop (M7): In der schmalen linken Hälfte überlappte der zentrierte Hinweis das Blättern. Ab
+ * 1300 px steht er links neben den Pfeilen; die iPad-Breiten (bis 1180 px) bleiben wie im Design.
+ */
+@media (min-width: 1300px) {
+  .padHint {
+    left: 16px;
+    transform: none;
+  }
+}

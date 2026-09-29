@@ -70,6 +70,7 @@ export function MaskCanvas({
   const [draft, setDraft] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   const zoom = useZoomPan(frame, {
     pan1: false,
+    keys: true,
     onMultiStart: () => {
       gesture.current = null;
       setDraft(null);

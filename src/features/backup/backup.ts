@@ -10,8 +10,10 @@ import {
 } from '@/domain/backup/codec';
 import { describeLastBackup, isBackupDue } from '@/domain/backup/reminder';
 import type { MetaValues } from '@/domain/model/records';
+import { saveMode } from '@/domain/device/environment';
 import { canShareFiles, downloadFile, shareFiles } from '@/platform/share';
 import { database } from '../app/database';
+import { currentEnvironment } from '../app/install';
 
 /** MIME-Typ beim Teilen (ADR-003), bis der Geräte-Check einen besseren bestätigt. */
 const BACKUP_MIME = 'application/octet-stream';
@@ -43,12 +45,14 @@ export async function createBackupFile(now = Date.now()): Promise<File> {
 export type SaveOutcome = 'geteilt' | 'geladen' | 'abgebrochen';
 
 /**
- * Öffnet das Teilen-Menü (darin „In Dateien sichern“), sonst einen Download. Muss direkt aus
- * einem Tippen heraus aufgerufen werden, sonst verweigert Safari das Teilen.
+ * Öffnet auf iOS und Android das Teilen-Menü (darin „In Dateien sichern“), sonst und auf dem
+ * Desktop einen Download (Entscheidung 12). Muss direkt aus einem Tippen heraus aufgerufen
+ * werden, sonst verweigert Safari das Teilen.
  */
 export async function saveBackupFile(file: File): Promise<SaveOutcome> {
   let outcome: SaveOutcome = 'geladen';
-  const shared = canShareFiles(navigator, [file]) ? await shareFiles(navigator, [file]) : null;
+  const share = saveMode(currentEnvironment()) === 'share' && canShareFiles(navigator, [file]);
+  const shared = share ? await shareFiles(navigator, [file]) : null;
   if (shared === 'abgebrochen') return 'abgebrochen';
   if (shared === 'geteilt') outcome = 'geteilt';
   else downloadFile(document, file);

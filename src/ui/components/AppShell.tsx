@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
-import { Outlet, useLocation, useOutletContext } from 'react-router';
+import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router';
+import { shellShortcut } from '@/domain/device/shortcuts';
+import { useKeys } from '../useKeys';
 import { navKeyFor, type NavKey } from './navigation';
 import styles from './AppShell.module.css';
 import { Sidebar } from './Sidebar';
@@ -23,6 +25,22 @@ export function AppShell({
   children?: ReactNode;
 }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  // Kürzel für Tastatur und Desktop: „n“ neue Karte, „/“ Suche im Stapel.
+  useKeys((input) => {
+    const action = shellShortcut(input);
+    if (action === 'new-card') {
+      void navigate('/neu');
+      return true;
+    }
+    if (action === 'search') {
+      const field = document.querySelector<HTMLInputElement>('[data-shortcut-search]');
+      if (field) field.focus();
+      else void navigate('/stapel');
+      return true;
+    }
+    return false;
+  });
   const context: unknown = useOutletContext();
   const current = active ?? navKeyFor(pathname);
   const isPushed = pushed ?? /^\/stapel\/[^/]+$/.test(pathname);

@@ -46,6 +46,10 @@ export interface LernenViewProps {
   /** Kartenbewegung durch den Finger, in Pixeln. */
   drag?: number | undefined;
   undoable: boolean;
+  /** Hinweis unter der Vorderseite; Standard „Tippen zum Umdrehen“, auf dem Desktop „Klicken …“. */
+  flipHint?: string | undefined;
+  /** Hinweis unter einer Abdeckung; Standard für Touch, auf dem Desktop mit Rad und Klick. */
+  coverHint?: string | undefined;
   onClose: () => void;
   onFlip: () => void;
   onRevealNext: () => void;
@@ -209,7 +213,7 @@ function Front({ view }: { view: LernenViewProps }) {
       </div>
       <div className={styles.flipHint}>
         <FlipIcon size={16} />
-        Tippen zum Umdrehen
+        {view.flipHint ?? 'Tippen zum Umdrehen'}
       </div>
     </div>
   );
@@ -513,7 +517,7 @@ export function LernenView(view: LernenViewProps) {
             </button>
             {face.kind === 'cover' ? (
               <div className={styles.hint}>
-                Zwei Finger zum Zoomen · Feld antippen zum Aufdecken
+                {view.coverHint ?? 'Zwei Finger zum Zoomen · Feld antippen zum Aufdecken'}
               </div>
             ) : null}
             {view.undoable ? (

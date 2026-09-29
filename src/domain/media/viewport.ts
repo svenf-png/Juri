@@ -93,3 +93,30 @@ export function containSize(image: Size, frame: Size): Size {
   const k = Math.min(frame.width / image.width, frame.height / image.height);
   return { width: image.width * k, height: image.height * k };
 }
+
+/** Zeilen und Seiten eines Rad-Ereignisses in Pixel (Firefox meldet Mäuse in Zeilen, `deltaMode` 1). */
+const LINE_PX = 16;
+const PAGE_PX = 800;
+
+/** Rad-Weg in Pixeln: `deltaMode` 0 sind Pixel, 1 Zeilen, 2 Seiten (DOM WheelEvent). */
+export function wheelPixels(delta: number, deltaMode: number): number {
+  if (deltaMode === 1) return delta * LINE_PX;
+  if (deltaMode === 2) return delta * PAGE_PX;
+  return delta;
+}
+
+/**
+ * Zoomfaktor von Strg+Rad und Trackpad-Zwicken (Chrome und Firefox melden es als Rad mit Strg).
+ * Ein Schritt eines Mausrads (etwa 100 Pixel) ergibt rund das 2,7-Fache, feine Trackpad-Werte
+ * zoomen fließend; die Weite eines Ereignisses ist begrenzt, damit ein Ausreißer nicht springt.
+ */
+export function wheelZoomFactor(deltaY: number, deltaMode: number): number {
+  const px = Math.max(-100, Math.min(100, wheelPixels(deltaY, deltaMode)));
+  return Math.exp(-px * 0.01);
+}
+
+/** Zoomfaktor der Safari-Geste auf dem Mac (`gesturechange`): Die Skala zählt ab Beginn der Geste. */
+export function gestureZoomFactor(previousScale: number, scale: number): number {
+  if (!(previousScale > 0) || !(scale > 0)) return 1;
+  return scale / previousScale;
+}
