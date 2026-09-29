@@ -8,10 +8,15 @@ import type { Page } from '@playwright/test';
 export function watchPage(page: Page, origin: string, { allow404 = false } = {}) {
   const errors: string[] = [];
   const foreign: string[] = [];
-  page.on('pageerror', (e) => errors.push(e.message));
+  const swNoise = (text: string) => text.includes('sw.js due to access control checks');
+  page.on('pageerror', (e) => {
+    if (!swNoise(e.message)) errors.push(e.message);
+  });
   page.on('console', (msg) => {
     if (msg.type() !== 'error') return;
     if (allow404 && msg.text().includes('status of 404')) return;
+    // WebKit meldet gelegentlich die Update-Suche des Service Workers; sie ist kein Fehler der App.
+    if (swNoise(msg.text())) return;
     errors.push(msg.text());
   });
   page.on('request', (req) => {
