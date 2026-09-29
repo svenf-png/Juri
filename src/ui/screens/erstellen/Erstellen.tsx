@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { createGoal, savedToast } from '@/domain/cards/goal';
-import { deckLabel } from '@/domain/library/library';
+import { deckAreaCodes, deckLabel } from '@/domain/library/library';
 import { readLastDeck, rememberDeck } from '@/platform/lastDeck';
 import { addCard } from '@/features/library/actions';
 import { useCreateData, useLibraryData } from '@/features/library/queries';
@@ -61,6 +61,7 @@ export function Erstellen() {
         mode="new"
         initial={EMPTY_FORM}
         deckLabel={deck ? deckLabel(deck, areas) : null}
+        deck={deck ? { id: deck.id, name: deck.name, areaCodes: deckAreaCodes(deck, areas) } : null}
         onPickDeck={() => {
           setSheet('pick');
         }}

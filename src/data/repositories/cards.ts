@@ -1,4 +1,5 @@
 import { buildCard, buildItems, type CardFields } from '@/domain/cards/card';
+import { linksTo, withoutLinks } from '@/domain/cards/schema';
 import type { Card, NewEvent } from '@/domain/model/records';
 import type { JuriDb } from '../db';
 import { readCounter, writeMeta } from './profile';
@@ -54,14 +55,55 @@ export async function updateCard(
   });
 }
 
-/** Löscht eine Karte mit ihren Abfragen; das Ereignis „angelegt“ bleibt im Log. */
-export async function deleteCard(db: JuriDb, id: string): Promise<number> {
+/**
+ * Entfernt die Verknüpfungen zu `targets` aus allen Schemas außerhalb von `except` (den ebenfalls
+ * gelöschten Karten). Die Punkte bleiben, nur der Verweis fällt weg; das Schema gilt als geändert.
+ * Läuft in der Transaktion des Löschens, damit kein Verweis ins Leere zeigt (ADR-009).
+ */
+export async function unlinkCards(
+  db: JuriDb,
+  targets: ReadonlySet<string>,
+  except: ReadonlySet<string>,
+  now: number,
+): Promise<number> {
+  const schemas = await db.cards.where('type').equals('schema').toArray();
+  const changed = [];
+  let removed = 0;
+  for (const use of linksTo(schemas, targets, except)) {
+    const next = withoutLinks(use.card, targets);
+    if (!next) continue;
+    removed += use.points;
+    changed.push({ ...next, updatedAt: now });
+  }
+  await db.cards.bulkPut(changed);
+  return removed;
+}
+
+/**
+ * Löscht eine Karte mit ihren Abfragen; das Ereignis „angelegt“ bleibt im Log. Schemas, die auf
+ * die Karte verwiesen, verlieren nur diesen Verweis (ADR-009).
+ */
+export async function deleteCard(
+  db: JuriDb,
+  id: string,
+  now: number = Date.now(),
+): Promise<number> {
   return db.transaction('rw', db.cards, db.reviewItems, async () => {
     const items = await db.reviewItems.where('cardId').equals(id).primaryKeys();
     await db.reviewItems.bulkDelete(items);
     await db.cards.delete(id);
+    await unlinkCards(db, new Set([id]), new Set([id]), now);
     return items.length;
   });
+}
+
+/** Schema-Karten und Karten insgesamt für die Auswahl beim Verknüpfen und das Löschen. */
+export async function readSchemasLinkingTo(
+  db: JuriDb,
+  targets: ReadonlySet<string>,
+  except: ReadonlySet<string> = new Set(),
+) {
+  return linksTo(await db.cards.where('type').equals('schema').toArray(), targets, except);
 }
 
 export async function readCard(db: JuriDb, id: string): Promise<Card | null> {

@@ -19,7 +19,25 @@ const SEARCH_PLACEHOLDER = {
     'eigene (in WebKit deutlich heller). Die App nimmt #726E7A (4,55:1 auf der Fläche).',
 };
 
+const PLACEHOLDER = {
+  css: 'textarea::placeholder, input::placeholder { color: #726E7A }',
+  reason: 'Annahme A2: #8E8A99 erreicht auf der Fläche nur 3,08:1, die App nimmt #726E7A.',
+};
+
 const FIXES: Record<string, { css: string; reason: string }[]> = {
+  'SchemaEditor.dc.html': [PLACEHOLDER],
+  'SchemaPunkt.dc.html': [PLACEHOLDER],
+  'SchemaNeueKarte.dc.html': [PLACEHOLDER],
+  'SchemaVerknuepfen.dc.html': [PLACEHOLDER],
+  'SchemaVerknuepfenLeer.dc.html': [PLACEHOLDER],
+  'Schema.dc.html': [
+    {
+      css: '.sheet { height: 359px !important }',
+      reason:
+        'Das Sheet ist 356 px hoch, sein Inhalt braucht 359 px: Der Griff schrumpft im Design von ' +
+        '5 auf 2 px. Die App nimmt 359 px und behält den Griff.',
+    },
+  ],
   'Luecke.dc.html': [
     {
       css: 'a[aria-label="Lernen beenden"] + div + div { min-width: 34px; text-align: right }',

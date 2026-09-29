@@ -1,0 +1,610 @@
+/*
+ * Schema bearbeiten nach SchemaEditor.dc.html (Kopf, Gliederung, Leiste unten, Verknüpfen) und den
+ * M5-Ergänzungen SchemaPunkt, SchemaVerknuepfen, SchemaNeueKarte, SchemaEditorLeer (Entscheidung 2).
+ */
+.screen {
+  --toolbar-h: calc(56px + max(28px, var(--bottom-inset)));
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: normal;
+  padding: calc(54px + var(--top-shift)) max(20px, env(safe-area-inset-right))
+    calc(var(--toolbar-h) + 24px) max(20px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+@media (min-width: 768px) {
+  .screen {
+    padding-top: calc(54px + var(--top-inset));
+  }
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.back {
+  height: 44px;
+  margin-left: -8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--link);
+}
+
+.topTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* „Sichern“: 36 px sichtbar, Trefferfläche 44 px (A1). */
+.save {
+  position: relative;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  border: 0;
+  background: var(--violet);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.save::after {
+  content: '';
+  position: absolute;
+  inset: -4px -6px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.titleEmpty {
+  color: var(--muted);
+}
+
+.sub {
+  margin-top: -8px;
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.row {
+  /* Im Design ohne border-box: Der Rand kommt zur Mindesthöhe dazu (47 px). */
+  box-sizing: content-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.rowNested {
+  min-height: 42px;
+  padding-left: 30px;
+}
+
+.rowDeep {
+  padding-left: 52px;
+}
+
+.rowOn {
+  padding-right: 8px;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 2px var(--violet);
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+}
+
+.label {
+  width: 22px;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--violet);
+}
+
+.rowNested .label {
+  width: 18px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.rowDeep .label {
+  width: 26px;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+  font-size: 15.5px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.rowNested .text {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.textEmpty {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.norm {
+  font-size: 12.5px;
+  color: var(--muted);
+  flex-shrink: 0;
+  max-width: 45%;
+  overflow-wrap: anywhere;
+}
+
+.rowError {
+  margin: 0;
+  padding: 0 0 8px 32px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+/* Verknüpfung am Punkt: 26 px sichtbar, Trefferfläche 44 px. */
+.chip {
+  position: relative;
+  height: 26px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  font-size: 11.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.chip::after {
+  content: '';
+  position: absolute;
+  inset: -9px -4px;
+}
+
+.chipOn {
+  background: var(--violet);
+  color: var(--bg);
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding: 56px 24px 0;
+  text-align: center;
+}
+
+.emptyTitle {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.emptyText {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.emptyAction {
+  margin-top: 8px;
+  height: 50px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.error {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.toolbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  height: var(--toolbar-h);
+  padding: 10px 16px max(28px, var(--bottom-inset));
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.tool {
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool:disabled {
+  opacity: 0.4;
+}
+
+.toolOn {
+  background: var(--violet);
+  color: var(--bg);
+}
+
+/* Verknüpfen (SchemaEditor.dc.html): Suchfeld, Treffer, „Neue Karte anlegen“. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.popover {
+  position: fixed;
+  z-index: 21;
+  left: 20px;
+  right: 20px;
+  bottom: calc(var(--toolbar-h) + 26px);
+  max-width: 520px;
+  margin: 0 auto;
+  border-radius: 22px;
+  background: var(--bg);
+  box-shadow: var(--shadow-popover);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 60dvh;
+}
+
+/* Bei offener Tastatur oben, damit sie nichts verdeckt. */
+.popoverTop {
+  bottom: auto;
+  top: calc(var(--top-shift) + 96px);
+}
+
+.search {
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  color: var(--muted);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-size: 15px;
+  outline: none;
+  color: var(--ink);
+}
+
+.hits {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.hit {
+  min-height: 50px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--bg);
+  text-align: left;
+  padding: 6px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.hitOn {
+  background: var(--violet-100);
+}
+
+.hitText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.hitTitle {
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.hitMeta {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.hitOn .hitMeta {
+  color: var(--violet-700);
+}
+
+.hitCheck {
+  color: var(--violet);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.none {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.action {
+  height: 44px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--bg);
+  text-align: left;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--link);
+}
+
+.actionDanger {
+  color: var(--danger);
+}
+
+/* Sheets: Punkt bearbeiten, Neue Karte (kompakte Felder, SchemaPunkt.dc.html). */
+.sheetFields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field {
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field:focus-within {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.fieldInvalid {
+  box-shadow: 0 0 0 2px var(--danger);
+}
+
+.fieldLabel {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.fieldInput {
+  width: 100%;
+  line-height: normal;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 17px;
+  color: var(--ink);
+  outline: none;
+  resize: none;
+}
+
+.fieldArea {
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.linked {
+  border-radius: 16px;
+  border: 1.5px solid var(--track);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.linkedIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.linkedText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.linkedTitle {
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.linkedMeta {
+  font-size: 12.5px;
+  color: var(--violet-700);
+  font-weight: 600;
+}
+
+.linkedButton {
+  height: 44px;
+  padding: 0 6px;
+  border: 0;
+  background: transparent;
+  color: var(--link);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.linkRow {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 16px;
+  border: 1.5px dashed var(--dash-cloze);
+  background: var(--bg);
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--link);
+}
+
+.moves {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.move {
+  height: 44px;
+  border-radius: 14px;
+  border: 1.5px solid var(--track);
+  background: var(--bg);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.move:disabled {
+  opacity: 0.4;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 10px;
+}
+
+.remove {
+  height: 54px;
+  border-radius: 18px;
+  border: 0;
+  background: transparent;
+  color: var(--danger);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.done {
+  height: 54px;
+  border-radius: 18px;
+  border: 0;
+  background: var(--violet);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: var(--shadow-primary);
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.45;
+}

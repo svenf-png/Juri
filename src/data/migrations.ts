@@ -39,6 +39,15 @@ export const MIGRATIONS: readonly Migration[] = [
       reviewLog: '++seq, itemId, at',
     },
   },
+  {
+    // M5: Schema-Karten (neuer Kartentyp `schema`, ohne Umformung) und ein Index auf `type`, damit
+    // Löschen die Schemas mit Verknüpfungen ohne Vollzugriff findet (ADR-009). Die Version trennt
+    // Backups mit Schemas sauber von älteren App-Ständen, die den Typ nicht kennen.
+    version: 4,
+    stores: {
+      cards: 'id, deckId, createdAt, *tags, type',
+    },
+  },
 ];
 
 export function schemaVersion(migrations: readonly Migration[] = MIGRATIONS): number {

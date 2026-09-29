@@ -2,7 +2,7 @@
  * Gespeicherte Datensätze (IndexedDB über Dexie, src/data/). Die zod-Schemas sind die einzige
  * Quelle der Typen und prüfen Datensätze beim Einspielen eines Backups.
  *
- * Stand M4: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog
+ * Stand M5: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog
  * und Ereignisse. Die übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen
  * dazu, jeweils mit Schema und Migration. Zeitpunkte sind Millisekunden seit 1970 (UTC).
  */
@@ -123,6 +123,40 @@ const cardBase = {
   updatedAt: millis,
 };
 
+/** Größte Einrückung einer Gliederung: 1., a), aa). */
+export const SCHEMA_MAX_LEVEL = 3;
+/** Höchstzahl der Punkte eines Schemas. */
+export const SCHEMA_MAX_POINTS = 60;
+
+/**
+ * Punkt einer Gliederung. `id` bleibt beim Bearbeiten stehen (Verknüpfungen, Merge in M9);
+ * `level` ist die Einrückung (1 bis 3); `link` ist die verknüpfte Karte (ADR-009).
+ */
+export const schemaPointSchema = z.strictObject({
+  id: z.string().regex(/^p[1-9]\d{0,3}$/),
+  level: z.number().int().min(1).max(SCHEMA_MAX_LEVEL),
+  text: singleLine(200),
+  /** Norm des Punkts, z. B. „§ 42 II VwGO“; fehlt, wenn es keine gibt. */
+  norm: singleLine(200).optional(),
+  /** Inhalt des Punkts (Definition, Prüfungsinhalt); erscheint beim Aufdecken (Entscheidung 4). */
+  content: z.string().min(1).max(2000).optional(),
+  /** Verknüpfte Karte; fehlt, wenn es keine gibt. */
+  link: id.optional(),
+});
+
+export type SchemaPoint = z.infer<typeof schemaPointSchema>;
+
+/** Punkte in Lesereihenfolge: der erste auf Ebene 1, jede Ebene höchstens eine tiefer als die davor. */
+const schemaPoints = z
+  .array(schemaPointSchema)
+  .min(1)
+  .max(SCHEMA_MAX_POINTS)
+  .refine(
+    (points) =>
+      new Set(points.map((p) => p.id)).size === points.length &&
+      points.every((p, i) => p.level <= (i === 0 ? 1 : (points[i - 1]?.level ?? 0) + 1)),
+  );
+
 export const cardSchema = z.discriminatedUnion('type', [
   z.strictObject({
     ...cardBase,
@@ -136,9 +170,15 @@ export const cardSchema = z.discriminatedUnion('type', [
     /** Text mit Lücken in der Schreibweise `{{c1::Wort}}` (domain/cards/cloze.ts). */
     text: z.string().min(1).max(4000).refine(hasGap),
   }),
+  z.strictObject({
+    ...cardBase,
+    type: z.literal('schema'),
+    title: singleLine(200),
+    points: schemaPoints,
+  }),
 ]);
 
-/** Karte; Schema und Abdeckung kommen mit M5 und M6 als weitere Typen dazu. */
+/** Karte; die Abdeckung kommt mit M6 als weiterer Typ dazu. */
 export type Card = z.infer<typeof cardSchema>;
 export type CardType = Card['type'];
 

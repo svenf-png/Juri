@@ -1,9 +1,15 @@
-import type { CSSProperties, PointerEventHandler, ReactNode } from 'react';
-import type { Face, Piece } from '@/domain/session/present';
+import {
+  useEffect,
+  useRef,
+  type CSSProperties,
+  type PointerEventHandler,
+  type ReactNode,
+} from 'react';
+import type { Face, Piece, SchemaRow } from '@/domain/session/present';
 import type { IntervalPreview } from '@/domain/scheduler/schedule';
 import type { RatingKey } from '@/domain/scheduler/rating';
 import { CardFlip } from '../../components/CardFlip';
-import { CloseIcon, FlipIcon, NoteIcon, UndoIcon } from '../../components/icons';
+import { CloseIcon, FlipIcon, LinkIcon, NoteIcon, UndoIcon } from '../../components/icons';
 import { RatingBar } from '../../components/RatingBar';
 import { cx } from '../../cx';
 import tap from '../../motion/tap.module.css';
@@ -37,6 +43,8 @@ export interface LernenViewProps {
   onRevealAll: () => void;
   onRate: (rating: RatingKey) => void;
   onUndo: () => void;
+  /** Schema: die verknüpfte Karte eines aufgedeckten Punkts anzeigen. */
+  onOpenLink?: ((cardId: string) => void) | undefined;
   /** Zeiger-Ereignisse der Karte für die Wischgeste. */
   cardEvents?: {
     onPointerDown: PointerEventHandler;
@@ -177,6 +185,115 @@ function Bundle({
   );
 }
 
+/** Breiten der Platzhalter für verdeckte Punkte (Schema.dc.html: 150 und 110 px für Punkt 4 und 5). */
+const SKELETON_WIDTHS = [130, 90, 120, 150, 110] as const;
+
+function SchemaRows({
+  face,
+  onOpenLink,
+}: {
+  face: Extract<Face, { kind: 'schema' }>;
+  onOpenLink?: ((cardId: string) => void) | undefined;
+}) {
+  const current = useRef<HTMLLIElement>(null);
+  // Der zuletzt aufgedeckte Punkt bleibt im Blick, auch wenn die Liste länger als die Karte wird.
+  useEffect(() => {
+    current.current?.scrollIntoView({ block: 'nearest' });
+  }, [face.revealed]);
+  const complete = face.revealed >= face.total;
+  return (
+    <ol className={styles.rows} role="list" aria-label="Gliederung">
+      {face.rows.map((row: SchemaRow, i) => {
+        const nested = row.level > 1;
+        if (!row.shown) {
+          return (
+            <li
+              key={row.id}
+              className={cx(styles.row, nested && styles.rowNested)}
+              aria-label="Punkt noch verdeckt"
+            >
+              <span className={cx(styles.num, styles.numHidden, nested && styles.numNested)}>
+                {row.number}
+              </span>
+              <span
+                className={cx(styles.skeleton, nested && styles.skeletonNested)}
+                style={{ width: SKELETON_WIDTHS[i % SKELETON_WIDTHS.length] ?? 130 }}
+              />
+            </li>
+          );
+        }
+        return (
+          <li
+            key={row.id}
+            ref={row.current ? current : undefined}
+            className={cx(styles.row, nested && styles.rowNested, row.current && styles.rowCurrent)}
+          >
+            <span
+              className={cx(
+                styles.num,
+                complete ? styles.numDone : styles.numOn,
+                nested && styles.numNested,
+              )}
+            >
+              {row.number}
+            </span>
+            <div className={cx(styles.rowText, row.content !== '' && styles.rowTextContent)}>
+              <span className={cx(styles.rowTitle, nested && styles.rowTitleNested)}>
+                {row.text}
+              </span>
+              {row.norm !== '' ? (
+                <span className={cx(styles.rowNorm, complete && styles.rowNormDone)}>
+                  {row.norm}
+                </span>
+              ) : null}
+              {row.content !== '' ? <span className={styles.rowContent}>{row.content}</span> : null}
+            </div>
+            {row.link !== null ? (
+              <button
+                type="button"
+                data-noswipe=""
+                className={cx(styles.linkChip, row.current && styles.linkChipOn, tap.tap)}
+                aria-label={`Verknüpfte Karte zu „${row.text}“ anzeigen`}
+                onClick={() => {
+                  onOpenLink?.(row.link ?? '');
+                }}
+              >
+                <LinkIcon size={14} strokeWidth={2.2} />
+                Karte
+              </button>
+            ) : null}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+function SchemaCard({
+  view,
+  face,
+}: {
+  view: LernenViewProps;
+  face: Extract<Face, { kind: 'schema' }>;
+}) {
+  return (
+    <div className={styles.schema}>
+      <Head area={view.area} type={face.typeLabel} norm={view.norm} />
+      <div className={styles.schemaTitle}>{face.title}</div>
+      <SchemaRows face={face} onOpenLink={view.onOpenLink} />
+      {view.note && view.flipped ? (
+        <div className={styles.note}>
+          <NoteIcon size={20} className={styles.noteIcon} />
+          <div className={styles.noteText}>
+            <span className={styles.noteLabel}>Notiz</span>
+            <span className={styles.noteBody}>{view.note}</span>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 /**
  * Lernansicht: Kopfzeile mit Beenden, Fortschritt und Zähler, die Karte (Frage, Lücke oder
  * gebündelte Lücken) und unten „Antwort zeigen“, „Nächste Lücke“ oder die vier Bewertungen.
@@ -184,7 +301,8 @@ function Bundle({
  */
 export function LernenView(view: LernenViewProps) {
   const { face } = view;
-  const bundle = face.kind === 'bundle';
+  const schema = face.kind === 'schema';
+  const bundle = face.kind === 'bundle' || (schema && face.total > 1);
   const cardStyle: CSSProperties | undefined =
     view.drag === undefined || view.drag === 0
       ? undefined
@@ -197,6 +315,8 @@ export function LernenView(view: LernenViewProps) {
   let card: ReactNode;
   if (face.kind === 'bundle') {
     card = <Bundle view={view} face={face} />;
+  } else if (face.kind === 'schema') {
+    card = <SchemaCard view={view} face={face} />;
   } else {
     card = (
       <CardFlip
@@ -236,7 +356,7 @@ export function LernenView(view: LernenViewProps) {
         </div>
       </div>
 
-      <div className={styles.stage}>
+      <div className={cx(styles.stage, schema && styles.stageTall)}>
         <div className={styles.frame}>
           {view.behind >= 2 ? <div className={cx(styles.behind, styles.behind2)} /> : null}
           {view.behind >= 1 ? <div className={cx(styles.behind, styles.behind1)} /> : null}
@@ -275,7 +395,7 @@ export function LernenView(view: LernenViewProps) {
               className={cx(styles.pairButton, styles.pairNext, tap.tap)}
               onClick={view.onRevealNext}
             >
-              Nächste Lücke
+              {schema ? 'Nächster Punkt' : 'Nächste Lücke'}
             </button>
           </div>
         ) : (

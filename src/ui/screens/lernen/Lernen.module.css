@@ -5,8 +5,9 @@
  * bekommen eine höhere Karte, breitere eine mittige Spalte (A8).
  */
 .screen {
-  min-height: 100dvh;
-  height: 100dvh;
+  /* In der Testinstanz steht das Hinweisband darüber (--shell-top), sonst scrollt die Seite. */
+  min-height: calc(100dvh - var(--shell-top, 0px));
+  height: calc(100dvh - var(--shell-top, 0px));
   width: 100%;
   max-width: 430px;
   margin: 0 auto;
@@ -392,6 +393,8 @@
   color: var(--violet-700);
   border-radius: 8px;
   padding: 1px 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
   box-shadow: 0 0 0 2px var(--violet);
   background-image: linear-gradient(var(--violet-100), var(--violet-100));
   background-repeat: no-repeat;
@@ -434,6 +437,8 @@
 
 /* Knöpfe unten: 110 px Platz ab 682 px. */
 .bottom {
+  /* Über der Karte, deren Schatten sonst in die Knöpfe ragt (Schema: Karte bis 678 px). */
+  position: relative;
   height: 110px;
   flex-shrink: 0;
   margin: 0 20px;
@@ -660,4 +665,238 @@
     animation: none;
     background-size: 100% 100%;
   }
+}
+
+/*
+ * Schema (Schema.dc.html, Entscheidung 4): eine Karte, Punkt für Punkt aufgedeckt. Die Karte ist
+ * 560 px hoch (die anderen 520 px) und läuft bis 4 px vor die Knöpfe.
+ */
+.stageTall {
+  padding-bottom: 4px;
+}
+
+.schema {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-card);
+  padding: 24px 24px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: var(--ink);
+}
+
+.schemaTitle {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
+  flex-shrink: 0;
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.row {
+  /* Im Design ohne border-box: Der Rand kommt zur Mindesthöhe dazu (51 px). */
+  box-sizing: content-box;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 50px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--heat-0);
+}
+
+.rowNested {
+  min-height: 42px;
+  padding-left: 38px;
+}
+
+.rowCurrent {
+  margin: 0 -10px;
+  padding: 0 10px;
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.rowCurrent.rowNested {
+  padding-left: 48px;
+}
+
+.num {
+  width: 26px;
+  height: 26px;
+  margin-top: 12px;
+  border-radius: 13px;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.numNested {
+  width: 22px;
+  height: 22px;
+  margin-top: 10px;
+  border-radius: 11px;
+  font-size: 11px;
+}
+
+.numOn {
+  background: var(--violet);
+  color: var(--bg);
+}
+
+/* Ganz aufgedeckt (Lernen.dc.html, Rückseite): weiche Kreise. */
+.numDone {
+  background: var(--surface);
+  color: var(--violet-700);
+}
+
+.numHidden {
+  background: var(--violet-100);
+  color: var(--violet-700);
+}
+
+.skeleton {
+  align-self: center;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--heat-0);
+}
+
+.skeletonNested {
+  height: 12px;
+  border-radius: 6px;
+}
+
+.rowText {
+  flex-grow: 1;
+  min-width: 0;
+  min-height: 50px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rowNested .rowText {
+  min-height: 42px;
+}
+
+.rowTextContent {
+  padding: 8px 0;
+}
+
+.rowTitle {
+  font-size: 16px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.rowTitleNested {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.rowNorm {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* Ganz aufgedeckt (Lernen.dc.html, Rückseite): die Norm in 500. */
+.rowNormDone {
+  font-weight: 500;
+}
+
+.rowContent {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 500;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* Verknüpfte Karte: 28 px sichtbar, Trefferfläche 44 px (A1). */
+.linkChip {
+  position: relative;
+  margin-top: 11px;
+  height: 28px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.linkChip::after {
+  content: '';
+  position: absolute;
+  inset: -8px -4px;
+}
+
+.linkChipOn {
+  background: var(--violet);
+  color: var(--bg);
+}
+
+/* Verknüpfte Karte im Sheet (Schema.dc.html): Text, darunter zwei Knöpfe à 54 px. */
+.linkText {
+  margin: 0;
+  flex-grow: 1;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.linkActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.linkBtn {
+  height: 54px;
+  border: 0;
+  border-radius: 18px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.linkBtnSoft {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.linkBtnInk {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.linkBtnInk:disabled {
+  opacity: 0.5;
 }

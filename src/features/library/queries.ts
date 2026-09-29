@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { parseDayKey, addDays, dayStart } from '@/domain/calendar/day';
-import { readCard } from '@/data/repositories/cards';
+import { readCard, readSchemasLinkingTo } from '@/data/repositories/cards';
 import {
   readCreateSnapshot,
   readDeckDetail,
@@ -75,4 +75,29 @@ export function useEditData(cardId: string) {
     [cardId],
   );
   return useLive(`edit:${cardId}`, query);
+}
+
+/** Eine einzelne Karte (Verknüpfung im Schema); `null`, wenn es sie nicht mehr gibt. */
+export function useCard(cardId: string | null) {
+  const query = useCallback(
+    (db: Parameters<typeof readCard>[0]) => readCard(db, cardId ?? ''),
+    [cardId],
+  );
+  return useLive(`card:${cardId ?? ''}`, query, cardId !== null);
+}
+
+/**
+ * Schemas, die auf eine der Karten `targets` verweisen (Löschen mit Verknüpfungen, ADR-009);
+ * `except` sind Karten, die mit gelöscht werden.
+ */
+export function useLinkUses(targets: readonly string[], enabled = true) {
+  const key = targets.join(',');
+  const query = useCallback(
+    (db: Parameters<typeof readCard>[0]) => {
+      const set = new Set(key === '' ? [] : key.split(','));
+      return readSchemasLinkingTo(db, set, set);
+    },
+    [key],
+  );
+  return useLive(`links:${key}`, query, enabled && key !== '');
 }

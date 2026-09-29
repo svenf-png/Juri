@@ -214,8 +214,15 @@ export function deckModel(input: {
   };
 }
 
+/** Kürzel der Rechtsgebiete eines Stapels in fester Reihenfolge: „ZR, ÖR“. */
+export function deckAreaCodes(deck: Deck, areas: readonly Area[]): string {
+  return sortAreas(areas.filter((a) => deck.areaIds.includes(a.id)))
+    .map((a) => a.code)
+    .join(', ');
+}
+
 /** „Diebstahl & Betrug · SR“ bzw. „Amtshaftung · ZR, ÖR“ für die Stapel-Zeile beim Erstellen. */
 export function deckLabel(deck: Deck, areas: readonly Area[]): string {
-  const codes = sortAreas(areas.filter((a) => deck.areaIds.includes(a.id))).map((a) => a.code);
-  return codes.length > 0 ? `${deck.name} · ${codes.join(', ')}` : deck.name;
+  const codes = deckAreaCodes(deck, areas);
+  return codes !== '' ? `${deck.name} · ${codes}` : deck.name;
 }

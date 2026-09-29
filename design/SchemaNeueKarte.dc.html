@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Schema: Neue Karte anlegen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button,input,textarea{font-family:inherit}
+button{cursor:pointer}
+textarea::placeholder,input::placeholder{color:#8E8A99}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s}
+.tap:active{transform:scale(.97)}
+.field{transition:box-shadow .2s}
+.field:focus-within{box-shadow:0 0 0 2px #6A3FE0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 54px 20px 0 20px; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; justify-content: space-between; align-items: center; height: 44px">
+    <a href="Erstellen.dc.html" style="font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 2px; margin-left: -8px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Zurück</a>
+    <span style="font-size: 16px; font-weight: 700">Schema</span>
+    <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: #6A3FE0; color: #FFFFFF; font-size: 14px; font-weight: 700">Sichern</button>
+  </div>
+  <div class="d" style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Amtshaftungsanspruch</div>
+  <div style="font-size: 14px; color: #6B6678; font-weight: 500; margin-top: -8px">§ 839 BGB i. V. m. Art. 34 GG · ZR, ÖR</div>
+  <div style="display: flex; flex-direction: column; border-top: 1px solid #EFECF5">
+    <div style="display: flex; align-items: center; gap: 10px; min-height: 46px; border-bottom: 1px solid #F3F1F8"><span style="width: 22px; font-size: 13px; font-weight: 800; color: #6A3FE0">1.</span><span style="font-size: 15.5px; font-weight: 600; flex-grow: 1">Ausübung eines öffentlichen Amtes</span></div><div style="display: flex; align-items: center; gap: 10px; min-height: 46px; border-bottom: 1px solid #F3F1F8"><span style="width: 22px; font-size: 13px; font-weight: 800; color: #6A3FE0">2.</span><span style="font-size: 15.5px; font-weight: 600; flex-grow: 1">Verletzung einer drittbezogenen Amtspflicht</span></div><div style="display: flex; align-items: center; gap: 10px; min-height: 42px; border-bottom: 1px solid #F3F1F8; padding-left: 30px"><span style="width: 18px; font-size: 13px; font-weight: 700; color: #6B6678">a)</span><span style="font-size: 15px; flex-grow: 1">Amtspflicht</span></div><div style="display: flex; align-items: center; gap: 10px; min-height: 42px; border-bottom: 1px solid #F3F1F8; padding: 0 8px 0 30px; border-radius: 12px; background: #F6F4FB; box-shadow: inset 0 0 0 2px #6A3FE0"><span style="width: 18px; font-size: 13px; font-weight: 700; color: #6B6678">b)</span><span style="font-size: 15px; flex-grow: 1">Drittbezogenheit</span><span style="height: 26px; padding: 0 8px; border-radius: 13px; background: #6A3FE0; color: #FFFFFF; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"></path><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"></path></svg>verknüpfen</span></div><div style="display: flex; align-items: center; gap: 10px; min-height: 46px; border-bottom: 1px solid #F3F1F8"><span style="width: 22px; font-size: 13px; font-weight: 800; color: #6A3FE0">3.</span><span style="font-size: 15.5px; font-weight: 600; flex-grow: 1">Verschulden</span></div><div style="display: flex; align-items: center; gap: 10px; min-height: 46px; border-bottom: 1px solid #F3F1F8"><span style="width: 22px; font-size: 13px; font-weight: 800; color: #6A3FE0">4.</span><span style="font-size: 15.5px; font-weight: 600; flex-grow: 1">Kausaler Schaden</span></div><div style="display: flex; align-items: center; gap: 10px; min-height: 46px; border-bottom: 1px solid #F3F1F8"><span style="width: 22px; font-size: 13px; font-weight: 800; color: #6A3FE0">5.</span><span style="font-size: 15.5px; font-weight: 600; flex-grow: 1">Kein Haftungsausschluss</span><span style="font-size: 12.5px; color: #6B6678">§ 839 I 2, III BGB</span></div>
+  </div>
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 10px 16px 28px 16px; border-top: 1px solid #EFECF5; background: #FFFFFF; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+    <button aria-label="Punkt hinzufügen" style="border: 0; border-radius: 12px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button><button aria-label="Einrücken" style="border: 0; border-radius: 12px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M11 12h9M11 18h9M4 10l3 2.5L4 15"></path></svg></button><button aria-label="Ausrücken" style="border: 0; border-radius: 12px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M11 12h9M11 18h9M7 10l-3 2.5L7 15"></path></svg></button><button aria-label="Mit Karte verknüpfen" style="border: 0; border-radius: 12px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"></path><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"></path></svg></button>
+  </div><div style="position: absolute; left: 20px; right: 20px; bottom: 110px; border-radius: 22px; background: #FFFFFF; box-shadow: 0 20px 44px -18px rgba(46,26,115,.45), 0 0 0 1px #EFECF5; padding: 12px; display: flex; flex-direction: column; gap: 6px">
+    <label style="height: 42px; border-radius: 12px; background: #F6F4FB; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B6678" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg>
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Karte suchen</span>
+      <input value="Drittbezogenheit" placeholder="Karte suchen" style="border: 0; background: transparent; font-size: 15px; outline: none; flex-grow: 1; color: #17141F">
+    </label>
+    <div style="min-height: 50px; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: #6B6678; font-weight: 500">Keine Karte gefunden.</div><button style="height: 44px; border: 0; border-radius: 12px; background: #FFFFFF; text-align: left; padding: 0 12px; font-size: 14px; font-weight: 700; color: #5B34D1">+ Neue Karte „Drittbezogenheit“ anlegen</button>
+  </div><div style="position: absolute; inset: 0; background: rgba(23,20,31,.28)"></div>
+  <div role="dialog" aria-modal="true" style="position: absolute; left: 0; right: 0; bottom: 0; ; box-sizing: border-box; border-radius: 30px 30px 0 0; background: #FFFFFF; padding: 12px 24px 34px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 -20px 40px -24px rgba(46,26,115,.4)">
+    <span style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #DCD6EA"></span>
+    <span style="display: flex; align-items: center; gap: 8px; color: #6A3FE0; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-top: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"></path><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"></path></svg>Neue Karte</span>
+    <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.015em">Karte anlegen und verknüpfen</h2>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <label class="field" style="border-radius: 16px; background: #F6F4FB; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Vorderseite</span>
+      <textarea rows="2" placeholder="" style="border: 0; background: transparent; font-size: 16px; line-height: 1.45; color: #17141F; outline: none; resize: none; padding: 0">Drittbezogenheit</textarea>
+    </label>
+      <label class="field" style="border-radius: 16px; background: #F6F4FB; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Rückseite</span>
+      <textarea rows="3" placeholder="Antwort" style="border: 0; background: transparent; font-size: 16px; line-height: 1.45; color: #17141F; outline: none; resize: none; padding: 0"></textarea>
+    </label>
+    </div>
+    <p style="margin: 0; font-size: 14px; color: #6B6678; line-height: 1.45">Die Frage liegt im Stapel Amtshaftung und wird sofort gespeichert.</p>
+    <button class="tap" style="height: 60px; border-radius: 20px; border: 0; background: #6A3FE0; color: #FFFFFF; box-shadow: 0 10px 24px -10px rgba(106,63,224,.55); font-size: 18px; font-weight: 700">Anlegen und verknüpfen</button>
+    <button class="tap" style="height: 52px; border-radius: 18px; border: 0; background: transparent; color: #6B6678; font-size: 16px; font-weight: 700">Abbrechen</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

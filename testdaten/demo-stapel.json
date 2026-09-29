@@ -301,6 +301,259 @@
       ]
     },
     {
+      "id": "demo-schemata",
+      "name": "Prüfungsschemata (Demo)",
+      "normen": "§§ 242, 263 StGB, § 839 BGB, § 331 ZPO, §§ 40 ff. VwGO",
+      "rechtsgebiete": ["ZR", "SR", "ÖR"],
+      "karten": [
+        {
+          "typ": "schema",
+          "titel": "Anfechtungsklage: Zulässigkeit",
+          "norm": "§§ 40 ff. VwGO",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "punkte": [
+            {
+              "ebene": 1,
+              "text": "Verwaltungsrechtsweg",
+              "norm": "§ 40 I VwGO",
+              "inhalt": "Öffentlich-rechtliche Streitigkeit nichtverfassungsrechtlicher Art, für die keine abweichende Zuweisung besteht."
+            },
+            {
+              "ebene": 1,
+              "text": "Statthaftigkeit",
+              "norm": "§ 42 I Alt. 1 VwGO",
+              "inhalt": "Die Aufhebung eines Verwaltungsakts wird begehrt."
+            },
+            {
+              "ebene": 1,
+              "text": "Klagebefugnis",
+              "norm": "§ 42 II VwGO",
+              "inhalt": "Der Kläger muss geltend machen, durch den Verwaltungsakt in eigenen Rechten verletzt zu sein. Nach der Möglichkeitstheorie genügt es, dass eine Rechtsverletzung nicht offensichtlich und eindeutig nach jeder Betrachtungsweise ausgeschlossen ist.",
+              "verknuepfung": "demo-vwgo-anfechtungsklage-02"
+            },
+            {
+              "ebene": 1,
+              "text": "Vorverfahren",
+              "norm": "§§ 68 ff. VwGO",
+              "inhalt": "Vor der Klage ist grundsätzlich ein Widerspruchsverfahren durchzuführen, soweit es nicht entbehrlich ist."
+            },
+            {
+              "ebene": 1,
+              "text": "Klagefrist",
+              "norm": "§ 74 I VwGO",
+              "inhalt": "Ein Monat nach Zustellung des Widerspruchsbescheids, ohne Widerspruchsbescheid ein Monat nach Bekanntgabe des Verwaltungsakts.",
+              "verknuepfung": "demo-vwgo-anfechtungsklage-03"
+            },
+            {
+              "ebene": 1,
+              "text": "Beteiligten- und Prozessfähigkeit",
+              "norm": "§§ 61, 62 VwGO",
+              "inhalt": "Beteiligtenfähig sind unter anderem natürliche und juristische Personen, prozessfähig sind die nach bürgerlichem Recht Geschäftsfähigen."
+            }
+          ],
+          "quelle": "https://www.gesetze-im-internet.de/vwgo/__42.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "schema",
+          "titel": "Amtshaftungsanspruch",
+          "norm": "§ 839 BGB i. V. m. Art. 34 GG",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "punkte": [
+            {
+              "ebene": 1,
+              "text": "Ausübung eines öffentlichen Amtes",
+              "norm": "Art. 34 S. 1 GG",
+              "inhalt": "Der Amtsträger handelt in Ausübung eines öffentlichen Amtes, wenn ein enger äußerer und innerer Zusammenhang mit der hoheitlichen Aufgabe besteht."
+            },
+            {
+              "ebene": 1,
+              "text": "Verletzung einer drittbezogenen Amtspflicht",
+              "norm": "§ 839 I 1 BGB"
+            },
+            {
+              "ebene": 2,
+              "text": "Amtspflicht",
+              "inhalt": "Jede Pflicht, die dem Amtsträger bei der Amtsausübung obliegt, insbesondere die Bindung an Recht und Gesetz."
+            },
+            {
+              "ebene": 2,
+              "text": "Drittbezogenheit",
+              "inhalt": "Die Amtspflicht muss zumindest auch dem Schutz des Geschädigten dienen.",
+              "verknuepfung": "demo-amtshaftung-04"
+            },
+            {
+              "ebene": 1,
+              "text": "Verschulden",
+              "norm": "§ 839 I 1 BGB",
+              "inhalt": "Vorsatz oder Fahrlässigkeit, gemessen an einem objektiven Sorgfaltsmaßstab."
+            },
+            {
+              "ebene": 1,
+              "text": "Kausaler Schaden",
+              "inhalt": "Der Schaden muss durch die Amtspflichtverletzung entstanden sein."
+            },
+            {
+              "ebene": 1,
+              "text": "Kein Haftungsausschluss"
+            },
+            {
+              "ebene": 2,
+              "text": "Verweisungsprivileg bei Fahrlässigkeit",
+              "norm": "§ 839 I 2 BGB",
+              "inhalt": "Der Geschädigte kann nur haften lassen, wenn er nicht auf andere Weise Ersatz erlangen kann.",
+              "verknuepfung": "demo-amtshaftung-03"
+            },
+            {
+              "ebene": 2,
+              "text": "Versäumung von Rechtsmitteln",
+              "norm": "§ 839 III BGB",
+              "inhalt": "Kein Ersatz, wenn der Verletzte es schuldhaft unterlassen hat, den Schaden durch Gebrauch eines Rechtsmittels abzuwenden.",
+              "verknuepfung": "demo-amtshaftung-05"
+            }
+          ],
+          "quelle": "https://www.gesetze-im-internet.de/bgb/__839.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "schema",
+          "titel": "Diebstahl",
+          "norm": "§ 242 StGB",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "punkte": [
+            {
+              "ebene": 1,
+              "text": "Tatbestand"
+            },
+            {
+              "ebene": 2,
+              "text": "Objektiver Tatbestand"
+            },
+            {
+              "ebene": 3,
+              "text": "Fremde bewegliche Sache",
+              "norm": "§ 242 I StGB"
+            },
+            {
+              "ebene": 3,
+              "text": "Wegnahme",
+              "norm": "§ 242 I StGB",
+              "inhalt": "Bruch fremden und Begründung neuen, nicht notwendig tätereigenen Gewahrsams.",
+              "verknuepfung": "demo-diebstahl-betrug-02"
+            },
+            {
+              "ebene": 2,
+              "text": "Subjektiver Tatbestand"
+            },
+            {
+              "ebene": 3,
+              "text": "Vorsatz",
+              "inhalt": "Vorsatz bezogen auf alle objektiven Merkmale."
+            },
+            {
+              "ebene": 3,
+              "text": "Zueignungsabsicht",
+              "norm": "§ 242 I StGB",
+              "inhalt": "Die Sache zumindest vorübergehend sich oder einem Dritten aneignen und den Eigentümer dauernd aus seiner Position verdrängen.",
+              "verknuepfung": "demo-diebstahl-betrug-03"
+            },
+            {
+              "ebene": 1,
+              "text": "Rechtswidrigkeit",
+              "inhalt": "Auch die beabsichtigte Zueignung muss rechtswidrig sein."
+            },
+            {
+              "ebene": 1,
+              "text": "Schuld"
+            }
+          ],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__242.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "schema",
+          "titel": "Betrug",
+          "norm": "§ 263 StGB",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "punkte": [
+            {
+              "ebene": 1,
+              "text": "Täuschung über Tatsachen",
+              "norm": "§ 263 I StGB",
+              "inhalt": "Einwirkung auf die Vorstellung eines anderen, die zu einer Fehlvorstellung über Tatsachen führt.",
+              "verknuepfung": "demo-diebstahl-betrug-07"
+            },
+            {
+              "ebene": 1,
+              "text": "Irrtum",
+              "inhalt": "Fehlvorstellung des Getäuschten, die durch die Täuschung hervorgerufen oder aufrechterhalten wird."
+            },
+            {
+              "ebene": 1,
+              "text": "Vermögensverfügung",
+              "inhalt": "Jedes Tun, Dulden oder Unterlassen, das sich unmittelbar vermögensmindernd auswirkt."
+            },
+            {
+              "ebene": 1,
+              "text": "Vermögensschaden",
+              "inhalt": "Negativer Saldo aus dem Vermögen vor und nach der Verfügung."
+            },
+            {
+              "ebene": 1,
+              "text": "Vorsatz"
+            },
+            {
+              "ebene": 1,
+              "text": "Bereicherungsabsicht",
+              "norm": "§ 263 I StGB",
+              "inhalt": "Absicht, sich oder einem Dritten einen rechtswidrigen, stoffgleichen Vermögensvorteil zu verschaffen."
+            }
+          ],
+          "quelle": "https://www.gesetze-im-internet.de/stgb/__263.html",
+          "pruefung": "offen"
+        },
+        {
+          "typ": "schema",
+          "titel": "Versäumnisurteil gegen den Beklagten",
+          "norm": "§ 331 ZPO",
+          "tags": ["Demo", "Aufbau", "Klausur"],
+          "punkte": [
+            {
+              "ebene": 1,
+              "text": "Antrag des Klägers",
+              "norm": "§ 331 I 1 ZPO"
+            },
+            {
+              "ebene": 1,
+              "text": "Säumnis des Beklagten",
+              "norm": "§ 331 I 1 ZPO",
+              "inhalt": "Der Beklagte ist im Termin nicht erschienen oder verhandelt nicht."
+            },
+            {
+              "ebene": 1,
+              "text": "Zulässigkeit der Klage",
+              "inhalt": "Zulässigkeit von Amts wegen prüfen; ist die Klage unzulässig, ergeht ein klageabweisendes Prozessurteil."
+            },
+            {
+              "ebene": 1,
+              "text": "Schlüssigkeit des Klägervortrags",
+              "norm": "§ 331 II ZPO",
+              "inhalt": "Der Vortrag des Klägers trägt den Antrag; sonst wird die Klage abgewiesen."
+            },
+            {
+              "ebene": 1,
+              "text": "Kein Hindernis",
+              "norm": "§§ 335, 337 ZPO",
+              "inhalt": "Etwa nicht ordnungsgemäße Ladung oder Nichteinhaltung von Fristen.",
+              "verknuepfung": "demo-zpo-versaeumnisurteil-04"
+            }
+          ],
+          "quelle": "https://www.gesetze-im-internet.de/zpo/__331.html",
+          "pruefung": "offen"
+        }
+      ]
+    },
+    {
       "id": "demo-vwgo-anfechtungsklage",
       "name": "VwGO: Anfechtungsklage (Demo)",
       "normen": "§ 42 I Alt. 1 VwGO",

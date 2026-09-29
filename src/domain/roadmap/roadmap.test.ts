@@ -46,6 +46,14 @@ describe('roadmap', () => {
     });
   });
 
+  it('Version 0.6.0: M0 bis M5 fertig, M6 in Arbeit', () => {
+    const r = roadmap('0.6.0');
+    expect(r.done).toBe(6);
+    expect(r.rows[5]?.state).toBe('done');
+    expect(r.rows[6]?.state).toBe('current');
+    expect(r.summary).toBe('6 von 12 Schritten fertig');
+  });
+
   it('eine Zwischenversion zählt noch zum vorigen Meilenstein', () => {
     expect(roadmap('0.4.1').done).toBe(4);
     expect(roadmap('0.4.1').rows[4]?.state).toBe('current');

@@ -2,10 +2,15 @@
  * Karten anlegen und prüfen: aus den Eingaben des Formulars (Text in Feldern) werden geprüfte
  * Felder, aus einer Karte ihre Abfragen. Reine Funktionen.
  */
-import type { Card, CardType, ReviewItem } from '../model/records';
+import type { Card, CardType, ReviewItem, SchemaPoint } from '../model/records';
 import { clozeNumbers, clozePlain, gapSub, hasGap } from './cloze';
+import { checkSchema, type DraftPoint, type SchemaErrors } from './schema';
 
-export const CARD_TYPE_LABEL: Readonly<Record<CardType, string>> = { qa: 'Frage', cloze: 'Lücke' };
+export const CARD_TYPE_LABEL: Readonly<Record<CardType, string>> = {
+  qa: 'Frage',
+  cloze: 'Lücke',
+  schema: 'Schema',
+};
 
 /** Höchstzahl der Tags je Karte und Grenzen der Felder (Schema in records.ts). */
 export const MAX_TAGS = 20;
@@ -17,7 +22,8 @@ export const NOTE_MAX = 2000;
 
 export type CardContent =
   | { readonly type: 'qa'; readonly front: string; readonly back: string }
-  | { readonly type: 'cloze'; readonly text: string };
+  | { readonly type: 'cloze'; readonly text: string }
+  | { readonly type: 'schema'; readonly title: string; readonly points: SchemaPoint[] };
 
 /** Eingaben des Karten-Formulars, alles Text. */
 export interface CardForm {
@@ -26,6 +32,9 @@ export interface CardForm {
   readonly back: string;
   /** Text mit Lücken in der Schreibweise `{{c1::Wort}}`. */
   readonly text: string;
+  /** Schema: Titel und Gliederung (schema.ts). */
+  readonly title?: string;
+  readonly points?: readonly DraftPoint[];
   readonly norm: string;
   /** „#Klausur #AG“ oder „Klausur, AG“. */
   readonly tags: string;
@@ -41,7 +50,10 @@ export interface CardFields {
   readonly note: string;
 }
 
-export type CardErrors = Partial<Record<'front' | 'back' | 'text' | 'norm' | 'note', string>>;
+export type CardErrors = Partial<Record<'front' | 'back' | 'text' | 'norm' | 'note', string>> & {
+  /** Nur Schema: Fehler in Titel und Gliederung. */
+  readonly schema?: SchemaErrors;
+};
 
 /** Tags aus freier Eingabe: getrennt durch Leerraum oder Komma, ohne „#“, ohne Doppelte. */
 export function normalizeTags(input: string): string[] {
@@ -91,6 +103,15 @@ export function checkCard(
     if (Object.keys(errors).length > 0) return { ok: false, errors };
     return { ok: true, fields: { content: { type: 'qa', front, back }, norm, tags, note } };
   }
+  if (form.type === 'schema') {
+    const checked = checkSchema({ title: form.title ?? '', points: form.points ?? [] });
+    if (!checked.ok) return { ok: false, errors: { ...errors, schema: checked.errors } };
+    if (Object.keys(errors).length > 0) return { ok: false, errors };
+    return {
+      ok: true,
+      fields: { content: { type: 'schema', ...checked.fields }, norm, tags, note },
+    };
+  }
   const text = form.text.trim();
   if (text === '') errors.text = 'Der Text fehlt.';
   else if (!hasGap(text)) errors.text = 'Markiere mindestens ein Wort als Lücke.';
@@ -102,7 +123,7 @@ export function checkCard(
 
 /** Kennungen der Abfragen einer Karte: Frage `['']`, Lückentext `['c1', 'c3']`. */
 export function reviewSubs(content: CardContent): string[] {
-  return content.type === 'qa' ? [''] : clozeNumbers(content.text).map(gapSub);
+  return content.type === 'cloze' ? clozeNumbers(content.text).map(gapSub) : [''];
 }
 
 /** Feste Kennung einer Abfrage: dieselbe Karte und Lücke ergibt immer dieselbe ID. */
@@ -112,6 +133,7 @@ export function reviewItemId(cardId: string, sub: string): string {
 
 /** Inhalt einer Karte ohne die gemeinsamen Felder. */
 export function contentOf(card: Card): CardContent {
+  if (card.type === 'schema') return { type: 'schema', title: card.title, points: card.points };
   return card.type === 'qa'
     ? { type: 'qa', front: card.front, back: card.back }
     : { type: 'cloze', text: card.text };
@@ -119,10 +141,29 @@ export function contentOf(card: Card): CardContent {
 
 /** Einzeilige Überschrift für Listen: Vorderseite, bei Lücken der Text mit aufgedeckten Lücken. */
 export function cardTitle(
-  card: Pick<Card, 'type'> & Partial<Record<'front' | 'text', string>>,
+  card: Pick<Card, 'type'> & Partial<Record<'front' | 'text' | 'title', string>>,
 ): string {
-  const raw = card.type === 'qa' ? (card.front ?? '') : clozePlain(card.text ?? '');
+  const raw =
+    card.type === 'qa'
+      ? (card.front ?? '')
+      : card.type === 'schema'
+        ? (card.title ?? '')
+        : clozePlain(card.text ?? '');
   return raw.replace(/\s+/gu, ' ').trim();
+}
+
+/**
+ * Kurztext einer Karte für die Vorschau in der Verknüpfung (Schema.dc.html): die Antwort einer
+ * Frage, der Text eines Lückentextes mit aufgedeckten Lücken, bei einem Schema die Punkte der
+ * obersten Ebene.
+ */
+export function cardPreview(card: Card): string {
+  if (card.type === 'qa') return card.back.trim();
+  if (card.type === 'cloze') return clozePlain(card.text).trim();
+  return card.points
+    .filter((p) => p.level === 1)
+    .map((p, i) => `${String(i + 1)}. ${p.text}`)
+    .join(' · ');
 }
 
 /** Karte aus geprüften Feldern. */
@@ -143,6 +184,9 @@ export function buildCard(
     updatedAt,
   };
   const { content } = fields;
+  if (content.type === 'schema') {
+    return { ...base, type: 'schema', title: content.title, points: content.points };
+  }
   return content.type === 'qa'
     ? { ...base, type: 'qa', front: content.front, back: content.back }
     : { ...base, type: 'cloze', text: content.text };

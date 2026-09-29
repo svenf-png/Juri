@@ -1,6 +1,7 @@
 import { toggleArea } from '@/domain/library/deckRules';
 import type { Deck } from '@/domain/model/records';
 import type { JuriDb } from '../db';
+import { unlinkCards } from './cards';
 
 export async function readDecks(db: JuriDb): Promise<Deck[]> {
   return db.decks.toArray();
@@ -68,6 +69,8 @@ export async function deleteDeck(
     await db.reviewItems.bulkDelete(items);
     await db.cards.bulkDelete(cards);
     await db.decks.delete(id);
+    // Schemas in anderen Stapeln verlieren die Verweise auf die gelöschten Karten (ADR-009).
+    await unlinkCards(db, new Set(cards), new Set(cards), Date.now());
     return { cards: cards.length, items: items.length };
   });
 }

@@ -9,6 +9,7 @@ import { Platzhalter } from '@/ui/screens/platzhalter/Platzhalter';
 import { PLATZHALTER } from '@/ui/screens/platzhalter/texte';
 import { Erstellen } from '@/ui/screens/erstellen/Erstellen';
 import { KarteBearbeiten } from '@/ui/screens/erstellen/KarteBearbeiten';
+import type { SchemaVariant } from '@/ui/screens/schema/SchemaVorschau';
 import { Stapel } from '@/ui/screens/stapel/Stapel';
 import { ProfileScreen, RequireBrowserTab, RequireNoProfile, RequireProfile } from './gates';
 
@@ -23,6 +24,20 @@ const HeuteErledigtVorschau = lazy(() =>
 );
 const LernenVorschau = lazy(() =>
   import('@/ui/screens/lernen/LernenVorschau').then((m) => ({ default: m.LernenVorschau })),
+);
+const SCHEMA_VARIANTS: readonly SchemaVariant[] = [
+  'lernen',
+  'inhalt',
+  'editor',
+  'punkt',
+  'verknuepfen',
+  'verknuepfen-leer',
+  'neue-karte',
+  'editor-leer',
+  'loeschen',
+];
+const SchemaVorschau = lazy(() =>
+  import('@/ui/screens/schema/SchemaVorschau').then((m) => ({ default: m.SchemaVorschau })),
 );
 const LernrhythmusVorschau = lazy(() =>
   import('@/ui/screens/einstellungen/LernrhythmusVorschau').then((m) => ({
@@ -139,6 +154,15 @@ export function routes(
       element: (
         <Lazy>
           <LernenVorschau variant={variant} />
+        </Lazy>
+      ),
+    })),
+    // Schema (Schema.dc.html, SchemaEditor.dc.html und die M5-Ergänzungen) mit Beispieldaten.
+    ...SCHEMA_VARIANTS.map((variant) => ({
+      path: `/styleguide/schema/${variant}`,
+      element: (
+        <Lazy>
+          <SchemaVorschau variant={variant} />
         </Lazy>
       ),
     })),

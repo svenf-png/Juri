@@ -13,7 +13,7 @@ import type { Area, Deck } from '@/domain/model/records';
 import { newId } from '@/platform/id';
 import { addArea, addDeck, changeArea, changeDeck, removeArea } from '@/features/library/actions';
 import { Button } from '../../components/Button';
-import { CheckIcon, ChevronRightIcon, PlusIcon, TrashIcon } from '../../components/icons';
+import { CheckIcon, ChevronRightIcon, LinkIcon, PlusIcon, TrashIcon } from '../../components/icons';
 import { Sheet } from '../../components/Sheet';
 import { TextField } from '../../components/TextField';
 import { cx } from '../../cx';
@@ -60,6 +60,7 @@ export function ConfirmSheet({
   title,
   preview,
   info,
+  usage,
   text,
   backup = false,
   confirmLabel,
@@ -70,6 +71,8 @@ export function ConfirmSheet({
   title: string;
   preview?: { type: string; text: string };
   info?: readonly [string, string][];
+  /** Verknüpfungen aus Schemas, die mit der Löschung entfallen (ADR-009). */
+  usage?: { heading: string; rows: readonly (readonly [string, string])[] } | undefined;
   text: string;
   backup?: boolean;
   confirmLabel: string;
@@ -94,6 +97,20 @@ export function ConfirmSheet({
             </div>
           ))}
         </dl>
+      ) : null}
+      {usage ? (
+        <div className={styles.usage}>
+          <span className={styles.usageHeading}>
+            <LinkIcon size={14} strokeWidth={2.4} />
+            {usage.heading}
+          </span>
+          {usage.rows.map(([title, count], i) => (
+            <div key={i} className={styles.usageRow}>
+              <span>{title}</span>
+              <span className={styles.usageCount}>{count}</span>
+            </div>
+          ))}
+        </div>
       ) : null}
       <p className={styles.para}>{text}</p>
       {backup ? (

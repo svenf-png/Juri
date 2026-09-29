@@ -35,7 +35,7 @@ Manuelle Prüfungen auf echten Geräten. Testgeräte (Entscheidung 7): iPhone 14
 
 ## M3: Karten und Stapel (pro Gerät)
 
-1. **Testinstanz:** `svenf-png.github.io/Juri/test/` öffnen, Einstellungen → Testdaten → „Demo-Stapel hinzufügen“. Stapel-Übersicht zeigt 5 Stapel; „Amtshaftung (Demo)“ steht in ZR und ÖR.
+1. **Testinstanz:** `svenf-png.github.io/Juri/test/` öffnen, Einstellungen → Testdaten → „Demo-Stapel hinzufügen“. Stapel-Übersicht zeigt 6 Stapel; „Amtshaftung (Demo)“ steht in ZR und ÖR, „Prüfungsschemata (Demo)“ in ZR, SR und ÖR.
 2. **Echte App, erster Stapel:** Stapel → „Ersten Stapel anlegen“, Name „Deliktsrecht“, „Zivilrecht“ antippen, anlegen.
 3. **Frage anlegen:** „+“ (iPhone) bzw. „Neue Karte“ (iPad), Vorderseite und Rückseite tippen, „Speichern & nächste“. Die Meldung „Karte gespeichert“ erscheint oben; die Tastatur verdeckt weder Felder noch Knopf.
 4. **Lückentext:** Typ „Lücke“, einen Satz tippen, ein Wort **per Doppeltipp oder Ziehen der Auswahlgriffe** markieren, „Markierung wird Lücke“. Das Wort wird violett und die Auswahl bleibt im Text sichtbar. Drei Lücken setzen: „Lücken · 3 Abfragen“. Text weiter tippen, ohne dass die Hervorhebung verrutscht (auch bei Zeilenumbruch und Diktat). Notieren: Sitzt die violette Fläche exakt hinter dem Wort?
@@ -61,9 +61,24 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/` installieren oder öffnen, 
 9. **Stapel:** Im Stapel-Detail lernt „N fällige lernen“ nur diesen Stapel; die Fortschrittsleiste zeigt „neu“, „im Lernen“ und „sicher“.
 10. **Lernrhythmus:** Einstellungen → „Lernrhythmus“ (iPad: Sidebar). Voreinstellung Examen wählen, Regler bewegen, „Neue Karten pro Tag“ ändern. Zu „Leitner-Kasten“ wechseln, Fach antippen, Tage ändern, zurück zu FSRS: Karten bleiben bewertet.
 11. **Tastatur (iPad mit Tastatur):** Leertaste dreht, 1 bis 4 bewerten, Strg/Cmd+Z nimmt zurück, Esc beendet.
-12. **Entwicklungsstand:** Einstellungen → „Entwicklungsstand“ aufklappen: M0 bis M4 mit Haken und Version, M5 „in Arbeit“.
+12. **Entwicklungsstand:** Einstellungen → „Entwicklungsstand“ aufklappen: M0 bis M5 mit Haken und Version, M6 „in Arbeit“.
 13. **Backup:** Nach dem Lernen ein Backup erstellen, App löschen, neu installieren, einspielen: Fälligkeiten und Lernstand sind wie vorher.
 14. **Bewegung:** Bei „Bewegung reduzieren“ (Bedienungshilfen) drehen und wechseln die Karten ohne Animation.
+
+## M5: Schema und Verknüpfungen (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/` mit den Demo-Stapeln (Stapel „Prüfungsschemata (Demo)“). In der echten App vorher einen Stapel mit zwei, drei Fragen anlegen.
+
+1. **Schema anlegen:** „+“ (iPhone) bzw. „Neue Karte“ (iPad), Typ „Schema“, Titel „Amtshaftungsanspruch“, „Gliederung bearbeiten“. „Ersten Punkt hinzufügen“: Das Sheet „Punkt bearbeiten“ öffnet sich, die Tastatur verdeckt weder Felder noch „Fertig“. Text, Norm und Inhalt eintragen, „Fertig“.
+2. **Gliederung:** „+“ setzt einen weiteren Punkt, „Einrücken“ macht ihn zum Unterpunkt („a)“), „Ausrücken“ holt ihn zurück. Einen Punkt antippen (Rahmen), nochmal antippen: Sheet. „Nach oben“ und „Nach unten“ verschieben ihn samt Unterpunkten. Notieren: Sind die Knöpfe unten gut zu treffen, auch am Rand des iPhone?
+3. **Verknüpfen:** Punkt wählen, Ketten-Symbol unten oder Chip „verknüpfen“. Das Feld öffnet sich mit dem Punkttext als Suche. Notieren: Verdeckt die Tastatur die Treffer oder springt die Ansicht? Zoomt Safari beim Antippen des Suchfelds hinein? Eine Karte antippen: Chip „Karte“ steht am Punkt. „Ändern“ und „Verknüpfung lösen“ ausprobieren.
+4. **Neue Karte aus dem Schema:** Im Suchfeld einen Begriff ohne Treffer tippen, „+ Neue Karte … anlegen“, Rückseite eintragen, „Anlegen und verknüpfen“. Die Karte liegt danach im Stapel.
+5. **Sichern und Speichern:** „Sichern“ führt zurück ins Formular („N Punkte“), „Speichern & nächste“ legt das Schema an. „Zurück“ im Editor nach einer Änderung fragt „Änderungen verwerfen?“.
+6. **Lernen:** Heute → „Lernen starten“. Beim Schema stehen die Punkte als graue Platzhalter da. „Nächster Punkt“ deckt einen auf (Norm und Inhalt erscheinen, der neue Punkt ist hinterlegt), „Alle zeigen“ alle. Erst danach erscheinen die Bewertungen. Notieren: Bleibt der aufgedeckte Punkt bei langen Schemas im Blick?
+7. **Verknüpfte Karte:** Am aufgedeckten Punkt „Karte“ antippen: Sheet mit der Karte. „Zurück zum Schema“ schließt es, „Karte lernen“ öffnet die Karte allein. Wischen auf der Schema-Karte (links „Nochmal“, rechts „Gut“) funktioniert wie sonst, das Antippen von „Karte“ wird nicht als Wischen gewertet.
+8. **Löschen:** Eine verknüpfte Frage öffnen, „Karte löschen“: Das Blatt nennt „Verknüpft in N Schemas“. Nach dem Löschen hat das Schema alle Punkte, aber keine Verknüpfung mehr. Ebenso beim Löschen eines Stapels.
+9. **Backup:** Backup erstellen, App löschen, neu installieren, einspielen: Schemas, Inhalte und Verknüpfungen sind wieder da.
+10. **iPad:** Erstellen und Editor stehen als Spalte in der Mitte; Lernen wie beim iPhone.
 
 ## Updates (pro Gerät, ab Version 0.4.1)
 
