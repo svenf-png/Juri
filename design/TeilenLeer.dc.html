@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Teilen: noch kein Stapel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button{font-family:inherit;cursor:pointer}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,border-color .2s}
+.tap:active{transform:scale(.97)}
+.knob{transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+.track{transition:background-color .25s}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-6px) rotate(-2deg)}}
+.float{animation:float 3.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 64px 24px 0 24px; display: flex; flex-direction: column; gap: 20px">
+  <h1 class="d" style="margin: 0; font-size: 40px; font-weight: 750; letter-spacing: -0.03em">Teilen</h1>
+  <div style="border-radius: 26px; background: #F6F4FB; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+    <span style="font-size: 17px; font-weight: 700">Noch nichts zu teilen</span>
+    <p style="margin: 0; font-size: 14px; line-height: 1.45; color: #6B6678">Lege zuerst einen Stapel mit Karten an. Dann kannst du ihn hier als Datei weitergeben.</p>
+    <a class="tap" href="Bibliothek.dc.html" style="height: 56px; border-radius: 18px; border: 0; background: #17141F; color: #FFFFFF; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px">Zu den Stapeln</a>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-size: 12px; font-weight: 700; color: #6B6678; letter-spacing: .06em; text-transform: uppercase">Empfangen</span>
+    <div style="border-radius: 22px; border: 1.5px dashed #CFC8E0; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+      <p style="margin: 0; font-size: 14px; line-height: 1.45; color: #6B6678">Stapel von anderen kommen als .juri-Datei. Sichere sie zuerst in „Dateien“, dann öffnest du sie hier.</p>
+      <button class="tap" style="height: 50px; border-radius: 16px; border: 0; background: #6A3FE0; color: #FFFFFF; font-size: 16px; font-weight: 700">Datei öffnen</button>
+      <button class="tap" style="height: 44px; border: 0; background: transparent; color: #5B34D1; font-size: 14px; font-weight: 700">So geht’s</button>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: space-between; align-items: center; height: 44px; font-size: 14px; font-weight: 600">
+    <span style="color: #6B6678">Alles sichern</span>
+    <a href="Einstellungen.dc.html" style="font-weight: 700">Backup exportieren</a>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

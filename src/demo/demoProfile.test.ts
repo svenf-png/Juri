@@ -77,7 +77,7 @@ describe('Demo-Profil', () => {
       expect(ids).toContain('serie-7');
       expect(ids).toContain('wiederholungen-1000');
       expect(ids).not.toContain('angelegt-100');
-      expect(ids).not.toContain('serie-30');
+      expect(ids).not.toContain('teamplayer');
     });
 
     it('lässt einen Meilenstein zur Feier offen', () => {

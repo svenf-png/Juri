@@ -3,6 +3,7 @@ import {
   deadlinesShortcut,
   formShortcut,
   pdfShortcut,
+  shareShortcut,
   shellShortcut,
   type KeyInput,
 } from './shortcuts';
@@ -79,5 +80,20 @@ describe('pdfShortcut', () => {
     expect(pdfShortcut(key('ArrowLeft', { altKey: true }))).toBeNull();
     expect(pdfShortcut(key('0', { editable: true }))).toBeNull();
     expect(pdfShortcut(key('a'))).toBeNull();
+  });
+});
+
+describe('shareShortcut', () => {
+  it('„i“ öffnet eine Datei, „e“ teilt', () => {
+    expect(shareShortcut(key('i'))).toBe('open-file');
+    expect(shareShortcut(key('e'))).toBe('send');
+  });
+
+  it('schweigt beim Tippen und mit Strg, Cmd oder Alt', () => {
+    expect(shareShortcut(key('i', { editable: true }))).toBeNull();
+    expect(shareShortcut(key('e', { ctrlKey: true }))).toBeNull();
+    expect(shareShortcut(key('e', { metaKey: true }))).toBeNull();
+    expect(shareShortcut(key('i', { altKey: true }))).toBeNull();
+    expect(shareShortcut(key('x'))).toBeNull();
   });
 });

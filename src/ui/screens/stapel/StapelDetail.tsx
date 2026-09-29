@@ -101,7 +101,11 @@ export function StapelDetail({
             <ChevronLeftIcon size={24} />
             Stapel
           </Link>
-          <Link to="/teilen" className={cx(styles.round, tap.tap)} aria-label="Stapel teilen">
+          <Link
+            to={`/teilen?stapel=${model.id}`}
+            className={cx(styles.round, tap.tap)}
+            aria-label="Stapel teilen"
+          >
             <ShareIcon size={20} />
           </Link>
         </div>
@@ -212,7 +216,11 @@ export function StapelDetail({
             </p>
           </div>
           <div className={styles.padActions}>
-            <Link to="/teilen" className={cx(styles.padRound, tap.tap)} aria-label="Stapel teilen">
+            <Link
+              to={`/teilen?stapel=${model.id}`}
+              className={cx(styles.padRound, tap.tap)}
+              aria-label="Stapel teilen"
+            >
               <ShareIcon size={20} />
             </Link>
             <Cta model={model} className={styles.padCta} />

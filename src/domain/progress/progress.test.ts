@@ -604,3 +604,30 @@ describe('Feier', () => {
     expect(m.moreMilestones).toBe(1);
   });
 });
+
+describe('Teamplayer (M10)', () => {
+  it('zählt geteilte Stapel und schaltet bei drei frei', () => {
+    const list = badges({ ...NO_METRICS, shared: 1 }, new Map());
+    const team = list.find((b) => b.id === 'teamplayer');
+    expect(team?.sub).toBe('1 von 3 geteilt');
+    expect(team?.done).toBe(false);
+    expect(newlyReached({ ...NO_METRICS, shared: 2 }, new Set()).map((m) => m.id)).toEqual([]);
+    expect(newlyReached({ ...NO_METRICS, shared: 3 }, new Set()).map((m) => m.id)).toEqual([
+      'teamplayer',
+    ]);
+    expect(
+      badges({ ...NO_METRICS, shared: 3 }, new Map()).find((b) => b.id === 'teamplayer')?.sub,
+    ).toBe('geschafft');
+  });
+
+  it('steht wie im Design an letzter Stelle', () => {
+    expect(MILESTONES.map((m) => m.id)).toEqual([
+      'erste-karte',
+      'angelegt-100',
+      'schema-baumeister',
+      'serie-7',
+      'wiederholungen-1000',
+      'teamplayer',
+    ]);
+  });
+});

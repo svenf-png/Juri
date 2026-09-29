@@ -3,7 +3,7 @@ titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
 stand: 2026-09-29
-version: 0.10 (nach M9)
+version: 0.11 (nach M10)
 ---
 
 # Die Idee
@@ -217,13 +217,20 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 ## Teilen ohne Server
 
-- Format `.juri`: ein ZIP mit Beschreibung, Karten und Medien
-- Verschicken über das Teilen-Menü von iOS
+- Format `.juri`: ein ZIP mit Beschreibung, Karten und Medien, **ohne Lernfortschritt**; Notizen nur mit Schalter
+- Verschicken über das Teilen-Menü von iOS (am Rechner als Download), die Datei entsteht schon vor dem Tippen
 - Empfangen: Datei in „Dateien“ sichern, in Juri importieren
-- Jede Datei wird vor dem Import streng geprüft
+- **Aktualisieren** gleicht über stabile IDs ab und lässt den Lernfortschritt unberührt; **Als Kopie** vergibt neue IDs und baut Verknüpfungen und Abfragen um
+- **Konflikte** (beide geändert, lokal gelöscht) entscheidest du je Karte; ein Stand pro Karte zeigt, wer geändert hat
+- Jede Datei wird vor dem Import streng geprüft: erlaubte Einträge, Größen, Verweise, Bildsignaturen, Zip-Bomben; ein Fehler lässt alles unverändert
 - Inhalte werden nie als ausführbarer Code behandelt
 
-> **Notizen:** iOS erlaubt Web-Apps nicht, im Teilen-Menü als Ziel zu erscheinen. Der Umweg über die Dateien-App ist deshalb nötig; Juri erklärt ihn einmalig mit einer Anleitung.
+> **Notizen:** iOS erlaubt Web-Apps nicht, im Teilen-Menü als Ziel zu erscheinen. Der Umweg über die Dateien-App ist deshalb nötig; Juri erklärt ihn mit einer Anleitung (ADR-003, ADR-014). Der Import läuft in einer Transaktion zusammen mit Tagesaggregaten und Meilensteinen. Ob das Teilen-Menü die Datei mit dem MIME-Typ application/octet-stream anbietet und die Dateiauswahl sie wieder annimmt, prüft der Gerätetest.
+
+<!-- layout: bild-gross -->
+<!-- status: M10 umgesetzt (Teilen.dc.html und acht ergänzte Artboards), Bild mit Beispieldaten aus der App -->
+
+![Import-Vorschau: Absender, Stapel, Aktualisieren oder Kopie](../bilder/teilen-import-iphone.png)
 
 ## Sicherheit
 
@@ -267,14 +274,14 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 <!-- layout: tabelle -->
 
-| Phase       | Inhalt                                                                                     |
-| ----------- | ------------------------------------------------------------------------------------------ |
-| M0 bis M3   | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                                 |
-| M4 bis M5   | Lern-Engine und Prüfungsschemata (fertig)                                                  |
-| M6 bis M9   | PDF und Abdeckung, Browser-Version, Fristen, Erfolge (fertig)                              |
-| M10 bis M13 | Teilen und Import, High fives, Feinschliff und Veröffentlichung, eigene Desktop-Gestaltung |
+| Phase       | Inhalt                                                                           |
+| ----------- | -------------------------------------------------------------------------------- |
+| M0 bis M3   | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                       |
+| M4 bis M5   | Lern-Engine und Prüfungsschemata (fertig)                                        |
+| M6 bis M10  | PDF und Abdeckung, Browser-Version, Fristen, Erfolge, Teilen und Import (fertig) |
+| M11 bis M13 | High fives, Feinschliff und Veröffentlichung, eigene Desktop-Gestaltung          |
 
-> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M9 sind 25,5 von 37 PT (69 %) eingeplant erledigt. M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht (sieben Artboards, Umfang-Schritt), M9 mit rund 3 statt 2,5 PT (sechs Artboards, Verfügbarkeit aus dem Lernlog, Aufbau der Aggregate in Migration und Backup); beides Einschätzungen, nicht gemessen. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
+> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M10 sind 28,5 von 37 PT (77 %) eingeplant erledigt. M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht (sieben Artboards, Umfang-Schritt), M9 mit rund 3 statt 2,5 PT (sechs Artboards, Verfügbarkeit aus dem Lernlog, Aufbau der Aggregate in Migration und Backup); M10 mit rund 3,5 statt 3 PT (acht Artboards, Prüfung fremder Dateien, gemeinsamer Stand pro Karte für Konflikte, Demo-Datei); alles Einschätzungen, nicht gemessen. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
 
 ## Stand heute
 
@@ -290,7 +297,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M7 fertig:** Juri läuft in Chrome, Safari und Firefox am Rechner (1440 × 900), ohne Sperrbild; Backup als Download, Kürzel (n, /, Strg+Eingabe), Zoom per Strg+Rad und Tasten im PDF, installierbar als Desktop-App
 - **M8 fertig:** Fristen mit Art, Datum und Umfang, Deckelung und Endspurt, Countdown und „x % sitzen sicher“, Kalenderdatei (.ics), Fristen in Heute und Lernrhythmus, Demo-Profil mit drei Fristen
 - **M9 fertig:** Erfolge mit Serie und Pausentag, Heatmap (12 und 26 Wochen) mit Rekordtag, Tagesziele einstellbar, Meilensteine mit Feier, „Tagesziel erreicht“ nach der Lernrunde, Heute mit echtem Ziel und Verlauf, Demo-Profil mit 26 Wochen Verlauf
-- Automatische Prüfung bei jeder Änderung: 717 Unit-Tests, 7 Bildvergleiche für Erfolge, 8 für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
+- **M10 fertig:** Teilen als `.juri`-Datei (Stapel wählen, Notizen und Erfolge nur mit Schalter, Teilen-Menü oder Download), Import mit Vorschau, „Aktualisieren“ (Fortschritt bleibt) und „Als Kopie“, Konflikte je Karte, Prüfung fremder und manipulierter Dateien, Import-Anleitung, Meilenstein „Teamplayer“, Demo-Datei in der Testinstanz
+- Automatische Prüfung bei jeder Änderung: 831 Unit-Tests, 8 Bildvergleiche für Teilen und Import, 7 für Erfolge, 8 für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
-- Fortschritt: 10 von 14 Meilensteinen (71 %), nach Planwerten 25,5 von 37 Personentagen (69 %)
-- Nächster Schritt: Gerätetest von M0 bis M9 (iPhone, iPad, Desktop-Browser), dann M10 (Teilen und Import)
+- Fortschritt: 11 von 14 Meilensteinen (79 %), nach Planwerten 28,5 von 37 Personentagen (77 %)
+- Nächster Schritt: Gerätetest von M0 bis M10 (iPhone, iPad, Desktop-Browser; für M10 vor allem Teilen-Menü, MIME-Typ und Dateiauswahl), dann M11 (High fives)

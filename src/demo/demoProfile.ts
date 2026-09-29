@@ -117,6 +117,7 @@ function demoMilestones(
     reviews: rows.reduce((sum, row) => sum + row.reviews, 0),
     schemas,
     streak: current,
+    shared: 0,
   };
   const reached = newlyReached(metrics, new Set(), MILESTONES);
   const nth = (type: string, n: number) => events.filter((e) => e.type === type)[n - 1]?.at ?? now;

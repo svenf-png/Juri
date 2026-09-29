@@ -44,13 +44,13 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 
 ## Ausprobieren mit Beispielstapeln
 
-<!-- status: M3 in der Testinstanz umgesetzt, als Datei zum Importieren ab M10 -->
+<!-- status: M3 in der Testinstanz umgesetzt, als Datei zum Importieren seit M10 (Demo-Datei) -->
 
 - Die Testinstanz „Juri Test“ hat **6 Demo-Stapel** mit 40 Karten zu ZR, SR und ÖR, darunter einen mit fünf Prüfungsschemata
 - In den Einstellungen unter „Testdaten“: **„Demo-Stapel hinzufügen“**
 - Die Inhalte sind als **Demo** gekennzeichnet; sie ersetzen kein Skript
 - Jeden Stapel kannst du einzeln wieder löschen
-- Als Datei zum Importieren kommen sie mit dem Teilen (Kapitel „Teilen“)
+- Als Datei zum Importieren gibt es **„Demo-Datei (.juri) vorbereiten“** (zwei Stapel mit Notizen, Bild, PDF und Verknüpfungen); du teilst sie in „Dateien“ und importierst sie unter **Teilen** (Kapitel „Teilen“)
 
 > **Notizen:** Die Testinstanz liegt unter svenf-png.github.io/Juri/test/. Sie ist eine eigene App mit eigenen Daten und berührt deine echten Lerndaten nicht. Die Karteninhalte sind noch nicht fachlich geprüft (testdaten/README.md).
 
@@ -355,23 +355,51 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Einen Stapel verschicken
 
-<!-- status: entwurf nach Teilen.dc.html, pruefen in M10 -->
+<!-- layout: bild-gross -->
+<!-- status: M10 umgesetzt (Teilen.dc.html und ergänzte Artboards), Teilen-Menü auf dem Gerät prüfen (Testliste M10) -->
 
-- Im Stapel oben rechts auf **Teilen** tippen
-- Optional **„Eigene Notizen mitschicken“** einschalten
-- **„AirDrop, Nachrichten, Mail …“** öffnet das Teilen-Menü von iOS
-- Dein Lernfortschritt bleibt **immer privat**
+![Teilen auf dem iPhone: Datei mit Größe, Stapel, Schalter für Notizen und Erfolge, Knopf zum Teilen](../bilder/teilen-iphone.png)
+
+- Im Stapel oben rechts auf **Teilen** tippen oder in der Leiste **Teilen** öffnen
+- Die Zeile **„Stapel“** zeigt, was in der Datei steckt; ein Tipp öffnet die Auswahl, **mehrere Stapel** sind möglich
+- **„Eigene Notizen mitschicken“** ist aus, bis du es einschaltest
+- **„Erfolge mitschicken“** teilt Serie, Wiederholungen und Meilensteine; ausschalten geht jederzeit
+- **„AirDrop, Nachrichten, Mail …“** öffnet das Teilen-Menü von iOS; am Rechner lädt **„Herunterladen“** die Datei
+- Dein Lernfortschritt bleibt **immer privat**: Die Datei enthält nur Karten, Bilder und PDFs
+
+> **Notizen:** Die Datei entsteht schon beim Wählen, deshalb steht ihre Größe in der Zeile und das Teilen-Menü öffnet sich sofort. Der Absender in der Datei ist dein Name, er ist nicht überprüft und dient nur der Anzeige.
 
 ## Einen Stapel empfangen
 
-<!-- status: entwurf, Anleitung wird im Canvas entworfen, pruefen in M10 -->
+<!-- layout: bild-gross -->
+<!-- status: M10 umgesetzt, Import-Anleitung als Artboard ergänzt (Entscheidung 2) -->
 
-1. Die `.juri`-Datei in AirDrop oder Nachrichten **„In Dateien sichern“**
+![Import-Anleitung: erst in Dateien sichern, Juri öffnen, Datei wählen](../bilder/teilen-anleitung-iphone.png)
+
+1. Die `.juri`-Datei in AirDrop, Nachrichten oder Mail **„In Dateien sichern“**
 2. Juri öffnen, **Teilen**, dann **„Datei öffnen“**
-3. Datei auswählen (sie steht unter „Zuletzt“ oben)
-4. **„Aktualisieren“** (dein Fortschritt bleibt) oder **„Als Kopie anlegen“**
+3. Datei auswählen (frisch gesicherte stehen unter „Zuletzt“ oben)
+4. Die Vorschau zeigt Absender, Stapel und Kartenzahl. **„Aktualisieren“** (dein Fortschritt bleibt) oder **„Als Kopie anlegen“** (eigener, unabhängiger Stapel), dann **„Importieren“**
 
-> **Notizen:** iOS lässt Web-Apps nicht direkt im Teilen-Menü erscheinen. Deshalb der kurze Umweg über die Dateien-App.
+- **„So geht’s“** zeigt diese Schritte in der App
+- Hast du den Stapel schon, sagt die Vorschau, wie viele Karten neu und geändert sind; ohne Änderung bleibt **„Importieren“** aus, ein zweiter Import ändert nichts
+- Karten, die der Absender inzwischen entfernt hat, bleiben bei dir; Aktualisieren löscht nie
+
+> **Notizen:** iOS lässt Web-Apps nicht direkt im Teilen-Menü erscheinen. Deshalb der kurze Umweg über die Dateien-App. Eine beschädigte, leere oder fremde Datei wird mit einer Meldung abgelehnt, und es ändert sich nichts.
+
+## Wenn beide etwas geändert haben
+
+<!-- layout: bild-gross -->
+<!-- status: M10 umgesetzt, Merge-Konflikt als Artboard ergänzt (Entscheidung 2) -->
+
+![Konflikte: pro Karte „Meine behalten“ oder „Import nehmen“](../bilder/teilen-konflikt-iphone.png)
+
+- Hast du eine Karte geändert und der Absender auch, fragt Juri je Karte: **„Meine behalten“** oder **„Import nehmen“**
+- Hast du eine Karte gelöscht, die in der Datei steht: **„Gelöscht lassen“** oder **„Wiederherstellen“**
+- Ohne Auswahl bleibt deine Karte, wie sie ist
+- Nach dem Import zeigt eine Meldung die Zahlen und führt mit **„Zum Stapel“** hin
+
+> **Notizen:** Juri merkt sich je Karte den Stand, den ihr zuletzt gemeinsam hattet, und erkennt daran, wer seitdem geändert hat. Notizen, Stapelname, Rechtsgebiete und Lernfortschritt bleiben bei dir.
 
 # Erfolge
 
@@ -386,9 +414,9 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - **Pausentag:** Ein freier Tag pro Woche (Montag bis Sonntag) bricht die Serie nicht. Tage, an denen keine Karte fällig oder neu war, auch nicht
 - **Heatmap:** Je dunkler, desto mehr; umschaltbar zwischen **Gelernt** und **Angelegt**, 12 Wochen (iPad: 26)
 - Der **Rekordtag** ist mit einem Ring markiert
-- **Meilensteine** wie „Erste Karte“, „7 Tage am Stück“ oder „1.000 Wiederholungen“; ein neuer erscheint einmal als Feier
+- **Meilensteine** wie „Erste Karte“, „7 Tage am Stück“, „1.000 Wiederholungen“ oder „Teamplayer“ (drei Stapel geteilt); ein neuer erscheint einmal als Feier
 
-> **Notizen:** Ein neuer Tag beginnt um 4 Uhr. Das Zurücknehmen einer Bewertung nimmt sie auch aus dem Tagesziel. Der Meilenstein „Teamplayer“ kommt mit dem Teilen.
+> **Notizen:** Ein neuer Tag beginnt um 4 Uhr. Das Zurücknehmen einer Bewertung nimmt sie auch aus dem Tagesziel. Der Meilenstein „Teamplayer“ zählt verschiedene Stapel, die du geteilt hast (Ziel: 3).
 
 ## Tagesziele einstellen
 

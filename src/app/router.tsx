@@ -13,6 +13,7 @@ import type { AbdeckungVariant } from '@/ui/screens/erstellen/AbdeckungVorschau'
 import type { SchemaVariant } from '@/ui/screens/schema/SchemaVorschau';
 import type { ErfolgeVariant } from '@/ui/screens/erfolge/ErfolgeVorschau';
 import type { FristenVariant } from '@/ui/screens/fristen/FristenVorschau';
+import type { TeilenVariant } from '@/ui/screens/teilen/TeilenVorschau';
 import { Stapel } from '@/ui/screens/stapel/Stapel';
 import { ProfileScreen, RequireBrowserTab, RequireNoProfile, RequireProfile } from './gates';
 
@@ -65,6 +66,22 @@ const ErfolgeVorschau = lazy(() =>
 );
 const Erfolge = lazy(() =>
   import('@/ui/screens/erfolge/Erfolge').then((m) => ({ default: m.Erfolge })),
+);
+const TEILEN_VARIANTS: readonly TeilenVariant[] = [
+  'bereit',
+  'import',
+  'stapel',
+  'konflikt',
+  'fehler',
+  'leer',
+  'erfolg',
+  'anleitung',
+];
+const TeilenVorschau = lazy(() =>
+  import('@/ui/screens/teilen/TeilenVorschau').then((m) => ({ default: m.TeilenVorschau })),
+);
+const Teilen = lazy(() =>
+  import('@/ui/screens/teilen/Teilen').then((m) => ({ default: m.Teilen })),
 );
 const FristenVorschau = lazy(() =>
   import('@/ui/screens/fristen/FristenVorschau').then((m) => ({ default: m.FristenVorschau })),
@@ -147,7 +164,14 @@ export function routes(
                 </Lazy>
               ),
             },
-            { path: '/teilen', element: <Platzhalter {...PLATZHALTER.teilen} /> },
+            {
+              path: '/teilen',
+              element: (
+                <Lazy>
+                  <Teilen />
+                </Lazy>
+              ),
+            },
             {
               path: '/fristen',
               element: (
@@ -247,6 +271,15 @@ export function routes(
       element: (
         <Lazy>
           <ErfolgeVorschau variant={variant} />
+        </Lazy>
+      ),
+    })),
+    // Teilen und Import (Teilen.dc.html und die M10-Artboards) mit Beispieldaten.
+    ...TEILEN_VARIANTS.map((variant) => ({
+      path: `/styleguide/teilen/${variant}`,
+      element: (
+        <Lazy>
+          <TeilenVorschau variant={variant} />
         </Lazy>
       ),
     })),
