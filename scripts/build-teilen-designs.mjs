@@ -45,7 +45,8 @@ const DATA = {
     'Stapel von anderen kommen als .juri-Datei. Sichere sie zuerst in „Dateien“, dann öffnest du sie hier.',
   incomingTitle: 'StPO: Revision',
   incomingMeta: 'von Mara · 27 Karten',
-  updateHint: 'Du hast den Stapel schon. 3 neue Karten, 2 Karten geändert. Dein Fortschritt bleibt.',
+  updateHint:
+    'Du hast den Stapel schon. 3 neue Karten, 2 Karten geändert. Dein Fortschritt bleibt.',
   copyHint: 'Eigener, unabhängiger Stapel',
   error: 'Diese Datei ist kein Juri-Stapel.',
 };
@@ -63,7 +64,10 @@ const fileRow = `<div style="display: flex; align-items: center; gap: 16px">
 
 const pickRow = `<button class="tap" style="width: 100%; min-height: 52px; padding: 0; border: 0; border-top: 1px solid #DCD6EA; border-bottom: 1px solid #DCD6EA; background: transparent; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #17141F; text-align: left"><span style="font-size: 15px; font-weight: 600; color: #6B6678">Stapel</span><span style="display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 700; text-align: right">${DATA.deck}${ICON.chevron}</span></button>`;
 
-const switchRow = (label, on) => `<button class="tap" role="switch" aria-checked="${on}" style="height: 48px; border: 0; background: transparent; padding: 0; display: flex; align-items: center; justify-content: space-between; color: #17141F; text-align: left">
+const switchRow = (
+  label,
+  on,
+) => `<button class="tap" role="switch" aria-checked="${on}" style="height: 48px; border: 0; background: transparent; padding: 0; display: flex; align-items: center; justify-content: space-between; color: #17141F; text-align: left">
       <span style="font-size: 15px; font-weight: 600">${label}</span>
       <span class="track" style="width: 50px; height: 30px; border-radius: 15px; background: ${on ? '#6A3FE0' : '#DCD6EA'}; position: relative; display: block">
         <span class="knob" style="position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 2px 4px rgba(0,0,0,.2); transform: ${on ? 'translateX(20px)' : 'translateX(0)'}"></span>
@@ -96,7 +100,11 @@ const idleIncoming = `<div style="border-radius: 22px; border: 1.5px dashed #CFC
       ${linkButton('So geht’s')}
     </div>`;
 
-const option = (title, sub, on) => `<button class="tap" role="radio" aria-checked="${on}" style="min-height: 56px; border-radius: 14px; border: 0; padding: 8px 12px; display: flex; align-items: center; gap: 12px; background: ${on ? '#F6F4FB' : '#FFFFFF'}">
+const option = (
+  title,
+  sub,
+  on,
+) => `<button class="tap" role="radio" aria-checked="${on}" style="min-height: 56px; border-radius: 14px; border: 0; padding: 8px 12px; display: flex; align-items: center; gap: 12px; background: ${on ? '#F6F4FB' : '#FFFFFF'}">
             <span style="width: 20px; height: 20px; border-radius: 10px; box-sizing: border-box; border: ${on ? '6px solid #6A3FE0' : '2px solid #CFC8E0'}; flex-shrink: 0"></span>
             <span style="display: flex; flex-direction: column; gap: 1px; text-align: left">
               <span style="font-size: 15px; font-weight: 700; color: #17141F">${title}</span>
@@ -104,7 +112,12 @@ const option = (title, sub, on) => `<button class="tap" role="radio" aria-checke
             </span>
           </button>`;
 
-const who = (letter, name, meta, bg = '#17141F') => `<div style="display: flex; align-items: center; gap: 12px">
+const who = (
+  letter,
+  name,
+  meta,
+  bg = '#17141F',
+) => `<div style="display: flex; align-items: center; gap: 12px">
         <span style="width: 40px; height: 40px; border-radius: 20px; background: ${bg}; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center">${letter}</span>
         <div style="display: flex; flex-direction: column; gap: 2px">
           <span style="font-size: 16px; font-weight: 700">${name}</span>
@@ -133,7 +146,11 @@ const footer = `<div style="display: flex; justify-content: space-between; align
     <a href="Einstellungen.dc.html" style="font-weight: 700">Backup exportieren</a>
   </div>`;
 
-const page = (exportPart, incomingPart, overlay = '') => `<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 64px 24px 0 24px; display: flex; flex-direction: column; gap: 20px">
+const page = (
+  exportPart,
+  incomingPart,
+  overlay = '',
+) => `<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 64px 24px 0 24px; display: flex; flex-direction: column; gap: 20px">
   <h1 class="d" style="margin: 0; font-size: 40px; font-weight: 750; letter-spacing: -0.03em">Teilen</h1>
   ${exportPart}
   <div style="display: flex; flex-direction: column; gap: 12px">
@@ -159,8 +176,10 @@ const ghost = (label) =>
 
 const badge = (code) =>
   `<span style="width: 34px; height: 24px; border-radius: 8px; background: #17141F; color: #FFFFFF; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">${code}</span>`;
-const pickItem = (name, meta, on) => `<button class="tap" aria-pressed="${on}" style="width: 100%; min-height: 56px; padding: 0; border: 0; border-bottom: 1px solid #EFECF5; background: none; display: flex; align-items: center; gap: 12px; color: #17141F; text-align: left"><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 650">${name}</span><span style="font-size: 13px; color: #6B6678; font-weight: 500">${meta}</span></span>${on ? `<span style="color: #6A3FE0; display: flex">${ICON.check}</span>` : ''}</button>`;
-const group = (code, name, items) => `<div><div style="display: flex; align-items: center; gap: 10px; padding-bottom: 2px">${badge(code)}<h3 style="margin: 0; font-size: 14px; font-weight: 700">${name}</h3></div>${items.join('')}</div>`;
+const pickItem = (name, meta, on) =>
+  `<button class="tap" aria-pressed="${on}" style="width: 100%; min-height: 56px; padding: 0; border: 0; border-bottom: 1px solid #EFECF5; background: none; display: flex; align-items: center; gap: 12px; color: #17141F; text-align: left"><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 650">${name}</span><span style="font-size: 13px; color: #6B6678; font-weight: 500">${meta}</span></span>${on ? `<span style="color: #6A3FE0; display: flex">${ICON.check}</span>` : ''}</button>`;
+const group = (code, name, items) =>
+  `<div><div style="display: flex; align-items: center; gap: 10px; padding-bottom: 2px">${badge(code)}<h3 style="margin: 0; font-size: 14px; font-weight: 700">${name}</h3></div>${items.join('')}</div>`;
 
 const deckSheet = sheet(
   'Teilen',
@@ -175,7 +194,13 @@ const deckSheet = sheet(
   ])}</div>${primary('Fertig')}`,
 );
 
-const conflictItem = (title, detail, mineLabel, theirsLabel, mine) => `<div style="display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid #EFECF5">
+const conflictItem = (
+  title,
+  detail,
+  mineLabel,
+  theirsLabel,
+  mine,
+) => `<div style="display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid #EFECF5">
       <span style="font-size: 16px; font-weight: 650">${title}</span>
       <span style="font-size: 13px; color: #6B6678; font-weight: 500">${detail}</span>
       <div role="group" aria-label="${title}" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: #F6F4FB">
@@ -199,7 +224,8 @@ const conflictSheet = sheet(
     ${primary('Importieren')}${ghost('Abbrechen')}`,
 );
 
-const infoRow = (k, v, last) => `<div style="display: flex; justify-content: space-between; gap: 12px; padding: 10px 0${last ? '' : '; border-bottom: 1px solid #EFECF5'}"><dt style="font-size: 15px; color: #6B6678">${k}</dt><dd style="margin: 0; font-size: 15px; font-weight: 700; text-align: right">${v}</dd></div>`;
+const infoRow = (k, v, last) =>
+  `<div style="display: flex; justify-content: space-between; gap: 12px; padding: 10px 0${last ? '' : '; border-bottom: 1px solid #EFECF5'}"><dt style="font-size: 15px; color: #6B6678">${k}</dt><dd style="margin: 0; font-size: 15px; font-weight: 700; text-align: right">${v}</dd></div>`;
 const importedSheet = sheet(
   'Import',
   'Stapel importiert',
@@ -209,15 +235,22 @@ const importedSheet = sheet(
 );
 
 const STEPS = [
-  ['In „Dateien“ sichern', 'Tippe in AirDrop, Nachrichten oder Mail auf die Datei und wähle „In Dateien sichern“.'],
+  [
+    'In „Dateien“ sichern',
+    'Tippe in AirDrop, Nachrichten oder Mail auf die Datei und wähle „In Dateien sichern“.',
+  ],
   ['Juri öffnen', 'Komm hierher zu „Teilen“ und tippe auf „Datei öffnen“.'],
-  ['Datei wählen', 'Wähle die .juri-Datei aus. Frisch gesicherte Dateien stehen unter „Zuletzt“ ganz oben.'],
+  [
+    'Datei wählen',
+    'Wähle die .juri-Datei aus. Frisch gesicherte Dateien stehen unter „Zuletzt“ ganz oben.',
+  ],
 ];
 const guideSheet = sheet(
   'Import',
   'So kommt die Datei in Juri',
   `<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 16px">${STEPS.map(
-    ([t, b], i) => `<li style="display: flex; align-items: flex-start; gap: 14px"><span style="width: 32px; height: 32px; border-radius: 16px; flex-shrink: 0; background: #EEE8FD; color: #6A3FE0; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center">${i + 1}</span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700">${t}</span><span style="font-size: 14px; line-height: 1.45; color: #6B6678">${b}</span></span></li>`,
+    ([t, b], i) =>
+      `<li style="display: flex; align-items: flex-start; gap: 14px"><span style="width: 32px; height: 32px; border-radius: 16px; flex-shrink: 0; background: #EEE8FD; color: #6A3FE0; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center">${i + 1}</span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700">${t}</span><span style="font-size: 14px; line-height: 1.45; color: #6B6678">${b}</span></span></li>`,
   ).join('')}</ol>
     ${primary('Datei öffnen')}${ghost('Schließen')}`,
 );
