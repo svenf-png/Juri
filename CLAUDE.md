@@ -2,7 +2,7 @@
 
 Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, Safari/WebKit), ohne Server für Nutzerdaten. Dieses Dokument ist die Übergabe für neue Sessions. Maßgeblich sind:
 
-- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 12**, Annahmen A1 bis A49, Plan M0 bis M13, Risiken
+- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 12**, Annahmen A1 bis A50, Plan M0 bis M13, Risiken
 - `docs/adr/`: Architekturentscheidungen (Stack, Speicher, .juri, Scheduler, Hosting, Datenbank, Karten, Lern-Engine)
 - `design/*.dc.html`: verbindliches Design (HTML mit Inline-Styles; `support.js` und der Script-Block am Ende gehören zum Design-Tool)
 - `docs/folien/`: Projekt-Präsentation und Handbuch, per KI in PowerPoint umwandelbar (`KONVENTION.md`)

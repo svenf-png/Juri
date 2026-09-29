@@ -266,4 +266,5 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M5 fertig:** Prüfungsschemata mit Gliederung in drei Ebenen, Norm und Inhalt je Punkt, Punkt für Punkt lernen, Verknüpfungen zu anderen Karten, Löschen ohne Verweise ins Leere, Demo-Schemata
 - **M6 fertig:** Abdeckung aus Foto oder PDF-Seite mit Feldern, Zoom und Editor, PDF-Ansicht mit Markieren zu Frage, Antwort oder Lücke, Quelle an der Karte, geteilte Ansicht auf dem iPad, Demo-Skript mit 50 Seiten
 - Automatische Prüfung bei jeder Änderung: 541 Unit-Tests, 12 Bildvergleiche für Abdeckung und PDF, Abläufe mit Foto und PDF, insgesamt rund 180 E2E-Szenarien auf iPhone- und iPad-Größen
+- Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
 - Nächster Schritt: Gerätetest von M0 bis M6 auf iPhone und iPad, dann M7 (Browser-Version)
