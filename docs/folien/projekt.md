@@ -274,7 +274,7 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M6 fertig:** Abdeckung aus Foto oder PDF-Seite mit Feldern, Zoom und Editor, PDF-Ansicht mit Markieren zu Frage, Antwort oder Lücke, Quelle an der Karte, geteilte Ansicht auf dem iPad, Demo-Skript mit 50 Seiten
 - **M7 fertig:** Juri läuft in Chrome, Safari und Firefox am Rechner (1440 × 900), ohne Sperrbild; Backup als Download, Kürzel (n, /, Strg+Eingabe), Zoom per Strg+Rad und Tasten im PDF, installierbar als Desktop-App
 - **M8 fertig:** Fristen mit Art, Datum und Umfang, Deckelung und Endspurt, Countdown und „x % sitzen sicher“, Kalenderdatei (.ics), Fristen in Heute und Lernrhythmus, Demo-Profil mit drei Fristen
-- Automatische Prüfung bei jeder Änderung: 636 Unit-Tests, 8 Bildvergleiche für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
+- Automatische Prüfung bei jeder Änderung: 638 Unit-Tests, 8 Bildvergleiche für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
 - Fortschritt: 9 von 14 Meilensteinen (64 %), nach Planwerten 23 von 37 Personentagen (62 %)
 - Nächster Schritt: Gerätetest von M0 bis M8 (iPhone, iPad, Desktop-Browser), dann M9 (Fortschritt)
