@@ -15,9 +15,17 @@ export function Screen({
   return <main className={cx(styles.screen, styles[width], className)}>{children}</main>;
 }
 
-export function BackLink({ to, label }: { to: string; label: string }) {
+export function BackLink({
+  to,
+  label,
+  className,
+}: {
+  to: string;
+  label: string;
+  className?: string | undefined;
+}) {
   return (
-    <Link to={to} className={styles.back}>
+    <Link to={to} className={cx(styles.back, className)}>
       <svg
         width="24"
         height="24"

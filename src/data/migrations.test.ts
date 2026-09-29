@@ -71,3 +71,69 @@ describe('Migrationen', () => {
     expect(migrateTables(tables, 2, [v1, v2])).toEqual(tables);
   });
 });
+
+describe('Version 2 (M3)', () => {
+  it('hebt eine Datenbank aus M1 an, ohne Profil und Metadaten anzutasten', async () => {
+    const { db, reopen } = testDb([MIGRATIONS[0]!]);
+    await writeProfileName(db, 'Sven', 1);
+    await db.meta.put({ key: 'onboardedAt', value: 1 });
+    db.close();
+    const upgraded = reopen(MIGRATIONS.slice(0, 2));
+    expect((await readProfile(upgraded))?.name).toBe('Sven');
+    expect(await upgraded.meta.get('onboardedAt')).toEqual({ key: 'onboardedAt', value: 1 });
+    expect(upgraded.tables.map((t) => t.name).sort()).toEqual([
+      'areas',
+      'cards',
+      'decks',
+      'events',
+      'meta',
+      'profile',
+      'reviewItems',
+    ]);
+    expect(await upgraded.cards.count()).toBe(0);
+  });
+});
+
+describe('Version 3 (M4)', () => {
+  const item = { id: 'k1', cardId: 'k1', deckId: 'd1', sub: '', createdAt: 5 };
+
+  it('hebt eine Datenbank aus M3 an: Abfragen bleiben unverändert und gelten als neu', async () => {
+    const { db, reopen } = testDb(MIGRATIONS.slice(0, 2));
+    await writeProfileName(db, 'Sven', 1);
+    await db.reviewItems.add(item);
+    db.close();
+    const upgraded = reopen(MIGRATIONS);
+    expect(upgraded.verno).toBe(4);
+    expect(await upgraded.reviewItems.get('k1')).toEqual(item);
+    expect(upgraded.tables.map((t) => t.name)).toContain('reviewLog');
+    expect(await upgraded.reviewLog.count()).toBe(0);
+    expect((await readProfile(upgraded))?.name).toBe('Sven');
+  });
+
+  it('indiziert die Fälligkeit; neue Abfragen ohne `due` stehen nicht im Index', async () => {
+    const { db } = testDb();
+    await db.reviewItems.bulkAdd([
+      item,
+      { ...item, id: 'k2', cardId: 'k2', due: 100 },
+      { ...item, id: 'k3', cardId: 'k3', due: 300 },
+    ]);
+    expect(await db.reviewItems.where('due').below(200).primaryKeys()).toEqual(['k2']);
+    expect(await db.reviewItems.where('due').aboveOrEqual(0).count()).toBe(2);
+  });
+});
+
+describe('Version 4 (M5)', () => {
+  const base = { deckId: 'd1', norm: '', tags: [], createdAt: 1, updatedAt: 1 };
+
+  it('hebt eine Datenbank aus M4 an: Karten bleiben unverändert, der Typ ist indiziert', async () => {
+    const { db, reopen } = testDb(MIGRATIONS.slice(0, 3));
+    const qa = { ...base, id: 'k1', type: 'qa' as const, front: 'F', back: 'B' };
+    await db.cards.add(qa);
+    db.close();
+    const upgraded = reopen(MIGRATIONS);
+    expect(upgraded.verno).toBe(4);
+    expect(await upgraded.cards.get('k1')).toEqual(qa);
+    expect(await upgraded.cards.where('type').equals('qa').count()).toBe(1);
+    expect(await upgraded.cards.where('type').equals('schema').count()).toBe(0);
+  });
+});

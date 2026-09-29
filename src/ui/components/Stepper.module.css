@@ -1,0 +1,46 @@
+/* Stepper: Knöpfe 36 px sichtbar (Radius 12, Fläche surface), Wert 17 px / 800 (Einstellungen.dc.html). */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.button {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+/* Trefferfläche auf 44 × 44 px erweitern. */
+.button::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+
+.face {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button:disabled .face {
+  opacity: 0.4;
+}
+
+.value {
+  min-width: 36px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 800;
+}

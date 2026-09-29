@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Schema bearbeiten: leer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button,input,textarea{font-family:inherit}
+button{cursor:pointer}
+textarea::placeholder,input::placeholder{color:#8E8A99}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s}
+.tap:active{transform:scale(.97)}
+.field{transition:box-shadow .2s}
+.field:focus-within{box-shadow:0 0 0 2px #6A3FE0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden; padding: 54px 20px 0 20px; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; justify-content: space-between; align-items: center; height: 44px">
+    <a href="Erstellen.dc.html" style="font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 2px; margin-left: -8px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Zurück</a>
+    <span style="font-size: 16px; font-weight: 700">Schema</span>
+    <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: #6A3FE0; color: #FFFFFF; font-size: 14px; font-weight: 700">Sichern</button>
+  </div>
+  <div class="d" style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Amtshaftungsanspruch</div>
+  <div style="font-size: 14px; color: #6B6678; font-weight: 500; margin-top: -8px">§ 839 BGB i. V. m. Art. 34 GG · ZR, ÖR</div>
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; border-top: 1px solid #EFECF5; padding: 56px 24px 0 24px; text-align: center">
+    <span style="font-size: 17px; font-weight: 700">Noch keine Punkte</span>
+    <span style="font-size: 14px; color: #6B6678; line-height: 1.45">Lege die Gliederung Punkt für Punkt an. Mit Einrücken bildest du Unterpunkte (a, aa).</span>
+    <button class="tap" style="margin-top: 8px; height: 50px; padding: 0 22px; border-radius: 16px; border: 0; background: #17141F; color: #FFFFFF; font-size: 15px; font-weight: 700">Ersten Punkt hinzufügen</button>
+  </div>
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 10px 16px 28px 16px; border-top: 1px solid #EFECF5; background: #FFFFFF; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+    <button aria-label="Punkt hinzufügen" style="border: 0; border-radius: 12px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button><button aria-label="Einrücken" style="border: 0; border-radius: 12px; background: #F6F4FB; color: #17141F; opacity: .4; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M11 12h9M11 18h9M4 10l3 2.5L4 15"></path></svg></button><button aria-label="Ausrücken" style="border: 0; border-radius: 12px; background: #F6F4FB; color: #17141F; opacity: .4; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M11 12h9M11 18h9M7 10l-3 2.5L7 15"></path></svg></button><button aria-label="Mit Karte verknüpfen" style="border: 0; border-radius: 12px; background: #6A3FE0; color: #FFFFFF; opacity: .4; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"></path><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"></path></svg></button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

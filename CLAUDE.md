@@ -2,24 +2,24 @@
 
 Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, Safari/WebKit), ohne Server für Nutzerdaten. Dieses Dokument ist die Übergabe für neue Sessions. Maßgeblich sind:
 
-- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 10**, Annahmen A1 bis A14, Plan M0 bis M11, Risiken
-- `docs/adr/`: Architekturentscheidungen (Stack, Speicher, .juri, Scheduler, Hosting)
+- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 11**, Annahmen A1 bis A33, Plan M0 bis M11, Risiken
+- `docs/adr/`: Architekturentscheidungen (Stack, Speicher, .juri, Scheduler, Hosting, Datenbank, Karten, Lern-Engine)
 - `design/*.dc.html`: verbindliches Design (HTML mit Inline-Styles; `support.js` und der Script-Block am Ende gehören zum Design-Tool)
 - `docs/folien/`: Projekt-Präsentation und Handbuch, per KI in PowerPoint umwandelbar (`KONVENTION.md`)
 
 ## Arbeitsweise
 
 - Nutzer: Sven. Sprache Deutsch. **Keine Gedankenstriche** (Em-Dash, En-Dash) in Texten für ihn, in UI-Texten und Doku. Bei unklaren Anforderungen nachfragen, Entscheidungen per Auswahl-Popup mit Empfehlung.
-- Fakten zu iOS/WebKit nur mit Quelle (WebKit-Blog, MDN, caniuse), nichts erfinden.
-- **Ein PR pro Meilenstein** gegen `main`. Nach jedem Meilenstein: Tests grün, Demo-Notiz, Doku und Folien aktualisiert, offene Punkte.
+- Fakten zu iOS/WebKit nur mit Quelle (WebKit-Blog, MDN, caniuse), nichts erfinden. Normtexte nur wörtlich aus gesetze-im-internet.de; die Cloud-Umgebung sperrt diese Adresse (Netzwerkrichtlinie), sie muss in den Umgebungseinstellungen freigegeben sein, sonst bleiben Demo-Inhalte „ungeprüft“ (`testdaten/README.md`).
+- **Ein PR pro Meilenstein** gegen `main`. Nach jedem Meilenstein: Tests grün, Version in `package.json` auf 0.(n+1).0 (speist den Entwicklungsstand in den Einstellungen, A31), Demo-Notiz, Doku und Folien aktualisiert, offene Punkte.
 - Design exakt übernehmen (Farben, Radien, Größen, Kurven), Werte aus `src/ui/tokens/tokens.ts`, nicht runden.
 - Touch-Ziele mindestens 44 px (sichtbare Größe darf kleiner sein, Trefferfläche erweitern), Text-Kontrast mindestens 4,5:1, echte Buttons/Links/Labels, reduzierte Bewegung respektieren.
 
-## Budget und Chats
+## Kosten und Chats
 
-- Budget: rund 100 $ Guthaben für das ganze Projekt (nach M0 verbraucht: 28,44 $). Testbarer Prototyp = M1 bis M4 (Entscheidung 11).
-- **Ein neuer Chat pro Meilenstein**, damit der Kontext klein bleibt. Am Ende jedes Meilensteins den Kostenstand melden und in `docs/ARCHITEKTUR.md` (Entscheidung 11) nachtragen. `get_session` liefert keinen Kostenwert (in M1 geprüft): den Betrag nicht schätzen, sondern Sven fragen, der ihn aus der Abrechnung abliest.
-- Sparsam arbeiten: wenige Screenshots und Bild-Reads, gezielte Datei-Ausschnitte statt ganzer Dateien, keine breite Web-Recherche ohne Anlass. Designs nur für den jeweiligen Meilenstein lesen.
+- Kosten: Sven hat ab M4 freigegeben, dass Kosten keine Rolle mehr spielen, alles läuft über das Plan-Abo. Die frühere Budgetgrenze (rund 100 $, verbraucht: nach M0 28,44 $) entfällt, ein Kostenstand muss nicht mehr gemeldet werden. Testbarer Prototyp = M1 bis M4 (Entscheidung 11).
+- **Ein neuer Chat pro Meilenstein**, damit der Kontext klein bleibt.
+- Gezielt arbeiten: Datei-Ausschnitte statt ganzer Dateien, keine breite Web-Recherche ohne Anlass. Designs nur für den jeweiligen Meilenstein lesen.
 - Routine-Meilensteine mit `/effort high`, M4 (Lernalgorithmus) und M9 (Merge) mit höherer Stufe.
 
 ### Start-Nachricht für einen Meilenstein-Chat
@@ -27,7 +27,7 @@ Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, 
 ```
 Juri, Meilenstein Mx. Lies CLAUDE.md, docs/ARCHITEKTUR.md (Entscheidungen, Annahmen,
 Plan-Zeile Mx) und nur die Design-Dateien, die Mx betrifft. Setze Mx um, ein PR gegen main.
-Frag mich nur bei kritischen Punkten. Am Ende: Demo-Notiz, offene Punkte, Kostenstand.
+Frag mich nur bei kritischen Punkten. Am Ende: Demo-Notiz, offene Punkte, PT-Stand.
 ```
 
 ## Befehle
@@ -60,7 +60,12 @@ WebKit läuft in der GitHub-CI.
 - Tokens: `tokens.ts` → `tokens.css` (Vite-Plugin), Gleichstand und Kontraste in `tokens.test.ts`.
 - Bildschirm-Abstände oben: iPhone Designwert + `var(--top-shift)` (Designs enthalten 47 px Statusleiste), iPad Designwert + `var(--top-inset)`.
 - Shell (M2): `AppShell` als Layout-Route, Tab-Bar unter 768 px, Sidebar ab 768 px, iPad-Designs ab 1100 px (A8). Bildschirme sind reine Ansichten eines Modells aus `domain/` (z. B. `todayModel`), Beispieldaten der Designs unter `/styleguide/heute`.
-- Pixelnähe: `tests/e2e/design.ts` rendert `design/*.dc.html` im Testbrowser; `heute.spec.ts` vergleicht Bild und Lage mit der App (auch WebKit). Neue Screens so absichern.
+- Pixelnähe: `tests/e2e/design.ts` rendert `design/*.dc.html` im Testbrowser (mit Vorlagen `sc-for`, `sc-if`, verschachtelt); `heute.spec.ts` und `stapel.spec.ts` vergleichen Bild und Lage mit der App (auch WebKit). Bewusste Abweichungen stehen mit Grund in `FIXES`. Neue Screens so absichern.
+- Karten und Stapel (M3, ADR-007): Tabellen `areas`, `decks` (m:n über `areaIds`), `cards` (qa, cloze), `reviewItems` (Lücke = Abfrage), `events` (Ereignis-Log). Reine Logik in `domain/cards`, `domain/library`, `domain/today/build.ts`; Schreiben in `data/repositories`, Hooks in `features/library`. Route `/stapel/:deckId?` (Master-Detail ab 1100 px), `/neu`, `/karte/:cardId`. Warn-Rot `danger` nur für Löschen und Fehler. Demo-Stapel: `testdaten/demo-stapel.json`.
+- Lernen (M4, ADR-008): `reviewItems` trägt `fsrs`, `leitner`, `due` (Index des aktiven Algorithmus), `reviewLog` das Lernlog samt Zustand davor (Undo), Einstellungen liegen in `meta` (`learning`). Reine Logik in `domain/scheduler` (ts-fsrs nur in `fsrs.ts`, Leitner, Fälligkeit und Reihenfolge in `queue.ts`, Zustand in `schedule.ts`) und `domain/session` (Zustandsmaschine, `present.ts` für die Ansicht). Schreiben in `data/repositories/study.ts`, Session-Hook `features/study/useSession.ts`, Bildschirme `ui/screens/lernen` und `ui/screens/einstellungen/Lernrhythmus*`. Route `/lernen?stapel=<ID>`. Der Entwicklungsstand (`domain/roadmap`) folgt der Version aus `package.json`.
+- Schema und Verknüpfungen (M5, ADR-009): Kartentyp `schema` mit flachen Punkten (`level` 1 bis 3, `text`, `norm`, `content`, `link`), eine Abfrage je Schema. Reine Logik in `domain/cards/schema.ts` (Editor-Operationen, Prüfung, Zählung, Verknüpfungen), Ansicht in `domain/session/present.ts` (`schemaRows`), Aufdeck-Schritte einer Station (`Station.steps`) in `domain/session`. Löschen bereinigt Verweise in derselben Transaktion (`data/repositories/cards.ts`, `decks.ts`), Backup prüft sie (`domain/model/integrity.ts`), Schema-Version 4. Dienste des Editors (Suche, verknüpfte Karte, neue Karte) sind über `LinkServices` (`features/library/links.ts`) austauschbar; Bildschirme `ui/screens/erstellen/SchemaEditor.tsx`, `ui/screens/lernen/LinkedCardSheet.tsx`, Vorschauen unter `/styleguide/schema/<Variante>` für `tests/e2e/schema.spec.ts`. Route `/lernen?karte=<ID>` lernt eine einzelne Karte.
+- Bildvergleich in Chromium läuft mit `--disable-lcd-text` (`playwright.config.ts`): Ein `<dialog>` wird in eigener Ebene mit Graustufen-Glättung gezeichnet, die Design-Seiten mit Farbsäumen. Bewusste Abweichungen vom Design stehen in `FIXES` (`tests/e2e/design.ts`).
+- Beim Design-Vergleich: Elemente, die im Design ohne `border-box` mit Rand gezeichnet sind, bekommen `box-sizing: content-box`, damit die Größe auf jeder Bildschirmdichte stimmt. Das Design lässt die Zeilenhöhe auf „normal“: Bildschirme aus dem Design setzen `line-height: normal`.
 
 ## Stand
 

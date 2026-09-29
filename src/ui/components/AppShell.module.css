@@ -9,6 +9,10 @@
   min-height: 100dvh;
 }
 
+.shell[data-pushed] {
+  --tabbar-height: 0px;
+}
+
 .content {
   min-width: 0;
   /* Bildschirme mit <Screen> lassen unten Platz für die Tab-Bar. */

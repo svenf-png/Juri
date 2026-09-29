@@ -196,3 +196,23 @@
   text-align: right;
   overflow-wrap: anywhere;
 }
+
+.linkRow {
+  color: var(--ink);
+  min-height: 64px;
+}
+
+.linkLabel {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.linkSub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.chevron {
+  color: var(--chevron);
+  display: flex;
+}

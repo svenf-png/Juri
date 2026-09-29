@@ -49,3 +49,11 @@ export function relativeDays(from: Day, to: Day): string {
 export function countdown(from: Day, to: Day): string {
   return `${Math.max(0, daysBetween(from, to))} T`;
 }
+
+/** „12.09.2026“ für einen Zeitpunkt, nach der Uhr des Geräts. */
+export function numericDate(ms: number): string {
+  const d = new Date(ms);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  return `${dd}.${mm}.${String(d.getFullYear())}`;
+}

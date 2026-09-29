@@ -18,6 +18,36 @@ export interface Migration {
  */
 export const MIGRATIONS: readonly Migration[] = [
   { version: 1, stores: { profile: 'id', meta: 'key' } },
+  {
+    // M3: Rechtsgebiete, Stapel (m:n über den Mehrfach-Index areaIds), Karten, Abfragen, Ereignisse.
+    version: 2,
+    stores: {
+      areas: 'id, code',
+      decks: 'id, *areaIds',
+      cards: 'id, deckId, createdAt, *tags',
+      reviewItems: 'id, cardId, deckId',
+      events: '++seq, at, type',
+    },
+  },
+  {
+    // M4: Lernzustand an den Abfragen (optionale Felder `fsrs`, `leitner`, `due`, `lastReviewedAt`;
+    // bestehende Abfragen sind damit „neu“, keine Umformung nötig), Index auf `due` für die
+    // Fälligkeit, und das Lernlog `reviewLog` (Undo, Tagesbilanz, spätere FSRS-Optimierung).
+    version: 3,
+    stores: {
+      reviewItems: 'id, cardId, deckId, due',
+      reviewLog: '++seq, itemId, at',
+    },
+  },
+  {
+    // M5: Schema-Karten (neuer Kartentyp `schema`, ohne Umformung) und ein Index auf `type`, damit
+    // Löschen die Schemas mit Verknüpfungen ohne Vollzugriff findet (ADR-009). Die Version trennt
+    // Backups mit Schemas sauber von älteren App-Ständen, die den Typ nicht kennen.
+    version: 4,
+    stores: {
+      cards: 'id, deckId, createdAt, *tags, type',
+    },
+  },
 ];
 
 export function schemaVersion(migrations: readonly Migration[] = MIGRATIONS): number {

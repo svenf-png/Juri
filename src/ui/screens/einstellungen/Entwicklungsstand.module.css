@@ -1,0 +1,149 @@
+/* Entwicklungsstand (Einstellungen): kleine Vorschau der Meilensteine, Werte aus dem Design-System. */
+.section {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.box {
+  border-radius: var(--radius-field-xl);
+  background: var(--surface);
+}
+
+.summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  min-height: 44px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 12px;
+  align-items: center;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.head {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.text {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.version {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.track {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--track);
+  overflow: hidden;
+  display: block;
+}
+
+.fill {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--violet);
+}
+
+/* Pfeil: dreht sich beim Aufklappen. */
+.more {
+  grid-column: 2;
+  grid-row: 1;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  border-right: 2.2px solid var(--chevron);
+  border-bottom: 2.2px solid var(--chevron);
+  transform: rotate(45deg);
+  transition: transform var(--dur-tap) var(--ease-standard);
+}
+
+.box[open] .more {
+  transform: rotate(-135deg);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0 16px 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.rowNow .title {
+  font-weight: 700;
+}
+
+.id {
+  width: 30px;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--violet-700);
+}
+
+.title {
+  flex-grow: 1;
+  font-size: 15px;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.state {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.done {
+  color: var(--violet);
+}
+
+.now {
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 12px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+}
+
+.planned {
+  color: var(--muted);
+  font-weight: 600;
+}

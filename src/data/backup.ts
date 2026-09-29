@@ -5,6 +5,7 @@ import {
   type BackupInstance,
   type BackupTables,
 } from '@/domain/backup/codec';
+import { hasIntegrity } from '@/domain/model/integrity';
 import { DEVICE_META_KEYS, RECORD_SCHEMAS, type MetaKey } from '@/domain/model/records';
 import type { JuriDb } from './db';
 import {
@@ -42,7 +43,8 @@ export async function exportBackup(
 
 /**
  * Prüft ein Backup vollständig, bevor etwas überschrieben wird: Version, Migration auf den
- * aktuellen Stand, bekannte Tabellen, jeder Datensatz gegen sein Schema, genau ein Profil.
+ * aktuellen Stand, bekannte Tabellen, jeder Datensatz gegen sein Schema, genau ein Profil,
+ * Verweise zwischen Rechtsgebieten, Stapeln, Karten und Abfragen.
  */
 export function prepareRestore(
   content: BackupContent,
@@ -60,7 +62,7 @@ export function prepareRestore(
       throw new BackupError('beschaedigt');
     }
   }
-  if (tables.profile?.length !== 1) throw new BackupError('beschaedigt');
+  if (tables.profile?.length !== 1 || !hasIntegrity(tables)) throw new BackupError('beschaedigt');
   tables.meta = (tables.meta ?? []).filter((record) => !isDeviceMeta(record));
   return tables;
 }

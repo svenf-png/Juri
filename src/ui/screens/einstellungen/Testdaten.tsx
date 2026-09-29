@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { loadDemoProfile, resetAllData } from '@/features/demo/demo';
+import { loadDemoDecks, loadDemoProfile, resetAllData } from '@/features/demo/demo';
 import { Button } from '../../components/Button';
 import styles from './Einstellungen.module.css';
 
-/** Testdaten-Menü der Testinstanz (Entscheidung 10): Demo-Profil laden oder alles löschen. */
+/** Testdaten-Menü der Testinstanz (Entscheidung 10): Demo-Stapel, Demo-Profil oder alles löschen. */
 export function Testdaten() {
   const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
   function run(question: string, task: () => Promise<void>) {
     if (!window.confirm(question)) return;
@@ -21,6 +22,32 @@ export function Testdaten() {
         Testdaten
       </h2>
       <div className={styles.buttons}>
+        <Button
+          variant="soft"
+          size="md"
+          block
+          disabled={busy}
+          onClick={() => {
+            setBusy(true);
+            setMessage(null);
+            void loadDemoDecks()
+              .then((added) => {
+                setMessage(
+                  added.decks === 0
+                    ? 'Alle Demo-Stapel sind schon da.'
+                    : `${String(added.decks)} Stapel mit ${String(added.cards)} Karten hinzugefügt.`,
+                );
+              })
+              .catch(() => {
+                setMessage('Das Hinzufügen hat nicht geklappt.');
+              })
+              .finally(() => {
+                setBusy(false);
+              });
+          }}
+        >
+          Demo-Stapel hinzufügen
+        </Button>
         <Button
           variant="soft"
           size="md"
@@ -44,7 +71,15 @@ export function Testdaten() {
           Alles zurücksetzen
         </Button>
       </div>
-      <p className={styles.help}>Nur in der Testinstanz. Die echte App bleibt unberührt.</p>
+      {message ? (
+        <p className={styles.help} role="status">
+          {message}
+        </p>
+      ) : null}
+      <p className={styles.help}>
+        Die Demo-Stapel kommen zu deinen Daten dazu (6 Stapel, 40 Karten, Inhalte in testdaten/).
+        Nur in der Testinstanz, die echte App bleibt unberührt.
+      </p>
     </section>
   );
 }

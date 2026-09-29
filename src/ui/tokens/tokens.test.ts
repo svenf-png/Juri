@@ -54,6 +54,10 @@ describe('Kontrast (WCAG 4,5:1 für Text)', () => {
     ['violet-700 auf violet-100', colors['violet-700'], colors['violet-100']],
     ['Weiß auf Veilchen', colors.bg, colors.violet],
     ['Weiß auf Tinte', colors.bg, colors.ink],
+    ['Warnung auf Weiß', colors.danger, colors.bg],
+    ['Warnung auf Fläche', colors.danger, colors.surface],
+    ['Warnung auf violet-100', colors.danger, colors['violet-100']],
+    ['Weiß auf Warnung', colors.bg, colors.danger],
   ];
 
   it.each(pairs)('%s', (_name, fg, bg) => {

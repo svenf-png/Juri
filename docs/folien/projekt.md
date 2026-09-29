@@ -2,8 +2,8 @@
 titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
-stand: 2026-09-28
-version: 0.2 (nach M2)
+stand: 2026-09-29
+version: 0.6 (nach M5)
 ---
 
 # Die Idee
@@ -125,15 +125,56 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 > **Notizen:** Die Fachlogik hängt nicht vom Browser ab und wird mit automatischen Tests zu mindestens 90 Prozent abgedeckt.
 
+## Karten, Stapel und Rechtsgebiete
+
+<!-- status: M3 umgesetzt, Modell in docs/adr/007-karten-stapel-und-luecken.md -->
+
+- Ein **Rechtsgebiet** ist ein Etikett; ein Stapel liegt in mindestens einem, gern in mehreren
+- Eine **Karte** ist eine Frage, ein Lückentext oder ein Prüfungsschema, später die Abdeckung
+- Jede Lücke wird eine **Abfrage** mit fester Kennung: drei Lücken ergeben drei Abfragen
+- Jede neue Karte schreibt ein Ereignis; daraus entstehen Tagesziel und Verlauf
+- Stapel löschen und Rechtsgebiet löschen folgen Regeln, damit nichts ins Leere zeigt
+
+> **Notizen:** Ein Backup prüft vor dem Einspielen alle Verweise zwischen Rechtsgebieten, Stapeln, Karten und Abfragen. Seit M4 trägt jede Abfrage ihren Lernzustand und wird nach Fälligkeit gezählt.
+
 ## Wie der Lernrhythmus funktioniert
+
+<!-- status: M4 umgesetzt (ADR-008) -->
 
 - **FSRS** schätzt für jede Karte, wie sicher sie noch sitzt
 - Sie kommt wieder, kurz bevor diese Sicherheit unter das Ziel fällt
-- Ziel einstellbar: 85, 90 oder 95 Prozent (Entspannt, Standard, Examen)
-- **Leitner** als Alternative: fünf Fächer mit festen Abständen
-- Wechsel zwischen beiden jederzeit ohne Datenverlust
+- Ziel einstellbar: 85, 90 oder 95 Prozent (Entspannt, Standard, Examen), dazwischen frei
+- **Leitner** als Alternative: fünf Fächer mit festen, einstellbaren Abständen
+- Jede Bewertung aktualisiert **beide** Verfahren; der Wechsel ändert nur, welches die Fälligkeit bestimmt
+- Kein Abstand länger als 180 Tage, „Nochmal“ führt über Lernschritte von 1 und 10 Minuten
 
-> **Notizen:** FSRS (Free Spaced Repetition Scheduler) ist ein offenes Verfahren, das auch Anki verwendet. Juri nutzt die Bibliothek ts-fsrs unter MIT-Lizenz.
+> **Notizen:** FSRS (Free Spaced Repetition Scheduler) ist ein offenes Verfahren, das auch Anki verwendet. Juri nutzt die Bibliothek ts-fsrs 5.4 unter MIT-Lizenz, gepinnt und nur über einen eigenen Adapter angesprochen. Streuung der Abstände ist aus, damit die Vorschau auf den Knöpfen genau stimmt.
+
+## Die Lernrunde
+
+<!-- status: M4 umgesetzt -->
+
+- Reine **Zustandsmaschine** ohne Browser: Karte drehen, bewerten, „Nochmal“ nach drei anderen Karten, Rückgängig
+- Mehrere fällige Lücken einer Karte erscheinen **gebündelt**, eine Bewertung gilt für jede Lücke
+- Fällig heißt: vor dem Ende des Lerntags (4 Uhr); neue Karten bis zum Tageslimit
+- Jede Bewertung entsteht in **einer Transaktion**: Lernzustand, Lernlog, Ereignis
+- **Rückgängig** stellt den Zustand aus dem Lernlog her; nichts wird geraten
+
+> **Notizen:** Das Lernlog enthält alle Felder, die eine spätere Optimierung der FSRS-Parameter auf den eigenen Daten braucht. Zufall und Uhr sind Parameter der Logik, damit die Tests deterministisch sind.
+
+## Prüfungsschemata und Verknüpfungen
+
+<!-- status: M5 umgesetzt (ADR-009) -->
+
+![Schema lernen auf dem iPhone: drei von fünf Punkten aufgedeckt, der dritte mit Norm, Inhalt und verknüpfter Karte](../bilder/schema-inhalt-iphone.png)
+
+- Ein **Schema** ist eine Gliederung mit bis zu drei Ebenen (1., a), aa)); jeder Punkt hat Text, Norm und Inhalt
+- Beim Lernen wird **Punkt für Punkt** aufgedeckt, danach gibt es eine Bewertung: das Schema ist eine Abfrage
+- Ein Punkt kann auf eine **andere Karte** verweisen, etwa die Definition der Klagebefugnis
+- Wird eine Karte gelöscht, nennt Juri vorher die betroffenen Schemas und entfernt die Verweise; die Punkte bleiben
+- Das Backup lehnt Verweise ins Leere ab
+
+> **Notizen:** Die Punkte stehen flach in Lesereihenfolge mit ihrer Ebene, die Zählung ist abgeleitet. Verknüpfungen sind Kartenkennungen am Punkt, es gibt keine eigene Tabelle. Schema-Version 4 fügt nur einen Index hinzu, damit die Suche nach Verweisen schnell bleibt. Fachlich sind die Demo-Schemata noch ungeprüft.
 
 ## Fristen
 
@@ -206,8 +247,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 | Phase      | Inhalt                                                          |
 | ---------- | --------------------------------------------------------------- |
-| M0 bis M2  | Fundament, Daten und Backup, Oberfläche und Heute-Screen        |
-| M3 bis M5  | Karten und Stapel, Lern-Engine, Prüfungsschemata                |
+| M0 bis M3  | Fundament, Daten und Backup, Oberfläche, Karten und Stapel      |
+| M4 bis M5  | Lern-Engine und Prüfungsschemata (fertig)                       |
 | M6 bis M8  | PDF und Abdeckung, Fristen, Erfolge                             |
 | M9 bis M11 | Teilen und Import, High fives, Feinschliff und Veröffentlichung |
 
@@ -220,6 +261,9 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M0 fertig:** Grundgerüst, Design-Tokens, Schriften, App-Icon, Styleguide, Testinstanz mit Geräte-Check
 - **M1 fertig:** Datenbank mit Migrationen, Onboarding, Install-Anleitung im Safari-Tab, Speicheranzeige, Backup erstellen und einspielen
 - **M2 fertig:** Tab-Bar und Sidebar, Heute-Screen pixelgleich zum Design, Lerntag ab 4 Uhr
-- Automatische Prüfung bei jeder Änderung: 191 Unit-Tests, 29 E2E-Szenarien auf iPhone- und iPad-Größen
+- **M3 fertig:** Rechtsgebiete, Stapel (in mehreren Rechtsgebieten), Frage und Lückentext, Suche, Bearbeiten und Löschen, Master-Detail auf dem iPad, Demo-Stapel
+- **M4 fertig:** Lernen mit FSRS und Leitner, Vorschau der Abstände, Wischen, Rückgängig, Tastatur, gebündelte Lücken, Lernrhythmus einstellen, Notiz an Karten, „Alles erledigt für heute“, Entwicklungsstand in den Einstellungen
+- **M5 fertig:** Prüfungsschemata mit Gliederung in drei Ebenen, Norm und Inhalt je Punkt, Punkt für Punkt lernen, Verknüpfungen zu anderen Karten, Löschen ohne Verweise ins Leere, Demo-Schemata
+- Automatische Prüfung bei jeder Änderung: 459 Unit-Tests, 8 Bildvergleiche und 4 Abläufe für Schema, insgesamt rund 120 E2E-Szenarien auf iPhone- und iPad-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
-- Nächster Schritt: Gerätetest von M0 bis M2 auf iPhone und iPad, dann M3 (Karten und Stapel)
+- Nächster Schritt: Gerätetest von M0 bis M5 auf iPhone und iPad, dann M6 (Bilder, PDF und Abdeckung)

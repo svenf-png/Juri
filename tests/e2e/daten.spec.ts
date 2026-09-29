@@ -113,7 +113,11 @@ test.describe('Testinstanz: Testdaten', () => {
     page.on('dialog', (dialog) => void dialog.accept());
     await page.goto('/Juri/test/');
     await page.getByRole('button', { name: 'Mit Demo-Profil starten' }).click();
-    await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
+    // Seit M3 bringt das Demo-Profil die Demo-Stapel mit: Heute zählt ihre Abfragen.
+    await expect(
+      page.getByRole('heading', { name: /\d+ Karten\s+warten heute/, level: 1 }),
+    ).toBeVisible();
+    await expect(page.getByText('+7 Karten angelegt')).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Hauptnavigation' })).toBeVisible();
     await page.goto('/Juri/test/einstellungen');
     await expect(page.getByText('Zeit für ein neues Backup')).toBeVisible();

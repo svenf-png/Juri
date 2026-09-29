@@ -32,10 +32,15 @@ jobs:
       - run: npm run test:coverage
       - run: npm run build
 
+  # Die E2E-Tests laufen in vier Teilen gleichzeitig (Playwright --shard), das halbiert die Wartezeit.
   e2e:
-    name: E2E (WebKit und Chromium)
+    name: E2E Teil ${{ matrix.shard }} von 4
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -45,10 +50,24 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps webkit chromium
       - run: npm run build
-      - run: npx playwright test
+      - run: npx playwright test --shard=${{ matrix.shard }}/4
       - if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}
           path: playwright-report/
           retention-days: 7
+
+  # Sammelstelle unter dem bisherigen Namen des Checks, damit er als eine Prüfung erscheint.
+  e2e-ergebnis:
+    name: E2E (WebKit und Chromium)
+    needs: e2e
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |
+          if [ "${{ needs.e2e.result }}" != "success" ]; then
+            echo "E2E-Teile: ${{ needs.e2e.result }}"
+            exit 1
+          fi

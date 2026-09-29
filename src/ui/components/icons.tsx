@@ -119,3 +119,151 @@ export function HighFiveIcon(props: IconProps) {
     </Svg>
   );
 }
+
+export function ChevronLeftIcon(props: IconProps) {
+  return (
+    <Svg strokeWidth={2.2} {...props}>
+      <path d="M15 5l-7 7 7 7" />
+    </Svg>
+  );
+}
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <Svg strokeWidth={2.6} {...props}>
+      <path d="M5 12.5l4.5 4.5L19 7" />
+    </Svg>
+  );
+}
+
+export function SearchIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="M20 20l-4-4" />
+    </Svg>
+  );
+}
+
+export function MoreIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <circle cx="5.5" cy="12" r="1.5" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+      <circle cx="18.5" cy="12" r="1.5" fill="currentColor" />
+    </Svg>
+  );
+}
+
+export function PencilIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M4 20h4L19 9l-4-4L4 16z" />
+      <path d="M13.5 6.5l4 4" />
+    </Svg>
+  );
+}
+
+export function TrashIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" />
+    </Svg>
+  );
+}
+
+export function CloseIcon(props: IconProps) {
+  return (
+    <Svg strokeWidth={2.4} {...props}>
+      <path d="M6 6l12 12M18 6L6 18" />
+    </Svg>
+  );
+}
+
+export function FileIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5" />
+    </Svg>
+  );
+}
+
+export function ImageIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <rect x="3" y="5" width="18" height="14" rx="3" />
+      <circle cx="9" cy="10" r="1.6" />
+      <path d="M21 16l-5-5-8 8" />
+    </Svg>
+  );
+}
+
+export function UndoIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M9 14 4 9l5-5" />
+      <path d="M4 9h10a6 6 0 0 1 0 12h-3" />
+    </Svg>
+  );
+}
+
+export function FlipIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3" />
+      <path d="M18 3v4h-4M6 21v-4h4" />
+    </Svg>
+  );
+}
+
+export function NoteIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5M9 13h6M9 17h4" />
+    </Svg>
+  );
+}
+
+/** Verknüpfung (SchemaEditor.dc.html, Schema.dc.html). */
+export function LinkIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1" />
+      <path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" />
+    </Svg>
+  );
+}
+
+export function IndentIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M4 6h16M11 12h9M11 18h9M4 10l3 2.5L4 15" />
+    </Svg>
+  );
+}
+
+export function OutdentIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M4 6h16M11 12h9M11 18h9M7 10l-3 2.5L7 15" />
+    </Svg>
+  );
+}
+
+export function ArrowUpIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </Svg>
+  );
+}
+
+export function ArrowDownIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M12 5v14M5 12l7 7 7-7" />
+    </Svg>
+  );
+}

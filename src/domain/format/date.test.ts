@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { parseDayKey } from '../calendar/day';
-import { countdown, longDate, relativeDays, shortDate, weekdayShort } from './date';
+import { countdown, longDate, numericDate, relativeDays, shortDate, weekdayShort } from './date';
 
 const d = parseDayKey;
 
@@ -38,5 +38,12 @@ describe('Datumsangaben', () => {
     expect(countdown(d('2026-09-28'), d('2026-10-09'))).toBe('11 T');
     expect(countdown(d('2026-09-28'), d('2027-01-15'))).toBe('109 T');
     expect(countdown(d('2026-09-28'), d('2026-09-20'))).toBe('0 T');
+  });
+});
+
+describe('numericDate', () => {
+  it('schreibt Tag, Monat und Jahr zweistellig nach deutscher Art', () => {
+    expect(numericDate(new Date(2026, 8, 5, 13).getTime())).toBe('05.09.2026');
+    expect(numericDate(new Date(2027, 11, 31, 23, 59).getTime())).toBe('31.12.2027');
   });
 });

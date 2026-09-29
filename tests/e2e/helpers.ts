@@ -8,10 +8,15 @@ import type { Page } from '@playwright/test';
 export function watchPage(page: Page, origin: string, { allow404 = false } = {}) {
   const errors: string[] = [];
   const foreign: string[] = [];
-  page.on('pageerror', (e) => errors.push(e.message));
+  const swNoise = (text: string) => text.includes('sw.js due to access control checks');
+  page.on('pageerror', (e) => {
+    if (!swNoise(e.message)) errors.push(e.message);
+  });
   page.on('console', (msg) => {
     if (msg.type() !== 'error') return;
     if (allow404 && msg.text().includes('status of 404')) return;
+    // WebKit meldet gelegentlich die Update-Suche des Service Workers; sie ist kein Fehler der App.
+    if (swNoise(msg.text())) return;
     errors.push(msg.text());
   });
   page.on('request', (req) => {
@@ -48,8 +53,19 @@ export async function onboard(page: Page, base = '/Juri/', name = 'Sven') {
   await page.getByRole('heading', HEUTE_LEER).waitFor();
 }
 
-/** Einstellungen über die Oberfläche: Avatar (iPhone) oder Sidebar „Lernrhythmus“ (iPad). */
+/**
+ * Einstellungen über die Oberfläche: Avatar (iPhone) oder auf dem iPad die Sidebar „Lernrhythmus“
+ * und von dort „Profil, Speicher und Backup“.
+ */
 export async function openSettings(page: Page) {
-  await page.getByRole('link', { name: /^(Profil und Einstellungen|Lernrhythmus)$/ }).click();
+  const avatar = page.getByRole('link', { name: 'Profil und Einstellungen' });
+  const sidebar = page.getByRole('link', { name: 'Lernrhythmus', exact: true });
+  await avatar.or(sidebar).first().waitFor();
+  if (await avatar.isVisible()) {
+    await avatar.click();
+  } else {
+    await sidebar.click();
+    await page.getByRole('link', { name: 'Profil, Speicher und Backup' }).click();
+  }
   await page.getByRole('heading', { name: 'Einstellungen', level: 1 }).waitFor();
 }

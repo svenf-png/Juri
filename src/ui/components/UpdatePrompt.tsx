@@ -1,16 +1,23 @@
 import { useRegisterSW } from 'virtual:pwa-register/react';
+import { startUpdateChecks } from '@/platform/updateCheck';
 import { Button } from './Button';
 import { Toast } from './Toast';
 
 /**
  * Meldet eine neue Version, statt still neu zu laden (Briefing B12).
  * Lädt erst nach Tipp auf „Neu laden“, damit keine laufende Lernrunde unterbrochen wird.
+ * Die Suche nach einer neuen Version stößt `startUpdateChecks` an (Start, Vordergrund).
  */
 export function UpdatePrompt() {
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
-  } = useRegisterSW({ immediate: true });
+  } = useRegisterSW({
+    immediate: true,
+    onRegisteredSW: (_url, registration) => {
+      if (registration) startUpdateChecks(registration, document);
+    },
+  });
 
   if (!needRefresh) return null;
   return (
