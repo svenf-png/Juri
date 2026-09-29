@@ -1,4 +1,6 @@
-/** Bild-Dekodierung und Neukodierung (B7: max. 2000 px Kante, JPEG/WebP). */
+import { fitWithin } from '@/domain/media/media';
+
+/** Bild-Dekodierung und Neukodierung (B7: max. 2000 px Kante, JPEG/WebP). Das Vorbereiten für Karten steht in `media/`. */
 
 export interface DecodedImage {
   bitmap: ImageBitmap;
@@ -13,17 +15,7 @@ export async function decodeImage(file: Blob): Promise<DecodedImage> {
   return { bitmap, width: bitmap.width, height: bitmap.height, ms: performance.now() - t0 };
 }
 
-/** Zielgröße mit längster Kante höchstens `maxEdge`, Seitenverhältnis bleibt. */
-export function fitWithin(
-  width: number,
-  height: number,
-  maxEdge: number,
-): { width: number; height: number } {
-  const longest = Math.max(width, height);
-  if (longest <= maxEdge) return { width, height };
-  const k = maxEdge / longest;
-  return { width: Math.round(width * k), height: Math.round(height * k) };
-}
+export { fitWithin } from '@/domain/media/media';
 
 export interface EncodedImage {
   requestedType: string;

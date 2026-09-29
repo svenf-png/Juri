@@ -9,6 +9,7 @@ import { Platzhalter } from '@/ui/screens/platzhalter/Platzhalter';
 import { PLATZHALTER } from '@/ui/screens/platzhalter/texte';
 import { Erstellen } from '@/ui/screens/erstellen/Erstellen';
 import { KarteBearbeiten } from '@/ui/screens/erstellen/KarteBearbeiten';
+import type { AbdeckungVariant } from '@/ui/screens/erstellen/AbdeckungVorschau';
 import type { SchemaVariant } from '@/ui/screens/schema/SchemaVorschau';
 import { Stapel } from '@/ui/screens/stapel/Stapel';
 import { ProfileScreen, RequireBrowserTab, RequireNoProfile, RequireProfile } from './gates';
@@ -38,6 +39,25 @@ const SCHEMA_VARIANTS: readonly SchemaVariant[] = [
 ];
 const SchemaVorschau = lazy(() =>
   import('@/ui/screens/schema/SchemaVorschau').then((m) => ({ default: m.SchemaVorschau })),
+);
+const ABDECKUNG_VARIANTS: readonly AbdeckungVariant[] = [
+  'lernen',
+  'antwort',
+  'leer',
+  'quelle',
+  'fehler',
+  'verkleinern',
+  'bild',
+  'editor',
+  'editor-leer',
+  'pdf',
+  'ipad',
+  'ipad-abdecken',
+];
+const AbdeckungVorschau = lazy(() =>
+  import('@/ui/screens/erstellen/AbdeckungVorschau').then((m) => ({
+    default: m.AbdeckungVorschau,
+  })),
 );
 const LernrhythmusVorschau = lazy(() =>
   import('@/ui/screens/einstellungen/LernrhythmusVorschau').then((m) => ({
@@ -163,6 +183,15 @@ export function routes(
       element: (
         <Lazy>
           <SchemaVorschau variant={variant} />
+        </Lazy>
+      ),
+    })),
+    // Abdeckung, PDF und Foto (Abdeckung.dc.html, iPadErstellen.dc.html und die M6-Ergänzungen).
+    ...ABDECKUNG_VARIANTS.map((variant) => ({
+      path: `/styleguide/abdeckung/${variant}`,
+      element: (
+        <Lazy>
+          <AbdeckungVorschau variant={variant} />
         </Lazy>
       ),
     })),

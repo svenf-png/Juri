@@ -70,7 +70,7 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/` installieren oder öffnen, 
 9. **Stapel:** Im Stapel-Detail lernt „N fällige lernen“ nur diesen Stapel; die Fortschrittsleiste zeigt „neu“, „im Lernen“ und „sicher“.
 10. **Lernrhythmus:** Einstellungen → „Lernrhythmus“ (iPad: Sidebar). Voreinstellung Examen wählen, Regler bewegen, „Neue Karten pro Tag“ ändern. Zu „Leitner-Kasten“ wechseln, Fach antippen, Tage ändern, zurück zu FSRS: Karten bleiben bewertet.
 11. **Tastatur (iPad mit Tastatur):** Leertaste dreht, 1 bis 4 bewerten, Strg/Cmd+Z nimmt zurück, Esc beendet.
-12. **Entwicklungsstand:** Einstellungen → „Entwicklungsstand“ aufklappen: M0 bis M5 mit Haken und Version, M6 „in Arbeit“.
+12. **Entwicklungsstand:** Einstellungen → „Entwicklungsstand“ aufklappen: M0 bis M6 mit Haken und Version, M7 „in Arbeit“.
 13. **Backup:** Nach dem Lernen ein Backup erstellen, App löschen, neu installieren, einspielen: Fälligkeiten und Lernstand sind wie vorher.
 14. **Bewegung:** Bei „Bewegung reduzieren“ (Bedienungshilfen) drehen und wechseln die Karten ohne Animation.
 
@@ -88,6 +88,23 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/` mit den Demo-Stapeln (Stape
 8. **Löschen:** Eine verknüpfte Frage öffnen, „Karte löschen“: Das Blatt nennt „Verknüpft in N Schemas“. Nach dem Löschen hat das Schema alle Punkte, aber keine Verknüpfung mehr. Ebenso beim Löschen eines Stapels.
 9. **Backup:** Backup erstellen, App löschen, neu installieren, einspielen: Schemas, Inhalte und Verknüpfungen sind wieder da.
 10. **iPad:** Erstellen und Editor stehen als Spalte in der Mitte; Lernen wie beim iPhone.
+
+## M6: Bilder, PDF und Abdeckung (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Einstellungen, Testdaten, „Demo-Skript (PDF) hinzufügen“ (50 Seiten, Stapel „Demo-Skript Sachenrecht“). Für die Fotos ein echtes Foto mit der Kamera (am besten 12 MP oder mehr) und ein HEIC-Foto aus der Fotomediathek bereithalten.
+
+1. **Foto wählen:** „+“ bzw. „Neue Karte“, Reiter „Abdeckung“, „PDF-Seite oder Foto wählen“, „Foto / Bild“. Der Datei-Dialog bietet Fotomediathek, Foto aufnehmen und Dateien. Ein Kamerafoto wählen: „Bild wird verkleinert“ erscheint kurz, danach die Felder. Notieren: Wie lange dauert es? Steht das Bild richtig herum (Hoch- und Querformat)? Klappt ein HEIC-Foto?
+2. **Felder aufziehen:** Mit dem Finger ein Feld aufziehen, ein zweites und drittes. Ein Feld antippen (Rahmen und vier Ecken), verschieben, an einer Ecke die Größe ändern. Notieren: Sind die Ecken mit dem Finger gut zu treffen? Zwei Finger zoomen das Bild, die Felder bleiben an ihrer Stelle. Mit dem Apple Pencil ebenso. „Feld löschen“, „Zurück“ nach einer Änderung fragt nach.
+3. **Speichern und lernen:** „Fertig“, „Speichern & nächste“, dann Heute → „Lernen starten“. Ein Feld pulsiert, die anderen sind verdeckt. Feld antippen und „Feld N aufdecken“ decken auf. Zwei Finger zoomen, ein Finger verschiebt das gezoomte Bild, Doppeltippen (Zoom 1 und 2,5) ausprobieren: kommt es auf iOS an? Wischen zum Bewerten funktioniert, solange nicht gezoomt ist.
+4. **PDF öffnen:** „PDF“ (unter dem Formular), das Demo-Skript oder ein eigenes Skript wählen. Blättern mit den Pfeilen, Seitenzahl antippen und „14“ eingeben. Notieren: Wie flüssig blättert es durch alle 50 Seiten (iPad und iPhone, älteres iPad)? Bleibt die App danach bedienbar, oder lädt Safari sie neu (Speicher)? Zoomen mit zwei Fingern: wird der Text nach kurzer Ruhe scharf?
+5. **Text markieren:** Auf Seite 14 den Satz „Der Erwerber ist nicht in gutem Glauben …“ mit Finger und mit Pencil markieren. Notieren: Erscheint die Leiste „Als Antwort / Als Frage / Als Lücke“, und verdeckt sie das Kontextmenü von iOS („Kopieren“, „Nachschlagen“)? Lässt sich der Griff der Markierung ziehen, ohne dass die Leiste verschwindet? „Als Antwort“ tippen: Der Text steht in der Rückseite, Zeilenumbrüche sind weg.
+6. **iPad quer:** Das PDF steht links, das Formular rechts. „Speichern & nächste aus PDF“ lässt das PDF offen, der Zähler „N von 5 heute“ läuft. „Abdecken“ schaltet um, Felder aufziehen, speichern. „Speichern“ (nicht „nächste“) verlässt den Bildschirm.
+7. **PDF-Seite abdecken (iPhone):** „PDF-Seite oder Foto wählen“, „PDF-Seite“, Seite wählen, Felder aufziehen, „Zur Karte“, speichern. Beim Lernen steht unten rechts „PDF · Demo-Skript Sachenrecht S. 14“, antippen öffnet das PDF an der Seite.
+8. **Quelle:** Eine Frage aus dem PDF speichern, beim Lernen unter der Antwort „Anhang: …, S. 14“ mit „Öffnen“. Karte bearbeiten zeigt die Quelle. Karte löschen: Das Blatt nennt bei Abdeckungen die Felder und das Bild.
+9. **Fehlerfälle:** Ein PDF über 50 MB wählen (falls vorhanden), ein passwortgeschütztes PDF, ein Bild, das keins ist (z. B. eine Textdatei mit Endung .jpg). Jedes zeigt ein Blatt mit dem Grund und „Andere Datei wählen“. Notieren: Reicht der Speicher für ein 50-MB-PDF, und wie reagiert Juri bei fast vollem Gerät („Speicher voll“)?
+10. **Backup:** Mit Demo-Skript und einem Foto-Abdeckung ein Backup erstellen (Einstellungen zeigen die Größe), App löschen, neu installieren, einspielen: Bilder, PDF, Felder und Herkunft sind wieder da, das PDF öffnet sich. Notieren: Dauer und Größe der Datei.
+11. **Offline:** Flugmodus, Juri öffnen, das PDF und eine Abdeckung ansehen: Beides funktioniert (der PDF-Worker steckt im Zwischenspeicher der App).
+12. **Speicher:** Einstellungen, Speicher: Der belegte Platz wächst mit dem PDF und schrumpft, wenn die letzte Karte darauf gelöscht ist.
 
 ## Updates (pro Gerät, ab Version 0.4.1)
 

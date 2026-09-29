@@ -1,4 +1,4 @@
-import { useId, type CSSProperties, type Ref } from 'react';
+import { useId, type CSSProperties, type ReactNode, type Ref } from 'react';
 import { cx } from '../cx';
 import styles from './Field.module.css';
 
@@ -17,6 +17,7 @@ export function TextField({
   inputRef,
   className,
   inputStyle,
+  labelExtra,
   ...rest
 }: {
   label: string;
@@ -29,6 +30,8 @@ export function TextField({
   inputRef?: Ref<HTMLInputElement & HTMLTextAreaElement>;
   className?: string | undefined;
   inputStyle?: CSSProperties;
+  /** Rechts neben der Beschriftung, z. B. die Marke „aus PDF übernommen“. */
+  labelExtra?: ReactNode;
   autoFocus?: boolean;
   maxLength?: number;
   autoCapitalize?: string;
@@ -50,7 +53,14 @@ export function TextField({
   };
   return (
     <label className={cx(styles.field, error && styles.invalid, className)}>
-      <span className={styles.label}>{label}</span>
+      {labelExtra ? (
+        <span className={styles.labelRow}>
+          <span className={styles.label}>{label}</span>
+          {labelExtra}
+        </span>
+      ) : (
+        <span className={styles.label}>{label}</span>
+      )}
       {multiline ? (
         <textarea
           {...common}

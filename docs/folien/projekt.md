@@ -3,7 +3,7 @@ titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
 stand: 2026-09-29
-version: 0.6 (nach M5)
+version: 0.7 (nach M6)
 ---
 
 # Die Idee
@@ -245,14 +245,14 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 <!-- layout: tabelle -->
 
-| Phase      | Inhalt                                                          |
-| ---------- | --------------------------------------------------------------- |
-| M0 bis M3  | Fundament, Daten und Backup, Oberfläche, Karten und Stapel      |
-| M4 bis M5  | Lern-Engine und Prüfungsschemata (fertig)                       |
-| M6 bis M8  | PDF und Abdeckung, Fristen, Erfolge                             |
-| M9 bis M11 | Teilen und Import, High fives, Feinschliff und Veröffentlichung |
+| Phase       | Inhalt                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------ |
+| M0 bis M3   | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                                 |
+| M4 bis M5   | Lern-Engine und Prüfungsschemata (fertig)                                                  |
+| M6 bis M9   | PDF und Abdeckung, Browser-Version, Fristen, Erfolge                                       |
+| M10 bis M13 | Teilen und Import, High fives, Feinschliff und Veröffentlichung, eigene Desktop-Gestaltung |
 
-> **Notizen:** Geschätzt rund 35 Personentage. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
+> **Notizen:** Geschätzt rund 41 Personentage. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
 
 ## Stand heute
 
@@ -264,6 +264,7 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M3 fertig:** Rechtsgebiete, Stapel (in mehreren Rechtsgebieten), Frage und Lückentext, Suche, Bearbeiten und Löschen, Master-Detail auf dem iPad, Demo-Stapel
 - **M4 fertig:** Lernen mit FSRS und Leitner, Vorschau der Abstände, Wischen, Rückgängig, Tastatur, gebündelte Lücken, Lernrhythmus einstellen, Notiz an Karten, „Alles erledigt für heute“, Entwicklungsstand in den Einstellungen
 - **M5 fertig:** Prüfungsschemata mit Gliederung in drei Ebenen, Norm und Inhalt je Punkt, Punkt für Punkt lernen, Verknüpfungen zu anderen Karten, Löschen ohne Verweise ins Leere, Demo-Schemata
-- Automatische Prüfung bei jeder Änderung: 459 Unit-Tests, 8 Bildvergleiche und 4 Abläufe für Schema, insgesamt rund 120 E2E-Szenarien auf iPhone- und iPad-Größen
+- **M6 fertig:** Abdeckung aus Foto oder PDF-Seite mit Feldern, Zoom und Editor, PDF-Ansicht mit Markieren zu Frage, Antwort oder Lücke, Quelle an der Karte, geteilte Ansicht auf dem iPad, Demo-Skript mit 50 Seiten
+- Automatische Prüfung bei jeder Änderung: 541 Unit-Tests, 12 Bildvergleiche für Abdeckung und PDF, Abläufe mit Foto und PDF, insgesamt rund 180 E2E-Szenarien auf iPhone- und iPad-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
-- Nächster Schritt: Gerätetest von M0 bis M5 auf iPhone und iPad, dann M6 (Bilder, PDF und Abdeckung)
+- Nächster Schritt: Gerätetest von M0 bis M6 auf iPhone und iPad, dann M7 (Browser-Version)

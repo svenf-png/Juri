@@ -1,0 +1,248 @@
+/*
+ * Formular neben der PDF-Ansicht (iPadErstellen.dc.html, iPadErstellenAbdecken.dc.html): Titel mit
+ * Tagesziel, Reiter, Felder, Norm, Stapel und Quelle, unten „Speichern“ und „Speichern & nächste
+ * aus PDF“. Ab 1100 px Breite, wenn ein PDF geöffnet ist.
+ */
+.form {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 24px 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  line-height: normal;
+  overflow-y: auto;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.made {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 15px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.types {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-field-lg);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.type {
+  position: relative;
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.type::after {
+  content: '';
+  position: absolute;
+  inset: -2px -1px;
+}
+
+.typeOn {
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: var(--shadow-segment);
+}
+
+.field {
+  padding: 14px 18px;
+}
+
+.fieldHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fieldLabel {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.applied {
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--violet-700);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.summary {
+  border-radius: var(--radius-field-xl);
+  background: var(--surface);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.summaryTitle {
+  font-size: 19px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.summaryText {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.mini {
+  border-radius: var(--radius-field-lg);
+  border: 1.5px solid var(--line);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.miniLabel {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.miniValue {
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.miniLink {
+  color: var(--violet);
+}
+
+.miniInput {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  background: transparent;
+  font-size: 15px;
+  color: var(--ink);
+  outline: none;
+  /* Wie das Eingabefeld im Design: Standard-Innenabstand des Browsers. */
+  padding: 1px 2px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.goal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.goalTrack {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--violet-100);
+}
+
+.goalFill {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--violet);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.save {
+  height: 60px;
+  border-radius: var(--radius-button);
+  border: 1.5px solid var(--border-soft);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.next {
+  height: 60px;
+  border-radius: var(--radius-button);
+  border: 0;
+  background: var(--violet);
+  color: var(--bg);
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: var(--shadow-primary);
+}
+
+.save:disabled,
+.next:disabled {
+  opacity: 0.6;
+}
+
+.failed {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+}

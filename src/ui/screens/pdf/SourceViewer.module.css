@@ -1,0 +1,30 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.missing {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.close {
+  height: 52px;
+  padding: 0 24px;
+  border-radius: 18px;
+  border: 0;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 700;
+}

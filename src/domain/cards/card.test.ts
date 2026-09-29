@@ -10,8 +10,12 @@ import {
   contentOf,
   formatTags,
   normalizeTags,
+  mediaIdsOf,
   reviewItemId,
   reviewSubs,
+  sourceChip,
+  sourceCoverChip,
+  sourceLabel,
   tidyLine,
   type CardForm,
 } from './card';
@@ -313,5 +317,108 @@ describe('cardPreview', () => {
         ],
       }),
     ).toBe('1. Weg · 2. Frist');
+  });
+});
+
+describe('Abdeckung (M6)', () => {
+  const masks = [
+    { n: 3, x: 0.5, y: 0.5, w: 0.2, h: 0.1 },
+    { n: 1, x: 0.1, y: 0.1, w: 0.3, h: 0.1 },
+  ];
+  const cover: CardForm = {
+    type: 'cover',
+    front: '',
+    back: '',
+    text: '',
+    mediaId: 'img1',
+    masks,
+    source: { name: 'Skript Sachenrecht.pdf', page: 14 },
+    norm: '',
+    tags: '',
+    note: '',
+  };
+
+  it('prüft Bild und Felder', () => {
+    expect(checkCard({ ...cover, mediaId: undefined })).toMatchObject({
+      ok: false,
+      errors: { cover: expect.stringContaining('Bild') as string },
+    });
+    expect(checkCard({ ...cover, masks: [] })).toMatchObject({
+      ok: false,
+      errors: { cover: expect.stringContaining('Feld') as string },
+    });
+  });
+
+  it('ordnet die Felder nach Nummer und behält die Herkunft', () => {
+    const checked = checkCard(cover);
+    expect(checked.ok).toBe(true);
+    if (!checked.ok) return;
+    expect(checked.fields.content).toMatchObject({ type: 'cover', mediaId: 'img1' });
+    expect(checked.fields.source).toEqual({ name: 'Skript Sachenrecht.pdf', page: 14 });
+    const card = buildCard('k1', 'd1', checked.fields, 5, 6);
+    expect(card).toMatchObject({ type: 'cover', mediaId: 'img1', source: { page: 14 } });
+    expect(card.type === 'cover' && card.masks.map((m) => m.n)).toEqual([1, 3]);
+  });
+
+  it('macht aus jedem Feld eine Abfrage mit fester Kennung', () => {
+    const card = buildCard(
+      'k1',
+      'd1',
+      {
+        content: { type: 'cover', mediaId: 'img1', masks: masks.slice().reverse() },
+        norm: '',
+        tags: [],
+        note: '',
+      },
+      1,
+      1,
+    );
+    expect(reviewSubs(contentOf(card))).toEqual(['m1', 'm3']);
+    expect(buildItems(card, 9).map((i) => i.id)).toEqual(['k1:m1', 'k1:m3']);
+    expect(CARD_TYPE_LABEL.cover).toBe('Abdeckung');
+  });
+
+  it('nennt Titel und Vorschau aus Herkunft oder Zahl der Felder', () => {
+    const base = { id: 'k', deckId: 'd', norm: '', tags: [], createdAt: 1, updatedAt: 1 };
+    const withSource: Card = {
+      ...base,
+      type: 'cover',
+      mediaId: 'i',
+      masks,
+      source: { name: 'A.pdf', page: 2 },
+    };
+    const without: Card = { ...base, type: 'cover', mediaId: 'i', masks };
+    expect(cardTitle(withSource)).toBe('A.pdf, S. 2');
+    expect(cardTitle(without)).toBe('Bild mit 2 Feldern');
+    expect(cardPreview(without)).toBe('Bild mit 2 Feldern');
+    expect(cardTitle({ ...withSource, source: { name: 'B.pdf' } })).toBe('B.pdf');
+    expect(cardTitle({ ...without, masks: masks.slice(0, 1) })).toBe('Bild mit 1 Feld');
+    expect(cardTitle({ type: 'cover' })).toBe('Bild ohne Felder');
+  });
+
+  it('nennt die Medien einer Karte ohne Doppelte', () => {
+    expect(
+      mediaIdsOf({ type: 'cover', mediaId: 'i', source: { name: 'x', mediaId: 'p' } }),
+    ).toEqual(['i', 'p']);
+    expect(mediaIdsOf({ type: 'qa', source: { name: 'x', mediaId: 'p' } })).toEqual(['p']);
+    expect(mediaIdsOf({ type: 'qa' })).toEqual([]);
+  });
+
+  it('gibt Herkunft an Frage, Lücke und Schema weiter', () => {
+    const source = { name: 'A.pdf', page: 3, mediaId: 'p' };
+    const q = checkCard({ ...qa, source });
+    expect(q.ok && buildCard('k', 'd', q.fields, 1, 1)).toMatchObject({ type: 'qa', source });
+    const c = checkCard({ ...cloze, source });
+    expect(c.ok && buildCard('k', 'd', c.fields, 1, 1)).toMatchObject({ type: 'cloze', source });
+  });
+
+  it('kürzt die Herkunft für Chips', () => {
+    expect(sourceChip({ name: 'Skript.pdf', page: 14 })).toBe('PDF S. 14');
+    expect(sourceChip({ name: 'Skript.pdf' })).toBe('Skript.pdf');
+    expect(sourceLabel({ name: 'Skript.pdf', page: 14 })).toBe('Skript.pdf, S. 14');
+    expect(sourceCoverChip({ name: 'Skript Sachenrecht.pdf', page: 14 })).toBe(
+      'PDF · Skript Sachenrecht S. 14',
+    );
+    expect(sourceCoverChip({ name: 'Buch' })).toBe('PDF · Buch');
   });
 });

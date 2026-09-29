@@ -181,3 +181,74 @@ describe('endSummary', () => {
     expect(endSummary({ ...end, next: null })).toBe('24 Wiederholungen, davon 3 nochmal gelernt.');
   });
 });
+
+describe('Abdeckung (M6)', () => {
+  const masks = [
+    { n: 2, x: 0.5, y: 0.5, w: 0.2, h: 0.1 },
+    { n: 5, x: 0.1, y: 0.1, w: 0.3, h: 0.1 },
+    { n: 9, x: 0.1, y: 0.7, w: 0.3, h: 0.1 },
+  ];
+  const cover: Card = {
+    ...base,
+    type: 'cover',
+    mediaId: 'i1',
+    masks,
+    source: { name: 'Skript.pdf', page: 14 },
+  };
+
+  it('fragt ein Feld, die übrigen bleiben verdeckt', () => {
+    const face = faceOf(cover, ['m5'], 0);
+    expect(face).toMatchObject({
+      kind: 'cover',
+      typeLabel: 'Abdeckung 2 von 3',
+      question: 'Was steht unter Feld 2?',
+      asked: 2,
+      chip: 'PDF · Skript S. 14',
+      openable: false,
+      mediaId: 'i1',
+    });
+    expect(face.kind === 'cover' && face.masks.map((m) => `${String(m.label)}:${m.look}`)).toEqual([
+      '1:covered',
+      '2:asked',
+      '3:covered',
+    ]);
+  });
+
+  it('deckt nur das gefragte Feld auf', () => {
+    const face = faceOf(cover, ['m5'], 1);
+    expect(face.kind === 'cover' && face.masks.map((m) => m.look)).toEqual([
+      'covered',
+      'revealed',
+      'covered',
+    ]);
+  });
+
+  it('nennt Öffnen nur, wenn das PDF gespeichert ist', () => {
+    const stored = { ...cover, source: { name: 'Skript.pdf', page: 14, mediaId: 'p1' } } as Card;
+    expect(faceOf(stored, ['m2'], 0)).toMatchObject({
+      openable: true,
+      sourceMediaId: 'p1',
+      sourcePage: 14,
+    });
+  });
+
+  it('gibt die Herkunft anderer Karten als Anhang mit', () => {
+    const withSource = {
+      ...qa,
+      source: { name: 'Skript ZPO.pdf', page: 42, mediaId: 'p1' },
+    } as Card;
+    expect(faceOf(withSource, [''], 0)).toMatchObject({
+      kind: 'qa',
+      source: { label: 'Skript ZPO.pdf, S. 42', mediaId: 'p1', page: 42 },
+    });
+    expect(faceOf(qa, [''], 0).source).toBeUndefined();
+    const plain = { ...qa, source: { name: 'Buch' } } as Card;
+    expect(faceOf(plain, [''], 0).source).toEqual({ label: 'Buch', mediaId: null, page: null });
+  });
+
+  it('kommt ohne Herkunft mit leerer Marke aus', () => {
+    const rest = { ...cover } as Record<string, unknown>;
+    delete rest.source;
+    expect(faceOf(rest as unknown as Card, ['m2'], 0)).toMatchObject({ chip: '', asked: 1 });
+  });
+});

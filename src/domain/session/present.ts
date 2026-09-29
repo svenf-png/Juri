@@ -3,6 +3,8 @@
  * Karte, gefragten Lücken und Stand der Aufdeckung. Die Oberfläche setzt die Stücke nur ein.
  */
 import { parseCloze } from '../cards/cloze';
+import { ordinals, maskNumber, type Mask } from '../cards/occlusion';
+import { sourceCoverChip, sourceLabel } from '../cards/card';
 import { pointNumbers } from '../cards/schema';
 import type { Card } from '../model/records';
 
@@ -106,7 +108,42 @@ export function schemaRows(
   });
 }
 
-export type Face =
+/** Aussehen eines Feldes der Abdeckung: verdeckt, gefragt (pulsiert) oder aufgedeckt. */
+export type MaskLook = 'covered' | 'asked' | 'revealed';
+
+export interface CoverMask extends Mask {
+  /** Anzeigenummer 1, 2, 3 (abgeleitet, siehe occlusion.ts). */
+  readonly label: number;
+  readonly look: MaskLook;
+}
+
+/**
+ * Felder einer Abdeckung für die Lernansicht (A7: alle verdeckt, eines gefragt). `asked` ist die
+ * Nummer des gefragten Feldes; mit `revealed` ist es aufgedeckt, die übrigen bleiben verdeckt.
+ */
+export function coverMasks(
+  masks: readonly Mask[],
+  asked: number | null,
+  revealed: boolean,
+): CoverMask[] {
+  const labels = ordinals(masks);
+  return masks.map((m) => ({
+    ...m,
+    label: labels.get(m.n) ?? 0,
+    look: m.n !== asked ? 'covered' : revealed ? 'revealed' : 'asked',
+  }));
+}
+
+/** Herkunft einer Karte für die Zeile „Anhang“ (Antwort.dc.html). */
+export interface SourceRef {
+  /** „Skript ZPO, S. 42“ */
+  readonly label: string;
+  /** Gespeichertes PDF, das „Öffnen“ zeigt. */
+  readonly mediaId: string | null;
+  readonly page: number | null;
+}
+
+type FaceBase =
   | {
       readonly kind: 'qa';
       readonly typeLabel: 'Frage';
@@ -128,6 +165,22 @@ export type Face =
       readonly total: number;
     }
   | {
+      readonly kind: 'cover';
+      /** „Abdeckung 2 von 3“ */
+      readonly typeLabel: string;
+      readonly question: string;
+      readonly mediaId: string;
+      readonly masks: readonly CoverMask[];
+      /** Anzeigenummer des gefragten Feldes. */
+      readonly asked: number;
+      /** Herkunft für die Marke unten rechts, z. B. „PDF S. 14“; leer ohne Herkunft. */
+      readonly chip: string;
+      /** Das PDF der Herkunft ist gespeichert und lässt sich öffnen. */
+      readonly openable: boolean;
+      readonly sourcePage: number | null;
+      readonly sourceMediaId: string | null;
+    }
+  | {
       readonly kind: 'bundle';
       readonly typeLabel: string;
       readonly pieces: readonly Piece[];
@@ -139,7 +192,22 @@ export type Face =
  * Ansicht einer Station: `subs` sind die Kennungen ihrer Abfragen (eine Frage `['']`, eine Lücke
  * `['c2']`, gebündelte Lücken `['c1', 'c3']`), `revealed` die schon aufgedeckten Lücken eines Bündels.
  */
+export type Face = FaceBase & { readonly source?: SourceRef | undefined };
+
 export function faceOf(card: Card, subs: readonly string[], revealed: number): Face {
+  const face = baseFace(card, subs, revealed);
+  if (face.kind === 'cover' || !card.source) return face;
+  return {
+    ...face,
+    source: {
+      label: sourceLabel(card.source),
+      mediaId: card.source.mediaId ?? null,
+      page: card.source.page ?? null,
+    },
+  };
+}
+
+function baseFace(card: Card, subs: readonly string[], revealed: number): FaceBase {
   if (card.type === 'qa') {
     return { kind: 'qa', typeLabel: 'Frage', question: card.front, answer: card.back };
   }
@@ -153,6 +221,23 @@ export function faceOf(card: Card, subs: readonly string[], revealed: number): F
       rows: schemaRows(card.points, shown),
       revealed: shown,
       total,
+    };
+  }
+  if (card.type === 'cover') {
+    const n = maskNumber(subs[0] ?? '');
+    const masks = coverMasks(card.masks, n, revealed > 0);
+    const label = masks.find((m) => m.n === n)?.label ?? 1;
+    return {
+      kind: 'cover',
+      typeLabel: `Abdeckung ${String(label)} von ${String(masks.length)}`,
+      question: `Was steht unter Feld ${String(label)}?`,
+      mediaId: card.mediaId,
+      masks,
+      asked: label,
+      chip: card.source ? sourceCoverChip(card.source) : '',
+      openable: card.source?.mediaId !== undefined,
+      sourcePage: card.source?.page ?? null,
+      sourceMediaId: card.source?.mediaId ?? null,
     };
   }
   const asked = askedNumbers(subs);

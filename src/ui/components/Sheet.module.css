@@ -25,6 +25,8 @@
 
 .body {
   box-sizing: border-box;
+  /* Die Designs lassen die Zeilenhöhe auf „normal“. */
+  line-height: normal;
   padding: 12px 24px calc(34px + var(--bottom-inset));
   display: flex;
   flex-direction: column;

@@ -53,7 +53,7 @@ export interface StudySnapshot {
 
 /**
  * Abfragen mit Lernzustand, Einstellungen und heute begonnene neue Abfragen. Liest alle Abfragen
- * (klein: eine Zeile je Frage oder Lücke); für 5.000 Karten misst M11 nach.
+ * (klein: eine Zeile je Frage oder Lücke); für 5.000 Karten misst M12 nach.
  */
 export async function readStudy(db: JuriDb, todayStart: number): Promise<StudySnapshot> {
   const [items, settings, startedToday] = await Promise.all([

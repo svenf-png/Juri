@@ -13,6 +13,9 @@ export async function loadDemoDecks(now = Date.now()) {
   return addDemoDecks(database(), now);
 }
 
+/** Fügt das Demo-Skript (50-seitiges PDF, Frage und Abdeckung) hinzu; `false`, wenn es schon da ist. */
+export { addDemoSkript as loadDemoSkript } from './skript';
+
 export async function resetAllData(): Promise<void> {
   await replaceTables(database(), {});
 }

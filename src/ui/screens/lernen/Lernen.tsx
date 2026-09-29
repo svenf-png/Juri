@@ -6,9 +6,11 @@ import { endSummary, faceOf, plural } from '@/domain/session/present';
 import type { RatingKey } from '@/domain/scheduler/rating';
 import { setSurfaceColor } from '@/platform/theme';
 import { useCard } from '@/features/library/queries';
+import { useMediaUrl } from '@/features/media/media';
 import { areaCodeOf, useStudySession, type SessionEnd } from '@/features/study/useSession';
 import { Button } from '../../components/Button';
 import { Celebration } from '../../components/Celebration';
+import { SurfaceImage, SurfaceMissing } from '../../components/CoverSurface';
 import { Sheet } from '../../components/Sheet';
 import { StorageError } from '../../components/StorageError';
 import { cx } from '../../cx';
@@ -16,6 +18,7 @@ import { useMediaQuery } from '../../useMediaQuery';
 import { useGoBack } from '../../useGoBack';
 import { colors } from '../../tokens/tokens';
 import { LernenView, type Exit } from './LernenView';
+import { SourceViewer } from '../pdf/SourceViewer';
 import { LinkedCardSheet } from './LinkedCardSheet';
 import styles from './Lernen.module.css';
 
@@ -38,6 +41,7 @@ export function Lernen() {
   const navigate = useNavigate();
   const goBack = useGoBack(deckId ? `/stapel/${deckId}` : '/');
   const [linked, setLinked] = useState<string | null>(null);
+  const [opened, setOpened] = useState<{ mediaId: string; page: number | null } | null>(null);
   const reduced = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [exit, setExit] = useState<Exit>('');
   const [drag, setDrag] = useState(0);
@@ -48,6 +52,7 @@ export function Lernen() {
   const touch = useRef<{ x: number; y: number } | null>(null);
 
   const { state, station } = session;
+  const coverMedia = useMediaUrl(session.card?.type === 'cover' ? session.card.mediaId : null);
   const flipped = state.flipped;
   const bundle = isBundle(station);
 
@@ -109,7 +114,7 @@ export function Lernen() {
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (asking || session.status !== 'ready' || state.done) return;
+      if (asking || opened || session.status !== 'ready' || state.done) return;
       const onButton = event.target instanceof HTMLButtonElement;
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
         event.preventDefault();
@@ -143,7 +148,7 @@ export function Lernen() {
     return () => {
       window.removeEventListener('keydown', onKey);
     };
-  }, [asking, session.status, state.done, flipped, advance, rateWith, undo, close]);
+  }, [asking, opened, session.status, state.done, flipped, advance, rateWith, undo, close]);
 
   useEffect(() => {
     document.title = 'Lernen · Juri';
@@ -224,9 +229,33 @@ export function Lernen() {
         onUndo={() => {
           if (!busy.current) undo();
         }}
+        coverImage={
+          coverMedia.status === 'ready' ? (
+            <SurfaceImage src={coverMedia.url} />
+          ) : coverMedia.status === 'missing' ? (
+            <SurfaceMissing />
+          ) : null
+        }
+        coverRatio={
+          coverMedia.status === 'ready' && coverMedia.record.width && coverMedia.record.height
+            ? coverMedia.record.width / coverMedia.record.height
+            : 1
+        }
         onOpenLink={setLinked}
+        onOpenSource={(mediaId, page) => {
+          setOpened({ mediaId, page });
+        }}
         cardEvents={cardEvents}
       />
+      {opened ? (
+        <SourceViewer
+          mediaId={opened.mediaId}
+          page={opened.page}
+          onClose={() => {
+            setOpened(null);
+          }}
+        />
+      ) : null}
       <LinkedCard
         cardId={linked}
         onClose={() => {

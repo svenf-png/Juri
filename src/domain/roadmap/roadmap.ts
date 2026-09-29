@@ -1,5 +1,5 @@
 /**
- * Entwicklungsstand für die Einstellungen: die Meilensteine M0 bis M11 mit der Version, in der sie
+ * Entwicklungsstand für die Einstellungen: die Meilensteine M0 bis M13 mit der Version, in der sie
  * erscheinen (docs/ARCHITEKTUR.md, Plan). Der Stand folgt der Versionsnummer der App: Ein
  * Meilenstein gilt als fertig, sobald die App seine Version erreicht hat. Jeder Meilenstein hebt
  * die Version an (package.json), damit die Liste ohne weitere Pflege mitläuft.
@@ -20,11 +20,13 @@ export const MILESTONES: readonly Milestone[] = [
   { id: 'M4', title: 'Lernen mit FSRS und Leitner', version: '0.5.0' },
   { id: 'M5', title: 'Schema und Verknüpfungen', version: '0.6.0' },
   { id: 'M6', title: 'Bilder, PDF und Abdeckung', version: '0.7.0' },
-  { id: 'M7', title: 'Fristen', version: '0.8.0' },
-  { id: 'M8', title: 'Erfolge und Serie', version: '0.9.0' },
-  { id: 'M9', title: 'Teilen und Import', version: '0.10.0' },
-  { id: 'M10', title: 'High fives', version: '0.11.0' },
-  { id: 'M11', title: 'Feinschliff', version: '1.0.0' },
+  { id: 'M7', title: 'Browser-Version', version: '0.8.0' },
+  { id: 'M8', title: 'Fristen', version: '0.9.0' },
+  { id: 'M9', title: 'Erfolge und Serie', version: '0.10.0' },
+  { id: 'M10', title: 'Teilen und Import', version: '0.11.0' },
+  { id: 'M11', title: 'High fives', version: '0.12.0' },
+  { id: 'M12', title: 'Feinschliff', version: '1.0.0' },
+  { id: 'M13', title: 'Eigene Desktop-Gestaltung', version: '1.1.0' },
 ];
 
 export type MilestoneState = 'done' | 'current' | 'planned';
@@ -37,7 +39,7 @@ export interface Roadmap {
   readonly rows: readonly MilestoneRow[];
   readonly done: number;
   readonly total: number;
-  /** „5 von 12 Schritten fertig“ */
+  /** „5 von 14 Schritten fertig“ */
   readonly summary: string;
   /** Prozent der fertigen Schritte, ganzzahlig. */
   readonly percent: number;

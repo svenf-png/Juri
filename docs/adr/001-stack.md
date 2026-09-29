@@ -14,7 +14,7 @@ Juri ist eine PWA für iPhone und iPad (Safari/WebKit), offline-first, ohne Serv
 - **Keine Animationsbibliothek** (Abweichung vom Briefing-Vorschlag motion): Alle Bewegungen im Design sind CSS-Keyframes und -Transitions mit festen Kurven und Dauern. Sie werden 1:1 als CSS übernommen, reduzierte Bewegung schaltet sie zentral ab (`global.css`).
 - **vite-plugin-pwa (Workbox, generateSW)** für Manifest, Precache und Update-Hinweis.
 - **Vitest** (jsdom) für Unit-Tests, **Playwright** für E2E (WebKit in der CI, Chromium lokal und für Service-Worker-Tests).
-- Später: Dexie (M1), ts-fsrs 5.x (M4), pdfjs-dist (M6), fflate (bereits für Testdateien), zod (M9), date-fns (bei Bedarf).
+- Später: Dexie (M1), ts-fsrs 5.x (M4), pdfjs-dist (M6), fflate (bereits für Testdateien), zod (M10), date-fns (bei Bedarf).
 - **Schriften** über Fontsource-Pakete gebündelt, nur Latein und Latein-Erweitert; Bricolage Grotesque mit opsz-Achse (12 bis 96), wie im Design über Google Fonts genutzt.
 
 ## Konsequenzen

@@ -13,7 +13,7 @@ import type { RatingKey } from '../scheduler/rating';
 import { RATING_KEYS } from '../scheduler/rating';
 
 export interface Station {
-  /** Die Karten-ID, eindeutig in der Session. */
+  /** Die Karten-ID (bei Feldern einer Abdeckung die Abfrage-Kennung), eindeutig in der Session. */
   readonly key: string;
   readonly cardId: string;
   /** Abfragen dieser Station, Lücken nach Nummer. Mehr als eine heißt: gebündelte Lücken. */
@@ -30,7 +30,7 @@ export function stepsOf(station: Station): number {
   return station.steps ?? station.itemIds.length;
 }
 
-/** Nummer aus einer Abfrage-Kennung: `c3` → 3; die ganze Karte (`''`) ist 0. */
+/** Nummer aus einer Abfrage-Kennung: `c3` oder `m3` → 3; die ganze Karte (`''`) ist 0. */
 function gapNumber(sub: string): number {
   return sub === '' ? 0 : Number(sub.slice(1));
 }
@@ -39,14 +39,21 @@ function gapNumber(sub: string): number {
  * Stationen aus den Abfragen einer Session (in Reihenfolge). Lücken derselben Karte kommen an die
  * Stelle der ersten in eine Station (Entscheidung 3), jede andere Abfrage bildet eine eigene.
  * `steps` nennt zu Karten-IDs die Zahl der Aufdeck-Schritte (Schema: Punkte), siehe `Station.steps`.
+ * `singles` sind Karten, deren Abfragen nie gebündelt werden (Abdeckung).
  */
 export function stationsFrom(
   items: readonly ReviewItem[],
   steps: ReadonlyMap<string, number> = new Map(),
+  singles: ReadonlySet<string> = new Set(),
 ): Station[] {
   const stations: { key: string; cardId: string; items: ReviewItem[] }[] = [];
   const byCard = new Map<string, (typeof stations)[number]>();
   for (const item of items) {
+    // Felder einer Abdeckung werden einzeln gefragt (A7): jedes ist eine eigene Station.
+    if (singles.has(item.cardId)) {
+      stations.push({ key: item.id, cardId: item.cardId, items: [item] });
+      continue;
+    }
     const existing = byCard.get(item.cardId);
     if (existing) {
       existing.items.push(item);

@@ -15,12 +15,12 @@ Mit M4 lernt Juri. Der Lernzustand muss zu ADR-004 passen (beide Algorithmen par
 - **Fälligkeit:** `due` vor dem Ende des Lerntags (04:00) oder, für neue Abfragen, im Rahmen des Tageslimits (A26). Reine Funktionen in `domain/scheduler/queue.ts`, Uhr und Zufall als Parameter.
 - **Session als Zustandsmaschine** (`domain/session/session.ts`): Stationen (Frage, Lücke oder gebündelte Lücken), `flip`, `revealNext`, `rate`, `undo`. `rate` und `undo` liefern die Wirkung auf die Daten (`effect`), die Anwendungsschicht (`features/study/useSession.ts`) führt sie aus. Die Oberfläche rechnet die Bewertung lokal mit derselben reinen Funktion wie die Datenbank (`reviewItem`), damit Vorschau und nächste Karte sofort stimmen, und speichert der Reihe nach über eine Warteschlange.
 - **FSRS ohne Streuung, längster Abstand 180 Tage:** siehe A28. Die Vorschau ist damit exakt.
-- **Bilanz je Abfrage:** Ein Bündel aus drei Lücken zählt dreifach (Tagesziel A5, Statistik M8).
+- **Bilanz je Abfrage:** Ein Bündel aus drei Lücken zählt dreifach (Tagesziel A5, Statistik M9).
 
 ## Konsequenzen
 
 - Backups aus M1 bis M3 bleiben einspielbar (alle Abfragen neu); Backups aus M4 lehnt eine ältere App ab (ADR-006).
 - Ein Wechsel des Algorithmus ist verlustfrei und sofort wirksam; die Fälligkeiten des anderen Algorithmus laufen im Hintergrund mit.
-- Fristen (M7) rechnen zur Laufzeit auf `due` und ändern nichts an den Daten.
-- Heute und Stapel lesen alle Abfragen (eine kleine Zeile je Frage oder Lücke); für 5.000 Karten misst M11 nach.
+- Fristen (M8) rechnen zur Laufzeit auf `due` und ändern nichts an den Daten.
+- Heute und Stapel lesen alle Abfragen (eine kleine Zeile je Frage oder Lücke); für 5.000 Karten misst M12 nach.
 - Die FSRS-Optimierung (nach V1) findet im Lernlog alle nötigen Felder.

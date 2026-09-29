@@ -1,6 +1,6 @@
 # ADR-003: Dateiformat .juri
 
-Status: angenommen · 28.09.2026 (Umsetzung in M9)
+Status: angenommen · 28.09.2026 (Umsetzung in M10)
 
 ## Kontext
 

@@ -2,7 +2,7 @@
  * Verweise zwischen den Tabellen: Ein Backup mit ins Leere zeigenden Verweisen oder fehlenden
  * Abfragen würde beim Lernen oder Anzeigen scheitern. Geprüft wird vor dem Einspielen.
  */
-import { reviewItemId, reviewSubs, contentOf } from '../cards/card';
+import { reviewItemId, reviewSubs, contentOf, mediaIdsOf } from '../cards/card';
 import { linkedCardIds } from '../cards/schema';
 import { cardSchema, type Card } from './records';
 
@@ -13,6 +13,7 @@ export function hasIntegrity(tables: {
   decks?: Rows;
   cards?: Rows;
   reviewItems?: Rows;
+  media?: Rows;
 }): boolean {
   const areaIds = new Set((tables.areas ?? []).map((a) => a.id));
   const decks = new Map((tables.decks ?? []).map((d) => [d.id as string, d]));
@@ -21,6 +22,7 @@ export function hasIntegrity(tables: {
   }
   const expected = new Map<string, { cardId: string; deckId: string; sub: string }>();
   const cardIds = new Set((tables.cards ?? []).map((c) => c.id));
+  const media = new Map((tables.media ?? []).map((m) => [m.id as string, m]));
   for (const row of tables.cards ?? []) {
     const parsed = cardSchema.safeParse(row);
     if (!parsed.success) return false;
@@ -28,6 +30,15 @@ export function hasIntegrity(tables: {
     if (!decks.has(card.deckId)) return false;
     // Verknüpfungen zeigen auf vorhandene andere Karten (ADR-009).
     if (linkedCardIds(card).some((id) => id === card.id || !cardIds.has(id))) return false;
+    // Bilder und PDFs, auf die eine Karte zeigt, liegen im Backup (M6).
+    for (const mediaId of mediaIdsOf(card)) {
+      const record = media.get(mediaId);
+      if (!record) return false;
+      // Abdeckung: ein Bild; Herkunft: ein PDF.
+      if (card.type === 'cover' && mediaId === card.mediaId && record.kind !== 'image')
+        return false;
+      if (mediaId === card.source?.mediaId && record.kind !== 'pdf') return false;
+    }
     for (const sub of reviewSubs(contentOf(card))) {
       expected.set(reviewItemId(card.id, sub), { cardId: card.id, deckId: card.deckId, sub });
     }

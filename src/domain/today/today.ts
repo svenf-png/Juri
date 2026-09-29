@@ -3,13 +3,13 @@
  * raus (Main.dc.html, iPadHeute.dc.html). Die Oberfläche rechnet nichts mehr selbst.
  *
  * Stand M2: Karten, Fristen, Tagesziele und High fives gibt es noch nicht; die Eingaben sind
- * so geschnitten, dass M3 (Karten), M4 (Fälligkeit), M7 (Fristen), M8 (Ziele, Stufen) und
- * M10 (High fives) sie nur noch befüllen.
+ * so geschnitten, dass M3 (Karten), M4 (Fälligkeit), M8 (Fristen), M9 (Ziele, Stufen) und
+ * M11 (High fives) sie nur noch befüllen.
  */
 import { addDays, daysBetween, dayKey, parseDayKey, type Day } from '../calendar/day';
 import { countdown, longDate, relativeDays, shortDate, weekdayShort } from '../format/date';
 
-/** Tagesziel, bis M8 es einstellbar macht (Main.dc.html: 24). */
+/** Tagesziel, bis M9 es einstellbar macht (Main.dc.html: 24). */
 export const DEFAULT_DAILY_GOAL = 24;
 /** Höchstzahl der Segmente in der Tagesziel-Leiste (Main.dc.html: 24 Spalten). */
 export const GOAL_SEGMENTS_MAX = 24;
@@ -34,7 +34,7 @@ export interface DeadlineInput {
   readonly title: string;
   /** „JJJJ-MM-TT“. */
   readonly date: string;
-  /** Anteil der Karten, die bis zur Frist sicher sitzen, 0 bis 100 (M7). */
+  /** Anteil der Karten, die bis zur Frist sicher sitzen, 0 bis 100 (M8). */
   readonly secureShare?: number | undefined;
 }
 

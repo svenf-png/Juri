@@ -2,7 +2,7 @@
 
 Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, Safari/WebKit), ohne Server für Nutzerdaten. Dieses Dokument ist die Übergabe für neue Sessions. Maßgeblich sind:
 
-- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 11**, Annahmen A1 bis A33, Plan M0 bis M11, Risiken
+- `docs/ARCHITEKTUR.md`: Architektur, **Entscheidungen 1 bis 12**, Annahmen A1 bis A50, Plan M0 bis M13, Risiken
 - `docs/adr/`: Architekturentscheidungen (Stack, Speicher, .juri, Scheduler, Hosting, Datenbank, Karten, Lern-Engine)
 - `design/*.dc.html`: verbindliches Design (HTML mit Inline-Styles; `support.js` und der Script-Block am Ende gehören zum Design-Tool)
 - `docs/folien/`: Projekt-Präsentation und Handbuch, per KI in PowerPoint umwandelbar (`KONVENTION.md`)
@@ -20,7 +20,7 @@ Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, 
 - Kosten: Sven hat ab M4 freigegeben, dass Kosten keine Rolle mehr spielen, alles läuft über das Plan-Abo. Die frühere Budgetgrenze (rund 100 $, verbraucht: nach M0 28,44 $) entfällt, ein Kostenstand muss nicht mehr gemeldet werden. Testbarer Prototyp = M1 bis M4 (Entscheidung 11).
 - **Ein neuer Chat pro Meilenstein**, damit der Kontext klein bleibt.
 - Gezielt arbeiten: Datei-Ausschnitte statt ganzer Dateien, keine breite Web-Recherche ohne Anlass. Designs nur für den jeweiligen Meilenstein lesen.
-- Routine-Meilensteine mit `/effort high`, M4 (Lernalgorithmus) und M9 (Merge) mit höherer Stufe.
+- Routine-Meilensteine mit `/effort high`, M4 (Lernalgorithmus) und M10 (Merge) mit höherer Stufe.
 
 ### Start-Nachricht für einen Meilenstein-Chat
 
@@ -64,6 +64,7 @@ WebKit läuft in der GitHub-CI.
 - Karten und Stapel (M3, ADR-007): Tabellen `areas`, `decks` (m:n über `areaIds`), `cards` (qa, cloze), `reviewItems` (Lücke = Abfrage), `events` (Ereignis-Log). Reine Logik in `domain/cards`, `domain/library`, `domain/today/build.ts`; Schreiben in `data/repositories`, Hooks in `features/library`. Route `/stapel/:deckId?` (Master-Detail ab 1100 px), `/neu`, `/karte/:cardId`. Warn-Rot `danger` nur für Löschen und Fehler. Demo-Stapel: `testdaten/demo-stapel.json`.
 - Lernen (M4, ADR-008): `reviewItems` trägt `fsrs`, `leitner`, `due` (Index des aktiven Algorithmus), `reviewLog` das Lernlog samt Zustand davor (Undo), Einstellungen liegen in `meta` (`learning`). Reine Logik in `domain/scheduler` (ts-fsrs nur in `fsrs.ts`, Leitner, Fälligkeit und Reihenfolge in `queue.ts`, Zustand in `schedule.ts`) und `domain/session` (Zustandsmaschine, `present.ts` für die Ansicht). Schreiben in `data/repositories/study.ts`, Session-Hook `features/study/useSession.ts`, Bildschirme `ui/screens/lernen` und `ui/screens/einstellungen/Lernrhythmus*`. Route `/lernen?stapel=<ID>`. Der Entwicklungsstand (`domain/roadmap`) folgt der Version aus `package.json`.
 - Schema und Verknüpfungen (M5, ADR-009): Kartentyp `schema` mit flachen Punkten (`level` 1 bis 3, `text`, `norm`, `content`, `link`), eine Abfrage je Schema. Reine Logik in `domain/cards/schema.ts` (Editor-Operationen, Prüfung, Zählung, Verknüpfungen), Ansicht in `domain/session/present.ts` (`schemaRows`), Aufdeck-Schritte einer Station (`Station.steps`) in `domain/session`. Löschen bereinigt Verweise in derselben Transaktion (`data/repositories/cards.ts`, `decks.ts`), Backup prüft sie (`domain/model/integrity.ts`), Schema-Version 4. Dienste des Editors (Suche, verknüpfte Karte, neue Karte) sind über `LinkServices` (`features/library/links.ts`) austauschbar; Bildschirme `ui/screens/erstellen/SchemaEditor.tsx`, `ui/screens/lernen/LinkedCardSheet.tsx`, Vorschauen unter `/styleguide/schema/<Variante>` für `tests/e2e/schema.spec.ts`. Route `/lernen?karte=<ID>` lernt eine einzelne Karte.
+- Bilder, PDF und Abdeckung (M6, ADR-010): Tabelle `media` (ArrayBuffer), Kartentyp `cover` (Felder in Bruchteilen des Bildes, Abfrage `<ID>:m<n>`), Herkunft `source` an jeder Karte, Schema-Version 5. Reine Logik in `domain/media` (Signatur, Grenzen, Renderplan, Zoom, Markierung) und `domain/cards/occlusion.ts`; Browser in `platform/media` (Bild verkleinern) und `platform/pdf` (pdf.js Legacy-Build, lazy, nur dort); Anwendungsfälle in `features/media`. Bildschirme: Reiter Abdeckung, Editor und PDF-Ansicht unter `ui/screens/erstellen` und `ui/screens/pdf`, Zoom `ui/useZoomPan.ts`, Fläche `ui/components/CoverSurface`. Vorschauen unter `/styleguide/abdeckung/<Variante>` für `tests/e2e/abdeckung.spec.ts`; Demo-PDF aus `npm run demo:pdf`, Demo-Skript in den Testdaten.
 - Bildvergleich in Chromium läuft mit `--disable-lcd-text` (`playwright.config.ts`): Ein `<dialog>` wird in eigener Ebene mit Graustufen-Glättung gezeichnet, die Design-Seiten mit Farbsäumen. Bewusste Abweichungen vom Design stehen in `FIXES` (`tests/e2e/design.ts`).
 - Beim Design-Vergleich: Elemente, die im Design ohne `border-box` mit Rand gezeichnet sind, bekommen `box-sizing: content-box`, damit die Größe auf jeder Bildschirmdichte stimmt. Das Design lässt die Zeilenhöhe auf „normal“: Bildschirme aus dem Design setzen `line-height: normal`.
 

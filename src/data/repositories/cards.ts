@@ -1,20 +1,24 @@
-import { buildCard, buildItems, type CardFields } from '@/domain/cards/card';
+import { buildCard, buildItems, mediaIdsOf, type CardFields } from '@/domain/cards/card';
 import { linksTo, withoutLinks } from '@/domain/cards/schema';
-import type { Card, NewEvent } from '@/domain/model/records';
+import type { Card, MediaRecord, NewEvent } from '@/domain/model/records';
 import type { JuriDb } from '../db';
+import { releaseMedia } from './media';
 import { readCounter, writeMeta } from './profile';
 
 /**
  * Legt eine Karte an: Karte, ihre Abfragen (ein Lückentext mit drei Lücken ergibt drei),
  * Ereignis „Karte angelegt“ und der Zähler für die Backup-Erinnerung in einer Transaktion.
+ * `media` sind neue Bilder oder PDFs, auf die die Karte zeigt; sie werden mit der Karte gespeichert
+ * (ein schon gespeichertes PDF wird nicht noch einmal übergeben).
  */
 export async function createCard(
   db: JuriDb,
-  input: { id: string; deckId: string; fields: CardFields },
+  input: { id: string; deckId: string; fields: CardFields; media?: readonly MediaRecord[] },
   now: number,
 ): Promise<Card> {
   const card = buildCard(input.id, input.deckId, input.fields, now, now);
-  await db.transaction('rw', db.cards, db.reviewItems, db.events, db.meta, async () => {
+  await db.transaction('rw', db.cards, db.reviewItems, db.events, db.meta, db.media, async () => {
+    if (input.media && input.media.length > 0) await db.media.bulkPut([...input.media]);
     await db.cards.add(card);
     await db.reviewItems.bulkAdd(buildItems(card, now));
     const event: NewEvent = { at: now, type: 'cardCreated', cardId: card.id, deckId: card.deckId };
@@ -88,11 +92,14 @@ export async function deleteCard(
   id: string,
   now: number = Date.now(),
 ): Promise<number> {
-  return db.transaction('rw', db.cards, db.reviewItems, async () => {
+  return db.transaction('rw', db.cards, db.reviewItems, db.media, async () => {
     const items = await db.reviewItems.where('cardId').equals(id).primaryKeys();
+    const card = await db.cards.get(id);
     await db.reviewItems.bulkDelete(items);
     await db.cards.delete(id);
     await unlinkCards(db, new Set([id]), new Set([id]), now);
+    // Bild und PDF der Karte gehen mit, wenn keine andere Karte sie nutzt.
+    if (card) await releaseMedia(db, mediaIdsOf(card));
     return items.length;
   });
 }

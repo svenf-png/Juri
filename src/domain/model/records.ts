@@ -2,8 +2,8 @@
  * Gespeicherte Datensätze (IndexedDB über Dexie, src/data/). Die zod-Schemas sind die einzige
  * Quelle der Typen und prüfen Datensätze beim Einspielen eines Backups.
  *
- * Stand M5: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog
- * und Ereignisse. Die übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen
+ * Stand M6: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog,
+ * Ereignisse und Medien. Die übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen
  * dazu, jeweils mit Schema und Migration. Zeitpunkte sind Millisekunden seit 1970 (UTC).
  */
 import { hasGap } from '../cards/cloze';
@@ -111,6 +111,14 @@ const tag = z
   .max(40)
   .regex(/^[^\s#,]+$/u);
 
+/** Herkunft einer Karte (M6): Datei und Seite; mit `mediaId` lässt sich das gespeicherte PDF öffnen. */
+export const sourceSchema = z.strictObject({
+  name: singleLine(200),
+  page: z.number().int().min(1).max(100_000).optional(),
+  mediaId: id.optional(),
+});
+export type Source = z.infer<typeof sourceSchema>;
+
 const cardBase = {
   id,
   deckId: id,
@@ -119,9 +127,23 @@ const cardBase = {
   tags: z.array(tag).max(20),
   /** Eigene Notiz (Entscheidung 5); erscheint beim Lernen unter der Antwort. */
   note: z.string().min(1).max(2000).optional(),
+  /** Herkunft, z. B. „Skript Sachenrecht.pdf, S. 14“ (M6). */
+  source: sourceSchema.optional(),
   createdAt: millis,
   updatedAt: millis,
 };
+
+/** Höchstzahl der Felder einer Abdeckung. */
+export const COVER_MAX_MASKS = 30;
+
+/** Feld einer Abdeckung in Bruchteilen des Bildes (domain/cards/occlusion.ts). */
+export const maskSchema = z.strictObject({
+  n: z.number().int().min(1).max(99),
+  x: z.number().min(0).max(1),
+  y: z.number().min(0).max(1),
+  w: z.number().min(0.02).max(1),
+  h: z.number().min(0.02).max(1),
+});
 
 /** Größte Einrückung einer Gliederung: 1., a), aa). */
 export const SCHEMA_MAX_LEVEL = 3;
@@ -129,7 +151,7 @@ export const SCHEMA_MAX_LEVEL = 3;
 export const SCHEMA_MAX_POINTS = 60;
 
 /**
- * Punkt einer Gliederung. `id` bleibt beim Bearbeiten stehen (Verknüpfungen, Merge in M9);
+ * Punkt einer Gliederung. `id` bleibt beim Bearbeiten stehen (Verknüpfungen, Merge in M10);
  * `level` ist die Einrückung (1 bis 3); `link` ist die verknüpfte Karte (ADR-009).
  */
 export const schemaPointSchema = z.strictObject({
@@ -176,9 +198,25 @@ export const cardSchema = z.discriminatedUnion('type', [
     title: singleLine(200),
     points: schemaPoints,
   }),
+  z.strictObject({
+    ...cardBase,
+    type: z.literal('cover'),
+    /** Bild in der Tabelle `media`. */
+    mediaId: id,
+    /** Felder, eindeutige Nummern; in Bildgrenzen. */
+    masks: z
+      .array(maskSchema)
+      .min(1)
+      .max(COVER_MAX_MASKS)
+      .refine(
+        (masks) =>
+          new Set(masks.map((m) => m.n)).size === masks.length &&
+          masks.every((m) => m.x + m.w <= 1 + 1e-9 && m.y + m.h <= 1 + 1e-9),
+      ),
+  }),
 ]);
 
-/** Karte; die Abdeckung kommt mit M6 als weiterer Typ dazu. */
+/** Karte: Frage, Lückentext, Schema oder Abdeckung (M6). */
 export type Card = z.infer<typeof cardSchema>;
 export type CardType = Card['type'];
 
@@ -219,8 +257,8 @@ export const reviewItemSchema = z.strictObject({
   cardId: id,
   /** Denormalisiert aus der Karte, damit Zählungen je Stapel ohne Verbindung auskommen. */
   deckId: id,
-  /** Leer für die ganze Karte, sonst `c1`, `c2` … für eine Lücke. */
-  sub: z.string().regex(/^(?:c[1-9]\d?)?$/),
+  /** Leer für die ganze Karte, sonst `c1`, `c2` … für eine Lücke, `m1` … für ein Feld. */
+  sub: z.string().regex(/^(?:[cm][1-9]\d?)?$/),
   createdAt: millis,
   ...learningState,
 });
@@ -273,7 +311,7 @@ export const eventSchema = z.discriminatedUnion('type', [
     cardId: id,
     deckId: id,
   }),
-  /** Eine Abfrage wurde bewertet (M4); Grundlage für Tagesziel und Statistik (M8). */
+  /** Eine Abfrage wurde bewertet (M4); Grundlage für Tagesziel und Statistik (M9). */
   z.strictObject({
     seq: z.number().int().positive(),
     at: millis,
@@ -302,6 +340,24 @@ export const eventSchema = z.discriminatedUnion('type', [
 export type AppEvent = z.infer<typeof eventSchema>;
 export type NewEvent = { [E in AppEvent as E['type']]: Omit<E, 'seq'> }[AppEvent['type']];
 
+/** Bild oder PDF (M6, ADR-002: ArrayBuffer statt Blob). */
+export const mediaSchema = z.strictObject({
+  id,
+  kind: z.enum(['image', 'pdf']),
+  mime: z.string().min(1).max(100),
+  /** Dateiname für die Anzeige, z. B. „Skript Sachenrecht.pdf“. */
+  name: singleLine(200),
+  size: z.number().int().positive(),
+  /** Bild: Pixel; PDF: fehlt. */
+  width: z.number().int().positive().max(20_000).optional(),
+  height: z.number().int().positive().max(20_000).optional(),
+  /** PDF: Seitenzahl. */
+  pages: z.number().int().positive().max(100_000).optional(),
+  createdAt: millis,
+  data: z.instanceof(ArrayBuffer),
+});
+export type MediaRecord = z.infer<typeof mediaSchema>;
+
 /** Schema je Tabelle; jede Tabelle der Datenbank braucht hier einen Eintrag. */
 export const RECORD_SCHEMAS: Readonly<Record<string, z.ZodType>> = {
   profile: profileSchema,
@@ -312,4 +368,5 @@ export const RECORD_SCHEMAS: Readonly<Record<string, z.ZodType>> = {
   reviewItems: reviewItemSchema,
   reviewLog: reviewLogSchema,
   events: eventSchema,
+  media: mediaSchema,
 };

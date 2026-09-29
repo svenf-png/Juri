@@ -107,7 +107,9 @@ export function KarteBearbeiten() {
               : '') +
             (card.type === 'cloze'
               ? `Damit ${gaps === 1 ? 'entfällt 1 Abfrage' : `entfallen ${String(gaps)} Abfragen`} mit ihrem Lernfortschritt. Das lässt sich nicht rückgängig machen.`
-              : 'Die Karte und ihr Lernfortschritt werden gelöscht. Das lässt sich nicht rückgängig machen.')
+              : card.type === 'cover'
+                ? `Damit ${card.masks.length === 1 ? 'entfällt 1 Feld' : `entfallen ${String(card.masks.length)} Felder`} mit ihrem Lernfortschritt. Das Bild wird mit gelöscht, wenn keine andere Karte es nutzt. Das lässt sich nicht rückgängig machen.`
+                : 'Die Karte und ihr Lernfortschritt werden gelöscht. Das lässt sich nicht rückgängig machen.')
           }
           confirmLabel="Karte löschen"
           onClose={close}

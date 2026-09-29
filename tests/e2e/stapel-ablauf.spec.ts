@@ -120,13 +120,16 @@ test.describe('Stapel und Karten', () => {
     await expect(page.getByText('Markiere zuerst ein Wort im Text.')).toBeVisible();
   });
 
-  test('Abdeckung sagt, wann sie kommt', async ({ page }) => {
+  test('Abdeckung ohne Bild bietet die Wahl von Foto oder PDF-Seite an', async ({ page }) => {
     await onboard(page);
     await page.goto('/Juri/neu');
     await page.getByRole('button', { name: 'Abdeckung', exact: true }).click();
-    await expect(page.getByText('Abdeckungs-Karten kommen mit M6')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Speichern & nächste' })).toBeDisabled();
-    await expect(page.getByRole('button', { name: /^PDF/ })).toBeDisabled();
+    await expect(page.getByText('PDF-Seite oder Foto wählen')).toBeVisible();
+    await expect(page.getByRole('button', { name: /^PDF/ }).first()).toBeEnabled();
+    await page.getByRole('button', { name: /PDF-Seite oder Foto wählen/ }).click();
+    const sheet = page.getByRole('dialog', { name: 'Bild oder PDF-Seite wählen' });
+    await expect(sheet.getByRole('button', { name: /Foto \/ Bild/ })).toBeVisible();
+    await expect(sheet.getByRole('button', { name: /PDF-Seite/ })).toBeVisible();
   });
 
   test('ohne Stapel öffnet Speichern die Stapelwahl und legt dort einen an', async ({ page }) => {

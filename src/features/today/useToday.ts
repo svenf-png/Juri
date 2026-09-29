@@ -31,7 +31,7 @@ export function useLearningDayKey(): string {
 
 /**
  * Daten für Heute aus der Datenbank: Karten, Rechtsgebiete, fällige Abfragen, heute bewertete
- * Abfragen und in der letzten Woche angelegte Karten. Fristen und Verlauf kommen mit M7 und M8. Bis die Datenbank
+ * Abfragen und in der letzten Woche angelegte Karten. Fristen und Verlauf kommen mit M8 und M9. Bis die Datenbank
  * geantwortet hat, gibt es kein Modell (`model: null`), damit kein falscher Leerzustand aufblitzt;
  * scheitert die Datenbank, ist `failed` gesetzt.
  */
