@@ -9,10 +9,14 @@ import { asInstalledApp, onboard, watchPage } from './helpers';
  * Nach Aktionen, die schreiben, wird erst auf die sichtbare Wirkung gewartet, dann navigiert.
  */
 
-/** Datum in `days` Tagen als „JJJJ-MM-TT“ nach der Uhr des Geräts. */
+/**
+ * Datum in `days` Lerntagen als „JJJJ-MM-TT“ nach der Uhr des Geräts. Der Lerntag wechselt um
+ * 04:00 (Entscheidung 6): Zwischen 0 und 4 Uhr ist „heute“ noch der Vortag, sonst wäre „morgen“
+ * zu spät und die Deckelung griffe nicht (in der CI kurz nach Mitternacht beobachtet).
+ */
 async function inDays(page: Page, days: number): Promise<string> {
   return page.evaluate((n) => {
-    const d = new Date();
+    const d = new Date(Date.now() - 4 * 3_600_000);
     d.setDate(d.getDate() + n);
     const two = (v: number) => String(v).padStart(2, '0');
     return `${String(d.getFullYear())}-${two(d.getMonth() + 1)}-${two(d.getDate())}`;
