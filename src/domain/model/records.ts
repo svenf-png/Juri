@@ -2,10 +2,11 @@
  * Gespeicherte Datensätze (IndexedDB über Dexie, src/data/). Die zod-Schemas sind die einzige
  * Quelle der Typen und prüfen Datensätze beim Einspielen eines Backups.
  *
- * Stand M6: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog,
- * Ereignisse und Medien. Die übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen
+ * Stand M9: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog,
+ * Ereignisse, Medien, Fristen, Tagesaggregate und Meilensteine. Die übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen
  * dazu, jeweils mit Schema und Migration. Zeitpunkte sind Millisekunden seit 1970 (UTC).
  */
+import { parseDayKey } from '../calendar/day';
 import { hasGap } from '../cards/cloze';
 import { normalizeName } from '../profile/name';
 import { z } from '../zod';
@@ -37,6 +38,12 @@ export const learningSettingsSchema = z.strictObject({
     .refine((days) => days.every((d, i) => i === 0 || d >= (days[i - 1] ?? 0))),
 });
 
+export const goalsSchema = z.strictObject({
+  learn: z.number().int().min(1).max(200),
+  create: z.number().int().min(1).max(50),
+  pause: z.boolean(),
+});
+
 export const metaEntrySchema = z.discriminatedUnion('key', [
   /** Onboarding abgeschlossen. */
   z.strictObject({ key: z.literal('onboardedAt'), value: millis }),
@@ -46,6 +53,8 @@ export const metaEntrySchema = z.discriminatedUnion('key', [
   z.strictObject({ key: z.literal('newCardsSinceBackup'), value: z.number().int().nonnegative() }),
   /** Einstellungen des Lernrhythmus (M4); fehlt der Eintrag, gelten die Voreinstellungen. */
   z.strictObject({ key: z.literal('learning'), value: learningSettingsSchema }),
+  /** Tagesziele und Pausentag (M9); fehlt der Eintrag, gelten die Voreinstellungen. */
+  z.strictObject({ key: z.literal('goals'), value: goalsSchema }),
 ]);
 
 export type MetaEntry = z.infer<typeof metaEntrySchema>;
@@ -358,6 +367,79 @@ export const mediaSchema = z.strictObject({
 });
 export type MediaRecord = z.infer<typeof mediaSchema>;
 
+/** Art einer Frist (Fristen.dc.html): bestimmt nur die Beschriftung. */
+export const DEADLINE_KINDS = ['exam', 'klausur', 'llm', 'custom'] as const;
+export type DeadlineKind = (typeof DEADLINE_KINDS)[number];
+
+const dayKeyText = z.string().refine((key) => {
+  try {
+    parseDayKey(key);
+    return true;
+  } catch {
+    return false;
+  }
+});
+
+/**
+ * Umfang einer Frist: alle Karten (`all`) oder die Vereinigung aus Rechtsgebieten, Stapeln und
+ * Tags. Ein Umfang ohne Angaben und ohne `all` erfasst keine Karte; das entsteht, wenn Löschen
+ * die letzten Verweise entfernt (ADR-012).
+ */
+export const deadlineScopeSchema = z
+  .strictObject({
+    all: z.boolean(),
+    areaIds: z.array(id).max(30),
+    deckIds: z.array(id).max(200),
+    tags: z.array(tag).max(20),
+  })
+  .refine(
+    (s) =>
+      new Set(s.areaIds).size === s.areaIds.length &&
+      new Set(s.deckIds).size === s.deckIds.length &&
+      new Set(s.tags).size === s.tags.length &&
+      (!s.all || (s.areaIds.length === 0 && s.deckIds.length === 0 && s.tags.length === 0)),
+  );
+export type DeadlineScope = z.infer<typeof deadlineScopeSchema>;
+
+export const deadlineSchema = z.strictObject({
+  id,
+  kind: z.enum(DEADLINE_KINDS),
+  name: singleLine(60),
+  /** Tag der Frist („JJJJ-MM-TT“); fehlt bei einer Frist ohne Datum, die nichts verändert. */
+  date: dayKeyText.optional(),
+  scope: deadlineScopeSchema,
+  /** Endspurt: in den letzten 7 Tagen kommt jede Karte noch einmal. */
+  sprint: z.boolean(),
+  createdAt: millis,
+  updatedAt: millis,
+});
+
+/** Frist (Prüfung, Klausur, Modul): Ziel mit Datum und Umfang; ändert die Fälligkeit nur zur Laufzeit. */
+export type Deadline = z.infer<typeof deadlineSchema>;
+
+/**
+ * Aggregate eines Lerntags (M9, ADR-013), abgeleitet aus dem Ereignis-Log und in derselben
+ * Transaktion geschrieben. `met` hält fest, ob das Tagesziel mit den damals gültigen Zielen
+ * erreicht war; spätere Änderungen der Ziele ändern die Vergangenheit nicht.
+ */
+export const dayStatSchema = z.strictObject({
+  /** Lerntag („JJJJ-MM-TT“), Schlüssel. */
+  day: dayKeyText,
+  reviews: z.number().int().nonnegative(),
+  learned: z.number().int().nonnegative(),
+  created: z.number().int().nonnegative(),
+  met: z.boolean(),
+});
+export type DayRow = z.infer<typeof dayStatSchema>;
+
+/** Freigeschalteter Meilenstein (M9): entsteht genau einmal; `seen`, sobald die Feier gezeigt wurde. */
+export const milestoneSchema = z.strictObject({
+  id,
+  unlockedAt: millis,
+  seen: z.boolean(),
+});
+export type MilestoneRecord = z.infer<typeof milestoneSchema>;
+
 /** Schema je Tabelle; jede Tabelle der Datenbank braucht hier einen Eintrag. */
 export const RECORD_SCHEMAS: Readonly<Record<string, z.ZodType>> = {
   profile: profileSchema,
@@ -369,4 +451,7 @@ export const RECORD_SCHEMAS: Readonly<Record<string, z.ZodType>> = {
   reviewLog: reviewLogSchema,
   events: eventSchema,
   media: mediaSchema,
+  deadlines: deadlineSchema,
+  dayStats: dayStatSchema,
+  milestones: milestoneSchema,
 };

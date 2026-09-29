@@ -136,6 +136,8 @@ test.describe('Zeiger und Tastatur', () => {
     await page.goto('/Juri/test/');
     await page.getByLabel('Wie heißt du?').fill('Sven');
     await page.getByRole('button', { name: 'Los geht’s' }).click();
+    // Erst wenn das Profil geschrieben ist, sonst verwirft der Seitenwechsel es.
+    await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
     await page.goto('/Juri/test/einstellungen');
     await page.getByRole('button', { name: 'Demo-Profil laden' }).click();
     // Erst wenn die Karten geschrieben sind, ist das Demo-Profil da.
@@ -279,6 +281,8 @@ test.describe('Abnahme 1440 × 900: nichts abgeschnitten', () => {
     await page.goto('/Juri/test/');
     await page.getByLabel('Wie heißt du?').fill('Sven');
     await page.getByRole('button', { name: 'Los geht’s' }).click();
+    // Erst wenn das Profil geschrieben ist, sonst verwirft der Seitenwechsel es.
+    await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
     await page.goto('/Juri/test/einstellungen');
     await page.getByRole('button', { name: 'Demo-Profil laden' }).click();
     await page.getByRole('button', { name: 'Demo-Stapel hinzufügen' }).click();

@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { formShortcut, pdfShortcut, shellShortcut, type KeyInput } from './shortcuts';
+import {
+  deadlinesShortcut,
+  formShortcut,
+  pdfShortcut,
+  shellShortcut,
+  type KeyInput,
+} from './shortcuts';
 
 const key = (k: string, extra: Partial<KeyInput> = {}): KeyInput => ({
   key: k,
@@ -20,6 +26,17 @@ describe('formShortcut', () => {
     expect(formShortcut(key('Enter'))).toBeNull();
     expect(formShortcut(key('s', { ctrlKey: true }))).toBeNull();
     expect(formShortcut(key('Enter', { ctrlKey: true, altKey: true }))).toBeNull();
+  });
+});
+
+describe('deadlinesShortcut', () => {
+  it('„f“ legt eine Frist an, nie beim Tippen oder mit Modifikatoren', () => {
+    expect(deadlinesShortcut(key('f'))).toBe('new-deadline');
+    expect(deadlinesShortcut(key('f', { editable: true }))).toBeNull();
+    expect(deadlinesShortcut(key('f', { ctrlKey: true }))).toBeNull();
+    expect(deadlinesShortcut(key('f', { metaKey: true }))).toBeNull();
+    expect(deadlinesShortcut(key('f', { altKey: true }))).toBeNull();
+    expect(deadlinesShortcut(key('n'))).toBeNull();
   });
 });
 

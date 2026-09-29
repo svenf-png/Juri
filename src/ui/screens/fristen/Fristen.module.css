@@ -1,0 +1,286 @@
+/*
+ * Fristen nach Fristen.dc.html, Werte exakt aus dem Design: 54 px oben, Rand 24 px, Abstand 18 px.
+ * Die Karten sind Knöpfe (Frist bearbeiten), sonst Optik wie im Design.
+ */
+.screen {
+  --screen-top: 54px;
+  gap: 18px;
+  line-height: normal;
+}
+
+.back {
+  margin: 0 0 0 -10px;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: -8px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.card {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 24px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1.5px solid var(--line);
+}
+
+.hero {
+  border: 0;
+  padding: 18px 20px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  background: var(--violet);
+  color: var(--bg);
+}
+
+.undated {
+  border: 1.5px dashed var(--violet-300);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.hero .eyebrow {
+  color: inherit;
+  opacity: 0.85;
+}
+
+.expired .eyebrow {
+  color: var(--muted);
+}
+
+.name {
+  font-size: 17px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.hero .name {
+  font-size: 19px;
+}
+
+.expired .name {
+  color: var(--muted);
+}
+
+.detail {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.hero .detail {
+  color: inherit;
+  opacity: 0.9;
+}
+
+.count {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.big {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.hero .big {
+  font-size: 38px;
+}
+
+.unit {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.hero .unit {
+  color: inherit;
+  opacity: 0.9;
+}
+
+.past {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.pill {
+  position: relative;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 17px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.track {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.28);
+  overflow: hidden;
+}
+
+.fill {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg);
+  transform-origin: left center;
+  animation: grow 800ms var(--ease-standard) 200ms both;
+}
+
+.progressText {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    animation: none;
+  }
+}
+
+.section {
+  margin-bottom: -6px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.add {
+  height: 56px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: var(--radius-button-sm);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.export,
+.export:hover {
+  align-self: flex-start;
+  min-height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--link);
+}
+
+.note {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Leerzustand wie Bibliothek.dc.html (Stapel leer), Kachel 72 px. */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 40px 12px 0;
+}
+
+.emptyTile {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  background: var(--surface);
+  color: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyTitle {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.emptyText {
+  max-width: 300px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);
+}

@@ -11,6 +11,8 @@ import { Erstellen } from '@/ui/screens/erstellen/Erstellen';
 import { KarteBearbeiten } from '@/ui/screens/erstellen/KarteBearbeiten';
 import type { AbdeckungVariant } from '@/ui/screens/erstellen/AbdeckungVorschau';
 import type { SchemaVariant } from '@/ui/screens/schema/SchemaVorschau';
+import type { ErfolgeVariant } from '@/ui/screens/erfolge/ErfolgeVorschau';
+import type { FristenVariant } from '@/ui/screens/fristen/FristenVorschau';
 import { Stapel } from '@/ui/screens/stapel/Stapel';
 import { ProfileScreen, RequireBrowserTab, RequireNoProfile, RequireProfile } from './gates';
 
@@ -39,6 +41,36 @@ const SCHEMA_VARIANTS: readonly SchemaVariant[] = [
 ];
 const SchemaVorschau = lazy(() =>
   import('@/ui/screens/schema/SchemaVorschau').then((m) => ({ default: m.SchemaVorschau })),
+);
+const FRISTEN_VARIANTS: readonly FristenVariant[] = [
+  'liste',
+  'leer',
+  'endspurt',
+  'neu',
+  'bearbeiten',
+  'fehler',
+  'umfang',
+  'loeschen',
+];
+const ERFOLGE_VARIANTS: readonly ErfolgeVariant[] = [
+  'liste',
+  'leer',
+  'ziele',
+  'fehler',
+  'meilenstein',
+  'fertig',
+];
+const ErfolgeVorschau = lazy(() =>
+  import('@/ui/screens/erfolge/ErfolgeVorschau').then((m) => ({ default: m.ErfolgeVorschau })),
+);
+const Erfolge = lazy(() =>
+  import('@/ui/screens/erfolge/Erfolge').then((m) => ({ default: m.Erfolge })),
+);
+const FristenVorschau = lazy(() =>
+  import('@/ui/screens/fristen/FristenVorschau').then((m) => ({ default: m.FristenVorschau })),
+);
+const Fristen = lazy(() =>
+  import('@/ui/screens/fristen/Fristen').then((m) => ({ default: m.Fristen })),
 );
 const ABDECKUNG_VARIANTS: readonly AbdeckungVariant[] = [
   'lernen',
@@ -107,9 +139,23 @@ export function routes(
           children: [
             { path: '/', element: <ProfileScreen screen={Heute} /> },
             { path: '/stapel/:deckId?', element: <Stapel /> },
-            { path: '/erfolge', element: <Platzhalter {...PLATZHALTER.erfolge} /> },
+            {
+              path: '/erfolge',
+              element: (
+                <Lazy>
+                  <Erfolge />
+                </Lazy>
+              ),
+            },
             { path: '/teilen', element: <Platzhalter {...PLATZHALTER.teilen} /> },
-            { path: '/fristen', element: <Platzhalter {...PLATZHALTER.fristen} /> },
+            {
+              path: '/fristen',
+              element: (
+                <Lazy>
+                  <Fristen />
+                </Lazy>
+              ),
+            },
             { path: '/high-fives', element: <Platzhalter {...PLATZHALTER.highFives} /> },
             {
               path: '/einstellungen/lernrhythmus',
@@ -192,6 +238,24 @@ export function routes(
       element: (
         <Lazy>
           <AbdeckungVorschau variant={variant} />
+        </Lazy>
+      ),
+    })),
+    // Erfolge (Erfolge.dc.html, iPadErfolge.dc.html, Fertig.dc.html und die M9-Ergänzungen).
+    ...ERFOLGE_VARIANTS.map((variant) => ({
+      path: `/styleguide/erfolge/${variant}`,
+      element: (
+        <Lazy>
+          <ErfolgeVorschau variant={variant} />
+        </Lazy>
+      ),
+    })),
+    // Fristen (Fristen.dc.html und die M8-Ergänzungen) mit Beispieldaten.
+    ...FRISTEN_VARIANTS.map((variant) => ({
+      path: `/styleguide/fristen/${variant}`,
+      element: (
+        <Lazy>
+          <FristenVorschau variant={variant} />
         </Lazy>
       ),
     })),

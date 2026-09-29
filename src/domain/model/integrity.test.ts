@@ -97,3 +97,46 @@ describe('hasIntegrity (Medien, M6)', () => {
     expect(hasIntegrity({ ...t, reviewItems: [] })).toBe(false);
   });
 });
+
+describe('hasIntegrity (Fristen, M8)', () => {
+  const scope = (over: Record<string, unknown> = {}) => ({
+    all: false,
+    areaIds: [],
+    deckIds: [],
+    tags: [],
+    ...over,
+  });
+  const deadline = (over: Record<string, unknown> = {}) => ({
+    id: 'f1',
+    kind: 'klausur',
+    name: 'Klausur',
+    scope: scope(),
+    sprint: false,
+    createdAt: 1,
+    updatedAt: 1,
+    ...over,
+  });
+  const withDeadlines = (deadlines: Record<string, unknown>[]) => ({
+    ...tables([qa]),
+    deadlines,
+  });
+
+  it('akzeptiert Umfänge, die auf vorhandene Rechtsgebiete und Stapel zeigen', () => {
+    expect(hasIntegrity(withDeadlines([]))).toBe(true);
+    expect(
+      hasIntegrity(
+        withDeadlines([deadline({ scope: scope({ areaIds: ['a1'], deckIds: ['d1'] }) })]),
+      ),
+    ).toBe(true);
+    expect(hasIntegrity(withDeadlines([deadline({ scope: scope({ all: true }) })]))).toBe(true);
+  });
+
+  it('lehnt Verweise ins Leere ab', () => {
+    expect(hasIntegrity(withDeadlines([deadline({ scope: scope({ areaIds: ['x'] }) })]))).toBe(
+      false,
+    );
+    expect(hasIntegrity(withDeadlines([deadline({ scope: scope({ deckIds: ['x'] }) })]))).toBe(
+      false,
+    );
+  });
+});

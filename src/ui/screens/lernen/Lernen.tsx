@@ -8,6 +8,8 @@ import { gestureHints, pointerVerbs } from '@/domain/device/environment';
 import { currentEnvironment } from '@/features/app/install';
 import { setSurfaceColor } from '@/platform/theme';
 import { useCard } from '@/features/library/queries';
+import type { FertigModel } from '@/domain/progress/celebrate';
+import { acknowledgeMilestones, celebrationAfterSession } from '@/features/progress/actions';
 import { useMediaUrl } from '@/features/media/media';
 import { areaCodeOf, useStudySession, type SessionEnd } from '@/features/study/useSession';
 import { Button } from '../../components/Button';
@@ -19,6 +21,7 @@ import { cx } from '../../cx';
 import { useMediaQuery } from '../../useMediaQuery';
 import { useGoBack } from '../../useGoBack';
 import { colors } from '../../tokens/tokens';
+import { Fertig } from './Fertig';
 import { LernenView, type Exit } from './LernenView';
 import { SourceViewer } from '../pdf/SourceViewer';
 import { LinkedCardSheet } from './LinkedCardSheet';
@@ -54,6 +57,33 @@ export function Lernen() {
   const touch = useRef<{ x: number; y: number } | null>(null);
 
   const { state, station } = session;
+  // Feier „Tagesziel erreicht“: nur wenn das Ziel in dieser Session neu erreicht wurde.
+  const [celebration, setCelebration] = useState<{
+    model: FertigModel;
+    milestones: string[];
+  } | null>(null);
+  const [showFertig, setShowFertig] = useState(false);
+  const { flush, goalStart } = session;
+  const ended = state.done && state.ratedItems > 0;
+  useEffect(() => {
+    if (!ended || !goalStart) return;
+    let cancelled = false;
+    flush()
+      .then(() => celebrationAfterSession(goalStart))
+      .then((result) => {
+        if (!cancelled) setCelebration(result);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [ended, goalStart, flush]);
+  const celebrating = celebration?.milestones;
+  useEffect(() => {
+    if (showFertig && celebrating && celebrating.length > 0) {
+      acknowledgeMilestones(celebrating).catch(() => undefined);
+    }
+  }, [showFertig, celebrating]);
   const coverMedia = useMediaUrl(session.card?.type === 'cover' ? session.card.mediaId : null);
   const flipped = state.flipped;
   const bundle = isBundle(station);
@@ -160,8 +190,26 @@ export function Lernen() {
   if (session.status === 'loading') return null;
 
   if (state.done) {
+    if (showFertig && celebration) {
+      return <Fertig model={celebration.model} onDone={leave} />;
+    }
     return session.end && state.ratedItems > 0 ? (
-      <Geschafft end={session.end} back={backLabel} onBack={leave} onMore={session.restart} />
+      <Geschafft
+        end={session.end}
+        back={celebration ? 'Weiter' : backLabel}
+        onBack={
+          celebration
+            ? () => {
+                setShowFertig(true);
+              }
+            : leave
+        }
+        onMore={() => {
+          setShowFertig(false);
+          setCelebration(null);
+          session.restart();
+        }}
+      />
     ) : (
       <Leer back={backLabel} onBack={leave} />
     );

@@ -8,16 +8,6 @@ export interface PlatzhalterProps {
 
 /** Platzhalter je Pfad; die Texte sagen, was dort entsteht. */
 export const PLATZHALTER = {
-  fristen: {
-    title: 'Fristen',
-    milestone: 'M8',
-    text: 'Hier trägst du bald Klausuren und Prüfungen ein; Juri plant die Wiederholungen danach.',
-  },
-  erfolge: {
-    title: 'Erfolge',
-    milestone: 'M9',
-    text: 'Hier siehst du bald deine Serie, deine Lerntage und erreichte Meilensteine.',
-  },
   teilen: {
     title: 'Teilen',
     milestone: 'M10',

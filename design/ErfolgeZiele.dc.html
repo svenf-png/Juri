@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Erfolge: Tagesziele einstellen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button{font-family:inherit;cursor:pointer}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s}
+.tap:active{transform:scale(.96)}
+@keyframes cell{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+.cell{animation:cell .45s cubic-bezier(.2,.8,.2,1) both;transition:background-color .35s ease}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.rise{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes unlock{0%{transform:scale(.6) rotate(-12deg);opacity:0}60%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:none}}
+.unlock{animation:unlock .8s cubic-bezier(.2,.8,.2,1) .5s both}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(106,63,224,.0)}50%{box-shadow:0 0 0 8px rgba(106,63,224,.14)}}
+.glow{animation:glow 2.4s ease-in-out 1.3s infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; position: relative; overflow: hidden">
+  <div style="padding: 64px 24px 0 24px; display: flex; flex-direction: column; gap: 24px">
+
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <h1 class="d" style="margin: 0; font-size: 40px; font-weight: 750; letter-spacing: -0.03em">Erfolge</h1>
+      <p style="margin: 0; font-size: 16px; color: #6B6678">Jede Wiederholung zählt. Jede neue Karte auch.</p>
+    </div>
+
+    <div class="rise" style="border-radius: 24px; background: #6A3FE0; color: #FFFFFF; padding: 20px 22px; display: flex; align-items: center; gap: 18px">
+      <span class="d" style="font-size: 64px; font-weight: 800; line-height: .9; letter-spacing: -0.04em">12</span>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 19px; font-weight: 700">Tage in Folge</span>
+        <span style="font-size: 13.5px; line-height: 1.35; opacity: .9">1 Pausentag pro Woche ist frei. Die Serie bleibt stehen, nichts geht verloren.</span>
+      </div>
+    </div>
+
+    <div class="rise" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; animation-delay: .08s">
+      <div style="border-radius: 20px; background: #F6F4FB; padding: 16px 18px; display: flex; flex-direction: column; gap: 2px">
+        <span class="d" style="font-size: 30px; font-weight: 750; letter-spacing: -0.02em">1.284</span>
+        <span style="font-size: 14px; font-weight: 600; color: #6B6678">Wiederholungen</span>
+      </div>
+      <div style="border-radius: 20px; background: #F6F4FB; padding: 16px 18px; display: flex; flex-direction: column; gap: 2px">
+        <span class="d" style="font-size: 30px; font-weight: 750; letter-spacing: -0.02em">146</span>
+        <span style="font-size: 14px; font-weight: 600; color: #6B6678">Karten angelegt</span>
+      </div>
+    </div>
+
+    <a href="HighFive.dc.html" class="tap rise" style="min-height: 60px; border-radius: 20px; border: 1.5px solid #EFECF5; padding: 0 16px; display: flex; align-items: center; gap: 12px; color: #17141F; animation-delay: .12s">
+      <span style="width: 38px; height: 38px; border-radius: 19px; background: #EEE8FD; color: #6A3FE0; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 12V6a1.5 1.5 0 0 1 3 0v5M10 11V4.5a1.5 1.5 0 0 1 3 0V11M13 11V5.5a1.5 1.5 0 0 1 3 0V12M16 12V9a1.5 1.5 0 0 1 3 0v5a7 7 0 0 1-7 7h-.5a6.5 6.5 0 0 1-5.2-2.6L3.6 14.8a1.5 1.5 0 0 1 2.3-1.9L7 14"></path></svg></span>
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 15.5px; font-weight: 700">2 High fives bekommen</span><span style="font-size: 13px; color: #6B6678">Mara und Jonas · 2 Erfolge zum Abklatschen</span></span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B3AEC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+    </a>
+
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <span style="font-size: 13px; font-weight: 600; color: #6B6678; letter-spacing: .04em; text-transform: uppercase">Letzte 12 Wochen</span>
+        <div style="display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #F6F4FB">
+          
+            <button class="tap" onClick="" aria-pressed="true" style="height: 32px; padding: 0 12px; border: 0; border-radius: 9px; font-size: 13px; font-weight: 700; background: #FFFFFF; color: #17141F; box-shadow: 0 2px 6px -2px rgba(46,26,115,.25)">Gelernt</button>
+          
+            <button class="tap" onClick="" aria-pressed="false" style="height: 32px; padding: 0 12px; border: 0; border-radius: 9px; font-size: 13px; font-weight: 700; background: transparent; color: #6B6678; box-shadow: none">Angelegt</button>
+          
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: repeat(7, 23px); grid-auto-flow: column; gap: 5px">
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.000s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.010s;"></div>
+        
+          <div class="cell" title="Stufe 0" style="border-radius: 6px; background: #F1EEF7; animation-delay: 0.020s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.030s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.040s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.050s;"></div>
+        
+          <div class="cell" title="Stufe 0" style="border-radius: 6px; background: #F1EEF7; animation-delay: 0.060s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.025s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.035s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.045s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.055s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.065s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.075s;"></div>
+        
+          <div class="cell" title="Stufe 0" style="border-radius: 6px; background: #F1EEF7; animation-delay: 0.085s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.050s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.060s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.070s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.080s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.090s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.100s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.110s;"></div>
+        
+          <div class="cell" title="Stufe 0" style="border-radius: 6px; background: #F1EEF7; animation-delay: 0.075s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.085s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.095s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.105s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.115s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.125s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.135s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.100s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.110s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.120s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.130s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.140s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.150s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.160s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.125s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.135s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.145s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.155s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.165s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.175s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.185s;"></div>
+        
+          <div class="cell" title="Stufe 0" style="border-radius: 6px; background: #F1EEF7; animation-delay: 0.150s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.160s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.170s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.180s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.190s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.200s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.210s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.175s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.185s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.195s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.205s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.215s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.225s;"></div>
+        
+          <div class="cell" title="Stufe 0" style="border-radius: 6px; background: #F1EEF7; animation-delay: 0.235s;"></div>
+        
+          <div class="cell" title="Stufe 0" style="border-radius: 6px; background: #F1EEF7; animation-delay: 0.200s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.210s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.220s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.230s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.240s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.250s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.260s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.225s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.235s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.245s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.255s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.265s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.275s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.285s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.250s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.260s;"></div>
+        
+          <div class="cell" title="Stufe 4" style="border-radius: 6px; background: #6A3FE0; animation-delay: 0.270s; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #17141F;"></div>
+        
+          <div class="cell" title="Stufe 0" style="border-radius: 6px; background: #F1EEF7; animation-delay: 0.280s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.290s;"></div>
+        
+          <div class="cell" title="Stufe 3" style="border-radius: 6px; background: #9A7BEF; animation-delay: 0.300s;"></div>
+        
+          <div class="cell" title="Stufe 1" style="border-radius: 6px; background: #EEE8FD; animation-delay: 0.310s;"></div>
+        
+          <div class="cell" title="Stufe 2" style="border-radius: 6px; background: #C9B8F7; animation-delay: 0.275s;"></div>
+        
+          <div class="cell" title="" style="border-radius: 6px; background: transparent; animation-delay: 0.285s;"></div>
+        
+          <div class="cell" title="" style="border-radius: 6px; background: transparent; animation-delay: 0.295s;"></div>
+        
+          <div class="cell" title="" style="border-radius: 6px; background: transparent; animation-delay: 0.305s;"></div>
+        
+          <div class="cell" title="" style="border-radius: 6px; background: transparent; animation-delay: 0.315s;"></div>
+        
+          <div class="cell" title="" style="border-radius: 6px; background: transparent; animation-delay: 0.325s;"></div>
+        
+          <div class="cell" title="" style="border-radius: 6px; background: transparent; animation-delay: 0.335s;"></div>
+        
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #6B6678; font-weight: 600">
+        <span>Juli</span><span>August</span><span>September</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; border: 1.5px solid #EFECF5">
+        <span style="width: 18px; height: 18px; border-radius: 5px; background: #6A3FE0; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #17141F; flex-shrink: 0"></span>
+        <span style="font-size: 14px; font-weight: 600; flex-grow: 1">Rekord: Mi, 23.9. · 86 Wiederholungen</span>
+        <div style="display: flex; gap: 3px; align-items: center" aria-label="Legende: wenig bis viel">
+          <span style="width: 10px; height: 10px; border-radius: 3px; background: #F1EEF7"></span>
+          <span style="width: 10px; height: 10px; border-radius: 3px; background: #EEE8FD"></span>
+          <span style="width: 10px; height: 10px; border-radius: 3px; background: #C9B8F7"></span>
+          <span style="width: 10px; height: 10px; border-radius: 3px; background: #9A7BEF"></span>
+          <span style="width: 10px; height: 10px; border-radius: 3px; background: #6A3FE0"></span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 13px; font-weight: 600; color: #6B6678; letter-spacing: .04em; text-transform: uppercase">Meilensteine</span>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 10px">
+        
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <div class="" style="position: relative; width: 76px; height: 76px; border-radius: 38px">
+              <svg width="76" height="76" viewBox="0 0 76 76" style="position: absolute; left: 0; top: 0" aria-hidden="true">
+                <circle cx="38" cy="38" r="34" fill="#6A3FE0" stroke="#EEE8FD" stroke-width="5"></circle>
+                <circle cx="38" cy="38" r="34" fill="none" stroke="#6A3FE0" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 999" transform="rotate(-90 38 38)"></circle>
+              </svg>
+              <div style="position: absolute; left: 0; top: 0; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; color: #FFFFFF">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16zM14 6l3 3"></path></svg>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1px">
+              <span style="font-size: 13.5px; font-weight: 700; line-height: 1.2">Erste Karte</span>
+              <span style="font-size: 12px; font-weight: 600; color: #6B6678">geschafft</span>
+            </div>
+          </div>
+        
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <div class="unlock glow" style="position: relative; width: 76px; height: 76px; border-radius: 38px">
+              <svg width="76" height="76" viewBox="0 0 76 76" style="position: absolute; left: 0; top: 0" aria-hidden="true">
+                <circle cx="38" cy="38" r="34" fill="#6A3FE0" stroke="#EEE8FD" stroke-width="5"></circle>
+                <circle cx="38" cy="38" r="34" fill="none" stroke="#6A3FE0" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 999" transform="rotate(-90 38 38)"></circle>
+              </svg>
+              <div style="position: absolute; left: 0; top: 0; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; color: #FFFFFF">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16v12H4zM7 4.5h10"></path></svg>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1px">
+              <span style="font-size: 13.5px; font-weight: 700; line-height: 1.2">100 angelegt</span>
+              <span style="font-size: 12px; font-weight: 600; color: #6B6678">geschafft</span>
+            </div>
+          </div>
+        
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <div class="" style="position: relative; width: 76px; height: 76px; border-radius: 38px">
+              <svg width="76" height="76" viewBox="0 0 76 76" style="position: absolute; left: 0; top: 0" aria-hidden="true">
+                <circle cx="38" cy="38" r="34" fill="#FFFFFF" stroke="#EEE8FD" stroke-width="5"></circle>
+                <circle cx="38" cy="38" r="34" fill="none" stroke="#6A3FE0" stroke-width="5" stroke-linecap="round" stroke-dasharray="149.5 999" transform="rotate(-90 38 38)"></circle>
+              </svg>
+              <div style="position: absolute; left: 0; top: 0; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; color: #4B2AA8">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h6M8 4v16M8 10h6M8 16h6M14 8h5v4h-5zM14 14h5v4h-5z"></path></svg>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1px">
+              <span style="font-size: 13.5px; font-weight: 700; line-height: 1.2">Schema-Baumeister</span>
+              <span style="font-size: 12px; font-weight: 600; color: #6B6678">7 von 10</span>
+            </div>
+          </div>
+        
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <div class="" style="position: relative; width: 76px; height: 76px; border-radius: 38px">
+              <svg width="76" height="76" viewBox="0 0 76 76" style="position: absolute; left: 0; top: 0" aria-hidden="true">
+                <circle cx="38" cy="38" r="34" fill="#6A3FE0" stroke="#EEE8FD" stroke-width="5"></circle>
+                <circle cx="38" cy="38" r="34" fill="none" stroke="#6A3FE0" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 999" transform="rotate(-90 38 38)"></circle>
+              </svg>
+              <div style="position: absolute; left: 0; top: 0; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; color: #FFFFFF">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1px">
+              <span style="font-size: 13.5px; font-weight: 700; line-height: 1.2">7 Tage am Stück</span>
+              <span style="font-size: 12px; font-weight: 600; color: #6B6678">geschafft</span>
+            </div>
+          </div>
+        
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <div class="" style="position: relative; width: 76px; height: 76px; border-radius: 38px">
+              <svg width="76" height="76" viewBox="0 0 76 76" style="position: absolute; left: 0; top: 0" aria-hidden="true">
+                <circle cx="38" cy="38" r="34" fill="#6A3FE0" stroke="#EEE8FD" stroke-width="5"></circle>
+                <circle cx="38" cy="38" r="34" fill="none" stroke="#6A3FE0" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 999" transform="rotate(-90 38 38)"></circle>
+              </svg>
+              <div style="position: absolute; left: 0; top: 0; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; color: #FFFFFF">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4"></path></svg>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1px">
+              <span style="font-size: 13.5px; font-weight: 700; line-height: 1.2">1.000 Wiederholungen</span>
+              <span style="font-size: 12px; font-weight: 600; color: #6B6678">geschafft</span>
+            </div>
+          </div>
+        
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <div class="" style="position: relative; width: 76px; height: 76px; border-radius: 38px">
+              <svg width="76" height="76" viewBox="0 0 76 76" style="position: absolute; left: 0; top: 0" aria-hidden="true">
+                <circle cx="38" cy="38" r="34" fill="#FFFFFF" stroke="#EEE8FD" stroke-width="5"></circle>
+                <circle cx="38" cy="38" r="34" fill="none" stroke="#6A3FE0" stroke-width="5" stroke-linecap="round" stroke-dasharray="70.5 999" transform="rotate(-90 38 38)"></circle>
+              </svg>
+              <div style="position: absolute; left: 0; top: 0; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; color: #4B2AA8">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4M5 12v7h14v-7"></path></svg>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1px">
+              <span style="font-size: 13.5px; font-weight: 700; line-height: 1.2">Teamplayer</span>
+              <span style="font-size: 12px; font-weight: 600; color: #6B6678">1 von 3 geteilt</span>
+            </div>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <nav style="position: absolute; left: 0; right: 0; bottom: 0; height: 86px; box-sizing: border-box; padding: 8px 12px 26px 12px; background: rgba(255,255,255,.94); border-top: 1px solid #EFECF5; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #6B6678; font-size: 11px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"></path></svg>Heute</a>
+    <a href="Bibliothek.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #6B6678; font-size: 11px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"></rect><path d="M7 4.5h10"></path></svg>Stapel</a>
+    <a href="Erstellen.dc.html" aria-label="Neue Karte" class="tap" style="justify-self: center; width: 52px; height: 52px; border-radius: 18px; background: #17141F; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></a>
+    <a href="Erfolge.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #6A3FE0; font-size: 11px; font-weight: 700">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"></path><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M9 20h6"></path></svg>Erfolge</a>
+    <a href="Teilen.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #6B6678; font-size: 11px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4"></path><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"></path></svg>Teilen</a>
+  </nav>
+  <div style="position: absolute; inset: 0; background: rgba(23,20,31,.28)"></div>
+  <div role="dialog" aria-modal="true" aria-labelledby="t" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; border-radius: 30px 30px 0 0; background: #FFFFFF; padding: 12px 22px 34px 22px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 -20px 40px -24px rgba(46,26,115,.4)">
+      <span style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #DCD6EA"></span>
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <h2 id="t" class="d" style="margin: 0; font-size: 24px; font-weight: 750; letter-spacing: -0.02em">Tagesziele</h2>
+        <button class="tap" aria-label="Schließen" style="width: 40px; height: 40px; border-radius: 20px; border: 0; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+      </div>
+      <p style="margin: 0; font-size: 14px; line-height: 1.4; color: #6B6678">Ein Tag zählt für deine Serie, sobald du eines der beiden Ziele erreichst.</p>
+      <div style="display: flex; flex-direction: column; border-top: 1px solid #EFECF5"><div style="min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #EFECF5"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700">Karten lernen</span><span style="font-size: 13px; color: #6B6678">Karten, die du mindestens einmal bewertest</span></span><div style="display: flex; align-items: center; gap: 4px"><button class="tap" aria-label="Ziel Lernen senken" style="width: 36px; height: 36px; border-radius: 12px; border: 0; background: #F6F4FB; font-size: 20px; font-weight: 600; color: #17141F">−</button><span style="min-width: 36px; text-align: center; font-size: 17px; font-weight: 800">24</span><button class="tap" aria-label="Ziel Lernen erhöhen" style="width: 36px; height: 36px; border-radius: 12px; border: 0; background: #F6F4FB; font-size: 20px; font-weight: 600; color: #17141F">+</button></div></div><div style="min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #EFECF5"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700">Karten anlegen</span><span style="font-size: 13px; color: #6B6678">Neue Karten an einem Tag</span></span><div style="display: flex; align-items: center; gap: 4px"><button class="tap" aria-label="Ziel Anlegen senken" style="width: 36px; height: 36px; border-radius: 12px; border: 0; background: #F6F4FB; font-size: 20px; font-weight: 600; color: #17141F">−</button><span style="min-width: 36px; text-align: center; font-size: 17px; font-weight: 800">5</span><button class="tap" aria-label="Ziel Anlegen erhöhen" style="width: 36px; height: 36px; border-radius: 12px; border: 0; background: #F6F4FB; font-size: 20px; font-weight: 600; color: #17141F">+</button></div></div></div>
+      <button class="tap" role="switch" aria-checked="true" style="min-height: 56px; border: 0; background: transparent; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #17141F; text-align: left">
+        <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700">Pausentag</span><span style="font-size: 13px; color: #6B6678">Ein freier Tag pro Woche, die Serie bleibt stehen</span></span>
+        <span style="width: 50px; height: 30px; border-radius: 15px; background: #6A3FE0; position: relative; display: block; flex-shrink: 0">
+          <span style="position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 2px 4px rgba(0,0,0,.2); transform: translateX(20px)"></span>
+        </span>
+      </button>
+      <button class="tap" style="height: 56px; border-radius: 18px; border: 0; background: #6A3FE0; color: #FFFFFF; font-size: 17px; font-weight: 700">Ziele speichern</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

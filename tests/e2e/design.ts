@@ -32,6 +32,9 @@ const FOCUS_RING = {
 };
 
 const FIXES: Record<string, { css: string; reason: string }[]> = {
+  'FristNeu.dc.html': [PLACEHOLDER],
+  'FristFehler.dc.html': [PLACEHOLDER],
+  'FristUmfang.dc.html': [PLACEHOLDER],
   'iPadErstellen.dc.html': [FOCUS_RING],
   'iPadErstellenAbdecken.dc.html': [FOCUS_RING],
   'SchemaEditor.dc.html': [PLACEHOLDER],

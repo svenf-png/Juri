@@ -4,6 +4,19 @@ import { ratingValue } from '@/domain/scheduler/rating';
 import { restoreItem, reviewItem, withActiveDue } from '@/domain/scheduler/schedule';
 import { DEFAULT_LEARNING, withDefaults, type LearningSettings } from '@/domain/scheduler/settings';
 import type { JuriDb } from '../db';
+import { readOverlay, type Overlay } from './deadlines';
+import { recordActivity } from './progress';
+
+/** Tabellen, die eine Aktivität (Bewertung, Undo, neue Karte) in einer Transaktion schreibt. */
+export const ACTIVITY_TABLES = (db: JuriDb) => [
+  db.cards,
+  db.reviewItems,
+  db.reviewLog,
+  db.events,
+  db.meta,
+  db.dayStats,
+  db.milestones,
+];
 
 /** Einstellungen des Lernrhythmus; fehlt der Eintrag, gelten die Voreinstellungen. */
 export async function readSettings(db: JuriDb): Promise<LearningSettings> {
@@ -45,23 +58,30 @@ export async function reviewedSince(db: JuriDb, since: number): Promise<number> 
 }
 
 export interface StudySnapshot {
+  /** Abfragen mit effektiver Fälligkeit (Fristen eingerechnet). */
   items: ReviewItem[];
+  /** Abfragen, wie gespeichert (für „sitzen sicher“, das vom gespeicherten Termin ausgeht). */
+  stored: ReviewItem[];
   settings: LearningSettings;
   /** Neue Abfragen, die heute schon begonnen wurden. */
   startedToday: number;
+  /** Rechnet die effektive Fälligkeit aus den Fristen neu, z. B. für Abfragen nach einer Bewertung. */
+  effective: Overlay;
 }
 
 /**
- * Abfragen mit Lernzustand, Einstellungen und heute begonnene neue Abfragen. Liest alle Abfragen
+ * Abfragen mit Lernzustand (Fälligkeit effektiv, mit Fristen), Einstellungen und heute begonnene
+ * neue Abfragen. Liest alle Abfragen
  * (klein: eine Zeile je Frage oder Lücke); für 5.000 Karten misst M12 nach.
  */
 export async function readStudy(db: JuriDb, todayStart: number): Promise<StudySnapshot> {
-  const [items, settings, startedToday] = await Promise.all([
+  const [items, settings, startedToday, effective] = await Promise.all([
     db.reviewItems.toArray(),
     readSettings(db),
     startedSince(db, todayStart),
+    readOverlay(db, todayStart),
   ]);
-  return { items, settings, startedToday };
+  return { items: effective(items), stored: items, settings, startedToday, effective };
 }
 
 /** Wie `readStudy`, aber nur die Abfragen eines Stapels (`deckId`), für eine Lernsession dazu. */
@@ -71,12 +91,13 @@ export async function readStudyOf(
   todayStart: number,
 ): Promise<StudySnapshot> {
   if (deckId === undefined) return readStudy(db, todayStart);
-  const [items, settings, startedToday] = await Promise.all([
+  const [items, settings, startedToday, effective] = await Promise.all([
     db.reviewItems.where('deckId').equals(deckId).toArray(),
     readSettings(db),
     startedSince(db, todayStart),
+    readOverlay(db, todayStart),
   ]);
-  return { items, settings, startedToday };
+  return { items: effective(items), stored: items, settings, startedToday, effective };
 }
 
 /** Karten zu Karten-IDs; Unbekannte fehlen im Ergebnis. */
@@ -95,8 +116,9 @@ export async function rateItems(
   rating: RatingKey,
   now: number,
 ): Promise<void> {
-  await db.transaction('rw', db.reviewItems, db.reviewLog, db.events, db.meta, async () => {
+  await db.transaction('rw', ACTIVITY_TABLES(db), async () => {
     const settings = await readSettings(db);
+    let rated = 0;
     for (const id of itemIds) {
       const item = await db.reviewItems.get(id);
       if (!item) continue;
@@ -112,7 +134,10 @@ export async function rateItems(
         rating: outcome.log.rating,
         first: outcome.log.wasNew,
       });
+      rated += 1;
     }
+    // Tagesaggregate und Meilensteine in derselben Transaktion (ADR-013).
+    if (rated > 0) await recordActivity(db, [now], now);
   });
 }
 
@@ -126,8 +151,9 @@ export async function undoRating(
   itemIds: readonly string[],
   now: number,
 ): Promise<void> {
-  await db.transaction('rw', db.reviewItems, db.reviewLog, db.events, db.meta, async () => {
+  await db.transaction('rw', ACTIVITY_TABLES(db), async () => {
     const settings = await readSettings(db);
+    const touched: number[] = [];
     for (const id of itemIds) {
       const entry = await db.reviewLog.where('itemId').equals(id).last();
       const item = await db.reviewItems.get(id);
@@ -143,6 +169,9 @@ export async function undoRating(
         rating: entry.rating,
         first: entry.wasNew,
       });
+      touched.push(entry.at);
     }
+    // Die zurückgenommene Bewertung zählt an ihrem eigenen Tag nicht mehr.
+    if (touched.length > 0) await recordActivity(db, [now, ...touched], now);
   });
 }

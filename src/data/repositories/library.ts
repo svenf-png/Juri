@@ -1,7 +1,13 @@
-import type { Area, Card, Deck, ReviewItem } from '@/domain/model/records';
+import type { Area, Card, DayRow, Deck, ReviewItem } from '@/domain/model/records';
+import type { Goals } from '@/domain/progress/goals';
 import type { LearningSettings } from '@/domain/scheduler/settings';
 import type { JuriDb } from '../db';
-import { readSettings, readStudy, reviewedSince, startedSince } from './study';
+import { learningDay } from '@/domain/calendar/day';
+import { todayDeadlines } from '@/domain/deadlines/list';
+import type { DeadlineInput } from '@/domain/today/today';
+import { readDeadlines, readOverlay, readScopeWorld } from './deadlines';
+import { readGoals } from './progress';
+import { readSettings, readStudy, startedSince } from './study';
 
 function countBy(keys: readonly unknown[]): Record<string, number> {
   const counts: Record<string, number> = {};
@@ -43,16 +49,25 @@ export async function readDeckDetail(
   id: string,
   todayStart: number,
 ): Promise<DeckDetail | null> {
-  const [deck, areas, cards, items, settings, startedToday] = await Promise.all([
+  const [deck, areas, cards, items, settings, startedToday, effective] = await Promise.all([
     db.decks.get(id),
     db.areas.toArray(),
     db.cards.where('deckId').equals(id).toArray(),
     db.reviewItems.where('deckId').equals(id).toArray(),
     readSettings(db),
     startedSince(db, todayStart),
+    readOverlay(db, todayStart),
   ]);
   return deck
-    ? { deck, areas, cards, itemCount: items.length, items, settings, startedToday }
+    ? {
+        deck,
+        areas,
+        cards,
+        itemCount: items.length,
+        items: effective(items),
+        settings,
+        startedToday,
+      }
     : null;
 }
 
@@ -63,9 +78,12 @@ export interface TodaySnapshot {
   items: ReviewItem[];
   settings: LearningSettings;
   startedToday: number;
-  /** Abfragen, die heute mindestens einmal bewertet wurden. */
-  reviewedToday: number;
   createdAt: number[];
+  /** Kommende Fristen mit „sitzen sicher“ (M8). */
+  deadlines: DeadlineInput[];
+  /** Tagesaggregate und Ziele (M9). */
+  days: DayRow[];
+  goals: Goals;
 }
 
 /**
@@ -77,20 +95,34 @@ export async function readTodaySnapshot(
   since: number,
   todayStart: number,
 ): Promise<TodaySnapshot> {
-  const [areas, decks, cardTotal, study, reviewedToday, events] = await Promise.all([
+  const [areas, decks, cardTotal, study, events, deadlines, days, goals] = await Promise.all([
     db.areas.toArray(),
     db.decks.toArray(),
     db.cards.count(),
     readStudy(db, todayStart),
-    reviewedSince(db, todayStart),
     db.events.where('at').aboveOrEqual(since).toArray(),
+    readDeadlines(db),
+    db.dayStats.toArray(),
+    readGoals(db),
   ]);
+  const world = await readScopeWorld(db, deadlines);
   return {
     areas,
     decks,
     cardTotal,
-    ...study,
-    reviewedToday,
+    items: study.items,
+    settings: study.settings,
+    startedToday: study.startedToday,
+    deadlines: todayDeadlines({
+      deadlines,
+      items: study.stored,
+      world,
+      areas,
+      decks,
+      today: learningDay(new Date(todayStart)),
+    }),
+    days,
+    goals,
     createdAt: events.filter((e) => e.type === 'cardCreated').map((e) => e.at),
   };
 }

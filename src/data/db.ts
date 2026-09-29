@@ -4,10 +4,13 @@ import type {
   AppEvent,
   Area,
   Card,
+  Deadline,
+  DayRow,
   Deck,
   MediaRecord,
   MetaEntry,
   MetaKey,
+  MilestoneRecord,
   NewEvent,
   Profile,
   ReviewItem,
@@ -27,6 +30,9 @@ export class JuriDb extends Dexie {
   declare reviewLog: Table<ReviewLogEntry, number, NewReviewLogEntry>;
   declare events: Table<AppEvent, number, NewEvent>;
   declare media: EntityTable<MediaRecord, 'id'>;
+  declare deadlines: EntityTable<Deadline, 'id'>;
+  declare dayStats: EntityTable<DayRow, 'day'>;
+  declare milestones: EntityTable<MilestoneRecord, 'id'>;
 
   constructor(
     name: string,
@@ -36,16 +42,24 @@ export class JuriDb extends Dexie {
     super(name, options);
     for (const migration of migrations) {
       const version = this.version(migration.version).stores(migration.stores);
-      const upgrade = migration.upgrade;
-      if (!upgrade) continue;
+      const { upgrade, derive } = migration;
+      if (!upgrade && !derive) continue;
       version.upgrade(async (tx) => {
-        for (const [table, transform] of Object.entries(upgrade)) {
+        for (const [table, transform] of Object.entries(upgrade ?? {})) {
           await tx
             .table<BackupRecord>(table)
             .toCollection()
             .modify((record, ctx) => {
               ctx.value = transform(record);
             });
+        }
+        if (derive) {
+          const reads: Record<string, BackupRecord[]> = {};
+          for (const name of derive.reads)
+            reads[name] = await tx.table<BackupRecord>(name).toArray();
+          for (const [name, records] of Object.entries(derive.build(reads))) {
+            await tx.table<BackupRecord>(name).bulkPut(records);
+          }
         }
       });
     }

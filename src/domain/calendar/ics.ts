@@ -1,7 +1,8 @@
 /**
- * Minimaler iCalendar-Erzeuger (RFC 5545) für einzelne Termine mit Erinnerung.
- * Wird für Fristen und Lernzeiten gebraucht (M8) und im Geräte-Check getestet.
+ * Minimaler iCalendar-Erzeuger (RFC 5545) für Termine mit Erinnerung: zeitgenau (Geräte-Check)
+ * und ganztägig (Fristen, M8), einzeln oder mehrere in einer Datei.
  */
+import { addDays, dayKey, type Day } from './day';
 
 export interface IcsEvent {
   uid: string;
@@ -12,6 +13,20 @@ export interface IcsEvent {
   /** Erinnerung so viele Minuten vor Beginn; weglassen für keine Erinnerung. */
   alarmMinutesBefore?: number;
   /** Zeitstempel der Erzeugung (DTSTAMP). */
+  now: Date;
+}
+
+/** Ganztägiger Termin an einem Kalendertag (DTSTART;VALUE=DATE, ohne Zeitzone). */
+export interface IcsDayEvent {
+  uid: string;
+  title: string;
+  description?: string;
+  day: Day;
+  /**
+   * Erinnerung so viele Minuten vor Beginn des Tages (00:00 im Kalender des Nutzers); negativ
+   * heißt danach, z. B. -540 für 09:00 am selben Tag. Weglassen für keine Erinnerung.
+   */
+  alarmMinutesBefore?: number;
   now: Date;
 }
 
@@ -50,14 +65,23 @@ export function foldIcsLine(line: string): string {
   return parts.join('\r\n ');
 }
 
-export function buildIcs(event: IcsEvent): string {
+function alarmLines(title: string, trigger: string): string[] {
+  return [
+    'BEGIN:VALARM',
+    'ACTION:DISPLAY',
+    `DESCRIPTION:${escapeIcsText(title)}`,
+    `TRIGGER:${trigger}`,
+    'END:VALARM',
+  ];
+}
+
+function compact(day: Day): string {
+  return dayKey(day).replace(/-/g, '');
+}
+
+function timedLines(event: IcsEvent): string[] {
   const end = new Date(event.start.getTime() + event.durationMinutes * 60_000);
   const lines = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Juri//Juri//DE',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH',
     'BEGIN:VEVENT',
     `UID:${event.uid}`,
     `DTSTAMP:${toIcsUtc(event.now)}`,
@@ -67,14 +91,46 @@ export function buildIcs(event: IcsEvent): string {
   ];
   if (event.description) lines.push(`DESCRIPTION:${escapeIcsText(event.description)}`);
   if (event.alarmMinutesBefore !== undefined) {
-    lines.push(
-      'BEGIN:VALARM',
-      'ACTION:DISPLAY',
-      `DESCRIPTION:${escapeIcsText(event.title)}`,
-      `TRIGGER:-PT${Math.max(0, Math.round(event.alarmMinutesBefore))}M`,
-      'END:VALARM',
-    );
+    const minutes = Math.max(0, Math.round(event.alarmMinutesBefore));
+    lines.push(...alarmLines(event.title, `-PT${String(minutes)}M`));
   }
-  lines.push('END:VEVENT', 'END:VCALENDAR');
+  lines.push('END:VEVENT');
+  return lines;
+}
+
+function dayLines(event: IcsDayEvent): string[] {
+  const lines = [
+    'BEGIN:VEVENT',
+    `UID:${event.uid}`,
+    `DTSTAMP:${toIcsUtc(event.now)}`,
+    `DTSTART;VALUE=DATE:${compact(event.day)}`,
+    `DTEND;VALUE=DATE:${compact(addDays(event.day, 1))}`,
+    `SUMMARY:${escapeIcsText(event.title)}`,
+  ];
+  if (event.description) lines.push(`DESCRIPTION:${escapeIcsText(event.description)}`);
+  if (event.alarmMinutesBefore !== undefined) {
+    const before = Math.round(event.alarmMinutesBefore);
+    const trigger = before >= 0 ? `-PT${String(before)}M` : `PT${String(-before)}M`;
+    lines.push(...alarmLines(event.title, trigger));
+  }
+  lines.push('END:VEVENT');
+  return lines;
+}
+
+/** Kalenderdatei mit beliebig vielen Terminen, Zeilen mit CRLF (RFC 5545, Abschnitt 3.1). */
+export function buildIcsCalendar(events: readonly (IcsEvent | IcsDayEvent)[]): string {
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Juri//Juri//DE',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    ...events.flatMap((event) => ('day' in event ? dayLines(event) : timedLines(event))),
+    'END:VCALENDAR',
+  ];
   return lines.map(foldIcsLine).join('\r\n') + '\r\n';
+}
+
+export function buildIcs(event: IcsEvent): string {
+  return buildIcsCalendar([event]);
 }

@@ -118,6 +118,35 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Fenster etwa 1440 × 900. 
 6. **Desktop-PWA:** Chrome: Symbol „Installieren“ in der Adressleiste, Juri als App öffnen. Notieren: Sind die Daten aus dem Tab da (gleicher Speicher) oder leer? Safari ab macOS 14: „Zum Dock hinzufügen“, gleiche Frage. Firefox bietet keine Installation an; dort läuft Juri im Tab.
 7. **Speicher:** Einstellungen, Speicher: „Dauerhaft speichern anfordern“ ausprobieren. Notieren: Was antwortet der Browser?
 
+## M8: Fristen (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Demo-Profil laden (bringt drei Fristen mit).
+
+1. **Liste:** Lernrhythmus, Zeile „Fristen“: Dort steht die Zahl 3. Der Bildschirm zeigt eine große Karte im Endspurt („Endspurt läuft“), das LL.M.-Modul und das Examen ohne Datum („Datum setzen“).
+2. **Anlegen:** „+ Frist hinzufügen“, Name leer lassen und speichern: Der Hinweis steht unter den Feldern. Ein Datum in der Vergangenheit wird abgelehnt. Mit Name und Datum speichern: Die Karte erscheint. Notieren: Öffnet sich das Datumsfeld von Safari sauber, ist die Tastatur dabei im Weg?
+3. **Umfang:** „+ Eingrenzen“, Rechtsgebiete, Stapel und Tags wählen, einen Tag eintippen, „Fertig“. Die Chips im Sheet zeigen die Auswahl, ein Tipp auf einen Chip entfernt ihn.
+4. **Deckelung:** Eine Frist für morgen mit Umfang „Alle Karten“ anlegen, dann Heute öffnen: Die Zahl fälliger Karten steigt um die Karten, deren Termin nach der Frist lag. Die Frist löschen: Die Zahl fällt wieder auf den alten Stand.
+5. **Endspurt:** Frist in 5 Tagen mit Endspurt: Heute zeigt die Karten verteilt, nicht alle auf einmal. Notieren: Wie viele Karten sind es am ersten Tag?
+6. **Kalenderdatei:** In der Frist „Im Kalender sichern“ und unter der Liste „Fristen als Kalenderdatei sichern“: Auf dem iPhone und iPad öffnet sich das Teilen-Menü. **Notieren:** Bietet es „Zum Kalender hinzufügen“ oder nur „In Dateien sichern“? Öffnet die gesicherte Datei die Kalender-App mit dem Termin (ganztägig, Erinnerung am Vortag um 9 Uhr)? Ein zweiter Export darf den Termin nicht verdoppeln.
+7. **Löschen:** Stapel löschen, der in einer Frist gewählt war: Die Frist bleibt, der Stapel ist aus dem Umfang verschwunden. Rechtsgebiet ebenso.
+8. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Die Fristen sind wieder da.
+9. **Rechner:** Taste „F“ auf der Fristen-Seite öffnet „Neue Frist“, Strg (Cmd) + Eingabe im Sheet speichert, „Fristen als Kalenderdatei sichern“ lädt die Datei herunter.
+
+## M9: Erfolge (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Demo-Profil laden (bringt 26 Wochen Verlauf mit).
+
+1. **Erfolge:** Tab „Erfolge“. Oben die Serie (etwa 21 Tage in Folge), darunter Wiederholungen und Karten angelegt, die Heatmap (iPhone 12, iPad quer 26 Wochen) mit einem Ring am Rekordtag („Rekord: … 86 Wiederholungen“), dann die Meilensteine. Beim ersten Öffnen erscheint das Sheet „Neuer Meilenstein“ (1.000 Wiederholungen), danach nicht mehr. Notieren: Springt die Seite beim Umschalten „Gelernt“ und „Angelegt“?
+2. **Heute:** Tagesziel „6 von 24“, die letzten 7 Tage mit Ring am Rekordtag.
+3. **Tagesziele:** In Erfolge „Tagesziele“, Lernen auf 12 stellen, Pausentag ausschalten, speichern. Heute zeigt „6 von 12“. Wieder auf 24 und Pausentag an.
+4. **Feier:** Lernen starten und Karten bewerten, bis das Ziel erreicht ist (ggf. Ziel auf 8 stellen). Am Ende „Geschafft.“, dann „Weiter“, dann „Tagesziel erreicht.“ mit der Serie. Notieren: Stimmen Animation und Text, ist die Tastatur nicht im Weg? Ein zweites Mal am selben Tag lernen: keine zweite Feier.
+5. **Tageswechsel:** Kurz nach 4 Uhr Heute öffnen: Das Tagesziel steht wieder auf 0, der Vortag ist in den letzten 7 Tagen. Nach Mitternacht (vor 4 Uhr) lernen zählt für den Vortag.
+6. **Pausentag:** An einem Tag nichts lernen, am nächsten weiter: Die Serie bleibt stehen (Text „Pausentag diese Woche genutzt“). Zweiter freier Tag in derselben Woche: Die Serie beginnt neu. Notieren: Nachvollziehbar?
+7. **Undo:** Karte bewerten, „Letzte Bewertung zurücknehmen“: Das Tagesziel in Heute sinkt wieder.
+8. **Leerzustand:** Frische App (nicht die Testinstanz): Erfolge zeigt „Noch kein Verlauf“; nach der ersten Karte erscheint die Feier „Erste Karte“.
+9. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Serie, Heatmap und Meilensteine sind wieder da, ohne erneute Feier.
+10. **Rechner:** Erfolge bei 1440 × 900: 26 Wochen, nichts abgeschnitten.
+
 ## Updates (pro Gerät, ab Version 0.4.1)
 
 1. Nach einem neuen Deploy die App im App-Umschalter schließen und neu öffnen, dann etwa 20 Sekunden auf Heute bleiben: Unten erscheint „Neue Version verfügbar“. „Neu laden“ tippen, unter Einstellungen steht die neue Versionsnummer.
