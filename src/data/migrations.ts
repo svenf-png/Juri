@@ -48,6 +48,16 @@ export const MIGRATIONS: readonly Migration[] = [
       cards: 'id, deckId, createdAt, *tags, type',
     },
   },
+  {
+    // M6: Medien (Bilder und PDFs als ArrayBuffer, ADR-002) und Indizes auf die Verweise der Karten
+    // (`mediaId` der Abdeckung, `source.mediaId` der Herkunft), damit Löschen ungenutzte Medien
+    // ohne Vollzugriff findet (ADR-010). Neuer Kartentyp `cover` und Feld `source` ohne Umformung.
+    version: 5,
+    stores: {
+      media: 'id, kind',
+      cards: 'id, deckId, createdAt, *tags, type, mediaId, source.mediaId',
+    },
+  },
 ];
 
 export function schemaVersion(migrations: readonly Migration[] = MIGRATIONS): number {

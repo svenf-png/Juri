@@ -103,7 +103,7 @@ describe('Version 3 (M4)', () => {
     await db.reviewItems.add(item);
     db.close();
     const upgraded = reopen(MIGRATIONS);
-    expect(upgraded.verno).toBe(4);
+    expect(upgraded.verno).toBe(MIGRATIONS.length);
     expect(await upgraded.reviewItems.get('k1')).toEqual(item);
     expect(upgraded.tables.map((t) => t.name)).toContain('reviewLog');
     expect(await upgraded.reviewLog.count()).toBe(0);
@@ -131,7 +131,7 @@ describe('Version 4 (M5)', () => {
     await db.cards.add(qa);
     db.close();
     const upgraded = reopen(MIGRATIONS);
-    expect(upgraded.verno).toBe(4);
+    expect(upgraded.verno).toBe(MIGRATIONS.length);
     expect(await upgraded.cards.get('k1')).toEqual(qa);
     expect(await upgraded.cards.where('type').equals('qa').count()).toBe(1);
     expect(await upgraded.cards.where('type').equals('schema').count()).toBe(0);
