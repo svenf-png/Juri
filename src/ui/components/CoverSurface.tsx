@@ -132,7 +132,7 @@ export function CoverSurface({
                     ? {
                         role: 'button',
                         tabIndex: 0,
-                        'aria-label': `Feld ${String(m.label)} aufdecken`,
+                        'aria-label': `Feld ${String(m.label)} im Bild aufdecken`,
                         onClick: onAskedPress,
                         onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => {
                           if (event.key === 'Enter' || event.key === ' ') {

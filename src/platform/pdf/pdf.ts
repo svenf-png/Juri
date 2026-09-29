@@ -1,10 +1,18 @@
 /**
  * PDF-Adapter (M6, ADR-010): pdf.js wird erst beim ersten Öffnen eines PDFs geladen und nur hier
  * benutzt (Schichten: `domain/media/pdfPlan.ts` rechnet, dieser Adapter zeichnet). Läuft ohne
- * WebAssembly, weil die CSP es nicht erlaubt; der Worker kommt vom eigenen Origin.
+ * WebAssembly, weil die CSP es nicht erlaubt; der Worker kommt vom eigenen Origin. Genommen wird der
+ * Legacy-Build: Der normale setzt neue Sprachfunktionen voraus (im Test-Chromium 141 fehlte
+ * `Map.prototype.getOrInsertComputed`), der Legacy-Build bringt Polyfills mit und ist damit für
+ * Safari 18 die sichere Wahl.
  */
-import type * as PdfJs from 'pdfjs-dist';
-import type { PDFDocumentProxy, PDFPageProxy, RenderTask, TextLayer } from 'pdfjs-dist';
+import type * as PdfJs from 'pdfjs-dist/legacy/build/pdf.mjs';
+import type {
+  PDFDocumentProxy,
+  PDFPageProxy,
+  RenderTask,
+  TextLayer,
+} from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { IMAGE_MAX_EDGE, PDF_MAX_PAGES } from '@/domain/media/media';
 import { fitWithin } from '@/domain/media/media';
 import { renderPlan } from '@/domain/media/pdfPlan';
@@ -15,8 +23,8 @@ let loaded: Promise<typeof PdfJs> | undefined;
 async function pdfjs(): Promise<typeof PdfJs> {
   loaded ??= (async () => {
     const [lib, worker] = await Promise.all([
-      import('pdfjs-dist'),
-      import('pdfjs-dist/build/pdf.worker.min.mjs?url'),
+      import('pdfjs-dist/legacy/build/pdf.mjs'),
+      import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'),
     ]);
     lib.GlobalWorkerOptions.workerSrc = worker.default;
     return lib;
