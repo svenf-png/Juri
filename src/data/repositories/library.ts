@@ -7,7 +7,7 @@ import { todayDeadlines } from '@/domain/deadlines/list';
 import type { DeadlineInput } from '@/domain/today/today';
 import { readDeadlines, readOverlay, readScopeWorld } from './deadlines';
 import { readGoals } from './progress';
-import { readSettings, readStudy, reviewedSince, startedSince } from './study';
+import { readSettings, readStudy, startedSince } from './study';
 
 function countBy(keys: readonly unknown[]): Record<string, number> {
   const counts: Record<string, number> = {};
@@ -78,8 +78,6 @@ export interface TodaySnapshot {
   items: ReviewItem[];
   settings: LearningSettings;
   startedToday: number;
-  /** Abfragen, die heute mindestens einmal bewertet wurden. */
-  reviewedToday: number;
   createdAt: number[];
   /** Kommende Fristen mit „sitzen sicher“ (M8). */
   deadlines: DeadlineInput[];
@@ -97,18 +95,16 @@ export async function readTodaySnapshot(
   since: number,
   todayStart: number,
 ): Promise<TodaySnapshot> {
-  const [areas, decks, cardTotal, study, reviewedToday, events, deadlines, days, goals] =
-    await Promise.all([
-      db.areas.toArray(),
-      db.decks.toArray(),
-      db.cards.count(),
-      readStudy(db, todayStart),
-      reviewedSince(db, todayStart),
-      db.events.where('at').aboveOrEqual(since).toArray(),
-      readDeadlines(db),
-      db.dayStats.toArray(),
-      readGoals(db),
-    ]);
+  const [areas, decks, cardTotal, study, events, deadlines, days, goals] = await Promise.all([
+    db.areas.toArray(),
+    db.decks.toArray(),
+    db.cards.count(),
+    readStudy(db, todayStart),
+    db.events.where('at').aboveOrEqual(since).toArray(),
+    readDeadlines(db),
+    db.dayStats.toArray(),
+    readGoals(db),
+  ]);
   const world = await readScopeWorld(db, deadlines);
   return {
     areas,
@@ -125,7 +121,6 @@ export async function readTodaySnapshot(
       decks,
       today: learningDay(new Date(todayStart)),
     }),
-    reviewedToday,
     days,
     goals,
     createdAt: events.filter((e) => e.type === 'cardCreated').map((e) => e.at),

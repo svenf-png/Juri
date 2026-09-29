@@ -114,7 +114,9 @@ describe('Bewerten', () => {
     expect(await reviewedSince(db, T - 1000)).toBe(2);
     expect(await startedSince(db, T + 5000)).toBe(0);
     const snapshot = await readTodaySnapshot(db, T - 1000, T - 1000);
-    expect(snapshot).toMatchObject({ startedToday: 2, reviewedToday: 2 });
+    expect(snapshot).toMatchObject({ startedToday: 2 });
+    // Das Tagesziel „Lernen“ liest Heute aus den Tagesaggregaten, in derselben Transaktion geschrieben.
+    expect(snapshot.days.at(-1)).toMatchObject({ learned: 2 });
   });
 
   it('das Tageslimit für neue Abfragen wirkt auf die Fälligkeit', async () => {

@@ -18,6 +18,8 @@
 }
 
 .row {
+  /* Im Design ohne border-box: 72 px Inhalt plus 1 px Linie. */
+  box-sizing: content-box;
   min-height: 72px;
   display: flex;
   align-items: center;

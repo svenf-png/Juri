@@ -12,7 +12,9 @@ import { createDeck } from './decks';
 import { writeProfileName } from './profile';
 import {
   markSeen,
+  readCelebration,
   readErfolge,
+  readGoalStart,
   readGoals,
   readStreak,
   refreshDays,
@@ -318,5 +320,21 @@ describe('Migration und Backup', () => {
         },
       }),
     ).toThrow();
+  });
+});
+
+describe('Feier', () => {
+  it('liefert den Stand zum Start und danach die Aggregate samt offener Meilensteine', async () => {
+    const { db } = await setup();
+    const today = learningDay(new Date(at(28, 12)));
+    expect(await readGoalStart(db, '2026-09-28')).toEqual({ learned: 0, goals: DEFAULT_GOALS });
+    await rateItems(db, ['k1', 'k2'], 'good', at(28, 11));
+    expect((await readGoalStart(db, '2026-09-28')).learned).toBe(2);
+    const snap = await readCelebration(db, today);
+    expect(snap.rows.find((r) => r.day === '2026-09-28')).toMatchObject({ learned: 2 });
+    expect(snap.fresh).toEqual(['erste-karte']);
+    expect(snap.streak).toBe(0);
+    await markSeen(db, snap.fresh);
+    expect((await readCelebration(db, today)).fresh).toEqual([]);
   });
 });

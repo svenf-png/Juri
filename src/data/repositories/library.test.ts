@@ -434,7 +434,6 @@ describe('Lesen', () => {
     expect(today).toMatchObject({
       cardTotal: 3,
       startedToday: 0,
-      reviewedToday: 0,
       createdAt: [T, T + 1000],
     });
     expect(today.items).toHaveLength(3);

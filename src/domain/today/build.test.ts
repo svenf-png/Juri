@@ -55,7 +55,6 @@ describe('todayInputFrom', () => {
       cardTotal: 7,
       dueByDeck: { amt: 2, delikt: 3, betrug: 4 },
       dueTotal: 9,
-      reviewedToday: 5,
       createdAt: [at(28, 9), at(27, 9), at(1, 9)],
       deadlines: [{ id: 'k', title: 'Klausur ZR', date: '2026-10-09', secureShare: 64 }],
       days: [
@@ -95,7 +94,6 @@ describe('todayInputFrom', () => {
         cardTotal: 0,
         dueByDeck: {},
         dueTotal: 0,
-        reviewedToday: 0,
         createdAt: [],
         deadlines: [],
         days: [],

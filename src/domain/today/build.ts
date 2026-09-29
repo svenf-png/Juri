@@ -18,8 +18,6 @@ export interface TodayData {
   readonly dueByDeck: Readonly<Record<string, number>>;
   /** Heute fällige Abfragen insgesamt (das Limit für neue gilt hier einmal, nicht je Stapel). */
   readonly dueTotal: number;
-  /** Abfragen, die heute mindestens einmal bewertet wurden (Tagesziel „Lernen“, Annahme A5). */
-  readonly reviewedToday: number;
   /** Zeitpunkte der Ereignisse „Karte angelegt“ (mindestens die letzten 7 Lerntage). */
   readonly createdAt: readonly number[];
   /** Kommende Fristen mit Sicherheitsquote (M8). */
@@ -65,7 +63,10 @@ export function todayInputFrom(today: Day, data: TodayData): TodayInput {
     due: data.dueTotal,
     dueByArea: dueByArea(data.areas, data.decks, data.dueByDeck),
     createdThisWeek: createdWithin(today, data.createdAt, WEEK_DAYS),
-    goal: { done: data.reviewedToday, target: data.goals.learn },
+    goal: {
+      done: data.days.find((row) => row.day === dayKey(today))?.learned ?? 0,
+      target: data.goals.learn,
+    },
     levels,
     recordDay,
     deadlines: data.deadlines,
