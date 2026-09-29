@@ -14,11 +14,19 @@ export function hasIntegrity(tables: {
   cards?: Rows;
   reviewItems?: Rows;
   media?: Rows;
+  deadlines?: Rows;
 }): boolean {
   const areaIds = new Set((tables.areas ?? []).map((a) => a.id));
   const decks = new Map((tables.decks ?? []).map((d) => [d.id as string, d]));
   for (const deck of decks.values()) {
     if (!(deck.areaIds as string[]).every((id) => areaIds.has(id))) return false;
+  }
+  // Fristen verweisen auf vorhandene Rechtsgebiete und Stapel (M8).
+  const deckIds = new Set(decks.keys());
+  for (const row of tables.deadlines ?? []) {
+    const scope = row.scope as { areaIds: string[]; deckIds: string[] };
+    if (!scope.areaIds.every((a) => areaIds.has(a))) return false;
+    if (!scope.deckIds.every((d) => deckIds.has(d))) return false;
   }
   const expected = new Map<string, { cardId: string; deckId: string; sub: string }>();
   const cardIds = new Set((tables.cards ?? []).map((c) => c.id));

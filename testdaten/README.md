@@ -22,6 +22,8 @@ Alle 40 Karten stehen auf `pruefung: offen`. Die Texte sind ohne Abgleich mit de
 
 ## Laden
 
+Das Demo-Profil bringt seit M8 drei Fristen mit (Klausur in 5 Tagen im Endspurt, LL.M.-Modul in 109 Tagen über den Tag „Demo“, Examen ohne Datum), relativ zum Ladetag.
+
 Nur in der Testinstanz: Einstellungen, Testdaten, „Demo-Stapel hinzufügen“ (fügt hinzu, ohne vorhandene Daten zu ändern) oder „Demo-Profil laden“ (ersetzt alles). Einzeln löschbar über den Stapel selbst.
 
 ## Demo-Skript (M6)

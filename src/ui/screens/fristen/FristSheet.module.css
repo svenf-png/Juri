@@ -1,0 +1,322 @@
+/*
+ * Sheet „Neue Frist“ und „Frist bearbeiten“ nach Fristen.dc.html, dazu die ergänzten Artboards
+ * FristBearbeiten, FristFehler und FristUmfang. Rahmen und Kopf liefert Sheet (titled).
+ */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.kinds {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.kind {
+  position: relative;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 19px;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1.5px solid var(--track);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* Trefferfläche 44 px: 38 px hoch plus 3 px oben und unten. */
+.kind::after {
+  content: '';
+  position: absolute;
+  inset: -3px 0;
+}
+
+.kindOn {
+  border: 0;
+  background: var(--violet);
+  color: var(--bg);
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 10px;
+}
+
+.field {
+  border-radius: var(--radius-field-lg);
+  background: var(--surface);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.field:focus-within {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.invalid {
+  box-shadow: 0 0 0 1.5px var(--danger);
+}
+
+.label {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.input {
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+  color: var(--ink);
+  outline: none;
+}
+
+.date {
+  font-size: 15px;
+}
+
+.errors {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: -6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.groupLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  position: relative;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 17px;
+  border: 0;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 13.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+/* Trefferfläche 44 px: 34 px hoch plus 5 px oben und unten. */
+.chip::after {
+  content: '';
+  position: absolute;
+  inset: -5px 0;
+}
+
+/* Im Design ein <span> ohne border-box: 34 px Inhalt plus 1,5 px Rand. */
+.chipAdd {
+  box-sizing: content-box;
+  border: 1.5px dashed var(--dash-chip);
+  background: none;
+  color: var(--muted);
+}
+
+.chipAdd::after {
+  inset: -4px 0;
+}
+
+.pick {
+  border: 1.5px solid var(--track);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.pickOn {
+  border: 0;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.switch {
+  min-height: 56px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ink);
+  text-align: left;
+}
+
+.switchText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.switchTitle {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.switchHint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.track {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 50px;
+  height: 30px;
+  border-radius: 15px;
+  background: var(--border-soft);
+  transition: background-color var(--dur-knob);
+}
+
+.trackOn {
+  background: var(--violet);
+}
+
+.knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform var(--dur-knob) var(--ease-knob);
+}
+
+.knobOn {
+  transform: translateX(20px);
+}
+
+.save {
+  height: 56px;
+  border: 0;
+  border-radius: var(--radius-button-sm);
+  background: var(--violet);
+  color: var(--bg);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.save:disabled {
+  opacity: 0.6;
+}
+
+.pair {
+  display: flex;
+  gap: 10px;
+}
+
+.secondary {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 48px;
+  border-radius: var(--radius-field-lg);
+  border: 1.5px solid var(--track);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.secondary:disabled {
+  color: var(--muted);
+}
+
+.danger {
+  color: var(--danger);
+}
+
+.note {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.error {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.tagRow {
+  display: flex;
+  gap: 8px;
+}
+
+.tagField {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 46px;
+  border-radius: var(--radius-field);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+}
+
+.tagField:focus-within {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.tagInput {
+  flex-grow: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+  color: var(--ink);
+  outline: none;
+}
+
+.tagAdd {
+  height: 46px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-field);
+  background: var(--violet-100);
+  color: var(--violet-700);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}

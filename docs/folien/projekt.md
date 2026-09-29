@@ -178,11 +178,18 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 ## Fristen
 
-- Umfang wählen: Rechtsgebiete, Stapel oder Tags
-- **Deckelung:** Keine Wiederholung wird hinter die Frist geplant
-- **Endspurt:** In den letzten 7 Tagen kommt jede Karte noch einmal
-- Anzeige: Countdown und Anteil, der am Stichtag sicher sitzt
+<!-- layout: bild-gross -->
+<!-- status: M8 umgesetzt (Fristen.dc.html und sieben ergänzte Artboards), Bild mit Beispieldaten aus der App -->
+
+![Fristen: Klausur mit Countdown und Fortschritt, LL.M.-Modul, Examen ohne Datum](../bilder/fristen-iphone.png)
+
+- Art (Examen, Klausur, LL.M., Eigene), Name, Datum und **Umfang** aus Rechtsgebieten, Stapeln oder Tags; ohne Datum ändert eine Frist nichts
+- **Deckelung:** Keine Karte im Umfang wird hinter die Frist geplant; sie kommt spätestens am letzten Lerntag davor
+- **Endspurt:** In den letzten 7 Tagen kommt jede Karte noch einmal, gleichmäßig auf die Tage verteilt
+- Anzeige: Countdown und **„x % sitzen sicher“**, dazu die Kalenderdatei (.ics) mit Erinnerung am Vortag
 - Nach der Frist läuft der normale Rhythmus weiter
+
+> **Notizen:** Fristen ändern keine gespeicherten Daten. Das Datum, an dem eine Karte fällig ist, wird beim Lesen aus dem Termin des Lernalgorithmus und den aktiven Fristen berechnet (ADR-012). Löschen oder Ablauf einer Frist stellt den normalen Rhythmus daher ohne Reparatur wieder her. „Sitzen sicher“ bedeutet: Der gespeicherte Termin der Karte liegt nicht vor der Frist. Ob iOS die .ics-Datei als Kalendertermin anbietet, prüft der Gerätetest.
 
 ## Daten und Backup
 
@@ -249,10 +256,10 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 | ----------- | ------------------------------------------------------------------------------------------ |
 | M0 bis M3   | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                                 |
 | M4 bis M5   | Lern-Engine und Prüfungsschemata (fertig)                                                  |
-| M6 bis M9   | PDF und Abdeckung, Browser-Version, Fristen, Erfolge                                       |
+| M6 bis M9   | PDF und Abdeckung, Browser-Version, Fristen (fertig), Erfolge                              |
 | M10 bis M13 | Teilen und Import, High fives, Feinschliff und Veröffentlichung, eigene Desktop-Gestaltung |
 
-> **Notizen:** Geschätzt rund 41 Personentage. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
+> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M8 sind 23 von 37 PT (62 %) eingeplant erledigt. M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht, weil sieben Artboards und ein Umfang-Schritt dazukamen (Einschätzung, nicht gemessen). Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
 
 ## Stand heute
 
@@ -266,7 +273,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M5 fertig:** Prüfungsschemata mit Gliederung in drei Ebenen, Norm und Inhalt je Punkt, Punkt für Punkt lernen, Verknüpfungen zu anderen Karten, Löschen ohne Verweise ins Leere, Demo-Schemata
 - **M6 fertig:** Abdeckung aus Foto oder PDF-Seite mit Feldern, Zoom und Editor, PDF-Ansicht mit Markieren zu Frage, Antwort oder Lücke, Quelle an der Karte, geteilte Ansicht auf dem iPad, Demo-Skript mit 50 Seiten
 - **M7 fertig:** Juri läuft in Chrome, Safari und Firefox am Rechner (1440 × 900), ohne Sperrbild; Backup als Download, Kürzel (n, /, Strg+Eingabe), Zoom per Strg+Rad und Tasten im PDF, installierbar als Desktop-App
-- Automatische Prüfung bei jeder Änderung: 576 Unit-Tests, 12 Bildvergleiche für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
+- **M8 fertig:** Fristen mit Art, Datum und Umfang, Deckelung und Endspurt, Countdown und „x % sitzen sicher“, Kalenderdatei (.ics), Fristen in Heute und Lernrhythmus, Demo-Profil mit drei Fristen
+- Automatische Prüfung bei jeder Änderung: 636 Unit-Tests, 8 Bildvergleiche für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
-- Fortschritt: 8 von 14 Meilensteinen (57 %)
-- Nächster Schritt: Gerätetest von M0 bis M7 (iPhone, iPad, Desktop-Browser), dann M8 (Fristen)
+- Fortschritt: 9 von 14 Meilensteinen (64 %), nach Planwerten 23 von 37 Personentagen (62 %)
+- Nächster Schritt: Gerätetest von M0 bis M8 (iPhone, iPad, Desktop-Browser), dann M9 (Fortschritt)

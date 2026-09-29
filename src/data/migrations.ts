@@ -58,6 +58,12 @@ export const MIGRATIONS: readonly Migration[] = [
       cards: 'id, deckId, createdAt, *tags, type, mediaId, source.mediaId',
     },
   },
+  {
+    // M8: Fristen (Prüfung, Klausur, Modul) mit Umfang und Endspurt. Die Tabelle ist klein (einige
+    // Datensätze), Zugriffe lesen sie ganz; Fristen ändern nie gespeicherte Abfragen (ADR-012).
+    version: 6,
+    stores: { deadlines: 'id' },
+  },
 ];
 
 export function schemaVersion(migrations: readonly Migration[] = MIGRATIONS): number {

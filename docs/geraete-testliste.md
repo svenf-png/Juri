@@ -118,6 +118,20 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Fenster etwa 1440 × 900. 
 6. **Desktop-PWA:** Chrome: Symbol „Installieren“ in der Adressleiste, Juri als App öffnen. Notieren: Sind die Daten aus dem Tab da (gleicher Speicher) oder leer? Safari ab macOS 14: „Zum Dock hinzufügen“, gleiche Frage. Firefox bietet keine Installation an; dort läuft Juri im Tab.
 7. **Speicher:** Einstellungen, Speicher: „Dauerhaft speichern anfordern“ ausprobieren. Notieren: Was antwortet der Browser?
 
+## M8: Fristen (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Demo-Profil laden (bringt drei Fristen mit).
+
+1. **Liste:** Lernrhythmus, Zeile „Fristen“: Dort steht die Zahl 3. Der Bildschirm zeigt eine große Karte im Endspurt („Endspurt läuft“), das LL.M.-Modul und das Examen ohne Datum („Datum setzen“).
+2. **Anlegen:** „+ Frist hinzufügen“, Name leer lassen und speichern: Der Hinweis steht unter den Feldern. Ein Datum in der Vergangenheit wird abgelehnt. Mit Name und Datum speichern: Die Karte erscheint. Notieren: Öffnet sich das Datumsfeld von Safari sauber, ist die Tastatur dabei im Weg?
+3. **Umfang:** „+ Eingrenzen“, Rechtsgebiete, Stapel und Tags wählen, einen Tag eintippen, „Fertig“. Die Chips im Sheet zeigen die Auswahl, ein Tipp auf einen Chip entfernt ihn.
+4. **Deckelung:** Eine Frist für morgen mit Umfang „Alle Karten“ anlegen, dann Heute öffnen: Die Zahl fälliger Karten steigt um die Karten, deren Termin nach der Frist lag. Die Frist löschen: Die Zahl fällt wieder auf den alten Stand.
+5. **Endspurt:** Frist in 5 Tagen mit Endspurt: Heute zeigt die Karten verteilt, nicht alle auf einmal. Notieren: Wie viele Karten sind es am ersten Tag?
+6. **Kalenderdatei:** In der Frist „Im Kalender sichern“ und unter der Liste „Fristen als Kalenderdatei sichern“: Auf dem iPhone und iPad öffnet sich das Teilen-Menü. **Notieren:** Bietet es „Zum Kalender hinzufügen“ oder nur „In Dateien sichern“? Öffnet die gesicherte Datei die Kalender-App mit dem Termin (ganztägig, Erinnerung am Vortag um 9 Uhr)? Ein zweiter Export darf den Termin nicht verdoppeln.
+7. **Löschen:** Stapel löschen, der in einer Frist gewählt war: Die Frist bleibt, der Stapel ist aus dem Umfang verschwunden. Rechtsgebiet ebenso.
+8. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Die Fristen sind wieder da.
+9. **Rechner:** Taste „F“ auf der Fristen-Seite öffnet „Neue Frist“, Strg (Cmd) + Eingabe im Sheet speichert, „Fristen als Kalenderdatei sichern“ lädt die Datei herunter.
+
 ## Updates (pro Gerät, ab Version 0.4.1)
 
 1. Nach einem neuen Deploy die App im App-Umschalter schließen und neu öffnen, dann etwa 20 Sekunden auf Heute bleiben: Unten erscheint „Neue Version verfügbar“. „Neu laden“ tippen, unter Einstellungen steht die neue Versionsnummer.

@@ -1,6 +1,10 @@
 import type { Area, Card, Deck, ReviewItem } from '@/domain/model/records';
 import type { LearningSettings } from '@/domain/scheduler/settings';
 import type { JuriDb } from '../db';
+import { learningDay } from '@/domain/calendar/day';
+import { todayDeadlines } from '@/domain/deadlines/list';
+import type { DeadlineInput } from '@/domain/today/today';
+import { readDeadlines, readOverlay, readScopeWorld } from './deadlines';
 import { readSettings, readStudy, reviewedSince, startedSince } from './study';
 
 function countBy(keys: readonly unknown[]): Record<string, number> {
@@ -43,16 +47,25 @@ export async function readDeckDetail(
   id: string,
   todayStart: number,
 ): Promise<DeckDetail | null> {
-  const [deck, areas, cards, items, settings, startedToday] = await Promise.all([
+  const [deck, areas, cards, items, settings, startedToday, effective] = await Promise.all([
     db.decks.get(id),
     db.areas.toArray(),
     db.cards.where('deckId').equals(id).toArray(),
     db.reviewItems.where('deckId').equals(id).toArray(),
     readSettings(db),
     startedSince(db, todayStart),
+    readOverlay(db, todayStart),
   ]);
   return deck
-    ? { deck, areas, cards, itemCount: items.length, items, settings, startedToday }
+    ? {
+        deck,
+        areas,
+        cards,
+        itemCount: items.length,
+        items: effective(items),
+        settings,
+        startedToday,
+      }
     : null;
 }
 
@@ -66,6 +79,8 @@ export interface TodaySnapshot {
   /** Abfragen, die heute mindestens einmal bewertet wurden. */
   reviewedToday: number;
   createdAt: number[];
+  /** Kommende Fristen mit „sitzen sicher“ (M8). */
+  deadlines: DeadlineInput[];
 }
 
 /**
@@ -77,19 +92,31 @@ export async function readTodaySnapshot(
   since: number,
   todayStart: number,
 ): Promise<TodaySnapshot> {
-  const [areas, decks, cardTotal, study, reviewedToday, events] = await Promise.all([
+  const [areas, decks, cardTotal, study, reviewedToday, events, deadlines] = await Promise.all([
     db.areas.toArray(),
     db.decks.toArray(),
     db.cards.count(),
     readStudy(db, todayStart),
     reviewedSince(db, todayStart),
     db.events.where('at').aboveOrEqual(since).toArray(),
+    readDeadlines(db),
   ]);
+  const world = await readScopeWorld(db, deadlines);
   return {
     areas,
     decks,
     cardTotal,
-    ...study,
+    items: study.items,
+    settings: study.settings,
+    startedToday: study.startedToday,
+    deadlines: todayDeadlines({
+      deadlines,
+      items: study.stored,
+      world,
+      areas,
+      decks,
+      today: learningDay(new Date(todayStart)),
+    }),
     reviewedToday,
     createdAt: events.filter((e) => e.type === 'cardCreated').map((e) => e.at),
   };

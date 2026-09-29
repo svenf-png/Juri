@@ -33,6 +33,12 @@ export function shellShortcut(input: KeyInput): ShellAction | null {
   return null;
 }
 
+/** Kürzel auf der Fristen-Seite: „f“ legt eine Frist an. Nie, während getippt wird. */
+export function deadlinesShortcut(input: KeyInput): 'new-deadline' | null {
+  if (input.editable || input.ctrlKey || input.metaKey || input.altKey) return null;
+  return input.key === 'f' ? 'new-deadline' : null;
+}
+
 export type PdfAction =
   'previous' | 'next' | 'first' | 'last' | 'zoom-in' | 'zoom-out' | 'zoom-reset';
 

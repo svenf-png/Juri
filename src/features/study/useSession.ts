@@ -34,6 +34,8 @@ interface Loaded {
   dayKey: string;
   /** Alle Abfragen des Umfangs, für die Bilanz am Ende. */
   scope: readonly ReviewItem[];
+  /** Fälligkeit mit Fristen neu rechnen (nach Bewertungen in dieser Session). */
+  effective: (items: readonly ReviewItem[]) => ReviewItem[];
 }
 
 type Load =
@@ -75,6 +77,7 @@ async function load(db: JuriDb, scope: StudyScope): Promise<Load & { status: 're
       settings: study.settings,
       dayKey: key,
       scope: study.items,
+      effective: study.effective,
     },
     initial: startSession(stations),
   };
@@ -215,7 +218,7 @@ export function useStudySession(scope: StudyScope): StudySession {
       settings: ready.settings,
       startedToday: 0,
     }).endOfDay;
-    const all = [...items.current.values()];
+    const all = ready.effective([...items.current.values()]);
     const stillDue = dueReviews(all, boundary).length;
     const upcoming = all
       .map((i) => i.due)

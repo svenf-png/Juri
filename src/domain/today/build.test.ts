@@ -56,6 +56,7 @@ describe('todayInputFrom', () => {
       dueTotal: 9,
       reviewedToday: 5,
       createdAt: [at(28, 9), at(27, 9), at(1, 9)],
+      deadlines: [{ id: 'k', title: 'Klausur ZR', date: '2026-10-09', secureShare: 64 }],
     });
     expect(input).toMatchObject({
       totalCards: 7,
@@ -72,6 +73,8 @@ describe('todayInputFrom', () => {
       ['ÖR', 2],
     ]);
     expect(model.action).toBe('learn');
+    expect(model.chip).toEqual({ title: 'Klausur ZR', when: 'in 11 Tagen' });
+    expect(model.deadlines[0]?.detail).toBe('Fr, 9.10. · 64\u00A0% sitzen sicher');
   });
 
   it('zeigt ohne Karten den Leerzustand und ohne Rechtsgebiete keine Liste', () => {
@@ -84,6 +87,7 @@ describe('todayInputFrom', () => {
         dueTotal: 0,
         reviewedToday: 0,
         createdAt: [],
+        deadlines: [],
       }),
     );
     expect(model.headline.accent).toBe('Noch keine Karten.');

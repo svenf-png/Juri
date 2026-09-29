@@ -4,6 +4,7 @@ import type {
   AppEvent,
   Area,
   Card,
+  Deadline,
   Deck,
   MediaRecord,
   MetaEntry,
@@ -27,6 +28,7 @@ export class JuriDb extends Dexie {
   declare reviewLog: Table<ReviewLogEntry, number, NewReviewLogEntry>;
   declare events: Table<AppEvent, number, NewEvent>;
   declare media: EntityTable<MediaRecord, 'id'>;
+  declare deadlines: EntityTable<Deadline, 'id'>;
 
   constructor(
     name: string,

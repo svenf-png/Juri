@@ -73,6 +73,46 @@
   overflow-wrap: anywhere;
 }
 
+/* Fristen.dc.html: Ränder 22 px, Abstand 16 px, Titel 24 px mit Schließen-Knopf (40 px, Fläche). */
+.titled {
+  padding: 12px 22px calc(34px + var(--bottom-inset));
+  gap: 16px;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headTitle {
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.close {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Trefferfläche 44 px. */
+.close::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+}
+
 @keyframes sheet-in {
   from {
     transform: translateY(100%);

@@ -322,13 +322,32 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 ## Fristen anlegen
 
-<!-- status: entwurf nach Fristen.dc.html, pruefen in M8 -->
+<!-- layout: bild-gross -->
+<!-- status: M8 umgesetzt (Fristen.dc.html und die ergänzten Artboards), Bild mit Beispieldaten aus der App -->
 
-- **„+ Frist hinzufügen“**: Examen, Klausur, LL.M. oder Eigene
-- Name und Datum eintragen (das Datum kann auch später folgen)
-- **Umfang** wählen: Rechtsgebiete, Stapel oder Tags
-- **Endspurt** an: In den letzten 7 Tagen kommt jede Karte noch einmal
+![Fristen: Klausur mit Countdown, LL.M.-Modul und Examen ohne Datum](../bilder/fristen-iphone.png)
+
+- **So kommst du hin:** Lernrhythmus, Zeile **„Fristen“** (dahinter steht die Zahl deiner Fristen); auf dem iPad auch über die Seitenleiste
+- **„+ Frist hinzufügen“** (am Rechner: Taste **F**): Art wählen (Examen, Klausur, LL.M. oder Eigene), Name und Datum eintragen; das Datum kann auch später folgen
+- **Umfang** wählen: Standard ist **„Alle Karten“**. **„+ Eingrenzen“** öffnet die Auswahl aus Rechtsgebieten, Stapeln und Tags; einen Tag kannst du dort auch neu eintippen
+- **Endspurt** an: In den letzten 7 Tagen kommt jede Karte im Umfang noch einmal, gleichmäßig auf die Tage verteilt
+- Die nächste Frist steht groß oben mit Countdown und **„x % sitzen sicher“**; darunter weitere Fristen, Fristen ohne Datum (gestrichelt) und abgelaufene
 - Auf **Heute** zeigt ein Hinweis, wie viele Tage noch bleiben
+
+> **Notizen:** Bis zur Frist zieht Juri Karten vor: Jede Karte im Umfang kommt spätestens am letzten Lerntag davor dran. Gespeichert wird daran nichts. Nach der Frist läuft der gewohnte Rhythmus weiter, ohne dass du etwas zurücksetzen musst. „Sitzen sicher“ heißt: Der nächste Termin der Karte liegt nicht vor der Frist.
+
+## Frist ändern, löschen und in den Kalender übernehmen
+
+<!-- layout: bild-gross -->
+<!-- status: M8 umgesetzt (FristBearbeiten, FristLoeschen), Bild mit Beispieldaten aus der App -->
+
+![Frist bearbeiten: Art, Name, Datum, Umfang, Endspurt, Kalender und Löschen](../bilder/frist-bearbeiten-iphone.png)
+
+- **Bearbeiten:** Frist antippen, ändern, **„Änderungen speichern“** (am Rechner Strg oder Cmd + Eingabe)
+- **Löschen:** im Sheet **„Löschen“**, dann bestätigen. Nur die Frist verschwindet; Karten und Lernstand bleiben, die Karten laufen wieder im normalen Rhythmus
+- **Kalender:** **„Im Kalender sichern“** (eine Frist) oder unter der Liste **„Fristen als Kalenderdatei sichern“** (alle kommenden). Am Rechner lädt Juri eine .ics-Datei herunter, auf iPhone und iPad öffnet sich das Teilen-Menü
+- Jede Frist wird ein ganztägiger Termin mit Erinnerung am Vortag um 9 Uhr, dazu einer für den Beginn des Endspurts
+- Lösche ich einen Stapel oder ein Rechtsgebiet, verschwindet es auch aus dem Umfang der Fristen; bleibt nichts übrig, steht dort **„Kein Umfang gewählt“**
 
 # Teilen
 
