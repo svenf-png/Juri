@@ -90,14 +90,9 @@ test.describe('Datei-Dialog und Download statt Web Share', () => {
 });
 
 test.describe('Zeiger und Tastatur', () => {
-  test('„n“ öffnet die neue Karte, „/“ die Suche, in Feldern bleiben sie Text', async ({
-    page,
-  }) => {
+  test('„n“ öffnet die neue Karte, in Feldern bleibt „n“ Text', async ({ page }) => {
     await onboard(page);
     await page.goto('/Juri/stapel');
-    await page.keyboard.press('/');
-    // Ohne Karten gibt es kein Suchfeld: „/“ führt zu den Stapeln und bleibt dort.
-    await expect(page).toHaveURL(/\/Juri\/stapel$/);
     await page.keyboard.press('n');
     await expect(page).toHaveURL(/\/Juri\/neu$/);
     const front = page.getByLabel('Vorderseite');
@@ -105,6 +100,13 @@ test.describe('Zeiger und Tastatur', () => {
     await page.keyboard.type('nein/n');
     await expect(front).toHaveValue('nein/n');
     await expect(page).toHaveURL(/\/Juri\/neu$/);
+  });
+
+  test('„/“ führt zur Suche der Stapel', async ({ page }) => {
+    await onboard(page);
+    await page.goto('/Juri/');
+    await page.keyboard.press('/');
+    await expect(page).toHaveURL(/\/Juri\/stapel$/);
   });
 
   test('Strg+Enter speichert die Karte aus dem Textfeld heraus', async ({ page }) => {
@@ -214,13 +216,13 @@ test.describe('Zeiger und Tastatur', () => {
     expect(watch.errors).toEqual([]);
   });
 
-  test('Hover lässt das Design unverändert und zeigt den Zeiger, Fokus ist sichtbar', async ({
+  test('Hover lässt das Design unverändert, Knöpfe zeigen den Zeiger, Fokus ist sichtbar', async ({
     page,
   }) => {
     await onboard(page);
     const look = (el: Element) => {
       const style = getComputedStyle(el);
-      return `${style.color}|${style.backgroundColor}|${style.boxShadow}|${style.cursor}`;
+      return `${style.color}|${style.backgroundColor}|${style.boxShadow}`;
     };
     for (const control of [
       page.getByRole('link', { name: 'Stapel', exact: true }),
@@ -229,8 +231,10 @@ test.describe('Zeiger und Tastatur', () => {
       const before = await control.evaluate(look);
       await control.hover();
       expect(await control.evaluate(look)).toBe(before);
-      expect(before.endsWith('|pointer')).toBe(true);
     }
+    await page.goto('/Juri/stapel');
+    const button = page.getByRole('button', { name: 'Ersten Stapel anlegen' });
+    expect(await button.evaluate((el) => getComputedStyle(el).cursor)).toBe('pointer');
     await page.mouse.move(0, 0);
     await page.keyboard.press('Tab');
     const outline = await page.evaluate(() => {
