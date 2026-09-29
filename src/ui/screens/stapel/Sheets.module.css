@@ -207,9 +207,6 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-height: 330px;
-  overflow: auto;
-  overscroll-behavior: contain;
 }
 
 .pickGroupHead {
@@ -237,6 +234,11 @@
   gap: 12px;
   color: var(--ink);
   text-align: left;
+}
+
+/* Der Fokusring läge sonst außerhalb und würde vom Blatt beschnitten. */
+.pickRow:focus-visible {
+  outline-offset: -2px;
 }
 
 .spaceTop {

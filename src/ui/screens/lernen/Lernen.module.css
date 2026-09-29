@@ -5,8 +5,9 @@
  * bekommen eine höhere Karte, breitere eine mittige Spalte (A8).
  */
 .screen {
-  min-height: 100dvh;
-  height: 100dvh;
+  /* In der Testinstanz steht das Hinweisband darüber (--shell-top), sonst scrollt die Seite. */
+  min-height: calc(100dvh - var(--shell-top, 0px));
+  height: calc(100dvh - var(--shell-top, 0px));
   width: 100%;
   max-width: 430px;
   margin: 0 auto;
@@ -392,6 +393,8 @@
   color: var(--violet-700);
   border-radius: 8px;
   padding: 1px 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
   box-shadow: 0 0 0 2px var(--violet);
   background-image: linear-gradient(var(--violet-100), var(--violet-100));
   background-repeat: no-repeat;
