@@ -86,6 +86,9 @@ export function useZoomPan(
   }, [frame, local, size, update]);
 
   const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
+    // Ein neuer erster Finger beginnt eine neue Geste; übrig gebliebene Zeiger (verpasstes
+    // „losgelassen“) würden sonst als zweiter Finger zählen.
+    if (event.isPrimary) pointers.current.clear();
     pointers.current.set(event.pointerId, local(event));
     if (pointers.current.size === 2) onMultiStart?.();
   };

@@ -11,7 +11,7 @@ import type { CreateGoal } from '@/domain/cards/goal';
 import { ordinals } from '@/domain/cards/occlusion';
 import { formatBytes } from '@/domain/format/bytes';
 import type { MediaRecord } from '@/domain/model/records';
-import { useBlobUrl, useMediaUrl } from '@/features/media/media';
+import { isQuotaError, useBlobUrl, useMediaUrl } from '@/features/media/media';
 import { Button } from '../../components/Button';
 import {
   CoverSurface,
@@ -162,8 +162,9 @@ export function CardScreen({
     let saved: boolean;
     try {
       saved = await onSubmit(checked.fields, pending);
-    } catch {
-      setFailed(true);
+    } catch (error) {
+      if (isQuotaError(error)) media.reportFull();
+      else setFailed(true);
       setBusy(false);
       return;
     }

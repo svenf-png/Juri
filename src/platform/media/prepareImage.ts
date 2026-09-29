@@ -84,10 +84,14 @@ export async function prepareImage(file: Blob): Promise<PreparedImage> {
   if (!checked.ok) throw new MediaProblem(checked.problem);
   let bitmap: ImageBitmap;
   try {
-    // `from-image` richtet Fotos nach der Kameraausrichtung (EXIF) aus.
-    bitmap = await createImageBitmap(new Blob([original], { type: checked.mime }), {
-      imageOrientation: 'from-image',
-    });
+    const blob = new Blob([original], { type: checked.mime });
+    try {
+      // `from-image` richtet Fotos nach der Kameraausrichtung (EXIF) aus.
+      bitmap = await createImageBitmap(blob, { imageOrientation: 'from-image' });
+    } catch {
+      // Ältere Engines kennen den Wert nicht und werfen; dann gilt ihre eigene Voreinstellung.
+      bitmap = await createImageBitmap(blob);
+    }
   } catch {
     throw new MediaProblem({ code: 'unbekannt' });
   }

@@ -95,6 +95,8 @@ export function MaskCanvas({
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     zoom.bind.onPointerDown(event);
     if (!event.isPrimary && event.pointerType === 'touch') return;
+    // Nur die linke Maustaste zeichnet.
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
     const target = event.target as Element;
     const from = at(event);
     const handle = target.closest<HTMLElement>('[data-handle]')?.dataset.handle as

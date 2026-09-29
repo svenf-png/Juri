@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { openStoredPdf } from '@/features/media/media';
 import type { PdfDocument } from '@/platform/pdf/pdf';
 import { PdfPageView } from './PdfPageView';
@@ -20,6 +20,21 @@ export function SourceViewer({
 }) {
   const [loaded, setLoaded] = useState<{ doc: PdfDocument; name: string } | null | 'missing'>(null);
   const [page, setPage] = useState(start ?? 1);
+  const overlay = useRef<HTMLDivElement>(null);
+
+  // Fokus in die Ansicht (Tastatur und VoiceOver), Escape schließt.
+  useEffect(() => {
+    overlay.current?.focus();
+  }, []);
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,7 +58,14 @@ export function SourceViewer({
   }, [mediaId]);
 
   return (
-    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="PDF">
+    <div
+      ref={overlay}
+      className={styles.overlay}
+      role="dialog"
+      aria-modal="true"
+      aria-label="PDF"
+      tabIndex={-1}
+    >
       {loaded === 'missing' ? (
         <div className={styles.missing}>
           <p>Das PDF ist nicht mehr gespeichert.</p>

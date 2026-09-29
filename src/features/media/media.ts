@@ -17,7 +17,11 @@ import { displayName, MediaProblem, prepareImage } from '@/platform/media/prepar
 import { openPdf, PdfError, type PdfDocument } from '@/platform/pdf/pdf';
 import { database } from '../app/database';
 
+/** Ab dieser Größe fragt Juri den Browser vorher nach freiem Platz; kleinere Dateien passen immer. */
+const ROOM_CHECK_FROM = 2_000_000;
+
 async function ensureRoom(bytes: number): Promise<void> {
+  if (bytes < ROOM_CHECK_FROM) return;
   const estimate = await navigator.storage.estimate().catch(() => ({}));
   if (!hasRoom(bytes, estimate)) throw new ProblemError({ code: 'speicher-voll' });
 }
@@ -123,6 +127,11 @@ export function pdfRecord(draft: PdfDraft): MediaRecord {
     createdAt: Date.now(),
     data: draft.bytes,
   };
+}
+
+/** Der Browser meldet beim Schreiben, dass der Speicher voll ist (Dexie und IndexedDB: `QuotaExceededError`). */
+export function isQuotaError(error: unknown): boolean {
+  return error instanceof Error && error.name === 'QuotaExceededError';
 }
 
 /** Meldung zu einem Problem (Artboard `MedienFehler`). */

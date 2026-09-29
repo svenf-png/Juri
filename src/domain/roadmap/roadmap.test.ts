@@ -56,6 +56,14 @@ describe('roadmap', () => {
     expect(r.summary).toBe('6 von 14 Schritten fertig');
   });
 
+  it('Version 0.7.0: M0 bis M6 fertig, M7 (Browser-Version) in Arbeit', () => {
+    const r = roadmap('0.7.0');
+    expect(r.done).toBe(7);
+    expect(r.rows[6]?.state).toBe('done');
+    expect(r.rows[7]).toMatchObject({ id: 'M7', title: 'Browser-Version', state: 'current' });
+    expect(r.summary).toBe('7 von 14 Schritten fertig');
+  });
+
   it('eine Zwischenversion zählt noch zum vorigen Meilenstein', () => {
     expect(roadmap('0.4.1').done).toBe(4);
     expect(roadmap('0.4.1').rows[4]?.state).toBe('current');

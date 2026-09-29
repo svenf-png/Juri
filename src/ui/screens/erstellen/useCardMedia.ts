@@ -56,6 +56,8 @@ export interface CardMedia {
   editor: boolean;
   /** Felder, die aus einer Markierung im PDF stammen („aus PDF übernommen“). */
   applied: { front: boolean; back: boolean };
+  /** Zeigt das Blatt „Speicher voll“ (Schreiben scheiterte an der Speichergrenze). */
+  reportFull: () => void;
   chooseImage: () => void;
   choosePdf: (mode: PdfMode) => void;
   openSourceSheet: () => void;
@@ -244,6 +246,9 @@ export function useCardMedia(
     sourceSheet,
     editor,
     applied,
+    reportFull: () => {
+      setProblem({ kind: pdf ? 'pdf' : 'image', problem: { code: 'speicher-voll' } });
+    },
     chooseImage,
     choosePdf,
     openSourceSheet: () => {

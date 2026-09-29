@@ -2,9 +2,10 @@
 
 Inhalte der Demo-Stapel als lesbare Datei, damit sie fachlich geprüft werden können, bevor sie in die App übernommen werden (Entscheidung 10).
 
-| Datei              | Inhalt                                                                                                              |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| `demo-stapel.json` | 3 Rechtsgebiete, 6 Stapel, 40 Karten (Frage, Lückentext und Schema). Zwei Stapel liegen in mehreren Rechtsgebieten. |
+| Datei              | Inhalt                                                                                                                                  |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `demo-stapel.json` | 3 Rechtsgebiete, 6 Stapel, 40 Karten (Frage, Lückentext und Schema). Zwei Stapel liegen in mehreren Rechtsgebieten.                     |
+| `demo-skript.pdf`  | 50-seitiges Demo-Skript für die PDF-Ansicht (M6), erzeugt mit `npm run demo:pdf`. Bis auf Seite 14 Beispieltext ohne fachlichen Inhalt. |
 
 ## Aufbau
 
@@ -22,3 +23,9 @@ Alle 40 Karten stehen auf `pruefung: offen`. Die Texte sind ohne Abgleich mit de
 ## Laden
 
 Nur in der Testinstanz: Einstellungen, Testdaten, „Demo-Stapel hinzufügen“ (fügt hinzu, ohne vorhandene Daten zu ändern) oder „Demo-Profil laden“ (ersetzt alles). Einzeln löschbar über den Stapel selbst.
+
+## Demo-Skript (M6)
+
+`demo-skript.pdf` hat 50 Seiten (A4, eingebettete Schriften, markierbarer Text). Seite 14 enthält den Satz aus dem Design (§ 932 II BGB: „Der Erwerber ist nicht in gutem Glauben, wenn ihm bekannt oder infolge grober Fahrlässigkeit unbekannt ist, dass die Sache nicht dem Veräußerer gehört.“). Er ist **nicht mit gesetze-im-internet.de abgeglichen** (die Umgebung sperrt die Adresse) und gilt wie die Demo-Stapel als ungeprüft. Alle anderen Seiten sind Platzhalter.
+
+Laden: Einstellungen, Testdaten, „Demo-Skript (PDF) hinzufügen“ (nur Testinstanz). Es entsteht der Stapel „Demo-Skript Sachenrecht“ im Rechtsgebiet ZR mit einer Frage (Herkunft: Seite 14) und einer Abdeckung mit drei Feldern auf Seite 14. Ein zweites Laden legt nichts doppelt an. Neu erzeugen: `PW_CHROMIUM_PATH=… npm run demo:pdf`.

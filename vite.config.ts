@@ -115,7 +115,10 @@ export default defineConfig(({ mode, command }) => {
         workbox: {
           cacheId: instance.cacheId,
           globPatterns: ['**/*.{js,mjs,css,html,woff2,png,svg,webmanifest,txt}'],
-          globIgnores: ['test/**', '404.html', '**/*.map'],
+          // Der Worker von pdf.js im Betrieb ist die .mjs-Datei (Vite `?url`, siehe platform/pdf/pdf.ts);
+          // eine zweite Kopie als .js-Chunk entsteht aus dem Rückfall von pdf.js und bleibt aus dem
+          // Zwischenspeicher (1,2 MB gespart).
+          globIgnores: ['test/**', '404.html', '**/*.map', '**/pdf.worker.min-*.js'],
           navigateFallback: `${instance.base}index.html`,
           navigateFallbackDenylist: navigateFallbackDenylist(instance),
           cleanupOutdatedCaches: true,
