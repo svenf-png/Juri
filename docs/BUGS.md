@@ -11,3 +11,11 @@ Format: laufende Nummer, Titel, Umgebung, Beschreibung, erwartetes Verhalten, St
 - **Erwartet:** Ein Link zu den Einstellungen in der Sidebar (Desktop), passend zum Design.
 - **Betroffene Stellen:** Sidebar in `AppShell`, Route `/einstellungen` in `src/app/router.tsx`, `src/ui/screens/einstellungen/Einstellungen.tsx`
 - **Status:** offen
+
+## B2: Schema-Editor: Nummer der aktiven Zeile wird vom Rahmen abgeschnitten
+
+- **Umgebung:** iPhone, installierte App, Testinstanz `/Juri/test/`, Schema-Editor (Kartentyp Schema), gemeldet am 29.09.2026
+- **Beschreibung:** Ist ein Punkt aktiv (Rahmen mit „verknüpfen“-Knopf), wird die Nummer am linken Rand („3.“) vom Rahmen überdeckt bzw. angeschnitten. Bei den inaktiven Zeilen („1.“, „2.“) ist die Nummer vollständig lesbar.
+- **Erwartet:** Nummer bleibt vollständig sichtbar, der Rahmen liegt mit Abstand um die ganze Zeile.
+- **Betroffene Stellen:** Zeile im Schema-Editor, `src/ui/screens/erstellen/SchemaEditor.tsx`, Vorschauen unter `/styleguide/schema/<Variante>`
+- **Status:** offen
