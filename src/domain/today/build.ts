@@ -5,7 +5,13 @@
 import { addDays, dayKey, learningDay, type Day } from '../calendar/day';
 import { sortAreas } from '../library/areas';
 import type { Area, Deck } from '../model/records';
-import { DEFAULT_DAILY_GOAL, emptyToday, WEEK_DAYS, type TodayInput } from './today';
+import {
+  DEFAULT_DAILY_GOAL,
+  emptyToday,
+  WEEK_DAYS,
+  type DeadlineInput,
+  type TodayInput,
+} from './today';
 
 export interface TodayData {
   readonly areas: readonly Area[];
@@ -20,6 +26,8 @@ export interface TodayData {
   readonly reviewedToday: number;
   /** Zeitpunkte der Ereignisse „Karte angelegt“ (mindestens die letzten 7 Lerntage). */
   readonly createdAt: readonly number[];
+  /** Kommende Fristen mit Sicherheitsquote (M8). */
+  readonly deadlines: readonly DeadlineInput[];
 }
 
 /** Karten, die an einem der letzten `days` Lerntage angelegt wurden (Tag `today` eingeschlossen). */
@@ -49,7 +57,7 @@ export function dueByArea(
 }
 
 export function todayInputFrom(today: Day, data: TodayData): TodayInput {
-  // Ziele, Verlauf, Fristen und High five kommen mit M8, M9 und M11; bis dahin gilt der Leerwert.
+  // Ziele, Verlauf und High five kommen mit M9 und M11; bis dahin gilt der Leerwert.
   return {
     ...emptyToday(today),
     totalCards: data.cardTotal,
@@ -57,5 +65,6 @@ export function todayInputFrom(today: Day, data: TodayData): TodayInput {
     dueByArea: dueByArea(data.areas, data.decks, data.dueByDeck),
     createdThisWeek: createdWithin(today, data.createdAt, WEEK_DAYS),
     goal: { done: data.reviewedToday, target: DEFAULT_DAILY_GOAL },
+    deadlines: data.deadlines,
   };
 }

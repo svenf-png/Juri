@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildIcs, escapeIcsText, foldIcsLine, toIcsUtc } from './ics';
+import { buildIcs, buildIcsCalendar, escapeIcsText, foldIcsLine, toIcsUtc } from './ics';
 
 const now = new Date('2026-09-28T10:00:00Z');
 
@@ -67,5 +67,34 @@ describe('buildIcs', () => {
     });
     expect(ics).not.toContain('DESCRIPTION');
     expect(ics).not.toContain('VALARM');
+  });
+});
+
+describe('buildIcsCalendar', () => {
+  it('schreibt ganztägige Termine mit Erinnerung davor und danach', () => {
+    const ics = buildIcsCalendar([
+      {
+        uid: 'a@juri',
+        title: 'Klausur',
+        day: { year: 2026, month: 12, day: 31 },
+        alarmMinutesBefore: 900,
+        now,
+      },
+      {
+        uid: 'b@juri',
+        title: 'Endspurt',
+        description: 'x',
+        day: { year: 2026, month: 12, day: 24 },
+        alarmMinutesBefore: -540,
+        now,
+      },
+      { uid: 'c@juri', title: 'Ohne', day: { year: 2026, month: 1, day: 1 }, now },
+    ]);
+    expect(ics).toContain('DTSTART;VALUE=DATE:20261231');
+    expect(ics).toContain('DTEND;VALUE=DATE:20270101');
+    expect(ics).toContain('TRIGGER:-PT900M');
+    expect(ics).toContain('TRIGGER:PT540M');
+    expect(ics.split('\r\n').filter((l) => l === 'BEGIN:VEVENT')).toHaveLength(3);
+    expect(ics.split('\r\n').filter((l) => l === 'BEGIN:VALARM')).toHaveLength(2);
   });
 });

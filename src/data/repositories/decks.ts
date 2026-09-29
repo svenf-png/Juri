@@ -1,5 +1,6 @@
 import { toggleArea } from '@/domain/library/deckRules';
 import type { Deck } from '@/domain/model/records';
+import { withoutDeck } from '@/domain/deadlines/scope';
 import type { JuriDb } from '../db';
 import { mediaIdsOf } from '@/domain/cards/card';
 import { unlinkCards } from './cards';
@@ -65,18 +66,28 @@ export async function deleteDeck(
   db: JuriDb,
   id: string,
 ): Promise<{ cards: number; items: number }> {
-  return db.transaction('rw', db.decks, db.cards, db.reviewItems, db.media, async () => {
-    const removed = await db.cards.where('deckId').equals(id).toArray();
-    const cards = removed.map((c) => c.id);
-    const items = await db.reviewItems.where('deckId').equals(id).primaryKeys();
-    await db.reviewItems.bulkDelete(items);
-    await db.cards.bulkDelete(cards);
-    await db.decks.delete(id);
-    // Schemas in anderen Stapeln verlieren die Verweise auf die gelöschten Karten (ADR-009).
-    await unlinkCards(db, new Set(cards), new Set(cards), Date.now());
-    await releaseMedia(db, removed.flatMap(mediaIdsOf));
-    return { cards: cards.length, items: items.length };
-  });
+  return db.transaction(
+    'rw',
+    db.decks,
+    db.cards,
+    db.reviewItems,
+    db.media,
+    db.deadlines,
+    async () => {
+      const removed = await db.cards.where('deckId').equals(id).toArray();
+      const cards = removed.map((c) => c.id);
+      const items = await db.reviewItems.where('deckId').equals(id).primaryKeys();
+      await db.reviewItems.bulkDelete(items);
+      await db.cards.bulkDelete(cards);
+      await db.decks.delete(id);
+      // Fristen verlieren den Stapel aus ihrem Umfang (ADR-012).
+      await db.deadlines.bulkPut(withoutDeck(await db.deadlines.toArray(), id, Date.now()));
+      // Schemas in anderen Stapeln verlieren die Verweise auf die gelöschten Karten (ADR-009).
+      await unlinkCards(db, new Set(cards), new Set(cards), Date.now());
+      await releaseMedia(db, removed.flatMap(mediaIdsOf));
+      return { cards: cards.length, items: items.length };
+    },
+  );
 }
 
 /**
