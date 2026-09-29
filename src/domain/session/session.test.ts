@@ -227,3 +227,20 @@ describe('Undo', () => {
     expect(undo(done)!.state.done).toBe(false);
   });
 });
+
+describe('Abdeckung: Felder einzeln (M6)', () => {
+  it('bildet je Feld eine Station, Lücken anderer Karten bleiben gebündelt', () => {
+    const stations = stationsFrom(
+      [item('k', 'm1'), item('k', 'm2'), item('c', 'c1'), item('c', 'c2'), item('k', 'm3')],
+      new Map(),
+      new Set(['k']),
+    );
+    expect(stations.map((s) => [s.key, s.itemIds])).toEqual([
+      ['k:m1', ['k:m1']],
+      ['k:m2', ['k:m2']],
+      ['c', ['c:c1', 'c:c2']],
+      ['k:m3', ['k:m3']],
+    ]);
+    expect(stations.every((s) => s.cardId === 'k' || s.cardId === 'c')).toBe(true);
+  });
+});

@@ -3,6 +3,8 @@
  * Karte, gefragten Lücken und Stand der Aufdeckung. Die Oberfläche setzt die Stücke nur ein.
  */
 import { parseCloze } from '../cards/cloze';
+import { ordinals, maskNumber, type Mask } from '../cards/occlusion';
+import { sourceChip } from '../cards/card';
 import { pointNumbers } from '../cards/schema';
 import type { Card } from '../model/records';
 
@@ -106,6 +108,32 @@ export function schemaRows(
   });
 }
 
+/** Aussehen eines Feldes der Abdeckung: verdeckt, gefragt (pulsiert) oder aufgedeckt. */
+export type MaskLook = 'covered' | 'asked' | 'revealed';
+
+export interface CoverMask extends Mask {
+  /** Anzeigenummer 1, 2, 3 (abgeleitet, siehe occlusion.ts). */
+  readonly label: number;
+  readonly look: MaskLook;
+}
+
+/**
+ * Felder einer Abdeckung für die Lernansicht (A7: alle verdeckt, eines gefragt). `asked` ist die
+ * Nummer des gefragten Feldes; mit `revealed` ist es aufgedeckt, die übrigen bleiben verdeckt.
+ */
+export function coverMasks(
+  masks: readonly Mask[],
+  asked: number | null,
+  revealed: boolean,
+): CoverMask[] {
+  const labels = ordinals(masks);
+  return masks.map((m) => ({
+    ...m,
+    label: labels.get(m.n) ?? 0,
+    look: m.n !== asked ? 'covered' : revealed ? 'revealed' : 'asked',
+  }));
+}
+
 export type Face =
   | {
       readonly kind: 'qa';
@@ -126,6 +154,18 @@ export type Face =
       readonly rows: readonly SchemaRow[];
       readonly revealed: number;
       readonly total: number;
+    }
+  | {
+      readonly kind: 'cover';
+      /** „Abdeckung 2 von 3“ */
+      readonly typeLabel: string;
+      readonly question: string;
+      readonly mediaId: string;
+      readonly masks: readonly CoverMask[];
+      /** Anzeigenummer des gefragten Feldes. */
+      readonly asked: number;
+      /** Herkunft für die Marke unten rechts, z. B. „PDF S. 14“; leer ohne Herkunft. */
+      readonly source: string;
     }
   | {
       readonly kind: 'bundle';
@@ -153,6 +193,20 @@ export function faceOf(card: Card, subs: readonly string[], revealed: number): F
       rows: schemaRows(card.points, shown),
       revealed: shown,
       total,
+    };
+  }
+  if (card.type === 'cover') {
+    const n = maskNumber(subs[0] ?? '');
+    const masks = coverMasks(card.masks, n, revealed > 0);
+    const label = masks.find((m) => m.n === n)?.label ?? 1;
+    return {
+      kind: 'cover',
+      typeLabel: `Abdeckung ${String(label)} von ${String(masks.length)}`,
+      question: `Was steht unter Feld ${String(label)}?`,
+      mediaId: card.mediaId,
+      masks,
+      asked: label,
+      source: card.source ? sourceChip(card.source) : '',
     };
   }
   const asked = askedNumbers(subs);

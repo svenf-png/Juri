@@ -64,7 +64,8 @@ async function load(db: JuriDb, scope: StudyScope): Promise<Load & { status: 're
   const steps = new Map(
     cards.flatMap((c) => (c.type === 'schema' ? [[c.id, c.points.length] as const] : [])),
   );
-  const stations = stationsFrom(picked, steps);
+  const singles = new Set(cards.flatMap((c) => (c.type === 'cover' ? [c.id] : [])));
+  const stations = stationsFrom(picked, steps, singles);
   return {
     status: 'ready',
     loaded: {
