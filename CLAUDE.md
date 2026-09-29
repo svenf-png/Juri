@@ -10,6 +10,7 @@ Juri ist eine Karteikarten-PWA für das juristische Referendariat (iPhone/iPad, 
 ## Arbeitsweise
 
 - Nutzer: Sven. Sprache Deutsch. **Keine Gedankenstriche** (Em-Dash, En-Dash) in Texten für ihn, in UI-Texten und Doku. Bei unklaren Anforderungen nachfragen, Entscheidungen per Auswahl-Popup mit Empfehlung.
+- **Fortschritt in jeder Zwischenmeldung und am Ende, immer mit Prozentzahlen:** (1) Gesamtfortschritt nach Meilensteinen (z. B. 11 von 14 = 79 %), (2) geleistete PT nach Planwerten (z. B. 28,5 von 37 PT = 77 %), (3) Fortschritt innerhalb des aktuellen Meilensteins in % (Domain, Daten, UI, Artboards, Tests, Doku, CI, Merge, Deploy). Neuen Stand in `docs/ARCHITEKTUR.md` (Status-Zeile, Plan) und `docs/folien/projekt.md` eintragen; weicht der Aufwand vom Planwert ab, kurz sagen und begründen.
 - Fakten zu iOS/WebKit nur mit Quelle (WebKit-Blog, MDN, caniuse), nichts erfinden. Normtexte nur wörtlich aus gesetze-im-internet.de; die Cloud-Umgebung sperrt diese Adresse (Netzwerkrichtlinie), sie muss in den Umgebungseinstellungen freigegeben sein, sonst bleiben Demo-Inhalte „ungeprüft“ (`testdaten/README.md`).
 - **Ein PR pro Meilenstein** gegen `main`. Nach jedem Meilenstein: Tests grün, Version in `package.json` auf 0.(n+1).0 (speist den Entwicklungsstand in den Einstellungen, A31), Demo-Notiz, Doku und Folien aktualisiert, offene Punkte.
 - Design exakt übernehmen (Farben, Radien, Größen, Kurven), Werte aus `src/ui/tokens/tokens.ts`, nicht runden.
