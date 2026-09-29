@@ -147,6 +147,21 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Demo-Profil laden (bringt 
 9. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Serie, Heatmap und Meilensteine sind wieder da, ohne erneute Feier.
 10. **Rechner:** Erfolge bei 1440 × 900: 26 Wochen, nichts abgeschnitten.
 
+## M10: Teilen und Import (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Einstellungen, Testdaten: „Demo-Stapel hinzufügen“. Für Schritt 1 und 2 brauchst du keine zweite Person, aber ein zweites Profil oder Gerät hilft bei Schritt 6.
+
+1. **Teilen-Menü:** Teilen, einen Stapel wählen, „AirDrop, Nachrichten, Mail …“. **Notieren:** Öffnet sich das Teilen-Menü sofort (ohne Wartezeit und ohne Fehlermeldung)? Bietet es AirDrop, Nachrichten, Mail und „In Dateien sichern“? Steht die Datei als „Stapelname.juri“ mit passender Größe da? Welcher MIME-Typ (`application/octet-stream`) funktioniert, oder verweigert iOS die Datei?
+2. **Aus „Dateien“ wieder öffnen:** Die Datei in „Dateien“ sichern, Juri öffnen, Teilen, „Datei öffnen“. **Notieren:** Graut die Dateiauswahl die Datei aus (sie sollte wählbar sein, weil kein Filter gesetzt ist)? Stehen frisch gesicherte Dateien unter „Zuletzt“ oben? Die Vorschau zeigt „von <dein Name>“ und die Kartenzahl; „Aktualisieren“ meldet „Alles schon auf dem neuesten Stand“, „Als Kopie anlegen“ legt einen zweiten Stapel an (Name mit „(Kopie)“).
+3. **Demo-Datei:** Einstellungen, Testdaten, „Demo-Datei (.juri) vorbereiten“, dann „teilen“ und in „Dateien“ sichern. Unter Teilen „Datei öffnen“: „2 Stapel“, „von Mara · 13 Karten“, importieren. Beide Stapel erscheinen, im Schema führt „Karte“ am Punkt zur verknüpften Frage, die Abdeckung zeigt das Schaubild, die Herkunft öffnet das PDF, die Notizen erscheinen unter der Antwort (nur bei den ersten beiden Karten).
+4. **Anleitung:** „So geht’s“ öffnet die drei Schritte; „Datei öffnen“ darin öffnet die Dateiauswahl.
+5. **Fehler:** Eine beliebige andere Datei wählen (Foto, PDF, ein Backup): Die Meldung nennt den Grund („Diese Datei ist kein Juri-Stapel“, „Das ist ein Backup …“), nichts ändert sich.
+6. **Zwei Geräte (wenn vorhanden):** Stapel von Gerät A nach B teilen und importieren. Auf B eine Karte lernen, auf A eine andere Karte ändern und neu teilen, auf B „Aktualisieren“: Die Änderung kommt an, der Lernfortschritt bleibt. Eine Karte auf beiden Seiten ändern: Es erscheint das Sheet „Was soll gelten?“. Eine Karte auf B löschen und A erneut teilen: „Gelöscht lassen“ oder „Wiederherstellen“ funktioniert.
+7. **Notizen und Erfolge:** Schalter „Eigene Notizen mitschicken“ an: Beim Empfänger erscheinen die Notizen; aus: keine. „Erfolge mitschicken“ aus: Die Datei wird kleiner oder gleich, der Import geht durch.
+8. **Teamplayer:** Nach dem dritten geteilten Stapel erscheint in Erfolge die Feier „Teamplayer“ („1 von 3 geteilt“ davor).
+9. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Importierte Karten und Stapel sind wieder da, nichts wird erneut gefeiert.
+10. **Rechner:** Teilen bei 1440 × 900: „Herunterladen“ lädt die `.juri`-Datei, „Datei öffnen“ und die Taste „I“ öffnen den Datei-Dialog, „E“ lädt herunter, nichts ist abgeschnitten.
+
 ## Updates (pro Gerät, ab Version 0.4.1)
 
 1. Nach einem neuen Deploy die App im App-Umschalter schließen und neu öffnen, dann etwa 20 Sekunden auf Heute bleiben: Unten erscheint „Neue Version verfügbar“. „Neu laden“ tippen, unter Einstellungen steht die neue Versionsnummer.

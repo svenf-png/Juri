@@ -184,7 +184,6 @@ export const leerModel: ErfolgeModel = {
     badge('schema-baumeister', 'Schema-Baumeister', 'tree', '0 von 10', 0),
     badge('serie-7', '7 Tage am Stück', 'cal', '0 von 7', 0),
     badge('wiederholungen-1000', '1.000 Wiederholungen', 'rep', '0 von 1.000', 0),
-    badge('serie-30', '30 Tage am Stück', 'cal', '0 von 30', 0),
   ],
   highFives: null,
 };

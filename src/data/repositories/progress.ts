@@ -126,6 +126,18 @@ export async function readStreak(
   return streak({ met, today, pause: goals.pause, available: (key) => days.has(key) });
 }
 
+/** Stapel, die als `.juri` weitergegeben wurden (verschiedene Stapel, auch gelöschte); M10. */
+async function sharedDecks(db: JuriDb): Promise<number> {
+  const ids = new Set<string>();
+  await db.events
+    .where('type')
+    .equals('shared')
+    .each((event) => {
+      if (event.type === 'shared') for (const id of event.deckIds) ids.add(id);
+    });
+  return ids.size;
+}
+
 /** Kennzahlen der Meilensteine; die Serie nur, wenn `withStreak` (sie ist die teuerste). */
 async function readMetrics(
   db: JuriDb,
@@ -145,6 +157,7 @@ async function readMetrics(
     created,
     reviews,
     schemas: await db.cards.where('type').equals('schema').count(),
+    shared: await sharedDecks(db),
     streak: withStreak ? (await readStreak(db, today, goals, rows)).current : 0,
   };
 }
@@ -152,7 +165,7 @@ async function readMetrics(
 /**
  * Schaltet erreichte Meilensteine frei, genau einmal: Was schon in `milestones` steht, bleibt
  * unangetastet. Läuft in der Transaktion der Aktivität (`cards`, `reviewItems`, `reviewLog`,
- * `dayStats`, `milestones` und `meta` müssen dazugehören). Die Serie wird nur geprüft, wenn ein
+ * `events`, `dayStats`, `milestones` und `meta` müssen dazugehören). Die Serie wird nur geprüft, wenn ein
  * Serien-Meilenstein noch offen ist und `checkStreak` gesetzt ist.
  */
 export async function unlockMilestones(
@@ -237,7 +250,7 @@ export async function markSeen(db: JuriDb, ids: readonly string[]): Promise<void
 export async function syncMilestones(db: JuriDb, now: number): Promise<string[]> {
   return db.transaction(
     'rw',
-    [db.cards, db.reviewItems, db.reviewLog, db.dayStats, db.milestones, db.meta],
+    [db.cards, db.reviewItems, db.reviewLog, db.events, db.dayStats, db.milestones, db.meta],
     async () => await unlockMilestones(db, now, true),
   );
 }

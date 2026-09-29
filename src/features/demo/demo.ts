@@ -19,3 +19,5 @@ export { addDemoSkript as loadDemoSkript } from './skript';
 export async function resetAllData(): Promise<void> {
   await replaceTables(database(), {});
 }
+
+export { prepareDemoJuri, saveDemoJuri } from './juri';

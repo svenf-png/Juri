@@ -7,7 +7,7 @@
 import { groupDigits } from '../today/today';
 
 export type MilestoneIcon = 'pen' | 'stack' | 'tree' | 'cal' | 'rep' | 'share';
-export type MetricKey = 'created' | 'reviews' | 'schemas' | 'streak';
+export type MetricKey = 'created' | 'reviews' | 'schemas' | 'streak' | 'shared';
 
 export interface MilestoneDef {
   readonly id: string;
@@ -15,6 +15,8 @@ export interface MilestoneDef {
   readonly icon: MilestoneIcon;
   readonly metric: MetricKey;
   readonly target: number;
+  /** Zusatz hinter „x von y“, z. B. „geteilt“ (Erfolge.dc.html: „1 von 3 geteilt“). */
+  readonly unit?: string;
   /** Satz für die Feier. */
   readonly text: string;
 }
@@ -23,8 +25,8 @@ export interface MilestoneDef {
 export type Metrics = Readonly<Record<MetricKey, number>>;
 
 /**
- * Reihenfolge wie in Erfolge.dc.html. „Teamplayer“ (geteilt) kommt mit dem Teilen in M10 und M11;
- * bis dahin gibt es keine Kennzahl dafür, und „30 Tage am Stück“ steht an seiner Stelle.
+ * Reihenfolge wie in Erfolge.dc.html. „Teamplayer“ zählt geteilte Stapel (M10: Ereignis `shared`);
+ * „30 Tage am Stück“, das bis M9 an seiner Stelle stand, entfällt (A66, A72).
  */
 export const MILESTONES: readonly MilestoneDef[] = [
   {
@@ -68,16 +70,17 @@ export const MILESTONES: readonly MilestoneDef[] = [
     text: '1.000 Wiederholungen. Das Wissen sitzt.',
   },
   {
-    id: 'serie-30',
-    name: '30 Tage am Stück',
-    icon: 'cal',
-    metric: 'streak',
-    target: 30,
-    text: '30 Tage in Folge. Das ist eine Gewohnheit.',
+    id: 'teamplayer',
+    name: 'Teamplayer',
+    icon: 'share',
+    metric: 'shared',
+    target: 3,
+    unit: 'geteilt',
+    text: '3 Stapel geteilt. Gemeinsam lernt es sich leichter.',
   },
 ];
 
-export const NO_METRICS: Metrics = { created: 0, reviews: 0, schemas: 0, streak: 0 };
+export const NO_METRICS: Metrics = { created: 0, reviews: 0, schemas: 0, streak: 0, shared: 0 };
 
 /** Die Meilensteine, die bei diesen Kennzahlen erreicht sind und noch nicht freigeschaltet wurden. */
 export function newlyReached(
@@ -122,7 +125,9 @@ export function badges(
       name: def.name,
       text: def.text,
       icon: def.icon,
-      sub: done ? 'geschafft' : `${groupDigits(value)} von ${groupDigits(def.target)}`,
+      sub: done
+        ? 'geschafft'
+        : `${groupDigits(value)} von ${groupDigits(def.target)}${def.unit ? ` ${def.unit}` : ''}`,
       fraction: done ? 1 : Math.max(0, Math.min(1, value / def.target)),
       done,
       fresh: unlock !== undefined && !unlock.seen,

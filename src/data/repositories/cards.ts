@@ -46,7 +46,10 @@ export async function updateCard(
   return db.transaction('rw', db.cards, db.reviewItems, async () => {
     const current = await db.cards.get(id);
     if (!current) return null;
-    const card = buildCard(id, input.deckId, input.fields, current.createdAt, now);
+    const built = buildCard(id, input.deckId, input.fields, current.createdAt, now);
+    // Der gemeinsame Stand mit dem Absender bleibt stehen, sonst gälte jede Karte als „neu“ (ADR-014).
+    const card: Card =
+      current.originHash === undefined ? built : { ...built, originHash: current.originHash };
     await db.cards.put(card);
     const have = await db.reviewItems.where('cardId').equals(id).toArray();
     const want = buildItems(card, now);

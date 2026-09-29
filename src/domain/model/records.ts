@@ -2,7 +2,7 @@
  * Gespeicherte Datensätze (IndexedDB über Dexie, src/data/). Die zod-Schemas sind die einzige
  * Quelle der Typen und prüfen Datensätze beim Einspielen eines Backups.
  *
- * Stand M9: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog,
+ * Stand M10: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog,
  * Ereignisse, Medien, Fristen, Tagesaggregate und Meilensteine. Die übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen
  * dazu, jeweils mit Schema und Migration. Zeitpunkte sind Millisekunden seit 1970 (UTC).
  */
@@ -55,6 +55,8 @@ export const metaEntrySchema = z.discriminatedUnion('key', [
   z.strictObject({ key: z.literal('learning'), value: learningSettingsSchema }),
   /** Tagesziele und Pausentag (M9); fehlt der Eintrag, gelten die Voreinstellungen. */
   z.strictObject({ key: z.literal('goals'), value: goalsSchema }),
+  /** Erfolgs-Snapshot in `.juri`-Dateien mitschicken (M10, A9); fehlt der Eintrag, gilt „ja“. */
+  z.strictObject({ key: z.literal('shareAchievements'), value: z.boolean() }),
 ]);
 
 export type MetaEntry = z.infer<typeof metaEntrySchema>;
@@ -70,14 +72,14 @@ export const DEVICE_META_KEYS: readonly MetaKey[] = ['lastBackupAt', 'newCardsSi
 const id = z.string().min(1).max(80);
 
 /** Einzeiliger Text ohne Leerraum am Rand. */
-const singleLine = (max: number) =>
+export const singleLine = (max: number) =>
   z
     .string()
     .min(1)
     .max(max)
     .regex(/^\S(?:.*\S)?$/u);
 /** Wie `singleLine`, darf aber leer sein. */
-const optionalLine = (max: number) =>
+export const optionalLine = (max: number) =>
   z
     .string()
     .max(max)
@@ -138,6 +140,14 @@ const cardBase = {
   note: z.string().min(1).max(2000).optional(),
   /** Herkunft, z. B. „Skript Sachenrecht.pdf, S. 14“ (M6). */
   source: sourceSchema.optional(),
+  /**
+   * Inhalts-Hash der Karte beim letzten Teilen oder Importieren (M10, ADR-014): der gemeinsame
+   * Stand mit dem Absender. Vergleich mit dem heutigen Hash zeigt, wer seitdem geändert hat.
+   */
+  originHash: z
+    .string()
+    .regex(/^[0-9a-f]{16}$/)
+    .optional(),
   createdAt: millis,
   updatedAt: millis,
 };
@@ -319,6 +329,25 @@ export const eventSchema = z.discriminatedUnion('type', [
     type: z.literal('cardCreated'),
     cardId: id,
     deckId: id,
+  }),
+  /**
+   * Karte aus einer `.juri`-Datei übernommen (M10). Zählt nicht als „angelegt“ (Tagesziel), macht
+   * aber sichtbar, dass die Karte einmal da war: Fehlt sie später, wurde sie lokal gelöscht.
+   */
+  z.strictObject({
+    seq: z.number().int().positive(),
+    at: millis,
+    type: z.literal('cardImported'),
+    cardId: id,
+    deckId: id,
+  }),
+  /** Stapel als `.juri`-Datei weitergegeben (M10); Kennzahl des Meilensteins „Teamplayer“. */
+  z.strictObject({
+    seq: z.number().int().positive(),
+    at: millis,
+    type: z.literal('shared'),
+    deckIds: z.array(id).min(1).max(50),
+    cards: z.number().int().nonnegative(),
   }),
   /** Eine Abfrage wurde bewertet (M4); Grundlage für Tagesziel und Statistik (M9). */
   z.strictObject({

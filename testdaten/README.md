@@ -24,7 +24,7 @@ Alle 40 Karten stehen auf `pruefung: offen`. Die Texte sind ohne Abgleich mit de
 
 Das Demo-Profil bringt seit M8 drei Fristen mit (Klausur in 5 Tagen im Endspurt, LL.M.-Modul in 109 Tagen über den Tag „Demo“, Examen ohne Datum), relativ zum Ladetag.
 
-Seit M9 hat es außerdem 26 Wochen Lernverlauf (relativ zum Ladetag): einen Rekordtag vor acht Tagen mit 86 Wiederholungen, in den letzten drei Wochen jeden Tag aktiv bis auf einen Pausentag pro Woche (laufende Serie), davor Lücken, dazu die Meilensteine „Erste Karte“, „7 Tage am Stück“ und „1.000 Wiederholungen“ (der letzte wartet auf die Feier; beim Öffnen von Erfolge erscheint sie) sowie drei fast erreichte („100 angelegt“, „Schema-Baumeister“, „30 Tage am Stück“). Heute zeigt „6 von 24“.
+Seit M9 hat es außerdem 26 Wochen Lernverlauf (relativ zum Ladetag): einen Rekordtag vor acht Tagen mit 86 Wiederholungen, in den letzten drei Wochen jeden Tag aktiv bis auf einen Pausentag pro Woche (laufende Serie), davor Lücken, dazu die Meilensteine „Erste Karte“, „7 Tage am Stück“ und „1.000 Wiederholungen“ (der letzte wartet auf die Feier; beim Öffnen von Erfolge erscheint sie) sowie drei fast erreichte („100 angelegt“, „Schema-Baumeister“, „Teamplayer“ mit 0 von 3). Heute zeigt „6 von 24“.
 
 Nur in der Testinstanz: Einstellungen, Testdaten, „Demo-Stapel hinzufügen“ (fügt hinzu, ohne vorhandene Daten zu ändern) oder „Demo-Profil laden“ (ersetzt alles). Einzeln löschbar über den Stapel selbst.
 
@@ -33,3 +33,11 @@ Nur in der Testinstanz: Einstellungen, Testdaten, „Demo-Stapel hinzufügen“ 
 `demo-skript.pdf` hat 50 Seiten (A4, eingebettete Schriften, markierbarer Text). Seite 14 enthält den Satz aus dem Design (§ 932 II BGB: „Der Erwerber ist nicht in gutem Glauben, wenn ihm bekannt oder infolge grober Fahrlässigkeit unbekannt ist, dass die Sache nicht dem Veräußerer gehört.“). Er ist **nicht mit gesetze-im-internet.de abgeglichen** (die Umgebung sperrt die Adresse) und gilt wie die Demo-Stapel als ungeprüft. Alle anderen Seiten sind Platzhalter.
 
 Laden: Einstellungen, Testdaten, „Demo-Skript (PDF) hinzufügen“ (nur Testinstanz). Es entsteht der Stapel „Demo-Skript Sachenrecht“ im Rechtsgebiet ZR mit einer Frage (Herkunft: Seite 14) und einer Abdeckung mit drei Feldern auf Seite 14. Ein zweites Laden legt nichts doppelt an. Neu erzeugen: `PW_CHROMIUM_PATH=… npm run demo:pdf`.
+
+## Demo-Datei zum Import (M10)
+
+`demo-amtshaftung.juri` ist eine echte `.juri`-Datei (ZIP, Format in docs/adr/003 und 014) mit den Stapeln „Amtshaftung (Demo)“ und „Prüfungsschemata (Demo)“ (13 Karten), zwei Notizen („Meine Merkhilfe …“, mit Schalter mitgeschickt), einem Schaubild als Abdeckung mit zwei Feldern, dem Demo-Skript (`demo-skript.pdf`) als Herkunft der Abdeckung und Verknüpfungen von Schemas auf Karten. Absender „Mara“, dazu ein Erfolgs-Snapshot. Verknüpfungen auf Karten anderer Demo-Stapel fehlen absichtlich (sie liegen nicht in der Datei). Die Inhalte sind wie die Demo-Stapel fachlich **ungeprüft**.
+
+- **Ohne zweites Gerät:** Einstellungen, Testdaten, „Demo-Datei (.juri) vorbereiten“, dann „teilen“ und in „Dateien“ sichern; danach unter Teilen „Datei öffnen“. Am Rechner lädt der Knopf die Datei herunter.
+- **Aus dem Repository:** Die Datei liegt hier und lässt sich direkt in jede Instanz importieren.
+- **Neu erzeugen:** `npm run demo:juri` (schreibt die Datei; ein Test verlangt, dass sie dem Erzeuger in `src/demo/demoJuri.ts` entspricht, deterministisch).
