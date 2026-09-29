@@ -32,14 +32,17 @@ function Pager({
   page,
   pages,
   onPage,
+  compact = false,
 }: {
   page: number;
   pages: number;
   onPage: (page: number) => void;
+  /** Kleine Leiste über der Seite (iPad), sonst die große unter der Seite (iPhone). */
+  compact?: boolean;
 }) {
   const [editing, setEditing] = useState(false);
   return (
-    <div className={styles.pager}>
+    <div className={cx(styles.pager, compact && styles.pagerCompact)}>
       <button
         type="button"
         className={styles.pagerButton}
@@ -157,28 +160,7 @@ export function PdfPane({
           <>
             <span className={styles.padHint}>{hint}</span>
             <div className={styles.padPager} data-addition="">
-              <button
-                type="button"
-                className={styles.padPagerButton}
-                aria-label="Vorige Seite"
-                disabled={page <= 1}
-                onClick={() => {
-                  onPage(page - 1);
-                }}
-              >
-                <ChevronLeftIcon size={20} strokeWidth={2.2} />
-              </button>
-              <button
-                type="button"
-                className={styles.padPagerButton}
-                aria-label="Nächste Seite"
-                disabled={page >= pages}
-                onClick={() => {
-                  onPage(page + 1);
-                }}
-              >
-                <ChevronRightIcon size={20} strokeWidth={2.2} />
-              </button>
+              <Pager page={page} pages={pages} onPage={onPage} compact />
             </div>
           </>
         )}

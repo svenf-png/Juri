@@ -407,3 +407,131 @@ test.describe('PDF', () => {
     ).toBeVisible();
   });
 });
+
+test.describe('PDF neben dem Formular (iPad quer)', () => {
+  test.beforeEach(async ({ page }) => {
+    await asInstalledApp(page);
+    const size = page.viewportSize();
+    test.skip((size?.width ?? 0) < 1100, 'geteilte Ansicht ab 1100 px');
+  });
+
+  test('Markierung übernehmen, Speichern & nächste aus PDF, Seite abdecken', async ({ page }) => {
+    await onboard(page);
+    await seedDeck(page);
+    await page.goto('/Juri/neu');
+    const [chooser] = await Promise.all([
+      page.waitForEvent('filechooser'),
+      page.getByRole('button', { name: 'PDF', exact: true }).click(),
+    ]);
+    await chooser.setFiles({
+      name: 'Demo-Skript Sachenrecht.pdf',
+      mimeType: 'application/pdf',
+      buffer: DEMO_PDF,
+    });
+
+    // PDF links, Formular rechts.
+    await expect(page.getByRole('heading', { name: 'Neue Karte', level: 1 })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'PDF' })).toBeVisible();
+    await expect(page.getByText('0 von 5 heute')).toBeVisible();
+    await page.getByRole('button', { name: /Seite wählen/ }).click();
+    await page.getByRole('textbox', { name: /Seite, 1 bis 50/ }).fill('14');
+    await page.keyboard.press('Enter');
+    await expect(
+      page.locator('[data-page="14"] span', { hasText: /Der Erwerber ist nicht/ }).first(),
+    ).toBeVisible({ timeout: 15_000 });
+
+    await page.evaluate(() => {
+      const layer = document.querySelector('[data-page="14"]')!;
+      const spans = [...layer.querySelectorAll('span')].filter((s) => s.textContent.trim() !== '');
+      const start = spans.find((s) => s.textContent.includes('Der Erwerber ist nicht'))!;
+      const end = spans.find((s) => s.textContent.includes('§ 932 II BGB'))!;
+      const range = document.createRange();
+      range.setStart(start.firstChild!, 0);
+      range.setEnd(end.firstChild!, end.textContent.length);
+      const sel = document.getSelection();
+      if (!sel) throw new Error('Keine Auswahl');
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+    await page
+      .getByRole('toolbar', { name: 'Markierung übernehmen' })
+      .getByRole('button', { name: 'Als Antwort' })
+      .click();
+    await expect(page.getByText('aus PDF übernommen')).toBeVisible();
+    await expect(page.getByLabel('Rückseite')).toHaveValue(
+      /^Der Erwerber ist nicht in gutem Glauben/,
+    );
+    await expect(page.getByText('PDF S. 14')).toBeVisible();
+    await page.getByLabel('Vorderseite').fill('Wann ist der Erwerber bösgläubig?');
+    await page.getByRole('button', { name: 'Speichern & nächste aus PDF' }).click();
+    await expect(page.getByText('1 von 5 heute')).toBeVisible();
+    // Das PDF bleibt offen, das Formular ist leer.
+    await expect(page.getByRole('region', { name: 'PDF' })).toBeVisible();
+    await expect(page.getByLabel('Vorderseite')).toHaveValue('');
+
+    // Abdecken: die Seite als Bild, ein Feld aufziehen, speichern.
+    await page.getByRole('button', { name: 'Abdecken' }).click();
+    await expect(page.getByText('Noch keine Felder')).toBeVisible({ timeout: 15_000 });
+    await drawField(page, 'PDF-Seite, Felder aufziehen', [0.1, 0.3], [0.6, 0.4]);
+    await expect(page.getByText('1 Feld auf S. 14')).toBeVisible();
+    await page.getByRole('button', { name: 'Speichern & nächste aus PDF' }).click();
+    await expect(page.getByText('2 von 5 heute')).toBeVisible();
+    expect(await mediaCount(page)).toBe(2);
+
+    // „Speichern“ legt die Karte an und verlässt den Bildschirm.
+    await page.getByRole('button', { name: 'Text', exact: true }).click();
+    await page.getByLabel('Vorderseite').fill('Dritte Karte');
+    await page.getByLabel('Rückseite').fill('Antwort');
+    await page.getByRole('button', { name: 'Speichern', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Neue Karte', level: 1 })).toBeHidden();
+  });
+});
+
+test.describe('PDF-Ansicht: Blättern durch 50 Seiten', () => {
+  test.beforeEach(async ({ page }) => {
+    await asInstalledApp(page);
+    const size = page.viewportSize();
+    test.skip((size?.width ?? 0) >= 768, 'Ablauf des iPhone-Layouts');
+  });
+
+  test('jede Seite wird gezeichnet, es steht nur eine Zeichenfläche im Speicher', async ({
+    page,
+  }) => {
+    await onboard(page);
+    await seedDeck(page);
+    await page.goto('/Juri/neu');
+    const [chooser] = await Promise.all([
+      page.waitForEvent('filechooser'),
+      page.getByRole('button', { name: 'PDF', exact: true }).click(),
+    ]);
+    await chooser.setFiles({
+      name: 'Demo-Skript.pdf',
+      mimeType: 'application/pdf',
+      buffer: DEMO_PDF,
+    });
+    const started = Date.now();
+    for (let n = 1; n <= 50; n++) {
+      await expect(
+        page.locator(`[data-page="${String(n)}"] span`, { hasText: `Seite ${String(n)} von 50` }),
+      ).toBeVisible({
+        timeout: 15_000,
+      });
+      // Nur die angezeigte Seite hat eine Zeichenfläche, sie bleibt unter der Pixelgrenze (12 Mio.).
+      const canvases = await page
+        .locator('[data-page] canvas')
+        .evaluateAll((all) =>
+          all.map((c) => (c as HTMLCanvasElement).width * (c as HTMLCanvasElement).height),
+        );
+      expect(canvases).toHaveLength(1);
+      expect(canvases[0]).toBeGreaterThan(0);
+      expect(canvases[0]).toBeLessThanOrEqual(12_000_000);
+      if (n < 50) await page.getByRole('button', { name: 'Nächste Seite' }).click();
+    }
+    const seconds = (Date.now() - started) / 1000;
+    console.log(
+      `50 Seiten in ${seconds.toFixed(1)} s (Chromium ohne GPU, ${String(page.viewportSize()?.width)} px)`,
+    );
+    // Grobe Obergrenze, damit ein Rückschritt auffällt (gemessen wird auf dem Gerät, siehe Testliste).
+    expect(seconds).toBeLessThan(90);
+  });
+});
