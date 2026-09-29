@@ -250,7 +250,7 @@ describe('Backup mit Medien', () => {
 describe('Version 5 (M6)', () => {
   it('hebt eine Datenbank aus M5 an: Karten bleiben, Medien sind leer', async () => {
     const { db, reopen } = testDb(MIGRATIONS.slice(0, 4));
-    await db.cards.add({
+    const qa = {
       id: 'q',
       deckId: 'd',
       type: 'qa' as const,
@@ -260,7 +260,8 @@ describe('Version 5 (M6)', () => {
       tags: [],
       createdAt: 1,
       updatedAt: 1,
-    });
+    };
+    await db.cards.add(qa);
     db.close();
     const upgraded = reopen(MIGRATIONS);
     expect(await upgraded.cards.count()).toBe(1);
