@@ -172,7 +172,12 @@ test.describe('Schema', () => {
 
     // Ausrücken bringt „Drittbezogenheit“ wieder auf Ebene 1.
     await page.getByRole('button', { name: 'Ausrücken' }).click();
-    await expect(page.getByRole('button', { name: /^3\. Drittbezogenheit/ })).toBeVisible();
+    const point = page.getByRole('button', { name: /^3\. Drittbezogenheit/ });
+    await expect(point).toBeVisible();
+    // Der Rahmen der gewählten Zeile (2 px) schneidet die Nummer nicht an.
+    const row = await point.locator('xpath=..').boundingBox();
+    const number = await point.locator('span').first().boundingBox();
+    expect(number!.x).toBeGreaterThanOrEqual(row!.x + 2);
     // Nach oben verschieben (Punkt-Sheet, zweites Antippen).
     await page.getByRole('button', { name: /^3\. Drittbezogenheit, bearbeiten/ }).click();
     await page.getByRole('dialog').getByRole('button', { name: 'Nach oben' }).click();

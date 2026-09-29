@@ -151,6 +151,15 @@ test.describe('Stapel und Karten', () => {
     await expect(page.getByLabel('Vorderseite')).toHaveValue('');
   });
 
+  test('die Kartenliste zeigt, wann eine Karte dran ist', async ({ page }) => {
+    await onboard(page);
+    await createDeck(page);
+    await createQuestion(page, 'Was ist Gewahrsam?', 'Sachherrschaft.');
+    await page.getByRole('button', { name: 'Schließen' }).click();
+    // Neu und innerhalb des Tageslimits: heute dran.
+    await expect(visible(page.getByText('Neu, heute dran'))).toBeVisible();
+  });
+
   test('Karte bearbeiten und löschen', async ({ page }) => {
     await onboard(page);
     await createDeck(page);

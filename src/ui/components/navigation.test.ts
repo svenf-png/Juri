@@ -9,7 +9,7 @@ describe('navKeyFor', () => {
     ['/fristen', 'fristen'],
     ['/teilen', 'teilen'],
     ['/einstellungen/lernrhythmus', 'rhythmus'],
-    ['/einstellungen', null],
+    ['/einstellungen', 'einstellungen'],
     ['/stapel/zr-1', 'stapel'],
     ['/lernen', null],
     ['/styleguide/heute', null],
@@ -28,6 +28,7 @@ describe('Navigation', () => {
       'Fristen',
       'Teilen',
       'Lernrhythmus',
+      'Einstellungen',
     ]);
   });
 });

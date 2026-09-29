@@ -10,7 +10,7 @@ Format: laufende Nummer, Titel, Umgebung, Beschreibung, erwartetes Verhalten, St
 - **Beschreibung:** In der Sidebar gibt es keinen Eintrag für die Einstellungen. Der Bereich „Lernrhythmus“ ist direkt verlinkt, die Einstellungsübersicht erreicht man nur, indem man auf `/einstellungen/lernrhythmus` den Zurück-Link „Einstellungen“ anklickt.
 - **Erwartet:** Ein Link zu den Einstellungen in der Sidebar (Desktop), passend zum Design.
 - **Betroffene Stellen:** Sidebar in `AppShell`, Route `/einstellungen` in `src/app/router.tsx`, `src/ui/screens/einstellungen/Einstellungen.tsx`
-- **Status:** offen
+- **Status:** behoben (Branch `fix/bugs-faelligkeit`): Sidebar-Eintrag „Einstellungen“ ab 768 px, als Ergänzung zum Design (`data-addition`)
 
 ## B2: Schema-Editor: Nummer der aktiven Zeile wird vom Rahmen abgeschnitten
 
@@ -18,4 +18,4 @@ Format: laufende Nummer, Titel, Umgebung, Beschreibung, erwartetes Verhalten, St
 - **Beschreibung:** Ist ein Punkt aktiv (Rahmen mit „verknüpfen“-Knopf), wird die Nummer am linken Rand („3.“) vom Rahmen überdeckt bzw. angeschnitten. Bei den inaktiven Zeilen („1.“, „2.“) ist die Nummer vollständig lesbar.
 - **Erwartet:** Nummer bleibt vollständig sichtbar, der Rahmen liegt mit Abstand um die ganze Zeile.
 - **Betroffene Stellen:** Zeile im Schema-Editor, `src/ui/screens/erstellen/SchemaEditor.tsx`, Vorschauen unter `/styleguide/schema/<Variante>`
-- **Status:** offen
+- **Status:** behoben (Branch `fix/bugs-faelligkeit`): gewählte Zeile der obersten Ebene bekommt innen 10 px Luft, außen `margin-left: -10px`

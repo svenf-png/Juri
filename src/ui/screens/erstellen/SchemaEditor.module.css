@@ -123,6 +123,16 @@
   box-shadow: inset 0 0 0 2px var(--violet);
 }
 
+/*
+ * Oberste Ebene: Der Rahmen (2 px) darf die Nummer nicht anschneiden. Innen 10 px Luft, außen
+ * 10 px in den Rand, damit Nummer und Text an derselben Stelle stehen wie in den anderen Zeilen.
+ * Unterpunkte haben im Design schon 30 px Einzug (SchemaEditor.dc.html).
+ */
+.rowOn:not(.rowNested) {
+  margin-left: -10px;
+  padding-left: 10px;
+}
+
 .main {
   flex: 1;
   min-width: 0;

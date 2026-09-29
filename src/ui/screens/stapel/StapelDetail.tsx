@@ -193,6 +193,11 @@ export function StapelDetail({
               <Link key={c.id} to={`/karte/${c.id}`} className={cx(styles.cardRow, tap.tap)}>
                 <span className={styles.typeChip}>{c.type}</span>
                 <span className={styles.cardTitle}>{c.title}</span>
+                {c.due !== undefined ? (
+                  <span className={styles.cardDue} data-addition>
+                    {c.due}
+                  </span>
+                ) : null}
               </Link>
             ))
           )}
@@ -275,6 +280,11 @@ export function StapelDetail({
                   <span className={styles.tileNorm}>{c.norm}</span>
                 </span>
                 <span className={styles.tileTitle}>{c.title}</span>
+                {c.due !== undefined ? (
+                  <span className={styles.tileDue} data-addition>
+                    {c.due}
+                  </span>
+                ) : null}
               </Link>
             ))}
           </div>
