@@ -114,7 +114,7 @@ export default defineConfig(({ mode, command }) => {
         },
         workbox: {
           cacheId: instance.cacheId,
-          globPatterns: ['**/*.{js,css,html,woff2,png,svg,webmanifest,txt}'],
+          globPatterns: ['**/*.{js,mjs,css,html,woff2,png,svg,webmanifest,txt}'],
           globIgnores: ['test/**', '404.html', '**/*.map'],
           navigateFallback: `${instance.base}index.html`,
           navigateFallbackDenylist: navigateFallbackDenylist(instance),

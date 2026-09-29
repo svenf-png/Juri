@@ -3,14 +3,16 @@
  * Regeln aus domain/ (checkCard, checkDeck, checkArea) und ruft dann diese Funktionen auf.
  */
 import type { CardFields } from '@/domain/cards/card';
+import type { MediaRecord } from '@/domain/model/records';
 import { newId } from '@/platform/id';
 import { createArea, deleteArea, updateArea } from '@/data/repositories/areas';
 import { createCard, deleteCard, updateCard } from '@/data/repositories/cards';
 import { createDeck, deleteDeck, toggleDeckArea, updateDeck } from '@/data/repositories/decks';
 import { database } from '../app/database';
 
-export function addCard(deckId: string, fields: CardFields) {
-  return createCard(database(), { id: newId(), deckId, fields }, Date.now());
+/** `media`: neue Bilder oder PDFs, auf die die Karte zeigt; sie werden mit ihr gespeichert. */
+export function addCard(deckId: string, fields: CardFields, media: readonly MediaRecord[] = []) {
+  return createCard(database(), { id: newId(), deckId, fields, media }, Date.now());
 }
 
 export function changeCard(id: string, deckId: string, fields: CardFields) {
