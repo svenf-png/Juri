@@ -1,5 +1,5 @@
 import { useRegisterSW } from 'virtual:pwa-register/react';
-import { startUpdateChecks } from '@/platform/updateCheck';
+import { shouldPromptForUpdate, startUpdateChecks } from '@/platform/updateCheck';
 import { Button } from './Button';
 import { Toast } from './Toast';
 
@@ -19,7 +19,8 @@ export function UpdatePrompt() {
     },
   });
 
-  if (!needRefresh) return null;
+  const controlled = 'serviceWorker' in navigator && navigator.serviceWorker.controller !== null;
+  if (!shouldPromptForUpdate(needRefresh, controlled)) return null;
   return (
     <Toast title="Neue Version verfügbar" sub="Deine Daten bleiben erhalten.">
       <Button variant="ghost" size="sm" onClick={() => setNeedRefresh(false)}>

@@ -1,5 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
-import { startUpdateChecks, UPDATE_CHECK_MIN_GAP_MS, type VisibilitySource } from './updateCheck';
+import {
+  canUpdate,
+  shouldPromptForUpdate,
+  startUpdateChecks,
+  UPDATE_CHECK_MIN_GAP_MS,
+  type VisibilitySource,
+} from './updateCheck';
 
 function setup() {
   let listener: (() => void) | undefined;
@@ -11,7 +17,7 @@ function setup() {
   };
   const update = vi.fn(() => Promise.resolve());
   let time = 1_000_000;
-  startUpdateChecks({ update }, doc, () => time);
+  startUpdateChecks({ update, active: {} }, doc, () => time);
   return {
     update,
     doc,
@@ -59,7 +65,7 @@ describe('startUpdateChecks', () => {
     const unhandled = vi.fn();
     process.on('unhandledRejection', unhandled);
     startUpdateChecks(
-      { update },
+      { update, active: {} },
       {
         visibilityState: 'visible',
         addEventListener: (_t, l) => {
@@ -73,5 +79,31 @@ describe('startUpdateChecks', () => {
     process.off('unhandledRejection', unhandled);
     expect(unhandled).not.toHaveBeenCalled();
     expect(update).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('erste Installation', () => {
+  const doc: VisibilitySource = { visibilityState: 'visible', addEventListener: () => undefined };
+
+  it('fragt nicht nach, solange noch kein Worker aktiv ist oder einer installiert wird', () => {
+    const update = vi.fn(() => Promise.resolve());
+    startUpdateChecks({ update, installing: {} }, doc, () => 0);
+    startUpdateChecks({ update, installing: {}, active: {} }, doc, () => 0);
+    startUpdateChecks({ update }, doc, () => 0);
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it('canUpdate: nur mit aktivem Worker und ohne laufende Installation', () => {
+    const update = () => Promise.resolve();
+    expect(canUpdate({ update, active: {} })).toBe(true);
+    expect(canUpdate({ update, active: {}, installing: {} })).toBe(false);
+    expect(canUpdate({ update, installing: {} })).toBe(false);
+    expect(canUpdate({ update })).toBe(false);
+  });
+
+  it('der Hinweis erscheint nur für eine gesteuerte Seite', () => {
+    expect(shouldPromptForUpdate(true, true)).toBe(true);
+    expect(shouldPromptForUpdate(true, false)).toBe(false);
+    expect(shouldPromptForUpdate(false, true)).toBe(false);
   });
 });

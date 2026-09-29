@@ -10,6 +10,28 @@ export const UPDATE_CHECK_MIN_GAP_MS = 60_000;
 
 export interface UpdatableRegistration {
   update(): Promise<unknown>;
+  /** Worker, der gerade installiert wird (fehlt bei Fremdobjekten in Tests). */
+  readonly installing?: unknown;
+  /** Worker, der die Seiten gerade bedient. */
+  readonly active?: unknown;
+}
+
+/**
+ * Gibt es schon eine Version, die aktualisiert werden kann? Bei der ersten Installation nicht:
+ * Dort ruft jede neu geladene Seite sofort `update()` auf, und Firefox macht während der
+ * Installation daraus einen zweiten Worker, der „Neue Version verfügbar“ meldet, obwohl es die
+ * erste Version ist (in der CI beobachtet, M7).
+ */
+export function canUpdate(registration: UpdatableRegistration): boolean {
+  return registration.active != null && registration.installing == null;
+}
+
+/**
+ * Zeigt Juri den Hinweis? Nur, wenn eine ältere Version diese Seite bedient (`controlled`).
+ * Eine Seite ohne Worker hat nichts zu aktualisieren.
+ */
+export function shouldPromptForUpdate(needRefresh: boolean, controlled: boolean): boolean {
+  return needRefresh && controlled;
 }
 
 export interface VisibilitySource {
@@ -27,10 +49,10 @@ export function startUpdateChecks(
   const ask = () => {
     registration.update().catch(() => undefined);
   };
-  ask();
+  if (canUpdate(registration)) ask();
   doc.addEventListener('visibilitychange', () => {
     if (doc.visibilityState !== 'visible' || now() - last < UPDATE_CHECK_MIN_GAP_MS) return;
     last = now();
-    ask();
+    if (canUpdate(registration)) ask();
   });
 }
