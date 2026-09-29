@@ -1,4 +1,7 @@
 import type { BackupRecord, BackupTables } from '@/domain/backup/codec';
+import { DEFAULT_GOALS } from '@/domain/progress/goals';
+import { dayRows } from '@/domain/progress/rows';
+import type { StatEvent } from '@/domain/progress/stats';
 
 export interface Migration {
   /** Fortlaufend ab 1. */
@@ -10,6 +13,15 @@ export interface Migration {
    * genauso für Backups aus älteren Versionen (migrateTables).
    */
   upgrade?: Readonly<Record<string, (record: BackupRecord) => BackupRecord>>;
+  /**
+   * Füllt neue Tabellen aus vorhandenen Datensätzen (z. B. Aggregate aus dem Ereignis-Log). Gilt
+   * ebenfalls für die Datenbank und für Backups aus älteren Versionen. `reads` sind die Tabellen,
+   * die `build` bekommt (nach den `upgrade`-Umformungen).
+   */
+  derive?: {
+    readonly reads: readonly string[];
+    readonly build: (tables: Readonly<Record<string, BackupRecord[]>>) => BackupTables;
+  };
 }
 
 /**
@@ -64,6 +76,22 @@ export const MIGRATIONS: readonly Migration[] = [
     version: 6,
     stores: { deadlines: 'id' },
   },
+  {
+    // M9: Tagesaggregate (ein Datensatz je Lerntag mit Aktivität, Schlüssel „JJJJ-MM-TT“) und
+    // freigeschaltete Meilensteine (ADR-013). Die Aggregate werden einmalig aus dem Ereignis-Log
+    // aufgebaut; danach schreibt jede Bewertung und jede neue Karte sie in derselben Transaktion.
+    version: 7,
+    stores: { dayStats: 'day', milestones: 'id' },
+    derive: {
+      reads: ['events'],
+      build: (tables) => ({
+        dayStats: dayRows(
+          (tables.events ?? []) as unknown as StatEvent[],
+          DEFAULT_GOALS,
+        ) as unknown as BackupRecord[],
+      }),
+    },
+  },
 ];
 
 export function schemaVersion(migrations: readonly Migration[] = MIGRATIONS): number {
@@ -102,6 +130,12 @@ export function migrateTables(
     for (const [name, upgrade] of Object.entries(migration.upgrade ?? {})) {
       const records = result.get(name);
       if (records) result.set(name, records.map(upgrade));
+    }
+    if (migration.derive) {
+      const reads = Object.fromEntries(migration.derive.reads.map((n) => [n, result.get(n) ?? []]));
+      for (const [name, records] of Object.entries(migration.derive.build(reads))) {
+        if (!result.has(name)) result.set(name, records);
+      }
     }
   }
   return Object.fromEntries(result);

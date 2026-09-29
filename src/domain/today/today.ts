@@ -8,6 +8,7 @@
  */
 import { addDays, daysBetween, dayKey, parseDayKey, type Day } from '../calendar/day';
 import { countdown, longDate, relativeDays, shortDate, weekdayShort } from '../format/date';
+import type { Level } from '../progress/levels';
 
 /** Tagesziel, bis M9 es einstellbar macht (Main.dc.html: 24). */
 export const DEFAULT_DAILY_GOAL = 24;
@@ -18,8 +19,7 @@ export const DEADLINES_SHOWN = 2;
 /** Tage in „Letzte 7 Tage“. */
 export const WEEK_DAYS = 7;
 
-/** Aktivitätsstufe eines Tages, 0 = nichts gelernt (Heatmap-Stufen, System.dc.html). */
-export type Level = 0 | 1 | 2 | 3 | 4;
+export type { Level };
 
 export interface AreaDue {
   readonly id: string;

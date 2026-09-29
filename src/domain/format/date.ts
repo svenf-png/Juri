@@ -5,7 +5,7 @@
 import { daysBetween, weekday, type Day } from '../calendar/day';
 
 const WEEKDAYS = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-const MONTHS = [
+export const MONTH_NAMES = [
   'Januar',
   'Februar',
   'März',
@@ -27,7 +27,7 @@ export function weekdayShort(d: Day): string {
 
 /** „Montag, 28. September“ (Main.dc.html, Kopfzeile). */
 export function longDate(d: Day): string {
-  return `${WEEKDAYS[weekday(d)] ?? ''}, ${d.day}. ${MONTHS[d.month - 1] ?? ''}`;
+  return `${WEEKDAYS[weekday(d)] ?? ''}, ${d.day}. ${MONTH_NAMES[d.month - 1] ?? ''}`;
 }
 
 /** „Fr, 9.10.“, in einem anderen Jahr als `today` mit Jahr: „Fr, 15.1.2027“ (iPadHeute). */
