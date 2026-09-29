@@ -106,6 +106,18 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Einstellungen, Testdaten, 
 11. **Offline:** Flugmodus, Juri öffnen, das PDF und eine Abdeckung ansehen: Beides funktioniert (der PDF-Worker steckt im Zwischenspeicher der App).
 12. **Speicher:** Einstellungen, Speicher: Der belegte Platz wächst mit dem PDF und schrumpft, wenn die letzte Karte darauf gelöscht ist.
 
+## M7: Browser-Version (Desktop, pro Browser)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Fenster etwa 1440 × 900. Prüfen in Chrome (oder Edge), Safari auf dem Mac und Firefox.
+
+1. **Kein Sperrbild:** Die Adresse öffnen: Juri zeigt das Onboarding, nicht die Install-Anleitung. `/installieren` führt zurück zur Startseite.
+2. **Abläufe:** Demo-Profil laden, dann Heute, Stapel, Neue Karte (alle vier Typen), Lernen, PDF, Einstellungen durchgehen. Notieren: Ist irgendwo etwas abgeschnitten oder verrutscht?
+3. **Backup:** „Backup erstellen“, „Herunterladen“: Die Datei landet im Download-Ordner, es öffnet sich kein Teilen-Fenster. Anderen Namen im Profil setzen, „Backup einspielen“, Datei wählen: Der alte Stand ist zurück.
+4. **Kürzel:** „n“ öffnet die neue Karte, „/“ die Suche der Stapel, im Feld tippen ändert nichts. Strg (Mac: Cmd) + Eingabe speichert die Karte. Lernen: Leertaste, 1 bis 4, Pfeile, Strg/Cmd + Z, Esc.
+5. **PDF und Zoom:** Demo-Skript öffnen. Strg + Mausrad zoomt um den Mauszeiger. Trackpad-Zwicken zoomt (Chrome, Firefox; in **Safari auf dem Mac** eigens prüfen, dort läuft es über `gesturechange`). Firefox: Ein Schritt des Mausrads (3 Zeilen) zoomt nicht sprunghaft. „+“, „−“, „0“ und Bild auf/ab funktionieren.
+6. **Desktop-PWA:** Chrome: Symbol „Installieren“ in der Adressleiste, Juri als App öffnen. Notieren: Sind die Daten aus dem Tab da (gleicher Speicher) oder leer? Safari ab macOS 14: „Zum Dock hinzufügen“, gleiche Frage. Firefox bietet keine Installation an; dort läuft Juri im Tab.
+7. **Speicher:** Einstellungen, Speicher: „Dauerhaft speichern anfordern“ ausprobieren. Notieren: Was antwortet der Browser?
+
 ## Updates (pro Gerät, ab Version 0.4.1)
 
 1. Nach einem neuen Deploy die App im App-Umschalter schließen und neu öffnen, dann etwa 20 Sekunden auf Heute bleiben: Unten erscheint „Neue Version verfügbar“. „Neu laden“ tippen, unter Einstellungen steht die neue Versionsnummer.

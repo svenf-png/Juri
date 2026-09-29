@@ -6,15 +6,21 @@ import {
   type PointerEvent as ReactPointerEvent,
   type RefObject,
 } from 'react';
+import { pdfShortcut } from '@/domain/device/shortcuts';
 import {
   clampViewport,
+  gestureZoomFactor,
   HOME,
   pan,
   pinch,
+  stepZoom,
+  wheelPixels,
+  wheelZoomFactor,
   zoomAround,
   type Pt,
   type Viewport,
 } from '@/domain/media/viewport';
+import { useKeys } from './useKeys';
 
 export interface ZoomPan {
   viewport: Viewport;
@@ -34,15 +40,17 @@ export interface ZoomPan {
 /**
  * Zoomen und Verschieben eines Rahmens: Zwei Finger zoomen und verschieben, ein Finger verschiebt
  * nur, wenn `pan1` gilt und schon gezoomt ist; Strg+Rad und Trackpad-Zwicken zoomen, das Rad
- * verschiebt, Doppeltippen wechselt zwischen 1 und 2,5. `onMultiStart` meldet, wenn ein zweiter
+ * verschiebt (Firefox meldet Mausrad-Schritte in Zeilen, sie werden in Pixel umgerechnet), die
+ * Safari-Geste auf dem Mac zoomt über `gesturechange`, Doppeltippen wechselt zwischen 1 und 2,5.
+ * Mit `keys` zoomen auch „+“, „−“ und „0“. `onMultiStart` meldet, wenn ein zweiter
  * Finger dazukommt (der Editor bricht dann ein begonnenes Feld ab). Die Rechnung steht in
  * domain/media/viewport.ts; hier nur die Zeiger.
  */
 export function useZoomPan(
   frame: RefObject<HTMLElement | null>,
-  options: { pan1?: boolean; onMultiStart?: () => void } = {},
+  options: { pan1?: boolean; keys?: boolean; onMultiStart?: () => void } = {},
 ): ZoomPan {
-  const { pan1 = true, onMultiStart } = options;
+  const { pan1 = true, keys = false, onMultiStart } = options;
   const [viewport, setViewport] = useState<Viewport>(HOME);
   const view = useRef(viewport);
   const pointers = useRef(new Map<number, Pt>());
@@ -72,18 +80,76 @@ export function useZoomPan(
       const at = local(event);
       if (event.ctrlKey) {
         event.preventDefault();
-        update(zoomAround(view.current, Math.exp(-event.deltaY * 0.01), at.x, at.y, size()));
+        update(
+          zoomAround(
+            view.current,
+            wheelZoomFactor(event.deltaY, event.deltaMode),
+            at.x,
+            at.y,
+            size(),
+          ),
+        );
       } else if (view.current.zoom > 1) {
         event.preventDefault();
-        update(pan(view.current, -event.deltaX, -event.deltaY, size()));
+        update(
+          pan(
+            view.current,
+            -wheelPixels(event.deltaX, event.deltaMode),
+            -wheelPixels(event.deltaY, event.deltaMode),
+            size(),
+          ),
+        );
       }
+    };
+    // Safari auf dem Mac zwickt über eigene Gesten-Ereignisse (nicht standardisiert). Während
+    // Finger auf dem Bildschirm liegen (iPhone, iPad), zoomt schon `pinch` aus den Zeigern.
+    let scale = 1;
+    const gesture = (event: Event) => event as Event & { scale: number };
+    const onGestureStart = (event: Event) => {
+      if (pointers.current.size > 0) return;
+      event.preventDefault();
+      scale = 1;
+    };
+    const onGestureChange = (event: Event) => {
+      if (pointers.current.size > 0) return;
+      event.preventDefault();
+      const next = gesture(event).scale;
+      const rect = element.getBoundingClientRect();
+      update(
+        zoomAround(
+          view.current,
+          gestureZoomFactor(scale, next),
+          rect.width / 2,
+          rect.height / 2,
+          size(),
+        ),
+      );
+      scale = next;
     };
     // Nicht passiv, damit das Zwicken die Seite nicht mitzoomt.
     element.addEventListener('wheel', onWheel, { passive: false });
+    element.addEventListener('gesturestart', onGestureStart);
+    element.addEventListener('gesturechange', onGestureChange);
     return () => {
       element.removeEventListener('wheel', onWheel);
+      element.removeEventListener('gesturestart', onGestureStart);
+      element.removeEventListener('gesturechange', onGestureChange);
     };
   }, [frame, local, size, update]);
+
+  useKeys((input) => {
+    if (!keys) return false;
+    const action = pdfShortcut(input);
+    if (action === 'zoom-in' || action === 'zoom-out') {
+      update(stepZoom(view.current, action === 'zoom-in' ? 1 : -1, size()));
+      return true;
+    }
+    if (action === 'zoom-reset') {
+      update(HOME);
+      return true;
+    }
+    return false;
+  });
 
   const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
     // Ein neuer erster Finger beginnt eine neue Geste; übrig gebliebene Zeiger (verpasstes

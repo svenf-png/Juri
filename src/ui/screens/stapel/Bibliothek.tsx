@@ -135,6 +135,7 @@ export function Bibliothek({
         <span className={styles.visuallyHidden}>Suchen</span>
         <input
           type="search"
+          data-shortcut-search=""
           value={query}
           onChange={(e) => {
             onQuery(e.target.value);

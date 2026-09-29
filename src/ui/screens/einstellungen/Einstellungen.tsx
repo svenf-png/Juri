@@ -1,8 +1,10 @@
 import { lazy, Suspense, useRef, useState, type ChangeEvent, type SyntheticEvent } from 'react';
 import { BUILD, buildLabel } from '@/app/build';
+import { fileCopy } from '@/domain/device/environment';
 import { formatBytes } from '@/domain/format/bytes';
 import { normalizeName } from '@/domain/profile/name';
 import type { AppData, ProfileData } from '@/features/app/appData';
+import { currentEnvironment } from '@/features/app/install';
 import {
   applyBackup,
   backupErrorMessage,
@@ -176,10 +178,7 @@ function StorageSection() {
           Dauerhaft speichern anfordern
         </Button>
       ) : null}
-      <p className={styles.help}>
-        Dauerhaft gespeicherte Daten löscht iOS nicht von sich aus, um Platz zu schaffen. Gegen das
-        Löschen der App oder den Verlust des Geräts hilft nur ein Backup.
-      </p>
+      <p className={styles.help}>{fileCopy(currentEnvironment()).storageHelp}</p>
     </section>
   );
 }
@@ -192,6 +191,7 @@ function BackupSection({ data }: { data: AppData }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ text: string; error: boolean } | null>(null);
   const input = useRef<HTMLInputElement>(null);
+  const copy = fileCopy(currentEnvironment());
 
   async function run(task: () => Promise<void>) {
     setBusy(true);
@@ -262,10 +262,7 @@ function BackupSection({ data }: { data: AppData }) {
           {message.text}
         </p>
       ) : null}
-      <p className={styles.help}>
-        Tipp: Beim Teilen „In Dateien sichern“ wählen. Dann liegt das Backup in iCloud Drive und
-        hilft auch auf einem neuen Gerät.
-      </p>
+      <p className={styles.help}>{copy.backupTip}</p>
 
       <Sheet
         open={file !== null}
@@ -276,8 +273,7 @@ function BackupSection({ data }: { data: AppData }) {
         title={file?.name ?? ''}
       >
         <p className={styles.sheetText}>
-          {formatBytes(file?.size ?? 0)} mit Profil und allen Daten. Im nächsten Schritt „In Dateien
-          sichern“ wählen, dann liegt es in iCloud Drive.
+          {formatBytes(file?.size ?? 0)} {copy.backupSheet}
         </p>
         <Button
           variant="primary"
@@ -298,7 +294,7 @@ function BackupSection({ data }: { data: AppData }) {
             });
           }}
         >
-          Sichern oder teilen
+          {copy.backupAction}
         </Button>
         <Button variant="ghost" size="md" block onClick={() => setFile(null)}>
           Abbrechen

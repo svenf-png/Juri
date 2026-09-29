@@ -4,6 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
  * E2E-Tests gegen den fertigen Build, ausgeliefert wie auf GitHub Pages (scripts/serve-pages.mjs).
  *
  * Viewports der Testgeräte (Entscheidung 7): iPhone 14, iPhone 16 Pro Max, iPad Air 11 Zoll.
+ * Desktop-Browser (M7, Entscheidung 12): Chromium, Firefox und WebKit bei 1440 × 900 ohne Touch.
  * WebKit ist die Engine von Safari und läuft in der CI. Lokal steht in der Entwicklungsumgebung
  * nur Chromium bereit: `PW_CHROMIUM_ONLY=1` beschränkt auf die Chromium-Projekte,
  * `PW_CHROMIUM_PATH` zeigt auf ein vorinstalliertes Chromium.
@@ -16,6 +17,10 @@ const iphone14 = { width: 390, height: 844 };
 const iphone16ProMax = { width: 440, height: 956 };
 const ipadQuer = { width: 1180, height: 820 };
 const ipadHoch = { width: 820, height: 1180 };
+const desktop = { width: 1440, height: 900 };
+
+/** Bildvergleiche mit den Design-Dateien gibt es nur für die Touch-Geräte. */
+const designSpecs = /\/(heute|stapel|lernen|schema|abdeckung)\.spec\.ts$/;
 
 const webkitProjects = [
   {
@@ -33,6 +38,16 @@ const webkitProjects = [
   {
     name: 'webkit-ipad-hoch',
     use: { ...devices['iPad Pro 11'], viewport: ipadHoch },
+  },
+  {
+    name: 'webkit-desktop',
+    testIgnore: designSpecs,
+    use: { ...devices['Desktop Safari'], viewport: desktop },
+  },
+  {
+    name: 'firefox-desktop',
+    testIgnore: designSpecs,
+    use: { ...devices['Desktop Firefox'], viewport: desktop },
   },
 ];
 
@@ -61,6 +76,18 @@ const chromiumProjects = [
         ...(chromiumPath ? { executablePath: chromiumPath } : {}),
         // Sheets sind <dialog> in eigener Ebene; Chromium zeichnet sie mit Graustufen-Glättung, die
         // Design-Seiten mit Farbsäumen (LCD). Ohne LCD-Text sind beide gleich (Bildvergleiche).
+        args: ['--disable-lcd-text'],
+      },
+    },
+  },
+  {
+    name: 'chromium-desktop',
+    testIgnore: designSpecs,
+    use: {
+      ...devices['Desktop Chrome'],
+      viewport: desktop,
+      launchOptions: {
+        ...(chromiumPath ? { executablePath: chromiumPath } : {}),
         args: ['--disable-lcd-text'],
       },
     },

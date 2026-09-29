@@ -1,3 +1,5 @@
+import { gestureHints } from '@/domain/device/environment';
+import { currentEnvironment } from '@/features/app/install';
 import { useState } from 'react';
 import { ordinals, removeMask, type Mask } from '@/domain/cards/occlusion';
 import type { CardMedia } from '../erstellen/useCardMedia';
@@ -33,14 +35,16 @@ export function PdfWorkspace({
   const url = useBlobUrl(media.mode === 'cover' ? (cover.draft?.record ?? null) : null);
   if (!pdf) return null;
   const cover_ = media.mode === 'cover';
+  // Vorschauen (mit `seed`) zeigen die Texte des Designs, unabhängig vom Browser der Tests.
+  const hints = gestureHints(media.seed ? 'ios' : currentEnvironment());
   const phone = layout === 'phone';
   const hint = cover_
     ? phone
       ? 'Felder mit dem Finger aufziehen'
-      : 'Felder mit Finger oder Pencil aufziehen'
+      : hints.pdfCover
     : phone
       ? 'Markieren mit dem Finger'
-      : 'Markieren mit Finger oder Pencil';
+      : hints.pdfText;
   const labels = ordinals(cover.masks);
   const current = cover.masks.find((m) => m.n === selected);
 

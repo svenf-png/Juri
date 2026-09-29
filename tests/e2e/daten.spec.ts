@@ -46,7 +46,7 @@ test.describe('Daten, Profil, Backup (M1)', () => {
     const sheet = page.getByRole('dialog', { name: /^Juri-Backup-\d{4}-\d\d-\d\d\.juri-backup$/ });
     await expect(sheet).toBeVisible();
     const downloading = page.waitForEvent('download');
-    await sheet.getByRole('button', { name: 'Sichern oder teilen' }).click();
+    await sheet.getByRole('button', { name: /^(Sichern oder teilen|Herunterladen)$/ }).click();
     const download = await downloading;
     const file = testInfo.outputPath(download.suggestedFilename());
     await download.saveAs(file);

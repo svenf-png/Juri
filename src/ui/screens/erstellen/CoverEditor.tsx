@@ -23,6 +23,8 @@ export interface CoverEditorProps {
   onBack: () => void;
   /** Nur Vorschauen: Feld, das beim Öffnen gewählt ist. */
   initialSelected?: number | null;
+  /** Hinweis unter dem Bild; auf dem Desktop mit Rad statt Fingern. */
+  zoomNote?: string;
 }
 
 /** Ein Feld in der Mitte des Bildes (Tastatur), Breite und Höhe je ein Fünftel. */
@@ -39,6 +41,7 @@ export function CoverEditor({
   onDone,
   onBack,
   initialSelected = null,
+  zoomNote = 'Zwei Finger zum Zoomen',
 }: CoverEditorProps) {
   const [masks, setMasks] = useState<Mask[]>([...initial]);
   const [selected, setSelected] = useState<number | null>(initialSelected);
@@ -124,7 +127,7 @@ export function CoverEditor({
             </button>
           ) : null}
         </div>
-        <div className={styles.note}>Zwei Finger zum Zoomen</div>
+        <div className={styles.note}>{zoomNote}</div>
       </div>
       <Sheet
         open={asking}

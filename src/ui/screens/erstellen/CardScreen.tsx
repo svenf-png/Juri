@@ -1,4 +1,8 @@
 import { useRef, useState, type ReactNode } from 'react';
+import { gestureHints } from '@/domain/device/environment';
+import { currentEnvironment } from '@/features/app/install';
+import { formShortcut } from '@/domain/device/shortcuts';
+import { useKeys } from '../../useKeys';
 import {
   checkCard,
   sourceChip,
@@ -120,6 +124,13 @@ export function CardScreen({
   const coverMissing =
     !form.cover.draft && form.cover.mediaId !== null && stored.status === 'missing';
   const hasCover = form.cover.draft !== null || form.cover.mediaId !== null;
+
+  // Strg oder Cmd plus Eingabe speichert, auch aus einem Textfeld heraus (Desktop).
+  useKeys((input) => {
+    if (formShortcut(input) !== 'save') return false;
+    void submit();
+    return true;
+  });
 
   async function submit(leave = false) {
     if (busy) return;
@@ -335,6 +346,7 @@ export function CardScreen({
   if (media.editor && hasCover) {
     return (
       <CoverEditor
+        zoomNote={gestureHints(seed ? 'ios' : currentEnvironment()).zoom}
         ratio={coverRatio}
         image={coverImage}
         initial={form.cover.masks}

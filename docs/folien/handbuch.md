@@ -1,12 +1,12 @@
 ---
 titel: Juri benutzen
-untertitel: Das Handbuch für iPhone und iPad
+untertitel: Das Handbuch für iPhone, iPad und den Browser am Rechner
 zielgruppe: Referendarinnen und Referendare
 stand: 2026-09-29
-version: 0.7 (bis M6 gegen die App geprüft, übrige Kapitel Entwurf nach Design)
+version: 0.8 (bis M7 gegen die App geprüft, übrige Kapitel Entwurf nach Design)
 ---
 
-<!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke, Schema, Abdeckung, PDF, Notiz), Lernen, Lernrhythmus und Stapel sind gegen die App geprüft (bis M6). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
+<!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke, Schema, Abdeckung, PDF, Notiz), Lernen, Lernrhythmus und Stapel sind gegen die App geprüft (bis M7). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
 
 # Loslegen
 
@@ -205,7 +205,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 <!-- status: M4 umgesetzt -->
 
-- **Tippen:** Karte umdrehen
+- **Tippen** (am Rechner **Klicken**): Karte umdrehen
 - **Nach links wischen:** Nochmal, **nach rechts wischen:** Gut
 - **„Letzte Bewertung zurücknehmen“** unter „Antwort zeigen“ macht Bewertungen rückgängig, auch mehrere nacheinander
 - Mit iPad-Tastatur: **Leertaste** umdrehen, **1 bis 4** bewerten, **Pfeile** links und rechts, **⌘ Z** zurücknehmen, **Esc** beenden
@@ -374,6 +374,19 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 # Deine Daten
 
+## Juri am Rechner
+
+<!-- status: M7 umgesetzt (Version 0.8.0, ADR-011); Safari, Firefox und die Desktop-App auf dem Rechner pruefen (Testliste M7) -->
+
+- Juri läuft auch in **Chrome, Safari und Firefox**, ohne Installation. Öffne die Adresse und lege los; die Install-Anleitung gibt es nur auf iPhone und iPad
+- Deine Daten liegen **nur in diesem Browser** (und Profil). Ein anderer Browser oder Rechner beginnt leer; zum Wechseln nimmst du ein **Backup** mit
+- **Backup:** „Backup erstellen“, dann **„Herunterladen“**. Einspielen mit **„Backup einspielen“** und dem Datei-Dialog des Browsers
+- **Tastatur:** **n** legt eine neue Karte an, **/** öffnet die Suche, **Strg** (Mac: **Cmd**) + **Eingabe** speichert eine Karte. Beim Lernen: **Leertaste** umdrehen, **1 bis 4** bewerten, **Esc** beenden
+- **PDF und Bilder:** **Strg** (Mac: **Cmd**) + **Mausrad** oder Zwicken auf dem Trackpad zoomt, **+**, **−** und **0** ebenso; **Bild auf/ab** oder die **Pfeiltasten** blättern durch das PDF
+- In Chrome und Edge lässt sich Juri über das Symbol in der Adressleiste als eigene App installieren
+
+> **Notizen:** Die Oberfläche ist in M7 dieselbe wie auf dem iPad, bei großen Fenstern mit der iPad-Aufteilung. Eine eigene Gestaltung für große Bildschirme kommt später (M13). Es gibt keinen Abgleich zwischen Rechnern: Backup-Datei ist der Weg.
+
 ## Wo deine Daten liegen
 
 - Alles liegt **nur auf deinem Gerät**, in der installierten App
@@ -387,8 +400,8 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 <!-- status: M1 umgesetzt (Profil.dc.html, BackupExport.dc.html, BackupImport.dc.html); Teilen-Menue auf dem Geraet pruefen -->
 
-- In den **Einstellungen**: **Backup erstellen**, dann **„Sichern oder teilen“**
-- Im Teilen-Menü **„In Dateien sichern“** und dort **iCloud Drive** wählen
+- In den **Einstellungen**: **Backup erstellen**, dann **„Sichern oder teilen“** (am Rechner **„Herunterladen“**)
+- Im Teilen-Menü **„In Dateien sichern“** und dort **iCloud Drive** wählen; am Rechner liegt die Datei im Download-Ordner des Browsers
 - Juri erinnert dich nach 14 Tagen oder 50 neuen Karten („Zeit für ein neues Backup“)
 - Wiederherstellen: **Backup einspielen**, Datei wählen, bestätigen. Das Backup **ersetzt** alle Daten auf dem Gerät
 

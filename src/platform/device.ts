@@ -1,7 +1,9 @@
+import type { Platform } from '@/domain/device/environment';
+
 /** Erkennung von Gerät, Betriebssystem und Anzeigemodus. */
 
 export interface DeviceInfo {
-  platform: 'iPhone' | 'iPad' | 'Mac' | 'Android' | 'Andere';
+  platform: Platform;
   osVersion: string | null;
   safariVersion: string | null;
   /** iPadOS meldet sich im Standard als Mac; erkannt an Touch-Punkten. */

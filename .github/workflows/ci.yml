@@ -48,7 +48,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps webkit chromium
+      - run: npx playwright install --with-deps webkit chromium firefox
       - run: npm run build
       - run: npx playwright test --shard=${{ matrix.shard }}/4
       - if: failure()
