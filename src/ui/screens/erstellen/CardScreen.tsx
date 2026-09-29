@@ -34,7 +34,7 @@ import { ProblemSheet, SourceSheet } from './MediaSheets';
 import { SchemaEditor } from './SchemaEditor';
 import { EMPTY_COVER, type FormState, type Tab } from './form';
 import { SplitForm } from './SplitForm';
-import { useCardMedia } from './useCardMedia';
+import { useCardMedia, type MediaSeed } from './useCardMedia';
 import styles from './Erstellen.module.css';
 
 const TABS: readonly { value: Tab; label: string }[] = [
@@ -66,6 +66,8 @@ export interface CardScreenProps {
   /** Nur beim Bearbeiten. */
   onDelete?: () => void;
   edited?: string;
+  /** Nur für Vorschauen (Bildvergleich): Zustand und Inhalte statt echter Dateien. */
+  seed?: MediaSeed;
 }
 
 /**
@@ -85,6 +87,7 @@ export function CardScreen({
   toast,
   onDelete,
   edited,
+  seed,
 }: CardScreenProps) {
   const editing = mode === 'edit';
   const [form, setForm] = useState<FormState>(initial);
@@ -102,7 +105,7 @@ export function CardScreen({
   const set = (change: Partial<FormState>) => {
     setForm((f) => ({ ...f, ...change }));
   };
-  const media = useCardMedia(form, setForm, editing);
+  const media = useCardMedia(form, setForm, editing, seed);
   // Geteilte Ansicht: PDF links, Formular rechts (iPad quer, Design ab 1100 px, A8).
   const wide = useMediaQuery('(min-width: 1100px)');
   const draftUrl = useBlobUrl(form.cover.draft?.record ?? null);
@@ -215,7 +218,8 @@ export function CardScreen({
     );
   }
 
-  const coverImage = coverUrl ? <SurfaceImage src={coverUrl} /> : <SurfaceMissing />;
+  const coverImage =
+    seed?.coverImage ?? (coverUrl ? <SurfaceImage src={coverUrl} /> : <SurfaceMissing />);
   const surfaceMasks: SurfaceMask[] = (() => {
     const labels = ordinals(form.cover.masks);
     return form.cover.masks.map((m) => ({

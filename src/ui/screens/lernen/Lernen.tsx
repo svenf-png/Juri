@@ -18,6 +18,7 @@ import { useMediaQuery } from '../../useMediaQuery';
 import { useGoBack } from '../../useGoBack';
 import { colors } from '../../tokens/tokens';
 import { LernenView, type Exit } from './LernenView';
+import { SourceViewer } from '../pdf/SourceViewer';
 import { LinkedCardSheet } from './LinkedCardSheet';
 import styles from './Lernen.module.css';
 
@@ -40,6 +41,7 @@ export function Lernen() {
   const navigate = useNavigate();
   const goBack = useGoBack(deckId ? `/stapel/${deckId}` : '/');
   const [linked, setLinked] = useState<string | null>(null);
+  const [opened, setOpened] = useState<{ mediaId: string; page: number | null } | null>(null);
   const reduced = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [exit, setExit] = useState<Exit>('');
   const [drag, setDrag] = useState(0);
@@ -112,7 +114,7 @@ export function Lernen() {
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (asking || session.status !== 'ready' || state.done) return;
+      if (asking || opened || session.status !== 'ready' || state.done) return;
       const onButton = event.target instanceof HTMLButtonElement;
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
         event.preventDefault();
@@ -146,7 +148,7 @@ export function Lernen() {
     return () => {
       window.removeEventListener('keydown', onKey);
     };
-  }, [asking, session.status, state.done, flipped, advance, rateWith, undo, close]);
+  }, [asking, opened, session.status, state.done, flipped, advance, rateWith, undo, close]);
 
   useEffect(() => {
     document.title = 'Lernen · Juri';
@@ -240,8 +242,20 @@ export function Lernen() {
             : 1
         }
         onOpenLink={setLinked}
+        onOpenSource={(mediaId, page) => {
+          setOpened({ mediaId, page });
+        }}
         cardEvents={cardEvents}
       />
+      {opened ? (
+        <SourceViewer
+          mediaId={opened.mediaId}
+          page={opened.page}
+          onClose={() => {
+            setOpened(null);
+          }}
+        />
+      ) : null}
       <LinkedCard
         cardId={linked}
         onClose={() => {

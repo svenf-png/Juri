@@ -24,7 +24,16 @@ const PLACEHOLDER = {
   reason: 'Annahme A2: #8E8A99 erreicht auf der Fläche nur 3,08:1, die App nimmt #726E7A.',
 };
 
+const FOCUS_RING = {
+  css: 'label[style*="box-shadow: 0 0 0 2px #6A3FE0"] { box-shadow: none !important }',
+  reason:
+    'Das Design zeigt das Vorderseiten-Feld mit Fokusring (es hat gerade den Fokus). Die Vorschau ' +
+    'der App zeigt kein fokussiertes Feld.',
+};
+
 const FIXES: Record<string, { css: string; reason: string }[]> = {
+  'iPadErstellen.dc.html': [FOCUS_RING],
+  'iPadErstellenAbdecken.dc.html': [FOCUS_RING],
   'SchemaEditor.dc.html': [PLACEHOLDER],
   'SchemaPunkt.dc.html': [PLACEHOLDER],
   'SchemaNeueKarte.dc.html': [PLACEHOLDER],

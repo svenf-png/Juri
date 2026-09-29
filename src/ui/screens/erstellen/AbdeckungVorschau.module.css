@@ -1,0 +1,100 @@
+/* Nachgebildete Bilder der Designs für den Bildvergleich (nur unter /styleguide). */
+.skeleton {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.noShrink {
+  flex-shrink: 0;
+}
+
+.pageText {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  overflow: hidden;
+}
+
+.pagePad {
+  padding: 40px 44px;
+}
+
+/* Als Bild der Abdeckung: 12 px innerhalb der Karte, damit der Text an derselben Stelle steht. */
+.pageCover {
+  padding: 28px 32px;
+}
+
+.pageHeading {
+  font-size: 12px;
+  color: #8e8a99;
+  font-weight: 600;
+}
+
+.pageTitle {
+  width: 70%;
+  height: 12px;
+  border-radius: 4px;
+  background: #cfcad9;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.line {
+  height: 8px;
+  border-radius: 4px;
+  background: #e6e2ee;
+  flex-shrink: 0;
+}
+
+.para {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.mark {
+  background: rgba(106, 63, 224, 0.18);
+  box-shadow: 0 0 0 2px rgba(106, 63, 224, 0.18);
+  border-radius: 2px;
+}
+
+.popup {
+  position: absolute;
+  left: 24px;
+  top: 250px;
+  border-radius: 14px;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 4px;
+  display: flex;
+  gap: 2px;
+  box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.5);
+}
+
+.popup span {
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.popupOn {
+  background: var(--violet);
+}
+
+.popupPad {
+  left: 88px;
+  top: 150px;
+}

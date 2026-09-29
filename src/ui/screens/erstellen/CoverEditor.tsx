@@ -21,6 +21,8 @@ export interface CoverEditorProps {
   initial: readonly Mask[];
   onDone: (masks: Mask[]) => void;
   onBack: () => void;
+  /** Nur Vorschauen: Feld, das beim Öffnen gewählt ist. */
+  initialSelected?: number | null;
 }
 
 /** Ein Feld in der Mitte des Bildes (Tastatur), Breite und Höhe je ein Fünftel. */
@@ -30,9 +32,16 @@ const CENTER = { x: 0.4, y: 0.45, w: 0.2, h: 0.1 };
  * Felder aufziehen (Vollbild): Änderungen gelten erst mit „Fertig“; „Zurück“ fragt nach, wenn etwas
  * geändert wurde. Die Bildfläche und ihre Gesten stehen in MaskCanvas.
  */
-export function CoverEditor({ ratio, image, initial, onDone, onBack }: CoverEditorProps) {
+export function CoverEditor({
+  ratio,
+  image,
+  initial,
+  onDone,
+  onBack,
+  initialSelected = null,
+}: CoverEditorProps) {
   const [masks, setMasks] = useState<Mask[]>([...initial]);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(initialSelected);
   const [asking, setAsking] = useState(false);
   // Höchste je vergebene Nummer: Eine gelöschte Nummer kehrt nicht wieder (Abfrage `m<n>`).
   const [everUsed, setEverUsed] = useState(() => Math.max(0, ...initial.map((m) => m.n)));

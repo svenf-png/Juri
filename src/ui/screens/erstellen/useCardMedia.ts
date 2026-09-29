@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   type Dispatch,
+  type ReactNode,
   type SetStateAction,
 } from 'react';
 import { draftToMarkup, draftFromMarkup } from '@/domain/cards/clozeDraft';
@@ -24,7 +25,25 @@ import { pickFile } from '@/platform/pickFile';
 import type { PdfMode } from '../pdf/PdfPane';
 import { EMPTY_COVER, type FormState } from './form';
 
+/**
+ * Zustand und Inhalte für Vorschauen (Bildvergleich mit den Designs): statt echter Dateien ein
+ * Platzhalter-PDF, eine Seite und ein Bild als Inhalt. Im Betrieb nie gesetzt.
+ */
+export interface MediaSeed {
+  busy?: { name: string; size: number };
+  pdf?: { name: string; pages: number; page: number; mode: PdfMode; open: boolean };
+  /** Inhalt der PDF-Seite statt pdf.js. */
+  pageContent?: ReactNode;
+  /** Bild der Abdeckung statt des gespeicherten oder gewählten Bildes. */
+  coverImage?: ReactNode;
+  applied?: { front: boolean; back: boolean };
+  /** Gewähltes Feld im Modus „Abdecken“. */
+  selected?: number;
+}
+
 export interface CardMedia {
+  /** Nur in Vorschauen. */
+  seed: MediaSeed | undefined;
   pdf: PdfDraft | null;
   /** Die PDF-Ansicht ist geöffnet (iPhone: Vollbild, iPad: neben dem Formular). */
   pdfOpen: boolean;
@@ -65,16 +84,33 @@ export function useCardMedia(
   form: FormState,
   setForm: Dispatch<SetStateAction<FormState>>,
   editing: boolean,
+  seed?: MediaSeed,
 ): CardMedia {
-  const [pdf, setPdf] = useState<PdfDraft | null>(null);
-  const [pdfOpen, setPdfOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const [mode, setMode] = useState<PdfMode>('text');
-  const [busy, setBusy] = useState<CardMedia['busy']>(null);
+  const [pdf, setPdf] = useState<PdfDraft | null>(() =>
+    seed?.pdf
+      ? {
+          document: {
+            pages: seed.pdf.pages,
+            page: () => Promise.reject(new Error('Vorschau')),
+            pageImage: () => Promise.reject(new Error('Vorschau')),
+            destroy: () => Promise.resolve(),
+          },
+          bytes: new ArrayBuffer(0),
+          name: seed.pdf.name,
+          pages: seed.pdf.pages,
+          id: 'vorschau',
+          stored: false,
+        }
+      : null,
+  );
+  const [pdfOpen, setPdfOpen] = useState(seed?.pdf?.open ?? false);
+  const [page, setPage] = useState(seed?.pdf?.page ?? 1);
+  const [mode, setMode] = useState<PdfMode>(seed?.pdf?.mode ?? 'text');
+  const [busy, setBusy] = useState<CardMedia['busy']>(seed?.busy ?? null);
   const [problem, setProblem] = useState<CardMedia['problem']>(null);
   const [sourceSheet, setSourceSheet] = useState(false);
   const [editor, setEditor] = useState(false);
-  const [applied, setApplied] = useState({ front: false, back: false });
+  const [applied, setApplied] = useState(seed?.applied ?? { front: false, back: false });
   // Das geöffnete PDF für Aufräumarbeiten außerhalb des Renderns (Zustandsänderungen bleiben rein).
   const latest = useRef<PdfDraft | null>(null);
   useEffect(() => {
@@ -177,7 +213,7 @@ export function useCardMedia(
     return () => {
       cancelled = true;
     };
-  }, [pdf, pdfOpen, mode, page, coverPage, coverDraft, setForm]);
+  }, [seed, pdf, pdfOpen, mode, page, coverPage, coverDraft, setForm]);
 
   const removePdf = useCallback(() => {
     void latest.current?.document.destroy();
@@ -198,6 +234,7 @@ export function useCardMedia(
 
   const retryKind = problem?.kind;
   return {
+    seed,
     pdf,
     pdfOpen,
     page,

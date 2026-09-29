@@ -29,7 +29,7 @@ export function PdfWorkspace({
   onClose: () => void;
 }) {
   const { pdf } = media;
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(media.seed?.selected ?? null);
   const url = useBlobUrl(media.mode === 'cover' ? (cover.draft?.record ?? null) : null);
   if (!pdf) return null;
   const cover_ = media.mode === 'cover';
@@ -58,12 +58,14 @@ export function PdfWorkspace({
       hint={hint}
       actionLabel={phone ? 'Zur Karte' : undefined}
     >
-      {cover_ ? (
-        url && cover.ratio > 0 ? (
+      {media.seed?.pageContent !== undefined && !cover_ ? (
+        media.seed.pageContent
+      ) : cover_ ? (
+        (url || media.seed?.coverImage) && cover.ratio > 0 ? (
           <div className={styles.cover}>
             <MaskCanvas
               ratio={cover.ratio}
-              image={<SurfaceImage src={url} />}
+              image={media.seed?.coverImage ?? <SurfaceImage src={url ?? ''} />}
               masks={cover.masks}
               selected={selected}
               everUsed={cover.everUsed}
