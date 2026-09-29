@@ -261,16 +261,21 @@ test.describe('PDF', () => {
     await expect(
       page.locator('[data-page="1"] span', { hasText: 'Besitz und Besitzschutz' }),
     ).toBeVisible({ timeout: 15_000 });
-    const painted = await page
-      .locator('[data-page="1"] canvas')
-      .evaluate((c: HTMLCanvasElement) => {
-        const ctx = c.getContext('2d')!;
-        const data = ctx.getImageData(0, 0, c.width, c.height).data;
-        let dark = 0;
-        for (let i = 0; i < data.length; i += 4) if ((data[i] ?? 255) < 128) dark++;
-        return dark;
-      });
-    expect(painted).toBeGreaterThan(500);
+    // Die Textebene erscheint vor der Zeichenfläche; das Zeichnen kann in WebKit länger dauern.
+    await expect
+      .poll(
+        () =>
+          page.locator('[data-page="1"] canvas').evaluate((c: HTMLCanvasElement) => {
+            const ctx = c.getContext('2d');
+            if (!ctx || c.width === 0) return 0;
+            const data = ctx.getImageData(0, 0, c.width, c.height).data;
+            let dark = 0;
+            for (let i = 0; i < data.length; i += 4) if ((data[i] ?? 255) < 128) dark++;
+            return dark;
+          }),
+        { timeout: 20_000 },
+      )
+      .toBeGreaterThan(500);
 
     // Blättern: Seitenzahl eingeben.
     await page.getByRole('button', { name: /Seite wählen/ }).click();
@@ -327,7 +332,9 @@ test.describe('PDF', () => {
     await page.getByRole('button', { name: 'Antwort zeigen', exact: true }).click();
     await page.getByRole('button', { name: /Demo-Skript Sachenrecht.pdf, S. 14 öffnen/ }).click();
     const viewer = page.getByRole('dialog', { name: 'PDF' });
-    await expect(viewer.getByRole('button', { name: /S\. 14 \/ 50/ })).toBeVisible();
+    await expect(viewer.getByRole('button', { name: /S\. 14 \/ 50/ })).toBeVisible({
+      timeout: 20_000,
+    });
     await expect(
       viewer.locator('[data-page="14"] span', { hasText: /Der Erwerber ist nicht/ }).first(),
     ).toBeVisible({ timeout: 15_000 });
@@ -404,7 +411,7 @@ test.describe('PDF', () => {
     await page.getByRole('button', { name: 'PDF · Demo-Skript Sachenrecht S. 14 öffnen' }).click();
     await expect(
       page.getByRole('dialog', { name: 'PDF' }).getByRole('button', { name: /S\. 14 \/ 50/ }),
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 20_000 });
   });
 });
 
@@ -560,7 +567,9 @@ test.describe('Demo-Skript der Testinstanz', () => {
     await page.getByRole('button', { name: 'Antwort zeigen', exact: true }).click();
     await page.getByRole('button', { name: /Demo-Skript Sachenrecht.pdf, S. 14 öffnen/ }).click();
     const viewer = page.getByRole('dialog', { name: 'PDF' });
-    await expect(viewer.getByRole('button', { name: /S\. 14 \/ 50/ })).toBeVisible();
+    await expect(viewer.getByRole('button', { name: /S\. 14 \/ 50/ })).toBeVisible({
+      timeout: 20_000,
+    });
     await viewer.getByRole('button', { name: 'Schließen' }).click();
     await page.getByRole('button', { name: /Gut/ }).click();
     await expect(page.getByText('Abdeckung 1 von 3')).toBeVisible();
