@@ -950,3 +950,20 @@
     padding: 0 12px;
   }
 }
+
+/* Hover am Rechner (ADR-017): Zustände wie DesktopZustaende.dc.html. */
+@media (min-width: 1280px) and (hover: hover) {
+  .mediaButton:hover,
+  .miniButton:hover {
+    border-color: var(--dash-cloze);
+  }
+
+  .type:not(.typeOn):hover {
+    background: var(--heat-0);
+  }
+
+  .topLink:hover,
+  .sourceButton:hover {
+    color: var(--link-hover);
+  }
+}

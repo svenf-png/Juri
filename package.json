@@ -1,7 +1,7 @@
 {
   "name": "juri",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Karteikarten-App (PWA) für das juristische Referendariat",
   "license": "MIT",
   "type": "module",

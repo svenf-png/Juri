@@ -174,7 +174,7 @@ export const primaryButton = (
   text,
   { h = 52, size = 16, kb = '', href = '#', grow = false, icon: ic = '' } = {},
 ) =>
-  `<a href="${href}" class="tap hv-primary" style="height: ${h}px; border-radius: 18px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 22px; font-size: ${size}px; font-weight: 700; ${grow ? 'flex-grow: 1;' : ''} box-shadow: 0 14px 30px -14px rgba(106,63,224,.6)">${ic}${text}${kb ? kbd(kb, 'dark') : ''}</a>`;
+  `<a href="${href}" class="tap hv-primary" style="height: ${h}px; border-radius: 18px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 22px; font-size: ${size}px; font-weight: 700; ${grow ? 'flex-grow: 1;' : ''} box-shadow: 0 10px 24px -10px rgba(106,63,224,.55)">${ic}${text}${kb ? kbd(kb, 'dark') : ''}</a>`;
 
 export const inkButton = (
   text,

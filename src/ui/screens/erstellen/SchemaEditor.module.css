@@ -934,3 +934,25 @@
     gap: 8px;
   }
 }
+
+/* Hover am Rechner (ADR-017). */
+@media (min-width: 1280px) and (hover: hover) {
+  .save:hover {
+    background: var(--link);
+  }
+
+  .row:not(.rowOn):hover {
+    background: var(--surface);
+  }
+
+  .tool:hover:not(:disabled),
+  .addPoint:hover:not(:disabled) {
+    background: var(--heat-0);
+  }
+
+  .hit:not(.hitOn):hover,
+  .action:hover,
+  .removePoint:hover {
+    background: var(--surface);
+  }
+}

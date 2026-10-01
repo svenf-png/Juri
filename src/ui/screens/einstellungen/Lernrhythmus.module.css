@@ -341,3 +341,19 @@
     min-width: 0;
   }
 }
+
+/* Hover am Rechner (ADR-017). */
+@media (min-width: 1280px) and (hover: hover) {
+  .rowLink:hover,
+  .rowBorderless:hover {
+    background: var(--surface);
+    box-shadow:
+      -10px 0 0 var(--surface),
+      10px 0 0 var(--surface);
+  }
+
+  .algo:not(.algoOn):hover,
+  .preset:not(.presetOn):hover {
+    background: var(--surface);
+  }
+}

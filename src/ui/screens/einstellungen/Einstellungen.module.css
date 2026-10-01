@@ -259,3 +259,13 @@
     min-width: 0;
   }
 }
+
+/* Hover am Rechner (ADR-017): Zeile mit Fläche, die Fläche reicht 10 px über den Rand hinaus. */
+@media (min-width: 1280px) and (hover: hover) {
+  .linkRow:hover {
+    background: var(--surface);
+    box-shadow:
+      -10px 0 0 var(--surface),
+      10px 0 0 var(--surface);
+  }
+}

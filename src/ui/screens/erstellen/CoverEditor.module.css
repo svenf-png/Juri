@@ -457,3 +457,26 @@
     font-weight: 600;
   }
 }
+
+/* Hover am Rechner (ADR-017). */
+@media (min-width: 1280px) and (hover: hover) {
+  .done:hover {
+    background: var(--link);
+  }
+
+  .zoomButton:hover:not(:disabled) {
+    background: var(--heat-0);
+  }
+
+  .field:not(.fieldOn):hover {
+    background: var(--surface);
+  }
+
+  .outline:hover {
+    border-color: var(--dash-cloze);
+  }
+
+  .removeSide:hover:not(:disabled) {
+    background: var(--surface);
+  }
+}

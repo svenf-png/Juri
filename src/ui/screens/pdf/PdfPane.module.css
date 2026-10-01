@@ -354,3 +354,15 @@
     position: static;
   }
 }
+
+/* Hover am Rechner (ADR-017). */
+@media (min-width: 1280px) and (hover: hover) {
+  .pagerButton:hover:not(:disabled),
+  .pagerLabel:hover {
+    border-color: var(--dash-cloze);
+  }
+
+  .mode:not(.modeOn):hover {
+    background: var(--surface);
+  }
+}

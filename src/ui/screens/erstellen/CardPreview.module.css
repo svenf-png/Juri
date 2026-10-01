@@ -152,3 +152,10 @@
   line-height: 1.4;
   color: var(--muted);
 }
+
+/* Hover am Rechner (ADR-017). */
+@media (min-width: 1280px) and (hover: hover) {
+  .option:not(.selected):hover {
+    background: var(--heat-0);
+  }
+}

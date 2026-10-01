@@ -349,3 +349,22 @@
     padding: 0 22px;
   }
 }
+
+/* Hover am Rechner (ADR-017). */
+@media (min-width: 1280px) and (hover: hover) {
+  .save:hover:not(:disabled) {
+    border-color: var(--dash-cloze);
+  }
+
+  .next:hover:not(:disabled) {
+    background: var(--link);
+  }
+
+  .type:not(.typeOn):hover {
+    background: var(--heat-0);
+  }
+
+  button.mini:hover {
+    border-color: var(--dash-cloze);
+  }
+}
