@@ -255,6 +255,16 @@ test.describe('Desktop: pixelnah zum Design', () => {
           writeFileSync(`test-results/diff/${tag}-app.png`, app);
           await test.info().attach('design.png', { body: design, contentType: 'image/png' });
           await test.info().attach('app.png', { body: app, contentType: 'image/png' });
+          if (process.env.CI && browserName !== 'chromium') {
+            // Fehlersuche ohne Zugriff auf die Berichte: beide Bilder in 1x als JPEG ins Protokoll.
+            const appJpg = await page.screenshot({ scale: 'css', type: 'jpeg', quality: 70 });
+            await showDesign(page, `${c.design}${size.suffix}.dc.html`);
+            if (c.name === 'Dialog')
+              await page.addStyleTag({ content: '[data-mask] { visibility: hidden }' });
+            const designJpg = await page.screenshot({ scale: 'css', type: 'jpeg', quality: 70 });
+            console.log(`IMGAPP ${tag} ${appJpg.toString('base64')}`);
+            console.log(`IMGDESIGN ${tag} ${designJpg.toString('base64')}`);
+          }
         }
         expect(diff.sameSize).toBe(true);
         expect(

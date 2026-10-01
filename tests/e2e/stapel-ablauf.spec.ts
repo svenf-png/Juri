@@ -314,6 +314,7 @@ test.describe('Stapel und Karten', () => {
       .first()
       .click();
     // Am Rechner (ab 1280 px) stehen alle Felder offen, „Mehr“ gibt es dort nicht.
+    await expect(page.getByLabel('Vorderseite')).toBeVisible();
     const more = page.getByRole('button', { name: 'Mehr', exact: true });
     if ((await more.count()) > 0) await more.click();
     await page.getByLabel('Vorderseite').fill('Was ist Gewahrsam?');

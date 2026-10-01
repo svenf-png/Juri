@@ -26,6 +26,16 @@ async function importDemo(page: Page) {
   await expect(page.getByRole('dialog', { name: 'Stapel importiert' })).toBeVisible();
 }
 
+/** Ab 1280 px (Desktop-Gestaltung, ADR-017) steht „Deine Leute“ fest neben den Spalten, sonst als Sheet. */
+const wide = (page: Page) => (page.viewportSize()?.width ?? 0) >= 1280;
+const people = (page: Page) =>
+  wide(page)
+    ? page.getByRole('complementary', { name: 'Deine Leute' })
+    : page.getByRole('dialog', { name: 'Deine Leute' });
+async function openPeople(page: Page) {
+  if (!wide(page)) await page.getByRole('button', { name: 'Alle anzeigen' }).click();
+}
+
 test.describe('High fives', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     if (!isDesktop(testInfo.project.name)) await asInstalledApp(page);
@@ -219,20 +229,17 @@ test.describe('High fives', () => {
       .getByRole('button', { name: 'Schön' })
       .click();
 
-    await page.getByRole('button', { name: 'Alle anzeigen' }).click();
-    const list = page.getByRole('dialog', { name: 'Deine Leute' });
+    await openPeople(page);
+    const list = people(page);
     await expect(list).toContainText('Mara');
     await list.getByRole('button', { name: /Mara/ }).click();
     const edit = page.getByRole('dialog', { name: 'Kontakt' });
     await edit.getByLabel('Name').fill('  Mara   aus der AG ');
     await edit.getByRole('button', { name: 'Speichern' }).click();
-    await expect(page.getByRole('dialog', { name: 'Deine Leute' })).toContainText(
-      'Mara aus der AG',
-    );
-    await page
-      .getByRole('dialog', { name: 'Deine Leute' })
-      .getByRole('button', { name: 'Schließen' })
-      .click();
+    await expect(people(page)).toContainText('Mara aus der AG');
+    if (!wide(page)) {
+      await people(page).getByRole('button', { name: 'Schließen' }).click();
+    }
     await expect(page.getByText('Mara aus der AG').first()).toBeVisible();
 
     // Dieselbe Datei noch einmal: Der Name bleibt, es kommt kein zweites High five.
@@ -247,11 +254,8 @@ test.describe('High fives', () => {
     await expect(page.getByRole('dialog', { name: 'High five!' })).toHaveCount(0);
 
     // Entfernen räumt Kontakt und High five weg.
-    await page.getByRole('button', { name: 'Alle anzeigen' }).click();
-    await page
-      .getByRole('dialog', { name: 'Deine Leute' })
-      .getByRole('button', { name: /Mara/ })
-      .click();
+    await openPeople(page);
+    await people(page).getByRole('button', { name: /Mara/ }).click();
     await page
       .getByRole('dialog', { name: 'Kontakt' })
       .getByRole('button', { name: 'Kontakt entfernen' })

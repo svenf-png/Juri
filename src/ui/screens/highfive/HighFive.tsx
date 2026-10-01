@@ -25,6 +25,7 @@ import { database } from '@/features/app/database';
 import { pickFile } from '@/platform/pickFile';
 import { StorageError } from '../../components/StorageError';
 import { useKeys } from '../../useKeys';
+import { useMediaQuery } from '../../useMediaQuery';
 import { ConfirmSheet } from '../stapel/Sheets';
 import { HighFiveView, Overlay } from './HighFiveView';
 import {
@@ -69,6 +70,8 @@ export function HighFive() {
   const [given, setGiven] = useState<Given | null>(null);
   const [card, setCard] = useState<CardState | null>(null);
   const [sheet, setSheet] = useState<Sheet>(null);
+  // Ab 1280 px steht „Deine Leute“ fest neben den Spalten (ADR-017): Das Sheet führt nicht zur Liste zurück.
+  const desktop = useMediaQuery('(min-width: 1280px)');
   const [busy, setBusy] = useState(false);
   const [sheetFailed, setSheetFailed] = useState(false);
   const [dismissed, setDismissed] = useState<ReadonlySet<string>>(new Set());
@@ -300,7 +303,7 @@ export function HighFive() {
             setBusy(true);
             renameContact(contact.id, name)
               .then(() => {
-                setSheet({ kind: 'contacts' });
+                setSheet(desktop ? null : { kind: 'contacts' });
               })
               .catch(() => {
                 setSheetFailed(true);
@@ -313,7 +316,7 @@ export function HighFive() {
             setSheet({ kind: 'remove', id: contact.id });
           }}
           onBack={() => {
-            setSheet({ kind: 'contacts' });
+            setSheet(desktop ? null : { kind: 'contacts' });
           }}
         />
       ) : null}
@@ -325,7 +328,7 @@ export function HighFive() {
           confirmLabel="Entfernen"
           onConfirm={async () => {
             await deleteContact(contact.id);
-            setSheet(model.contacts.length > 1 ? { kind: 'contacts' } : null);
+            setSheet(model.contacts.length > 1 && !desktop ? { kind: 'contacts' } : null);
           }}
           onClose={() => {
             setSheet({ kind: 'contact', id: contact.id });

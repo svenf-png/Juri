@@ -7,6 +7,22 @@ import { asInstalledApp, onboard, watchPage } from './helpers';
  * Bearbeiten (Ein- und Ausrücken, Verschieben, Verwerfen).
  */
 
+/** Ab 1280 px (Desktop-Gestaltung, ADR-017) steht „Punkt bearbeiten“ als Spalte statt als Sheet. */
+const isDesktop = (page: Page) => (page.viewportSize()?.width ?? 0) >= 1280;
+const pointEditor = (page: Page) =>
+  isDesktop(page)
+    ? page.getByRole('complementary', { name: 'Punkt bearbeiten' })
+    : page.getByRole('dialog', { name: 'Punkt bearbeiten' });
+/** Das Sheet schließt mit „Fertig“; in der Spalte gibt es das nicht. */
+async function finishPoint(page: Page) {
+  if (!isDesktop(page)) await pointEditor(page).getByRole('button', { name: 'Fertig' }).click();
+}
+/** Die Suche nach Karten: Popover am Handy, Liste in der Spalte am Rechner. */
+const linkPicker = (page: Page) =>
+  isDesktop(page)
+    ? page.getByRole('group', { name: 'Mit Karte verknüpfen' })
+    : page.getByRole('dialog', { name: 'Mit Karte verknüpfen' });
+
 /** Stapel „Amtshaftung“ im Rechtsgebiet Zivilrecht mit einer Frage. */
 async function seedDeck(page: Page) {
   await page.goto('/Juri/stapel');
@@ -40,19 +56,19 @@ async function createSchema(page: Page) {
 
   // Erster Punkt mit Norm und Inhalt.
   await page.getByRole('button', { name: 'Ersten Punkt hinzufügen' }).click();
-  const sheet = page.getByRole('dialog', { name: 'Punkt bearbeiten' });
+  const sheet = pointEditor(page);
   await sheet.getByLabel('Text').fill('Ausübung eines öffentlichen Amtes');
   await sheet.getByLabel('Norm').fill('Art. 34 S. 1 GG');
   await sheet.getByLabel('Inhalt').fill('Enger Zusammenhang mit der hoheitlichen Aufgabe.');
-  await sheet.getByRole('button', { name: 'Fertig' }).click();
+  await finishPoint(page);
 
   // Zweiter Punkt, dritter als Unterpunkt.
   await page.getByRole('button', { name: 'Punkt hinzufügen' }).click();
   await sheet.getByLabel('Text').fill('Drittbezogene Amtspflicht');
-  await sheet.getByRole('button', { name: 'Fertig' }).click();
+  await finishPoint(page);
   await page.getByRole('button', { name: 'Punkt hinzufügen' }).click();
   await sheet.getByLabel('Text').fill('Drittbezogenheit');
-  await sheet.getByRole('button', { name: 'Fertig' }).click();
+  await finishPoint(page);
   await page.getByRole('button', { name: 'Einrücken' }).click();
   await expect(page.getByRole('button', { name: /^a\) Drittbezogenheit/ })).toBeVisible();
 }
@@ -73,7 +89,7 @@ test.describe('Schema', () => {
 
     // Verknüpfen: „Drittbezogenheit“ ist ausgewählt; die Suche startet mit dem Punkttext.
     await page.getByRole('button', { name: 'Mit Karte verknüpfen' }).last().click();
-    const picker = page.getByRole('dialog', { name: 'Mit Karte verknüpfen' });
+    const picker = linkPicker(page);
     await picker.getByLabel('Karte suchen').fill('drittbezogen');
     await picker.getByRole('button', { name: /Wann ist eine Amtspflicht drittbezogen/ }).click();
     await expect(page.getByRole('button', { name: 'Verknüpfte Karte ändern' })).toBeVisible();
@@ -133,7 +149,7 @@ test.describe('Schema', () => {
     await seedDeck(page);
     await createSchema(page);
     await page.getByRole('button', { name: 'Mit Karte verknüpfen' }).last().click();
-    const picker = page.getByRole('dialog', { name: 'Mit Karte verknüpfen' });
+    const picker = linkPicker(page);
     await picker.getByLabel('Karte suchen').fill('drittbezogen');
     await picker.getByRole('button', { name: /Wann ist eine Amtspflicht drittbezogen/ }).click();
     await page.getByRole('button', { name: 'Sichern' }).click();
@@ -178,11 +194,13 @@ test.describe('Schema', () => {
     const row = await point.locator('xpath=..').boundingBox();
     const number = await point.locator('span').first().boundingBox();
     expect(number!.x).toBeGreaterThanOrEqual(row!.x + 2);
-    // Nach oben verschieben (Punkt-Sheet, zweites Antippen).
-    await page.getByRole('button', { name: /^3\. Drittbezogenheit, bearbeiten/ }).click();
-    await page.getByRole('dialog').getByRole('button', { name: 'Nach oben' }).click();
+    // Nach oben verschieben (Handy: Punkt-Sheet beim zweiten Antippen, Rechner: die Spalte).
+    if (!isDesktop(page)) {
+      await page.getByRole('button', { name: /^3\. Drittbezogenheit, bearbeiten/ }).click();
+    }
+    await pointEditor(page).getByRole('button', { name: 'Nach oben' }).click();
     await expect(page.getByRole('button', { name: /^2\. Drittbezogenheit/ })).toBeVisible();
-    await page.getByRole('dialog').getByRole('button', { name: 'Löschen' }).click();
+    await pointEditor(page).getByRole('button', { name: 'Löschen' }).click();
     await expect(page.getByRole('button', { name: /Drittbezogenheit/ })).toHaveCount(0);
 
     // Zurück mit Änderungen fragt nach; Verwerfen verlässt den Editor ohne Punkte zu sichern.
@@ -205,7 +223,7 @@ test.describe('Schema', () => {
     await seedDeck(page);
     await createSchema(page);
     await page.getByRole('button', { name: 'Mit Karte verknüpfen' }).last().click();
-    const picker = page.getByRole('dialog', { name: 'Mit Karte verknüpfen' });
+    const picker = linkPicker(page);
     await picker.getByLabel('Karte suchen').fill('Verjährung');
     await expect(picker.getByText('Keine Karte gefunden.')).toBeVisible();
     await picker.getByRole('button', { name: '+ Neue Karte „Verjährung“ anlegen' }).click();
