@@ -1,11 +1,19 @@
 /** Testdaten-Menü, nur in der Testinstanz (Entscheidung 10). */
 import { replaceTables } from '@/data/backup';
 import { addDemoDecks } from '@/demo/addDemoDecks';
+import { demoLargeTables } from '@/demo/demoLarge';
 import { demoTables } from '@/demo/demoProfile';
 import { database } from '../app/database';
 
 export async function loadDemoProfile(now = Date.now()): Promise<void> {
   await replaceTables(database(), demoTables(now));
+}
+
+/** Großer Datensatz für Messungen (M12): 5.000 Karten, ersetzt alle Daten der Testinstanz. */
+export async function loadDemoLarge(now = Date.now()): Promise<{ cards: number; decks: number }> {
+  const { tables, cards, decks } = demoLargeTables(now);
+  await replaceTables(database(), tables);
+  return { cards, decks };
 }
 
 /** Fügt die Demo-Stapel hinzu, ohne vorhandene Daten zu ändern. */

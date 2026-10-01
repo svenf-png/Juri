@@ -25,7 +25,7 @@ const HOUR = 3_600_000;
 
 export const LARGE_CARD_COUNT = 5000;
 export const LARGE_DECK_COUNT = 50;
-const AREAS = ['ZR', 'SR', 'ÖR', 'AR', 'HR', 'StPO', 'ZPO', 'VwGO'];
+const AREAS = ['ZR', 'SR', 'ÖR', 'AR', 'HR', 'STPO', 'ZPO', 'VWGO'];
 const WEEKS = 13;
 
 function lcg(seed: number) {
@@ -106,7 +106,7 @@ export function demoLargeTables(now: number, count = LARGE_CARD_COUNT): LargeDat
   for (let i = 0; i < count; i++) {
     const deck = decks[i % deckCount];
     if (!deck) continue;
-    const kind = i % 10 === 9 ? 'schema' : i % 5 === 4 ? 'cloze' : 'qa';
+    const kind = i % 10 === 9 ? 'schema' : i % 10 === 4 || i % 10 === 8 ? 'cloze' : 'qa';
     const checked = checkCard(fields(i, kind));
     if (!checked.ok) throw new Error(`Ungültige Karte ${String(i)} im großen Datensatz`);
     const at = now - WEEKS * 7 * DAY + Math.floor((i / count) * (WEEKS * 7 - 1) * DAY);
@@ -127,9 +127,12 @@ export function demoLargeTables(now: number, count = LARGE_CARD_COUNT): LargeDat
   const learned = items.map((item) => {
     if (random() > 0.7) return item;
     const intervalDays = Math.max(1, Math.round(random() * random() * 90));
-    const lastAt = now - Math.floor(random() * 60 + 1) * DAY - Math.floor(random() * 12) * HOUR;
-    const lastReviewedAt = Math.max(item.createdAt, lastAt);
-    const due = lastReviewedAt + intervalDays * DAY;
+    // Etwa 8 % der gelernten Abfragen sind fällig (vor 0 bis 10 Tagen), der Rest in 1 bis 120 Tagen.
+    const dueNow = random() < 0.08;
+    const due = dueNow
+      ? now - Math.floor(random() * 10 * DAY)
+      : now + Math.floor((1 + random() * 120) * DAY);
+    const lastReviewedAt = Math.min(now - HOUR, Math.max(item.createdAt, due - intervalDays * DAY));
     const stability = intervalDays * 1.1;
     const fsrs = {
       due,
