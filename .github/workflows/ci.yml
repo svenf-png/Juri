@@ -48,7 +48,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      # Die Installation hing mehrfach über 30 Minuten (apt); mit Limit scheitert der Schritt früh und lässt sich neu starten.
       - run: npx playwright install --with-deps webkit chromium firefox
+        timeout-minutes: 10
       - run: npm run build
       - run: npx playwright test --shard=${{ matrix.shard }}/6
       - if: failure()
