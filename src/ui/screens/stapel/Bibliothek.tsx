@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import type { LibraryModel, StackRow } from '@/domain/library/library';
 import { highlight, type SearchHit } from '@/domain/library/search';
 import { PencilIcon, SearchIcon, StackIcon } from '../../components/icons';
+import { Kbd } from '../../components/Kbd';
 import { Button } from '../../components/Button';
 import { cx } from '../../cx';
 import rise from '../../motion/rise.module.css';
@@ -146,6 +147,7 @@ export function Bibliothek({
           autoCorrect="off"
           spellCheck={false}
         />
+        <Kbd>/</Kbd>
       </label>
 
       {model.empty ? null : (

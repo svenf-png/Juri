@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import type { DeadlineCard, DeadlinesModel } from '@/domain/deadlines/list';
 import { CalendarIcon } from '../../components/icons';
+import { Kbd } from '../../components/Kbd';
 import { BackLink, Screen } from '../../components/Screen';
 import { cx } from '../../cx';
 import tap from '../../motion/tap.module.css';
@@ -122,14 +123,22 @@ export function FristenView({ model, onAdd, onOpen, onExport, exportNote }: Fris
         ))
       )}
 
-      <button type="button" className={cx(styles.add, tap.tap)} onClick={onAdd}>
-        + Frist hinzufügen
-      </button>
-      {onExport && exportable ? (
-        <button type="button" className={styles.export} onClick={onExport} data-addition>
-          Fristen als Kalenderdatei sichern
+      <div className={styles.actions}>
+        <button
+          type="button"
+          className={cx(styles.add, tap.tap)}
+          onClick={onAdd}
+          aria-keyshortcuts="F"
+        >
+          + Frist hinzufügen
+          <Kbd tone="dark">F</Kbd>
         </button>
-      ) : null}
+        {onExport && exportable ? (
+          <button type="button" className={styles.export} onClick={onExport} data-addition>
+            Fristen als Kalenderdatei sichern
+          </button>
+        ) : null}
+      </div>
       {exportNote ? (
         <p className={styles.note} role="status" data-addition>
           {exportNote}

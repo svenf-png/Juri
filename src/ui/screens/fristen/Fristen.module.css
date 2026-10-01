@@ -220,6 +220,10 @@
   color: var(--muted);
 }
 
+.actions {
+  display: contents;
+}
+
 .add {
   height: 56px;
   flex-shrink: 0;
@@ -283,4 +287,96 @@
   font-size: 16px;
   line-height: 1.5;
   color: var(--muted);
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopFristen.dc.html): Kopf links, die Knöpfe rechts
+ * daneben; darunter die Karten in zwei Spalten, die nächste Frist über die ganze Breite.
+ */
+@media (min-width: 1280px) {
+  .screen {
+    /* 40 px oben wie die übrigen Bildschirme: Screen rechnet --screen-top plus --top-shift (47 px weniger). */
+    --screen-top: 87px;
+    max-width: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    gap: 16px;
+  }
+
+  .back {
+    display: none;
+  }
+
+  .head {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0 0 12px;
+    gap: 8px;
+  }
+
+  .title {
+    font-size: 44px;
+    line-height: 1.05;
+  }
+
+  .lead {
+    font-size: 16px;
+    line-height: 1.45;
+    max-width: 60ch;
+  }
+
+  .actions {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .add,
+  .export,
+  .export:hover {
+    box-sizing: border-box;
+    height: 48px;
+    min-height: 48px;
+    padding: 0 22px;
+    border-radius: var(--radius-button-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .export,
+  .export:hover {
+    border: 1.5px solid var(--border-soft);
+    background: var(--bg);
+    color: var(--ink);
+  }
+
+  .hero {
+    grid-column: span 2;
+  }
+
+  .section,
+  .empty,
+  .note {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Mit Zeiger: Violett wird Link-Violett, Tinte Violett-900, der Rand des Umrisses Violett-Rand. */
+@media (min-width: 1280px) and (hover: hover) {
+  .add:hover {
+    background: var(--violet-900);
+  }
+
+  .export:hover {
+    border-color: var(--dash-cloze);
+  }
 }

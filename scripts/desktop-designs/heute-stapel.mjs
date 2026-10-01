@@ -122,7 +122,7 @@ const STACKS = [
 ];
 
 const stackRow = ([name, meta, due, selected]) =>
-  `<div class="${selected ? '' : 'hv-row'}" style="min-height: 56px; border-radius: 14px; padding: 8px 10px; box-sizing: border-box; display: flex; align-items: center; gap: 8px; ${selected ? 'background: #F6F4FB; box-shadow: inset 3px 0 0 #6A3FE0' : ''}">
+  `<div class="${selected ? '' : 'hv-row'}" style="min-height: 56px; border-radius: 14px; padding: 6px 10px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; ${selected ? 'background: #F6F4FB; box-shadow: inset 3px 0 0 #6A3FE0' : ''}">
     <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 15px; font-weight: 700">${name}</span><span style="font-size: 12.5px; color: #6B6678; font-weight: 500">${meta}</span></span>
     <span style="min-width: 26px; height: 26px; border-radius: 13px; background: #EEE8FD; color: #4B2AA8; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">${due}</span>
   </div>`;
@@ -132,12 +132,12 @@ const CARDS = [
     'Frage',
     'Wer haftet nach Art. 34 S. 1 GG im Außenverhältnis?',
     'Art. 34 S. 1 GG',
-    'fällig heute',
+    'heute fällig',
     true,
   ],
   ['Schema', 'Amtshaftungsanspruch: Prüfungsaufbau', '§ 839 BGB', 'fällig morgen'],
   ['Lücke', 'Subsidiarität bei Fahrlässigkeit', '§ 839 I 2 BGB', 'fällig in 5 Tagen'],
-  ['Abdeckung', 'Übersicht Staatshaftung', 'PDF S. 3', 'überfällig seit 2 Tagen', true],
+  ['Abdeckung', 'Übersicht Staatshaftung', 'PDF S. 3', 'überfällig seit 2 Tagen'],
   ['Frage', 'Wann ist eine Amtspflicht drittbezogen?', '§ 839 BGB', 'Neu, heute dran'],
   [
     'Frage',
@@ -147,12 +147,12 @@ const CARDS = [
   ],
 ];
 
-const cardRow = ([type, front, norm, due, hot]) =>
+const cardRow = ([type, front, norm, due]) =>
   `<div class="hv-row" style="display: grid; grid-template-columns: 96px minmax(0, 1fr) 150px 170px; align-items: center; gap: 16px; min-height: 60px; padding: 0 12px; border-radius: 12px; border-bottom: 1px solid #EFECF5">
     <span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6A3FE0">${type}</span>
     <span style="font-size: 16px; font-weight: 650; line-height: 1.3">${front}</span>
     <span style="font-size: 13.5px; font-weight: 600; color: #6B6678">${norm}</span>
-    <span style="font-size: 13.5px; font-weight: 600; ${hot ? 'color: #4B2AA8' : 'color: #6B6678'}">${due}</span>
+    <span style="font-size: 13.5px; font-weight: 600; color: #6B6678">${due}</span>
   </div>`;
 
 /** Stapel: Liste neben der Sidebar, rechts die Karten als Tabelle; der Inhalt rechts wird gedeckelt. */
@@ -162,15 +162,15 @@ const stapel = (
 ) => `<div style="width: ${w}px; height: ${h}px; box-sizing: border-box; background: #FFFFFF; display: flex; overflow: hidden">
   ${sidebar('stapel')}
   <section style="width: 340px; flex-shrink: 0; box-sizing: border-box; border-right: 1px solid #EFECF5; padding: 34px 20px 20px 20px; display: flex; flex-direction: column; gap: 16px">
-    <div style="display: flex; align-items: baseline; justify-content: space-between">
+    <div style="display: flex; align-items: center; justify-content: space-between">
       <h1 class="d" style="margin: 0; font-size: 34px; font-weight: 750; letter-spacing: -0.03em">Stapel</h1>
-      <a href="#" style="font-size: 14px; font-weight: 700; color: #5B34D1">+ Stapel</a>
+      <a href="#" style="font-size: 15px; font-weight: 700; color: #5B34D1">+ Stapel</a>
     </div>
     <label style="height: 42px; border-radius: 12px; background: #F6F4FB; display: flex; align-items: center; gap: 8px; padding: 0 10px 0 12px; color: #6B6678">${icon('search', 16)}<span style="flex-grow: 1; font-size: 15px; color: #726E7A">Karten, Normen, Tags</span>${kbd('/')}</label>
     <div style="display: flex; gap: 6px">
-      <span style="height: 38px; padding: 0 16px; border-radius: 19px; background: #6A3FE0; color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center">Alle</span>
-      ${['ZR', 'SR', 'ÖR'].map((c) => `<span class="hv-outline" style="height: 38px; padding: 0 16px; border-radius: 19px; border: 1.5px solid #EFECF5; box-sizing: border-box; font-size: 14px; font-weight: 700; display: flex; align-items: center">${c}</span>`).join('')}
-      <span class="hv-outline" style="width: 38px; height: 38px; border-radius: 19px; border: 1.5px solid #EFECF5; box-sizing: border-box; display: flex; align-items: center; justify-content: center">${icon('pencil', 16)}</span>
+      <span style="height: 34px; padding: 0 14px; border-radius: 17px; background: #6A3FE0; color: #FFFFFF; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">Alle</span>
+      ${['ZR', 'SR', 'ÖR'].map((c) => `<span class="hv-outline" style="height: 34px; padding: 0 14px; border-radius: 17px; border: 1.5px solid #E4DDF7; box-sizing: border-box; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">${c}</span>`).join('')}
+      <span class="hv-outline" style="width: 34px; height: 34px; border-radius: 17px; border: 1.5px solid #E4DDF7; box-sizing: border-box; display: flex; align-items: center; justify-content: center">${icon('pencil', 16)}</span>
     </div>
     <div style="display: flex; flex-direction: column; gap: 14px; overflow: hidden">
       ${STACKS.map(([name, rows]) => `<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 800; color: #6B6678; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px">${name}</span>${rows.map(stackRow).join('')}</div>`).join('')}
@@ -180,8 +180,8 @@ const stapel = (
     <div style="width: 100%; max-width: 1100px; box-sizing: border-box; padding: 34px 48px; display: flex; flex-direction: column; gap: 20px">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px">
         <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
-          <h2 class="d" style="margin: 0; font-size: 40px; font-weight: 750; letter-spacing: -0.03em">Amtshaftung</h2>
-          <span style="font-size: 15px; color: #6B6678">§ 839 BGB i. V. m. Art. 34 GG · von Mara · 21 Karten</span>
+          <div style="display: flex; align-items: center; gap: 4px"><h2 class="d" style="margin: 0; font-size: 40px; font-weight: 750; letter-spacing: -0.03em">Amtshaftung</h2><span aria-label="Stapel-Menü" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #6B6678">${icon('more', 24)}</span></div>
+          <span style="font-size: 15px; color: #6B6678">§ 839 BGB i. V. m. Art. 34 GG · von Mara · Version 3 · 21 Karten</span>
         </div>
         <div style="display: flex; gap: 10px; flex-shrink: 0">
           <a href="DesktopTeilen.dc.html" aria-label="Stapel teilen" class="tap hv-card" style="width: 48px; height: 48px; border-radius: 16px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center">${icon('share')}</a>
@@ -191,7 +191,7 @@ const stapel = (
       <div style="display: flex; gap: 8px; flex-wrap: wrap">
         <span style="height: 34px; padding: 0 14px; border-radius: 17px; background: #17141F; color: #FFFFFF; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">Zivilrecht</span>
         <span style="height: 34px; padding: 0 14px; border-radius: 17px; background: #17141F; color: #FFFFFF; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">Öffentliches Recht</span>
-        <span style="height: 34px; padding: 0 14px; border-radius: 17px; border: 1.5px dashed #CFC8E0; box-sizing: border-box; color: #6B6678; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">+ Rechtsgebiet</span>
+        <span style="height: 34px; padding: 0 14px; border-radius: 17px; border: 1.5px dashed #CFC8E0; color: #6B6678; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">+ Rechtsgebiet</span>
       </div>
       <div style="display: flex; flex-direction: column; gap: 8px">
         <div style="display: flex; height: 12px; gap: 3px"><span style="width: 48%; background: #6A3FE0; border-radius: 6px"></span><span style="width: 33%; background: #C9B8F7; border-radius: 6px"></span><span style="width: 19%; background: #EEE8FD; border-radius: 6px"></span></div>

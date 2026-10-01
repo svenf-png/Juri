@@ -228,6 +228,9 @@ export function HighFive() {
         onContacts={() => {
           setSheet({ kind: 'contacts' });
         }}
+        onContact={(id) => {
+          setSheet({ kind: 'contact', id });
+        }}
         onOpenGreeting={openGreeting}
       />
       {given ? (

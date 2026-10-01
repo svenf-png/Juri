@@ -1,0 +1,41 @@
+/*
+ * Tastenhinweis am Rechner (Desktop-Gestaltung, ADR-017): Chip mit der Taste, nur ab 1280 px
+ * sichtbar. Höhe 22, Radius 8 (Token `tag`), Schrift 12/700 wie die Kennzeichen der Karten.
+ */
+.kbd {
+  display: none;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  border-radius: var(--radius-tag);
+  border: 1.5px solid var(--border-soft);
+  background: var(--bg);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+@media (min-width: 1280px) {
+  .kbd {
+    display: inline-flex;
+  }
+}
+
+/* Auf Violett oder Tinte: durchscheinendes Weiß. */
+.dark {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--bg);
+}
+
+/* Auf einer Fläche (Seitenfeld): Tinte statt Grau. */
+.onSurface {
+  color: var(--ink);
+}

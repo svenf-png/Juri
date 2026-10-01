@@ -3,6 +3,8 @@
  * Bildschirme reichen die Taste samt Zustand herein und führen die Aktion aus.
  */
 
+import type { Platform } from './environment';
+
 export interface KeyInput {
   key: string;
   ctrlKey: boolean;
@@ -94,4 +96,9 @@ export function pdfShortcut(input: KeyInput): PdfAction | null {
     default:
       return null;
   }
+}
+
+/** Beschriftung der Strg- oder Cmd-Taste in Tastenhinweisen: Cmd auf dem Mac, sonst Strg. */
+export function modifierLabel(platform: Platform): string {
+  return platform === 'Mac' ? '⌘' : 'Strg';
 }

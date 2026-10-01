@@ -264,7 +264,7 @@ export function routes(
       ),
     },
     // Lernen und Lernrhythmus mit den Beispieldaten der Designs (Bildvergleich, A12).
-    ...(['frage', 'luecke'] as const).map((variant) => ({
+    ...(['frage', 'luecke', 'antwort', 'schema', 'geschafft'] as const).map((variant) => ({
       path: `/styleguide/lernen/${variant}`,
       element: (
         <Lazy>
@@ -335,7 +335,7 @@ export function routes(
       ),
     },
     // Stapel und Erstellen mit den Beispieldaten der Designs (Bildvergleich, A12).
-    ...(['liste', 'detail', 'ipad'] as const).map((screen) => ({
+    ...(['liste', 'detail', 'ipad', 'desktop'] as const).map((screen) => ({
       path: `/styleguide/stapel/${screen}`,
       element: (
         <Lazy>

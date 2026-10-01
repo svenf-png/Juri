@@ -45,8 +45,8 @@ const cardStack = (height, face) => `<div style="position: relative; height: ${h
       ${face}
     </div>`;
 
-const faceBox = (height, inner) =>
-  `<div style="position: relative; height: ${height}px; box-sizing: border-box; border-radius: 32px; background: #FFFFFF; box-shadow: 0 30px 60px -36px rgba(46,26,115,.4); padding: 36px; display: flex; flex-direction: column; gap: 22px">${inner}</div>`;
+const faceBox = (height, inner, gap = 22) =>
+  `<div style="position: relative; height: ${height}px; box-sizing: border-box; border-radius: 32px; background: #FFFFFF; box-shadow: 0 30px 60px -36px rgba(46,26,115,.4); padding: 36px; display: flex; flex-direction: column; gap: ${gap}px">${inner}</div>`;
 
 const front = (height) =>
   faceBox(
@@ -64,7 +64,7 @@ const back = (height) =>
         <div style="font-size: 16px; font-weight: 600; color: #6B6678; line-height: 1.35">Was versteht man unter Gewahrsam?</div>
         <div style="font-size: 24px; line-height: 1.45; font-weight: 500; max-width: 600px">Die von einem Herrschaftswillen getragene tatsächliche Sachherrschaft eines Menschen über eine Sache, deren Reichweite sich nach der Verkehrsanschauung bestimmt.</div>
       </div>
-      <div style="margin-top: auto; border-radius: 16px; background: #F6F4FB; padding: 12px 16px; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #6B6678">${icon('note', 18)}<span><strong style="color: #17141F">Notiz</strong> Fall Rucksack im Hörsaal: Gewahrsam bleibt beim Studenten.</span></div>`,
+      <div style="margin-top: auto; display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-radius: 16px; background: #F6F4FB"><span style="flex-shrink: 0; margin-top: 1px; color: #6A3FE0; display: flex">${icon('note', 20)}</span><div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6B6678">Notiz</span><span style="font-size: 14px; font-weight: 600; line-height: 1.4">Fall Rucksack im Hörsaal: Gewahrsam bleibt beim Studenten.</span></div></div>`,
   );
 
 const POINTS = [
@@ -75,11 +75,11 @@ const POINTS = [
   ['5.', '', '', false, 'hidden'],
 ];
 
-const pointRow = ([n, text, norm, link, look]) => {
+const pointRow = ([n, text, norm, link, look], i) => {
   const hidden = look === 'hidden';
-  return `<div style="display: flex; align-items: center; gap: 14px; min-height: 56px; border-bottom: 1px solid #F1EEF7; ${look === 'current' ? 'margin: 0 -12px; padding: 0 12px; border-radius: 14px; background: #F6F4FB; border-bottom-color: transparent' : ''}">
-        <span style="width: 28px; height: 28px; border-radius: 14px; background: ${look === 'current' ? '#6A3FE0' : '#F6F4FB'}; color: ${look === 'current' ? '#FFFFFF' : '#4B2AA8'}; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">${n.replace('.', '')}</span>
-        ${hidden ? '<span style="flex-grow: 1; height: 14px; border-radius: 7px; background: #EEE8FD; max-width: 260px"></span>' : `<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 18px; font-weight: 650">${text}</span><span style="font-size: 13px; color: #6B6678; font-weight: 500">${norm}</span></span>`}
+  return `<div style="display: flex; align-items: center; gap: 12px; min-height: 56px; border-bottom: 1px solid #F1EEF7; ${look === 'current' ? 'margin: 0 -12px; padding: 0 12px; border-radius: 14px; background: #F6F4FB; border-bottom-color: transparent' : ''}">
+        <span style="width: 28px; height: 28px; border-radius: 14px; background: ${hidden ? '#EEE8FD' : '#6A3FE0'}; color: ${hidden ? '#4B2AA8' : '#FFFFFF'}; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">${n.replace('.', '')}</span>
+        ${hidden ? `<span style="flex-grow: 1; height: 14px; border-radius: 7px; background: #F1EEF7; max-width: ${[150, 110][i - 3]}px"></span>` : `<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 18px; font-weight: 650">${text}</span><span style="font-size: 13px; color: #6B6678; font-weight: 500">${norm}</span></span>`}
         ${link ? `<span style="height: 30px; padding: 0 11px; border-radius: 15px; background: #EEE8FD; color: #4B2AA8; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px">${icon('link', 14, 2.2)}Karte</span>` : ''}
       </div>`;
 };
@@ -92,22 +92,54 @@ const schemaFace = (height) =>
       <div style="display: flex; flex-direction: column">${POINTS.map(pointRow).join('')}</div>`,
   );
 
+/** Abdeckung wie Abdeckung.dc.html: Hochformat-Bild mit drei Feldern (Prozent des Bildes), Marke der Herkunft. */
 const coverFace = (height) =>
   faceBox(
     height,
-    `<div style="display: flex; gap: 8px; align-items: center">${areaTag('ZR')}${typeTag('Abdeckung')}<span style="margin-left: auto; font-size: 14px; font-weight: 700; color: #6A3FE0">§ 932 BGB</span></div>
-      <div style="flex-grow: 1; border-radius: 20px; background: #FBFAFD; border: 1.5px solid #EFECF5; position: relative; overflow: hidden">
-        <div style="position: absolute; left: 36px; top: 34px; width: 330px; height: 14px; border-radius: 7px; background: #E4DDF7"></div>
-        <div style="position: absolute; left: 36px; top: 62px; width: 520px; height: 10px; border-radius: 5px; background: #EFECF5"></div>
-        <div style="position: absolute; left: 36px; top: 84px; width: 470px; height: 10px; border-radius: 5px; background: #EFECF5"></div>
-        <div style="position: absolute; left: 36px; top: 118px; width: 250px; height: 54px; border-radius: 12px; background: #17141F"></div>
-        <div style="position: absolute; left: 304px; top: 118px; width: 250px; height: 54px; border-radius: 12px; background: #6A3FE0; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 800; font-size: 20px">2 ?</div>
-        <div style="position: absolute; left: 36px; top: 196px; width: 320px; height: 54px; border-radius: 12px; background: #17141F"></div>
-        <div style="position: absolute; left: 36px; top: 276px; width: 500px; height: 10px; border-radius: 5px; background: #EFECF5"></div>
-        <div style="position: absolute; left: 36px; top: 298px; width: 380px; height: 10px; border-radius: 5px; background: #EFECF5"></div>
-        <span style="position: absolute; left: 16px; bottom: 14px; height: 26px; padding: 0 10px; border-radius: 13px; background: #FFFFFF; box-shadow: 0 0 0 1px #EFECF5; font-size: 12px; font-weight: 700; color: #4B2AA8; display: flex; align-items: center; gap: 6px">${icon('file', 14, 2.2)}PDF · Skript Sachenrecht S. 14</span>
-      </div>
-      <div style="font-size: 14px; font-weight: 600; color: #6B6678; display: flex; align-items: center; gap: 8px">Feld 2 gefragt · Klicken deckt auf</div>`,
+    `<div style="display: flex; gap: 8px; align-items: center">${areaTag('ZR')}${typeTag('Abdeckung 2 von 3')}</div>
+      <div class="d" style="font-size: 24px; font-weight: 700; letter-spacing: -0.015em; flex-shrink: 0">Was steht unter Feld 2?</div>
+      <div style="position: relative; flex: 1 1 0; min-height: 0; box-sizing: border-box; border-radius: 14px; background: #FBFAFD; border: 1px solid #EFECF5; overflow: hidden; display: flex; align-items: center; justify-content: center">
+        <div style="position: relative; height: 100%; aspect-ratio: 304 / 412; flex-shrink: 0">
+          <div style="position: absolute; inset: 0; padding: 20px 18px; box-sizing: border-box; display: flex; flex-direction: column; gap: 9px">
+            ${[
+              ['55%', 12, '#CFCAD9'],
+              ['6px', 0, null],
+              ['100%', 7, '#E6E2EE'],
+              ['94%', 7, '#E6E2EE'],
+              ['97%', 7, '#E6E2EE'],
+              ['60%', 7, '#E6E2EE'],
+              ['8px', 0, null],
+              ['100%', 7, '#E6E2EE'],
+              ['90%', 7, '#E6E2EE'],
+              ['96%', 7, '#E6E2EE'],
+              ['99%', 7, '#E6E2EE'],
+              ['45%', 7, '#E6E2EE'],
+              ['8px', 0, null],
+              ['100%', 7, '#E6E2EE'],
+              ['93%', 7, '#E6E2EE'],
+              ['70%', 7, '#E6E2EE'],
+            ]
+              .map(([w, h, c]) =>
+                c === null
+                  ? `<span style="height: ${w}; flex-shrink: 0"></span>`
+                  : `<span style="width: ${w}; height: ${h}px; border-radius: 4px; background: ${c}; flex-shrink: 0"></span>`,
+              )
+              .join('')}
+          </div>
+          ${[
+            [1, 30 / 304, 58 / 412, 150 / 304, 30 / 412, false],
+            [2, 90 / 304, 148 / 412, 190 / 304, 30 / 412, true],
+            [3, 26 / 304, 238 / 412, 120 / 304, 30 / 412, false],
+          ]
+            .map(
+              ([n, x, y, w, h, asked]) =>
+                `<div style="position: absolute; box-sizing: border-box; left: ${(x * 100).toFixed(3)}%; top: ${(y * 100).toFixed(3)}%; width: ${(w * 100).toFixed(3)}%; height: ${(h * 100).toFixed(3)}%; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; background: ${asked ? '#6A3FE0' : '#C9B8F7'}; color: ${asked ? '#FFFFFF' : '#2E1A73'}">${n}${asked ? ' ?' : ''}</div>`,
+            )
+            .join('')}
+        </div>
+        <span style="position: absolute; right: 12px; bottom: 10px; height: 24px; padding: 0 8px; border-radius: 12px; background: rgba(255,255,255,.9); border: 1px solid #EFECF5; font-size: 11.5px; font-weight: 700; color: #6B6678; display: flex; align-items: center">PDF · Skript Sachenrecht S. 14</span>
+      </div>`,
+    14,
   );
 
 const panelStats = (
@@ -195,7 +227,7 @@ const schema = (w, h) =>
     face: schemaFace,
     counter: '2/4',
     pct: 25,
-    action: `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px"><span class="tap hv-ink" style="height: 64px; border-radius: 20px; background: #17141F; color: #FFFFFF; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px">Nächster Punkt${kbd('Leertaste', 'dark')}</span><span class="tap hv-outline" style="height: 64px; border-radius: 20px; border: 1.5px solid #DCD6EA; box-sizing: border-box; background: #FFFFFF; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center">Alle zeigen</span></div>`,
+    action: `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px"><span class="tap hv-outline" style="height: 64px; border-radius: 20px; border: 1.5px solid #DCD6EA; box-sizing: border-box; background: #FFFFFF; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center">Alle zeigen</span><span class="tap hv-ink" style="height: 64px; border-radius: 20px; background: #17141F; color: #FFFFFF; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px">Nächster Punkt${kbd('Leertaste', 'dark')}</span></div>`,
     counts: [0, 1, 0, 0],
     open: '3 Karten offen',
     undoable: true,
@@ -205,9 +237,9 @@ const abdeckung = (w, h) =>
   stage(w, h, {
     cardH: 580,
     face: coverFace,
-    counter: '4/4',
-    pct: 75,
-    action: `<span class="tap hv-ink" style="height: 64px; border-radius: 20px; background: #17141F; color: #FFFFFF; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px">Feld 2 aufdecken${kbd('Leertaste', 'dark')}</span>`,
+    counter: '17/24',
+    pct: 71,
+    action: `<div><span class="tap hv-ink" style="height: 64px; border-radius: 20px; background: #17141F; color: #FFFFFF; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px">Feld 2 aufdecken${kbd('Leertaste', 'dark')}</span><div style="margin-top: 10px; text-align: center; font-size: 12.5px; font-weight: 600; color: #6B6678">Strg oder Cmd + Rad zum Zoomen · Feld anklicken zum Aufdecken</div></div>`,
     counts: [1, 1, 1, 0],
     open: '1 Karte offen',
     undoable: true,
@@ -227,7 +259,7 @@ const fertig = (
   </div>
   <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
     <h1 class="d" style="margin: 0; font-size: 56px; font-weight: 750; letter-spacing: -0.03em">Geschafft.</h1>
-    <p style="margin: 0; font-size: 18px; color: #6B6678; line-height: 1.45">4 Karten in dieser Runde. Morgen kommen 9 dazu.</p>
+    <p style="margin: 0; font-size: 18px; color: #6B6678; line-height: 1.45; max-width: 560px">4 Wiederholungen, davon 1 nochmal gelernt. 2 Karten kommen heute noch einmal.</p>
   </div>
   <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: 560px">
     ${stat(1, 'Nochmal', 'background: #FFFFFF; border: 1.5px solid #DCD6EA; color: #17141F')}${stat(1, 'Schwer', 'background: #EEE8FD; color: #2E1A73')}${stat(1, 'Gut', 'background: #C9B8F7; color: #17141F')}${stat(1, 'Leicht', 'background: #6A3FE0; color: #FFFFFF')}

@@ -990,6 +990,11 @@
   gap: 14px;
 }
 
+/* Tabelle der Desktop-Gestaltung; darunter unsichtbar (die Kacheln gelten). */
+.table {
+  display: none;
+}
+
 .tile,
 .tile:hover {
   min-height: 118px;
@@ -1033,4 +1038,96 @@
   font-weight: 650;
   line-height: 1.35;
   overflow-wrap: anywhere;
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopStapel.dc.html): Die Detailspalte wird auf
+ * 1100 px gedeckelt (Liste 340 px plus Detail ergibt 1440 px) und zeigt die Karten als Tabelle
+ * mit Typ, Karte, Norm und Fälligkeit statt als Kacheln.
+ */
+@media (min-width: 1280px) {
+  .search {
+    padding: 0 10px 0 12px;
+  }
+
+  .detail {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: calc(34px + var(--top-inset)) 48px 40px;
+  }
+
+  .grid {
+    display: none;
+  }
+
+  .table {
+    display: flex;
+    flex-direction: column;
+    margin: 4px -12px 0;
+  }
+
+  .tHead,
+  .tRow,
+  .tRow:hover {
+    /* Das Board rechnet ohne border-box: Höhe plus Linie. */
+    box-sizing: content-box;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr) 150px 170px;
+    align-items: center;
+    gap: 16px;
+    padding: 0 12px;
+  }
+
+  .tHead {
+    height: 34px;
+    border-bottom: 1.5px solid var(--line);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .tRows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tRow,
+  .tRow:hover {
+    min-height: 60px;
+    border-radius: 12px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+
+  .tType {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--violet);
+  }
+
+  .tTitle {
+    font-size: 16px;
+    font-weight: 650;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .tNorm,
+  .tDue {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+}
+
+/* Mit Zeiger: Zeile in Fläche (Artboard DesktopZustaende). */
+@media (min-width: 1280px) and (hover: hover) {
+  .tRow:hover {
+    background: var(--surface);
+  }
 }

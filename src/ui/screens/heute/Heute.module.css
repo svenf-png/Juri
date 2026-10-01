@@ -226,6 +226,23 @@
   display: none;
 }
 
+/* Hüllen für die Desktop-Gestaltung: darunter ohne eigene Box, die Kinder gehören zur Spalte. */
+.hero,
+.aside {
+  display: contents;
+}
+
+/* „fällig“ hinter der Zahl: erst am Rechner sichtbar, sonst nur für Vorlesegeräte. */
+.dueWord {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 /* Gestaffeltes Einblenden wie im Design (Spezifität über .rise, das die Verzögerung zurücksetzt). */
 .heute .chipLink {
   animation-delay: 0.05s;
@@ -483,5 +500,151 @@
 
   .heute .areas {
     animation-delay: 0.25s;
+  }
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopHeute.dc.html): zwei Reihen mit zwei Spalten.
+ * Reihe 1: Kopf mit Tagesziel und „Lernen starten“ | Fristen und High five. Reihe 2: Rechtsgebiete
+ * als Kacheln | die letzten 7 Tage. Der Deckel von 1440 px liegt in AppShell.module.css.
+ */
+@media (min-width: 1280px) {
+  .heute {
+    padding: calc(40px + var(--top-inset)) 48px calc(40px + var(--bottom-inset));
+    gap: 44px 56px;
+    align-content: start;
+  }
+
+  .primary,
+  .secondary {
+    display: contents;
+  }
+
+  .hero {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    min-width: 0;
+  }
+
+  .aside {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding-top: 38px;
+    min-width: 0;
+  }
+
+  .areas {
+    grid-column: 1;
+    grid-row: 2;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .week {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+    --dot-size: 44px;
+    --dot-label-gap: 8px;
+  }
+
+  .week > ol {
+    padding-top: 10px;
+  }
+
+  .areasLabel {
+    padding-bottom: 0;
+  }
+
+  .areaList {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .areaList > li {
+    display: flex;
+  }
+
+  .area,
+  .area:hover {
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    border: 0;
+    border-radius: 20px;
+    background: var(--surface);
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto minmax(14px, 1fr) auto auto;
+    align-items: center;
+    gap: 0;
+  }
+
+  .code {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    background: var(--bg);
+  }
+
+  .chevron {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .areaName {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    font-size: 17px;
+  }
+
+  .areaDue {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    margin-top: 2px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 1.05;
+    font-weight: 780;
+    letter-spacing: -0.03em;
+  }
+
+  .dueWord {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: normal;
+    color: var(--muted);
+  }
+}
+
+/* Mit Zeiger: Fläche in Heat-0, Violett in Link-Violett (Artboard DesktopZustaende). */
+@media (min-width: 1280px) and (hover: hover) {
+  .chipLink:hover .chip,
+  .area:hover,
+  .highFive:hover {
+    background: var(--heat-0);
+  }
+
+  .cta:hover {
+    background: var(--link);
   }
 }

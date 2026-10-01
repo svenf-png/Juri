@@ -9,7 +9,6 @@ import {
   icon,
   inkButton,
   kbd,
-  label,
   pageHead,
   primaryButton,
   shell,
@@ -18,139 +17,133 @@ import {
 const toggle = (on) =>
   `<span style="width: 50px; height: 30px; border-radius: 15px; background: ${on ? '#6A3FE0' : '#DCD6EA'}; position: relative; display: block; flex-shrink: 0"><span style="position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 2px 4px rgba(0,0,0,.2); transform: translateX(${on ? 20 : 0}px)"></span></span>`;
 
-const SURFACE_CARD = 'border-radius: 28px; background: #F6F4FB;';
-
-/* Erfolge */
+/* Erfolge: Maße und Daten wie iPadErfolge.dc.html und die Vorschau der App (Erfolge.module.css). */
 const HEAT = ['#F1EEF7', '#EEE8FD', '#C9B8F7', '#9A7BEF', '#6A3FE0'];
-const heatCells = () => {
-  let seed = 7;
-  const next = () => {
-    seed = (seed * 1103515245 + 12345) % 2147483648;
-    return seed / 2147483648;
-  };
-  const cells = [];
-  for (let col = 0; col < 26; col++) {
-    for (let row = 0; row < 7; row++) {
-      const last = col === 25;
-      if (last && row > 1) {
-        cells.push('<span style="border-radius: 7px"></span>');
-        continue;
-      }
-      const r = next();
-      const level = r < 0.22 ? 0 : r < 0.42 ? 1 : r < 0.68 ? 2 : r < 0.88 ? 3 : 4;
-      const record = col === 24 && row === 2;
-      cells.push(
-        `<span style="border-radius: 7px; background: ${record ? HEAT[4] : HEAT[level]}; ${record ? 'box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #17141F' : ''}"></span>`,
-      );
-    }
-  }
-  return cells.join('');
+// Stufen der 26 Wochen, je Woche 7 Tage von oben nach unten (f = noch nicht, r = Rekord).
+const LEVELS =
+  '2,3,1,0,1,3,1,1,3,1,2,3,3,2,1,2,2,2,1,3,0,3,0,1,2,2,2,3,3,2,3,0,0,2,3,0,3,2,3,2,3,3,2,3,1,3,3,3,2,2,3,1,1,2,1,2,2,3,2,1,3,3,3,0,3,1,2,3,1,0,2,3,2,0,0,1,3,2,3,3,2,0,2,2,3,0,3,3,2,0,3,2,2,3,2,3,2,2,3,0,2,3,2,1,1,2,3,1,0,0,3,3,3,3,2,2,1,3,0,3,0,2,2,3,3,1,1,2,1,0,1,3,1,0,2,3,3,3,2,2,3,2,2,1,1,3,2,1,2,3,3,3,3,2,1,3,3,1,0,3,2,1,0,0,3,1,2,3,3,3,4r,0,2,3,1,2,f,f,f,f,f,f'.split(
+    ',',
+  );
+const heatCells = () =>
+  LEVELS.map((l) => {
+    if (l === 'f') return '<span style="border-radius: 6px"></span>';
+    const record = l.endsWith('r');
+    return `<span style="border-radius: 6px; background: ${HEAT[Number.parseInt(l, 10)]}; ${record ? 'box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #17141F' : ''}"></span>`;
+  }).join('');
+
+const BADGE_PATHS = {
+  pen: 'M4 20l4-1 11-11-3-3L5 16zM14 6l3 3',
+  stack: 'M4 8h16v12H4zM7 4.5h10',
+  tree: 'M5 4h6M8 4v16M8 10h6M8 16h6M14 8h5v4h-5zM14 14h5v4h-5z',
+  cal: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M9 15l2 2 4-4',
+  rep: 'M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4',
+  share: 'M12 15V4M8 8l4-4 4 4M5 12v7h14v-7',
 };
 
-const statTile = (n, text, { big = false, sub = '' } = {}) =>
-  `<div style="border-radius: 28px; box-sizing: border-box; padding: 20px 24px; display: flex; flex-direction: column; justify-content: center; gap: 4px; min-height: 108px; ${big ? 'background: #6A3FE0; color: #FFFFFF; flex-direction: row; align-items: center; justify-content: flex-start; gap: 16px' : 'background: #F6F4FB'}">
-    <span class="d" style="font-size: ${big ? 64 : 40}px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">${n}</span>
-    <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: ${big ? 18 : 15}px; font-weight: ${big ? 700 : 600}; ${big ? '' : 'color: #6B6678'}">${text}</span>${sub ? `<span style="font-size: 13px; opacity: .9">${sub}</span>` : ''}</span>
-  </div>`;
-
-const badge = (name, sub, ic, frac) => {
-  const c = 2 * Math.PI * 35;
-  return `<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
-    <div style="position: relative; width: 76px; height: 76px">
-      <svg width="76" height="76" viewBox="0 0 76 76" aria-hidden="true"><circle cx="38" cy="38" r="35" fill="none" stroke="#EEE8FD" stroke-width="3.5"></circle><circle cx="38" cy="38" r="35" fill="none" stroke="#6A3FE0" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="${(c * frac).toFixed(1)} 999" transform="rotate(-90 38 38)"></circle></svg>
-      <span style="position: absolute; left: 9px; top: 9px; width: 58px; height: 58px; border-radius: 29px; display: flex; align-items: center; justify-content: center; background: ${frac === 1 ? '#6A3FE0' : '#EEE8FD'}; color: ${frac === 1 ? '#FFFFFF' : '#6A3FE0'}">${icon(ic, 26)}</span>
+const badge = (name, sub, ic, fraction) => {
+  const done = fraction === 1;
+  const ring = 2 * Math.PI * 34;
+  const dash = done ? '0 999' : `${(ring * fraction).toFixed(1)} 999`;
+  return `<li style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+    <div style="position: relative; width: 76px; height: 76px; flex-shrink: 0">
+      <svg width="76" height="76" viewBox="0 0 76 76" style="position: absolute; left: 0; top: 0" aria-hidden="true"><circle cx="38" cy="38" r="34" fill="${done ? '#6A3FE0' : '#FFFFFF'}" stroke="#EEE8FD" stroke-width="5"></circle><circle cx="38" cy="38" r="34" fill="none" stroke="#6A3FE0" stroke-width="5" stroke-linecap="round" stroke-dasharray="${dash}" transform="rotate(-90 38 38)"></circle></svg>
+      <div style="position: absolute; left: 0; top: 0; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; color: ${done ? '#FFFFFF' : '#4B2AA8'}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${BADGE_PATHS[ic]}"></path></svg></div>
     </div>
-    <span style="font-size: 14px; font-weight: 700">${name}</span>
+    <span style="font-size: 13.5px; font-weight: 700; line-height: 1.2">${name}</span>
     <span style="font-size: 12px; font-weight: 600; color: #6B6678; margin-top: -6px">${sub}</span>
-  </div>`;
+  </li>`;
 };
+
+const statTile = (value, text) =>
+  `<div style="border-radius: 22px; background: #F6F4FB; padding: 18px 20px; display: flex; flex-direction: column; justify-content: center; gap: 2px"><span class="d" style="font-size: 30px; font-weight: 750; letter-spacing: -0.02em">${value}</span><span style="font-size: 14px; font-weight: 600; color: #6B6678">${text}</span></div>`;
 
 const erfolge = (w, h) =>
   shell(
     w,
     h,
     'erfolge',
-    `${pageHead('Erfolge', '', `<span class="tap hv-card" style="height: 44px; padding: 0 18px 0 14px; border-radius: 22px; background: #F6F4FB; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; color: #17141F"><span style="color: #6A3FE0; display: flex">${icon('hand', 20, 1.9)}</span>2 High fives bekommen</span>`)}
-    <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 16px; margin-top: 24px">
-      ${statTile(12, 'Tage in Folge', { big: true, sub: '1 Pausentag pro Woche frei' })}
-      ${statTile('1.284', 'Wiederholungen')}
-      ${statTile('146', 'Karten angelegt')}
+    `<div style="display: flex; flex-direction: column; gap: 26px">
+    <div style="display: flex; flex-direction: column; gap: 6px"><h1 class="d" style="margin: 0; font-size: 44px; font-weight: 750; letter-spacing: -0.03em">Erfolge</h1></div>
+    <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 12px">
+      <div style="border-radius: 22px; background: #6A3FE0; color: #FFFFFF; padding: 18px 20px; display: flex; align-items: center; gap: 14px"><span class="d" style="font-size: 56px; font-weight: 800; line-height: .9; letter-spacing: -0.04em">12</span><div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">Tage in Folge</span><span style="font-size: 12.5px; opacity: .9">1 Pausentag pro Woche frei</span></div></div>
+      ${statTile('1.284', 'Wiederholungen')}${statTile('146', 'Karten angelegt')}
+      <a href="DesktopHighFive.dc.html" class="tap hv-card" style="border-radius: 22px; background: #F6F4FB; padding: 18px 20px; display: flex; flex-direction: column; justify-content: center; gap: 2px; color: #17141F"><span class="d" style="font-size: 30px; font-weight: 750; letter-spacing: -0.02em">2</span><span style="font-size: 14px; font-weight: 600; color: #6B6678">High fives bekommen</span></a>
     </div>
-    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 30px">
+    <div style="display: flex; flex-direction: column; gap: 12px">
       <div style="display: flex; justify-content: space-between; align-items: center">
         <span style="font-size: 13px; font-weight: 600; color: #6B6678; letter-spacing: .04em; text-transform: uppercase">Letzte 26 Wochen</span>
-        <span style="display: flex; padding: 3px; border-radius: 12px; background: #F6F4FB"><span style="height: 32px; padding: 0 14px; border-radius: 10px; background: #FFFFFF; box-shadow: 0 2px 8px -3px rgba(46,26,115,.3); font-size: 13.5px; font-weight: 700; display: flex; align-items: center">Gelernt</span><span style="height: 32px; padding: 0 14px; font-size: 13.5px; font-weight: 600; color: #6B6678; display: flex; align-items: center">Angelegt</span></span>
+        <span style="display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #F6F4FB"><span style="height: 32px; padding: 0 14px; border-radius: 9px; background: #FFFFFF; box-shadow: 0 2px 6px -2px rgba(46,26,115,.25); font-size: 13px; font-weight: 700; display: flex; align-items: center">Gelernt</span><span style="height: 32px; padding: 0 14px; font-size: 13px; font-weight: 700; color: #6B6678; display: flex; align-items: center">Angelegt</span></span>
       </div>
-      <div style="display: grid; grid-template-columns: repeat(26, minmax(0, 1fr)); grid-template-rows: repeat(7, 24px); grid-auto-flow: column; gap: 6px">${heatCells()}</div>
-      <div style="display: flex; justify-content: space-between; font-size: 13px; color: #6B6678; font-weight: 500"><span>April</span><span>Mai</span><span>Juni</span><span>Juli</span><span>August</span><span>September</span></div>
-      <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500"><span style="width: 18px; height: 18px; border-radius: 6px; background: #6A3FE0; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #17141F; margin: 0 4px"></span>Rekord: Mi, 23.9. · 86 Wiederholungen</div>
+      <div style="display: grid; grid-auto-flow: column; grid-template-columns: repeat(26, minmax(0, 1fr)); grid-template-rows: repeat(7, 22px); gap: 5px">${heatCells()}</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #6B6678; font-weight: 600"><span>April</span><span>Mai</span><span>Juni</span><span>Juli</span><span>August</span><span>September</span></div>
+      <div style="display: flex; align-items: center; gap: 10px"><span style="width: 16px; height: 16px; border-radius: 5px; background: #6A3FE0; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #17141F; flex-shrink: 0"></span><span style="font-size: 14px; font-weight: 600">Rekord: Mi, 23.9. · 86 Wiederholungen</span></div>
     </div>
-    <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 28px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
       <span style="font-size: 13px; font-weight: 600; color: #6B6678; letter-spacing: .04em; text-transform: uppercase">Meilensteine</span>
-      <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px">
-        ${badge('Erste Karte', 'geschafft', 'pencil', 1)}${badge('100 angelegt', 'geschafft', 'stack', 1)}${badge('Schema-Baumeister', '7 von 10', 'indent', 0.7)}${badge('7 Tage am Stück', 'geschafft', 'calendar', 1)}${badge('1.000 Wiederholungen', 'geschafft', 'flip', 1)}${badge('Teamplayer', '1 von 3 geteilt', 'share', 0.34)}
-      </div>
+      <ul style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px 10px">
+        ${badge('Erste Karte', 'geschafft', 'pen', 1)}${badge('100 angelegt', 'geschafft', 'stack', 1)}${badge('Schema-Baumeister', '7 von 10', 'tree', 0.7)}${badge('7 Tage am Stück', 'geschafft', 'cal', 1)}${badge('1.000 Wiederholungen', 'geschafft', 'rep', 1)}${badge('Teamplayer', '1 von 3 geteilt', 'share', 1 / 3)}
+      </ul>
+    </div>
     </div>`,
   );
 
-/* Fristen */
+/* Fristen: Karten wie Fristen.dc.html und FristNeu.dc.html (Fristen.module.css), im Raster mit zwei Spalten. */
 const frist = ({ kind, name, meta, days, hero = false, dashed = false, bar = 0 }) => {
   const fg = hero ? '#FFFFFF' : '#17141F';
-  return `<div style="border-radius: 24px; box-sizing: border-box; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; ${hero ? 'background: #6A3FE0; color: #FFFFFF; grid-column: span 2' : dashed ? 'border: 1.5px dashed #C9B8F7' : 'border: 1.5px solid #EFECF5'}">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px">
+  return `<div style="border-radius: 24px; box-sizing: border-box; padding: ${hero ? '18px 20px' : '16px 20px'}; display: flex; flex-direction: ${hero ? 'column' : 'row'}; justify-content: space-between; align-items: ${hero ? 'stretch' : 'center'}; gap: ${hero ? 12 : 10}px; ${hero ? 'background: #6A3FE0; color: #FFFFFF; grid-column: span 2' : dashed ? 'border: 1.5px dashed #C9B8F7' : 'border: 1.5px solid #EFECF5'}">
+    <div style="display: flex; justify-content: space-between; align-items: ${hero ? 'flex-start' : 'center'}; gap: 10px; ${hero ? '' : 'flex-grow: 1'}">
       <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
         <span style="font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; ${hero ? 'opacity: .85' : 'color: #6A3FE0'}">${kind}</span>
-        <span style="font-size: ${hero ? 22 : 18}px; font-weight: 700; color: ${fg}">${name}</span>
-        <span style="font-size: 14px; ${hero ? 'opacity: .9' : 'color: #6B6678'}">${meta}</span>
+        <span style="font-size: ${hero ? 19 : 17}px; font-weight: 700; color: ${fg}">${name}</span>
+        <span style="font-size: 13.5px; ${hero ? 'opacity: .9' : 'color: #6B6678'}">${meta}</span>
       </div>
-      ${days ? `<div style="display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0"><span class="d" style="font-size: ${hero ? 48 : 34}px; font-weight: 800; line-height: .95; letter-spacing: -0.03em; color: ${fg}">${days}</span><span style="font-size: 12px; font-weight: 700; ${hero ? 'opacity: .9' : 'color: #6B6678'}">Tage</span></div>` : `<span style="height: 34px; padding: 0 14px; border-radius: 17px; background: #EEE8FD; color: #4B2AA8; font-size: 13px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">Datum setzen</span>`}
+      ${days ? `<div style="display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0"><span class="d" style="font-size: ${hero ? 38 : 30}px; font-weight: 800; line-height: .95; letter-spacing: -0.03em; color: ${fg}">${days}</span><span style="font-size: 12px; font-weight: 700; ${hero ? 'opacity: .9' : 'color: #6B6678'}">Tage</span></div>` : `<span style="height: 34px; padding: 0 12px; border-radius: 17px; background: #EEE8FD; color: #4B2AA8; font-size: 13px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">Datum setzen</span>`}
     </div>
-    ${hero ? `<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 8px; border-radius: 4px; background: rgba(255,255,255,.28); overflow: hidden"><div style="width: ${bar}%; height: 8px; border-radius: 4px; background: #FFFFFF"></div></div><div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; opacity: .95"><span>${bar} % sitzen sicher</span><span>Endspurt ab Fr, 2.10.</span></div></div>` : ''}
+    ${hero ? `<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 8px; border-radius: 4px; background: rgba(255,255,255,.28); overflow: hidden"><div style="width: ${bar}%; height: 8px; border-radius: 4px; background: #FFFFFF"></div></div><div style="display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; font-weight: 600; opacity: .95"><span>${bar} % sitzen sicher</span><span>Endspurt ab Fr, 2.10.</span></div></div>` : ''}
   </div>`;
 };
 
-const fristenBody = `${pageHead(
-  'Fristen',
-  'Bis zum Termin kommt alles im Umfang rechtzeitig dran. Danach läuft der normale Rhythmus weiter.',
-  `${ghostButton('Als Kalenderdatei sichern', { h: 48, size: 15 })}${inkButton('+ Frist hinzufügen', { h: 48, size: 15, kb: 'F' })}`,
-)}
-  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px">
-    ${frist({ kind: 'Klausur', name: 'Zivilrecht, AG-Klausur', meta: 'Fr, 9.10. · ZR · 3 Stapel · 101 Karten', days: 11, hero: true, bar: 64 })}
-    ${frist({ kind: 'LL.M.', name: 'Modul Vertragsrecht', meta: 'Fr, 15.1.2027 · Tag #LLM · 58 Karten', days: 109 })}
-    ${frist({ kind: 'Examen', name: '2. Staatsexamen, schriftlich', meta: 'Alle Rechtsgebiete', days: 0, dashed: true })}
-  </div>`;
+const fristenBody = `<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-content: start">
+  <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px"><h1 class="d" style="margin: 0; font-size: 44px; line-height: 1.05; font-weight: 750; letter-spacing: -0.03em">Fristen</h1><p style="margin: 0; font-size: 16px; line-height: 1.45; color: #6B6678; max-width: 60ch">Bis zum Termin kommt alles im Umfang rechtzeitig dran. Danach läuft der normale Rhythmus weiter.</p></div>
+  <div style="display: flex; justify-content: flex-end; align-items: flex-start; gap: 12px">${ghostButton('Fristen als Kalenderdatei sichern', { h: 48, size: 15 })}${inkButton('+ Frist hinzufügen', { h: 48, size: 15, kb: 'F' })}</div>
+  ${frist({ kind: 'Klausur', name: 'Zivilrecht, AG-Klausur', meta: 'Fr, 9.10. · ZR · 3 Stapel · 101 Karten', days: 11, hero: true, bar: 64 })}
+  ${frist({ kind: 'LL.M.', name: 'Modul Vertragsrecht', meta: 'Fr, 15.1.2027 · Tag #LLM · 58 Karten', days: 109 })}
+  ${frist({ kind: 'Examen', name: '2. Staatsexamen, schriftlich', meta: 'Alle Rechtsgebiete', days: 0, dashed: true })}
+</div>`;
 
 const fristen = (w, h) => shell(w, h, 'fristen', fristenBody);
 
-/* Teilen */
-const fileIcon = `<span style="position: relative; width: 58px; height: 68px; flex-shrink: 0"><span style="position: absolute; left: 8px; top: 4px; width: 50px; height: 64px; border-radius: 12px; background: #C9B8F7"></span><span style="position: absolute; left: 0; top: 0; width: 50px; height: 64px; box-sizing: border-box; border-radius: 12px; background: #6A3FE0; color: #FFFFFF; font-size: 9px; font-weight: 800; letter-spacing: .06em; display: flex; align-items: flex-end; padding: 8px">JURI</span></span>`;
+/* Teilen: Werte wie Teilen.dc.html (Teilen.module.css), die Karte links, Empfangen rechts. */
+const fileIcon = `<span style="position: relative; width: 58px; height: 70px; flex-shrink: 0"><span style="position: absolute; left: 8px; top: 4px; width: 50px; height: 64px; border-radius: 10px; background: #C9B8F7"></span><span style="position: absolute; left: 0; top: 0; width: 50px; height: 64px; box-sizing: border-box; border-radius: 10px; background: #6A3FE0; color: #FFFFFF; font-size: 10px; font-weight: 800; letter-spacing: .04em; display: flex; align-items: flex-end; justify-content: flex-start; padding: 7px">JURI</span></span>`;
 
 const switchRow = (text, on) =>
-  `<div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px"><span style="font-size: 16px; font-weight: 600">${text}</span>${toggle(on)}</div>`;
+  `<div style="height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px"><span style="font-size: 15px; font-weight: 600">${text}</span>${toggle(on)}</div>`;
 
 const teilen = (w, h) =>
   shell(
     w,
     h,
     'teilen',
-    `${pageHead('Teilen')}
-    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin-top: 28px; align-items: start">
-      <div style="${SURFACE_CARD} padding: 24px; display: flex; flex-direction: column; gap: 6px">
-        <div style="display: flex; align-items: center; gap: 18px; padding-bottom: 16px; border-bottom: 1px solid #EFECF5">${fileIcon}<div style="display: flex; flex-direction: column; gap: 2px"><span class="d" style="font-size: 22px; font-weight: 750; letter-spacing: -0.02em">Amtshaftung.juri</span><span style="font-size: 14px; color: #6B6678">21 Karten · 3 PDFs · 2,4 MB</span></div></div>
-        <div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EFECF5"><span style="font-size: 16px; color: #6B6678; font-weight: 500">Stapel</span><span style="display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700">Amtshaftung · ZR${icon('chevron', 16, 2.2, '#B3AEC0')}</span></div>
+    `<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; row-gap: 20px; align-content: start">
+      <h1 class="d" style="grid-column: 1 / -1; margin: 0; font-size: 44px; line-height: 1.05; font-weight: 750; letter-spacing: -0.03em">Teilen</h1>
+      <div style="align-self: start; border-radius: 26px; background: #F6F4FB; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; align-items: center; gap: 16px">${fileIcon}<div style="display: flex; flex-direction: column; gap: 3px; min-width: 0"><span style="font-size: 17px; font-weight: 700">Amtshaftung.juri</span><span style="font-size: 13.5px; color: #6B6678; font-weight: 500">21 Karten · 3 PDFs · 2,4 MB</span></div></div>
+        <div style="box-sizing: border-box; min-height: 52px; border-top: 1px solid #DCD6EA; border-bottom: 1px solid #DCD6EA; display: flex; align-items: center; justify-content: space-between; gap: 12px"><span style="font-size: 15px; font-weight: 600; color: #6B6678">Stapel</span><span style="display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 700">Amtshaftung · ZR${icon('chevron', 16, 2.2, '#B3AEC0')}</span></div>
         ${switchRow('Eigene Notizen mitschicken', false)}
         ${switchRow('Erfolge mitschicken', true)}
-        <p style="margin: 0 0 8px; font-size: 13px; color: #6B6678">Dein Lernfortschritt bleibt immer privat auf deinem Gerät.</p>
-        <div style="margin-top: 4px">${inkButton('Herunterladen', { h: 56, kb: 'E', icon: icon('share', 20), size: 16 })}</div>
+        <div style="font-size: 13px; color: #6B6678; line-height: 1.4; margin-top: -8px">Dein Lernfortschritt bleibt immer privat auf deinem Gerät.</div>
+        <span class="tap hv-ink" style="height: 56px; border-radius: 18px; background: #17141F; color: #FFFFFF; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px">${icon('share', 20, 2.2)}Herunterladen${kbd('E', 'dark')}</span>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 14px">
-        ${label('Empfangen')}
-        <div style="border-radius: 28px; border: 1.5px dashed #CFC8E0; padding: 24px; display: flex; flex-direction: column; gap: 16px">
-          <p style="margin: 0; font-size: 15px; line-height: 1.45; color: #6B6678">Stapel von anderen kommen als .juri-Datei. Speichere sie zuerst auf deinem Rechner.</p>
-          ${primaryButton('Datei öffnen', { h: 56, kb: 'I' })}
-          <span style="align-self: center; font-size: 14px; font-weight: 700; color: #5B34D1">So geht’s</span>
+      <div style="align-self: start; display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <span style="font-size: 12px; font-weight: 700; color: #6B6678; letter-spacing: .06em; text-transform: uppercase">Empfangen</span>
+          <div style="border-radius: 22px; border: 1.5px dashed #CFC8E0; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+            <p style="margin: 0; font-size: 14px; line-height: 1.45; color: #6B6678">Stapel von anderen kommen als .juri-Datei. Speichere sie zuerst auf deinem Rechner.</p>
+            <span class="tap hv-primary" style="height: 50px; border-radius: 16px; background: #6A3FE0; color: #FFFFFF; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px">Datei öffnen${kbd('I', 'dark')}</span>
+            <span style="height: 44px; color: #5B34D1; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">So geht’s</span>
+          </div>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; font-size: 14px"><span style="color: #6B6678; font-weight: 500">Alles sichern</span><span style="font-weight: 700; color: #5B34D1">Backup exportieren</span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 44px; font-size: 14px; font-weight: 600"><span style="color: #6B6678">Alles sichern</span><span style="font-weight: 700; color: #5B34D1">Backup exportieren</span></div>
       </div>
     </div>`,
   );
@@ -167,33 +160,42 @@ const personCard = (
   </div>`;
 
 const receivedRow = (i, n, r, when) =>
-  `<div style="min-height: 56px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #EFECF5"><span style="width: 34px; height: 34px; border-radius: 17px; background: #EEE8FD; color: #4B2AA8; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center">${i}</span><span style="flex-grow: 1; font-size: 15px; line-height: 1.35"><strong>${n}</strong> ${r}</span><span style="font-size: 13px; color: #6B6678">${when}</span></div>`;
+  `<div style="min-height: 56px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #EFECF5"><span style="width: 34px; height: 34px; border-radius: 17px; background: #EEE8FD; color: #4B2AA8; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">${i}</span><span style="flex-grow: 1; font-size: 15px; line-height: 1.35"><strong>${n}</strong> ${r}</span><span style="font-size: 13px; color: #6B6678">${when}</span></div>`;
 
 const contactRow = (i, n, sub) =>
-  `<div class="hv-row" style="min-height: 60px; margin: 0 -10px; padding: 0 10px; border-radius: 14px; display: flex; align-items: center; gap: 12px"><span style="width: 38px; height: 38px; border-radius: 19px; background: #17141F; color: #FFFFFF; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center">${i}</span><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 15.5px; font-weight: 700">${n}</span><span style="font-size: 13px; color: #6B6678">${sub}</span></span>${icon('chevron', 16, 2.2, '#B3AEC0')}</div>`;
+  `<div class="hv-row" style="min-height: 60px; margin: 0 -10px; padding: 0 10px; border-radius: 14px; display: flex; align-items: center; gap: 12px"><span style="width: 38px; height: 38px; border-radius: 19px; background: #17141F; color: #FFFFFF; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0">${i}</span><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 15.5px; font-weight: 700">${n}</span><span style="font-size: 13px; color: #6B6678; font-weight: 500">${sub}</span></span>${icon('chevron', 16, 2.2, '#B3AEC0')}</div>`;
+
+const label7 = (text) =>
+  `<span style="font-size: 12px; font-weight: 700; color: #6B6678; letter-spacing: .06em; text-transform: uppercase">${text}</span>`;
 
 const highFive = (w, h) =>
   shell(
     w,
     h,
     'erfolge',
-    `${backLink('Erfolge', 'DesktopErfolge.dc.html')}
-    <div style="margin-top: -8px">${pageHead('High fives', 'Für Erfolge der anderen. Oder einfach so.')}</div>
-    <div style="display: grid; grid-template-columns: 1.1fr 1fr 0.9fr; gap: 40px; margin-top: 30px; align-items: start">
-      <div style="display: flex; flex-direction: column; gap: 14px; min-width: 0">
-        ${label('Neu von deinen Leuten')}
+    `<div style="display: flex; flex-direction: column; gap: 26px">
+    ${backLink('Erfolge', 'DesktopErfolge.dc.html')}
+    <div style="display: flex; flex-direction: column; gap: 6px; margin-top: -8px"><h1 class="d" style="margin: 0; font-size: 44px; font-weight: 750; letter-spacing: -0.03em; line-height: normal">High fives</h1><p style="margin: 0; font-size: 15px; color: #6B6678; line-height: 1.4">Für Erfolge der anderen. Oder einfach so.</p></div>
+    <div style="display: grid; grid-template-columns: 1.1fr 1fr 0.9fr; gap: 40px; align-items: start">
+      <div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+        ${label7('Neu von deinen Leuten')}
         ${personCard('M', 'Mara', '12 Tage in Folge')}${personCard('J', 'Jonas', '200 Karten angelegt')}
+        </div>
         <span class="tap hv-outline" style="height: 56px; border-radius: 18px; border: 1.5px dashed #C9B8F7; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700"><span style="color: #6A3FE0; display: flex">${icon('hand', 20, 1.9)}</span>Einfach so ein High five${kbd('H')}</span>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 14px; min-width: 0">
-        ${label('Bekommen')}
+      <div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+        ${label7('Bekommen')}
         <div style="display: flex; flex-direction: column">${receivedRow('M', 'Mara', 'für 1.000 Wiederholungen', 'gestern')}${receivedRow('J', 'Jonas', 'einfach so', 'Sa')}</div>
+        </div>
       </div>
       <div style="display: flex; flex-direction: column; gap: 14px; min-width: 0">
-        <div style="display: flex; justify-content: space-between; align-items: center">${label('Deine Leute (2)')}${kbd('K')}</div>
+        <div style="display: flex; justify-content: space-between; align-items: center">${label7('Deine Leute (2)')}${kbd('K')}</div>
         <div style="display: flex; flex-direction: column">${contactRow('M', 'Mara', '12 Tage in Folge · zuletzt gesehen gestern')}${contactRow('J', 'Jonas', 'zuletzt gesehen Sa')}</div>
-        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid #EFECF5; font-size: 14px"><span style="color: #6B6678; font-weight: 500">Gruß von jemandem?</span><span style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #5B34D1">Gruß-Datei öffnen${kbd('O')}</span></div>
+        <div style="min-height: 44px; border-top: 1px solid #EFECF5; padding-top: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600"><span style="color: #6B6678">Gruß von jemandem?</span><span style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #5B34D1">Gruß-Datei öffnen${kbd('O')}</span></div>
       </div>
+    </div>
     </div>`,
   );
 

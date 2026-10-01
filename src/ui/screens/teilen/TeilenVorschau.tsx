@@ -1,4 +1,6 @@
 import { shareCopy } from '@/domain/juri/text';
+import { DesktopShell } from '../../components/DesktopShell';
+import { useMediaQuery } from '../../useMediaQuery';
 import {
   AREAS,
   CARD_COUNTS,
@@ -33,20 +35,31 @@ const PARTS: Record<TeilenVariant, { export: ExportModel; incoming: IncomingMode
 /** Teilen mit den Beispieldaten der Artboards (/styleguide/teilen/…), für den Bildvergleich. */
 export function TeilenVorschau({ variant }: { variant: TeilenVariant }) {
   const part = PARTS[variant];
+  // Ab 1280 px gelten Beschriftung und Hinweis für den Rechner (A52): Herunterladen statt Teilen-Menü.
+  const desktop = useMediaQuery('(min-width: 1280px)');
+  const copy = shareCopy('desktop');
+  const exported =
+    desktop && part.export.kind === 'ready' ? { ...part.export, action: copy.action } : part.export;
+  const incoming =
+    desktop && part.incoming.kind === 'idle'
+      ? { ...part.incoming, hint: copy.receiveHint }
+      : part.incoming;
   return (
     <>
-      <TeilenView
-        export={part.export}
-        incoming={part.incoming}
-        onPickDecks={noop}
-        onToggleNotes={noop}
-        onToggleAchievements={noop}
-        onSend={noop}
-        onOpenFile={noop}
-        onHelp={noop}
-        onMode={noop}
-        onImport={noop}
-      />
+      <DesktopShell active="teilen">
+        <TeilenView
+          export={exported}
+          incoming={incoming}
+          onPickDecks={noop}
+          onToggleNotes={noop}
+          onToggleAchievements={noop}
+          onSend={noop}
+          onOpenFile={noop}
+          onHelp={noop}
+          onMode={noop}
+          onImport={noop}
+        />
+      </DesktopShell>
       {variant === 'stapel' ? (
         <DeckShareSheet
           areas={AREAS}

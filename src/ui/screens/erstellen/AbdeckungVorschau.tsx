@@ -1,5 +1,6 @@
 import { useEffect, type CSSProperties, type ReactNode } from 'react';
 import { createGoal } from '@/domain/cards/goal';
+import { gestureHints } from '@/domain/device/environment';
 import type { Mask } from '@/domain/cards/occlusion';
 import type { CoverMask, Face } from '@/domain/session/present';
 import type { ImageDraft } from '@/features/media/media';
@@ -273,6 +274,8 @@ function PageText({
  */
 export function AbdeckungVorschau({ variant }: { variant: AbdeckungVariant }) {
   const learn = variant === 'lernen' || variant === 'antwort';
+  // Ab 1280 px gilt die Desktop-Gestaltung samt Seitenfeld und Texten für Maus und Tastatur.
+  const desktop = window.matchMedia('(min-width: 1280px)').matches;
   useEffect(() => {
     setSurfaceColor(document, learn || variant === 'pdf' ? colors.surface : null);
     return () => {
@@ -292,7 +295,12 @@ export function AbdeckungVorschau({ variant }: { variant: AbdeckungVariant }) {
         behind={0}
         intervals={{ again: '10 min', hard: '2 T', good: '6 T', easy: '14 T' }}
         exit=""
-        undoable={false}
+        undoable={desktop}
+        counts={{ again: 1, hard: 1, good: 1, easy: 0 }}
+        open={1}
+        {...(desktop
+          ? { coverHint: gestureHints('desktop').coverStudy, flipHint: 'Klicken zum Umdrehen' }
+          : {})}
         coverRatio={304 / 412}
         coverImage={<Skeleton lines={PAGE_LEARN} padding="20px 18px" gap={9} />}
         onClose={noop}

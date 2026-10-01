@@ -225,7 +225,7 @@ export const segmented = (items, active, { h = 48, size = 14.5, w = '' } = {}) =
 export const areaTag = (text) =>
   `<span style="height: 26px; padding: 0 9px; border-radius: 8px; background: #F6F4FB; color: #4B2AA8; font-size: 12px; font-weight: 800; display: flex; align-items: center">${text}</span>`;
 export const typeTag = (text) =>
-  `<span style="height: 26px; padding: 0 10px; border-radius: 8px; border: 1.5px solid #E4DDF7; box-sizing: border-box; color: #6B6678; font-size: 12px; font-weight: 700; display: flex; align-items: center">${text}</span>`;
+  `<span style="height: 26px; padding: 0 10px; border-radius: 8px; border: 1.5px solid #E4DDF7; color: #6B6678; font-size: 12px; font-weight: 700; display: flex; align-items: center">${text}</span>`;
 
 /** Seite eines Boards als vollständiges Dokument im Format des Design-Tools. */
 export const page = (title, body) => `<!doctype html>

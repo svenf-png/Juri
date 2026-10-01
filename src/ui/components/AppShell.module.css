@@ -29,3 +29,19 @@
     --screen-bottom: calc(40px + var(--bottom-inset));
   }
 }
+
+/*
+ * Desktop-Gestaltung (ab 1280 px, ADR-017): Der Inhalt neben der Sidebar wächst bis 1440 px
+ * einschließlich Innenabstand und steht darüber mittig (bei 1920 px 120 px Rand je Seite).
+ */
+@media (min-width: 1280px) {
+  .cap {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+
+  .cap[data-uncapped] {
+    max-width: none;
+  }
+}

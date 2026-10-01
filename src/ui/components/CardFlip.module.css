@@ -20,10 +20,10 @@
   position: absolute;
   inset: 0;
   border: 0;
-  border-radius: var(--radius-card);
+  border-radius: var(--card-radius, var(--radius-card));
   background: var(--bg);
-  box-shadow: var(--shadow-card);
-  padding: 26px;
+  box-shadow: var(--card-shadow, var(--shadow-card));
+  padding: var(--card-pad, 26px);
   display: flex;
   flex-direction: column;
   text-align: left;

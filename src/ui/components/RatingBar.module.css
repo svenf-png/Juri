@@ -56,3 +56,37 @@
 .easy .interval {
   opacity: 0.85;
 }
+
+/*
+ * Desktop-Gestaltung (ab 1280 px, ADR-017, DesktopLernenAntwort.dc.html): 76 px hoch, 10 px
+ * Abstand, die Zifferntaste oben rechts im Knopf.
+ */
+.key {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .bar {
+    gap: 10px;
+  }
+
+  .button {
+    position: relative;
+    height: 76px;
+  }
+
+  .label {
+    font-size: 16px;
+  }
+
+  .interval {
+    font-size: 12.5px;
+  }
+
+  .key {
+    display: inline-flex;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+}

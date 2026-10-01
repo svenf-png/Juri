@@ -3,7 +3,7 @@ import { createGoal } from '@/domain/cards/goal';
 import { CardScreen } from '../erstellen/CardScreen';
 import { EMPTY_FORM } from '../erstellen/form';
 import { Bibliothek } from './Bibliothek';
-import { padDeck, padLibrary, phoneDeck, phoneLibrary } from './designFixture';
+import { desktopDeck, padDeck, padLibrary, phoneDeck, phoneLibrary } from './designFixture';
 import styles from './Stapel.module.css';
 import { StapelDetail } from './StapelDetail';
 
@@ -12,10 +12,11 @@ const noop = () => undefined;
 /**
  * Stapel-Bereich mit den Beispieldaten der Designs, samt Tab-Bar bzw. Sidebar
  * (Bildvergleich mit Bibliothek.dc.html, Stapel.dc.html und iPadStapel.dc.html).
- * `phone`: Übersicht oder Detail eines Stapels; `pad`: Master-Detail ab 1100 px.
+ * `phone`: Übersicht oder Detail eines Stapels; `pad`: Master-Detail ab 1100 px; `desktop`: wie
+ * `pad`, dazu mit Fälligkeit an den Karten (Tabelle ab 1280 px, DesktopStapel.dc.html).
  */
-export function StapelVorschau({ screen }: { screen: 'liste' | 'detail' | 'ipad' }) {
-  const pad = screen === 'ipad';
+export function StapelVorschau({ screen }: { screen: 'liste' | 'detail' | 'ipad' | 'desktop' }) {
+  const pad = screen === 'ipad' || screen === 'desktop';
   return (
     <AppShell active="stapel" pushed={screen === 'detail'}>
       <main className={styles.stapel} data-view={screen === 'liste' ? 'list' : 'detail'}>
@@ -31,7 +32,7 @@ export function StapelVorschau({ screen }: { screen: 'liste' | 'detail' | 'ipad'
           onManageAreas={noop}
         />
         <StapelDetail
-          model={pad ? padDeck : phoneDeck}
+          model={screen === 'desktop' ? desktopDeck : pad ? padDeck : phoneDeck}
           onToggleArea={noop}
           notice={null}
           onEdit={noop}
