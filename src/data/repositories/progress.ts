@@ -15,6 +15,8 @@ import {
   type Unlock,
 } from '@/domain/progress/milestones';
 import { rowOf } from '@/domain/progress/rows';
+import { effectiveNewPerDay } from '@/domain/scheduler/dailyLimits';
+import { DEFAULT_LEARNING, withDefaults } from '@/domain/scheduler/settings';
 import { dayOfTime, dayStats } from '@/domain/progress/stats';
 import { streak, NO_STREAK, type StreakResult } from '@/domain/progress/streak';
 import type { JuriDb } from '../db';
@@ -73,10 +75,19 @@ export async function refreshDays(db: JuriDb, keys: Iterable<string>): Promise<D
   return changes;
 }
 
-/** Speichert die Ziele; der heutige Tag wird nach den neuen Zielen bewertet, frühere bleiben. */
+/**
+ * Speichert die Ziele; der heutige Tag wird nach den neuen Zielen bewertet, frühere bleiben.
+ * Ein Ziel über dem Tageslimit für neue Karten hebt das Limit mit an (`dailyLimits.ts`).
+ */
 export async function writeGoals(db: JuriDb, goals: Goals, now: number): Promise<void> {
   await db.transaction('rw', db.meta, db.dayStats, async () => {
     await db.meta.put({ key: 'goals', value: goals });
+    const entry = await db.meta.get('learning');
+    const learning = entry?.key === 'learning' ? withDefaults(entry.value) : DEFAULT_LEARNING;
+    const limit = effectiveNewPerDay(learning.newPerDay, goals.learn);
+    if (limit !== learning.newPerDay) {
+      await db.meta.put({ key: 'learning', value: { ...learning, newPerDay: limit } });
+    }
     const today = dayKey(learningDay(new Date(now)));
     const row = await db.dayStats.get(today);
     if (row) await db.dayStats.put(rowOf(today, row, goals));

@@ -33,7 +33,7 @@ export const RELEARNING_STEPS = ['10m'] as const;
 export const DEFAULT_LEARNING: LearningSettings = {
   algorithm: 'fsrs',
   retention: 90,
-  newPerDay: 20,
+  newPerDay: 24,
   leitnerDays: [1, 3, 7, 14, 30],
 };
 
@@ -52,13 +52,14 @@ export function clampRetention(n: number): number {
   return clamp(n, RETENTION_MIN, RETENTION_MAX);
 }
 
-export function clampNewPerDay(n: number): number {
-  return clamp(n, 0, NEW_PER_DAY_MAX);
+/** Neue Karten pro Tag, mindestens `min` (das Tagesziel Lernen, siehe `dailyLimits.ts`). */
+export function clampNewPerDay(n: number, min = 0): number {
+  return clamp(n, Math.min(min, NEW_PER_DAY_MAX), NEW_PER_DAY_MAX);
 }
 
-/** Neue Karten pro Tag um einen Schritt ändern; die Grenzen 0 und 100 bleiben. */
-export function stepNewPerDay(current: number, direction: 1 | -1): number {
-  return clampNewPerDay(current + direction * NEW_PER_DAY_STEP);
+/** Neue Karten pro Tag um einen Schritt ändern; die Grenzen `min` und 100 bleiben. */
+export function stepNewPerDay(current: number, direction: 1 | -1, min = 0): number {
+  return clampNewPerDay(current + direction * NEW_PER_DAY_STEP, min);
 }
 
 /**

@@ -158,6 +158,8 @@ export interface CardRow {
   readonly type: string;
   readonly title: string;
   readonly norm: string;
+  /** Wann die Karte dran ist („fällig in 3 Tagen“, „Neu, heute dran“); fehlt ohne Angabe. */
+  readonly due?: string;
 }
 
 export interface DeckModel {
@@ -183,6 +185,8 @@ export function deckModel(input: {
   progress: DeckProgress;
   /** Heute fällige Abfragen des Stapels. */
   due: number;
+  /** Fälligkeitstext je Karten-ID (`dueLabels`); ohne Eintrag zeigt die Karte keine Angabe. */
+  dueLabels?: ReadonlyMap<string, string>;
 }): DeckModel {
   const { deck, cards, due } = input;
   const cta: DeckModel['cta'] =
@@ -210,7 +214,11 @@ export function deckModel(input: {
     cardCount: cardCount(cards.length),
     cards: [...cards]
       .sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id))
-      .map((c) => ({ id: c.id, type: CARD_TYPE_LABEL[c.type], title: cardTitle(c), norm: c.norm })),
+      .map((c) => {
+        const due = input.dueLabels?.get(c.id);
+        const row = { id: c.id, type: CARD_TYPE_LABEL[c.type], title: cardTitle(c), norm: c.norm };
+        return due === undefined ? row : { ...row, due };
+      }),
   };
 }
 

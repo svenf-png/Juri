@@ -2,10 +2,11 @@ import type { Card, ReviewItem } from '@/domain/model/records';
 import type { RatingKey } from '@/domain/scheduler/rating';
 import { ratingValue } from '@/domain/scheduler/rating';
 import { restoreItem, reviewItem, withActiveDue } from '@/domain/scheduler/schedule';
+import { effectiveNewPerDay } from '@/domain/scheduler/dailyLimits';
 import { DEFAULT_LEARNING, withDefaults, type LearningSettings } from '@/domain/scheduler/settings';
 import type { JuriDb } from '../db';
 import { readOverlay, type Overlay } from './deadlines';
-import { recordActivity } from './progress';
+import { readGoals, recordActivity } from './progress';
 
 /** Tabellen, die eine Aktivität (Bewertung, Undo, neue Karte) in einer Transaktion schreibt. */
 export const ACTIVITY_TABLES = (db: JuriDb) => [
@@ -18,10 +19,15 @@ export const ACTIVITY_TABLES = (db: JuriDb) => [
   db.milestones,
 ];
 
-/** Einstellungen des Lernrhythmus; fehlt der Eintrag, gelten die Voreinstellungen. */
+/**
+ * Einstellungen des Lernrhythmus; fehlt der Eintrag, gelten die Voreinstellungen. Das Tageslimit
+ * für neue Karten liegt nie unter dem Tagesziel „Lernen“ (`dailyLimits.ts`), auch nicht bei
+ * älteren Ständen oder eingespielten Sicherungen.
+ */
 export async function readSettings(db: JuriDb): Promise<LearningSettings> {
-  const entry = await db.meta.get('learning');
-  return entry?.key === 'learning' ? withDefaults(entry.value) : DEFAULT_LEARNING;
+  const [entry, goals] = await Promise.all([db.meta.get('learning'), readGoals(db)]);
+  const stored = entry?.key === 'learning' ? withDefaults(entry.value) : DEFAULT_LEARNING;
+  return { ...stored, newPerDay: effectiveNewPerDay(stored.newPerDay, goals.learn) };
 }
 
 /**
@@ -31,7 +37,9 @@ export async function readSettings(db: JuriDb): Promise<LearningSettings> {
 export async function writeSettings(db: JuriDb, next: LearningSettings): Promise<void> {
   await db.transaction('rw', db.meta, db.reviewItems, async () => {
     const before = await readSettings(db);
-    await db.meta.put({ key: 'learning', value: next });
+    const { learn } = await readGoals(db);
+    const value = { ...next, newPerDay: effectiveNewPerDay(next.newPerDay, learn) };
+    await db.meta.put({ key: 'learning', value });
     if (before.algorithm === next.algorithm) return;
     const items = await db.reviewItems.toArray();
     const changed = items

@@ -27,6 +27,7 @@ export function Sidebar({ active }: { active: NavKey | null }) {
               to={to}
               className={cx(styles.item, current && styles.active)}
               aria-current={current ? 'page' : undefined}
+              data-addition={key === 'einstellungen' ? '' : undefined}
             >
               <Icon size={20} />
               {label}

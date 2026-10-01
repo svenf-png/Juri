@@ -185,7 +185,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - Oben zeigen Leiste und Zähler, wie weit du bist; das **X** beendet die Runde
 - Am Ende: kurze Feier und Zusammenfassung
 
-> **Notizen:** In einer Runde stehen fällige Karten und bis zu 20 neue am Tag (einstellbar). Überfällige kommen zuerst, neue zuletzt.
+> **Notizen:** In einer Runde stehen fällige Karten und bis zu 24 neue am Tag (einstellbar, nie unter dem Tagesziel). Überfällige kommen zuerst, neue zuletzt.
 
 ## Die vier Bewertungen
 
@@ -309,7 +309,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - **FSRS (empfohlen)** oder **Leitner-Kasten** wählen
 - Voreinstellungen: **Entspannt 85 %**, **Standard 90 %**, **Examen 95 %**, dazwischen mit dem Regler
 - Das Beispiel zeigt die Abstände, wenn du immer „Gut“ wählst
-- **Neue Karten pro Tag:** in Fünferschritten von 0 bis 100
+- **Neue Karten pro Tag:** in Fünferschritten bis 100, nie unter dem Tagesziel Lernen (das steht direkt darunter und in Erfolge)
 
 > **Notizen:** Die Prozentzahl ist die Wahrscheinlichkeit, eine Karte bei Fälligkeit noch zu wissen. Höher heißt kürzere Abstände und mehr Wiederholungen pro Tag. Der längste Abstand ist 180 Tage, „Nochmal“ führt über Lernschritte von 1 und 10 Minuten.
 

@@ -291,3 +291,10 @@
   height: 28px;
   accent-color: var(--violet);
 }
+
+/* Ergänzung zum Design (data-addition): Erklärung unter Tageslimit und Tagesziel. */
+.rowNote {
+  margin: 0;
+  padding: 10px 0 12px;
+  border-bottom: 1px solid var(--line-soft);
+}

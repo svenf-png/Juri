@@ -294,10 +294,15 @@ test.describe('Lernrhythmus', () => {
 
     await page.getByRole('button', { name: /Examen/ }).click();
     await expect(page.getByText('95 %').first()).toBeVisible();
-    // Neue Karten pro Tag: 20 → 5 (dreimal weniger); Heute zeigt dann nur noch 3, es sind nur 3 da.
-    for (let i = 0; i < 3; i += 1)
-      await page.getByRole('button', { name: 'Weniger', exact: true }).click();
-    await expect(page.getByText('5', { exact: true })).toBeVisible();
+    // Das Limit für neue Karten liegt nie unter dem Tagesziel (24): erst das Ziel senken.
+    const fewer = page.getByRole('button', { name: 'Weniger', exact: true });
+    await expect(fewer).toBeDisabled();
+    for (let i = 0; i < 21; i += 1)
+      await page.getByRole('button', { name: 'Tagesziel senken' }).click();
+    await expect(fewer).toBeEnabled();
+    // Neue Karten pro Tag: 24 → 4 (viermal weniger); es sind nur 3 Karten da.
+    for (let i = 0; i < 4; i += 1) await fewer.click();
+    await expect(page.getByText('4', { exact: true })).toBeVisible();
 
     await page.getByRole('button', { name: 'Leitner-Kasten' }).click();
     await expect(page.getByRole('button', { name: 'Leitner-Kasten' })).toHaveAttribute(
@@ -333,6 +338,24 @@ test.describe('Lernrhythmus', () => {
       'true',
     );
     await expectDue(page, 2);
+  });
+
+  test('Tageslimit und Tagesziel: das Ziel hebt das Limit an, das Limit bleibt über dem Ziel', async ({
+    page,
+  }) => {
+    await onboard(page);
+    await page.goto('/Juri/einstellungen/lernrhythmus');
+    const limit = page.getByRole('button', { name: 'Weniger', exact: true });
+    await expect(page.getByText('Tagesziel Lernen')).toBeVisible();
+    await expect(limit).toBeDisabled();
+    // Ziel 24 → 28: das Limit steigt mit.
+    await page.getByRole('button', { name: 'Tagesziel erhöhen' }).click();
+    await expect(page.getByText('28', { exact: true })).toHaveCount(2);
+    await expect(limit).toBeDisabled();
+    // Ziel senken lässt das Limit stehen und gibt Spielraum nach unten frei.
+    await page.getByRole('button', { name: 'Tagesziel senken' }).click();
+    await expect(page.getByText('24', { exact: true })).toHaveCount(1);
+    await expect(limit).toBeEnabled();
   });
 
   test('Entwicklungsstand: die Meilensteine samt Version', async ({ page }) => {

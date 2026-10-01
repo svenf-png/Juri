@@ -66,7 +66,7 @@ test.describe('Fristen', () => {
     const card = page.getByRole('button', { name: /Klausur ÖR/ });
     await expect(card).toBeVisible();
     await expect(card).toContainText('Alle Rechtsgebiete');
-    await expect(card).toContainText(/\b(29|30) Tage|\b(29|30)\b/);
+    await expect(card).toContainText(/(29|30)\s*Tage/);
     await expect(page.getByRole('heading', { name: 'Noch keine Fristen' })).toHaveCount(0);
 
     // Heute zeigt die nächste Frist als Chip, Lernrhythmus die Zahl.

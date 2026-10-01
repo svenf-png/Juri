@@ -2,6 +2,7 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ALL_AREAS, deckModel, deckProgress, libraryModel } from '@/domain/library/library';
 import { searchCards, searchTokens } from '@/domain/library/search';
+import { dueLabels } from '@/domain/scheduler/dueLabel';
 import { dueSummary } from '@/domain/scheduler/queue';
 import { rememberDeck } from '@/platform/lastDeck';
 import { describeLinkUse } from '@/domain/cards/schema';
@@ -106,6 +107,7 @@ export function Stapel() {
         cards: deckReady.cards,
         progress: deckProgress(deckReady.items, deckReady.settings),
         due: dueSummary(deckReady.items, dueContext(dayKey, deckReady)).total,
+        dueLabels: dueLabels(deckReady.items, dueContext(dayKey, deckReady)),
       })
     : null;
 

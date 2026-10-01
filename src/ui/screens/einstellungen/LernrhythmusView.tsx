@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { LEARN_GOAL_MAX, LEARN_GOAL_MIN, learnStep } from '@/domain/progress/goals';
+import { minNewPerDay } from '@/domain/scheduler/dailyLimits';
 import {
-  clampNewPerDay,
   clampRetention,
   LEITNER_BOXES,
   MAX_INTERVAL_DAYS,
@@ -45,6 +46,11 @@ export interface LernrhythmusViewProps {
   /** Anzahl der Fristen (M8); ohne Angabe steht keine Zahl an der Zeile. */
   deadlines?: number | undefined;
   onChange: (next: LearningSettings) => void;
+  /**
+   * Ergänzungen zum Design (`data-addition`): das Tagesziel „Lernen“ neben dem Tageslimit für neue
+   * Karten und kurze Erklärungen. Ohne Angabe zeigt der Bildschirm nur das Design.
+   */
+  daily?: { learnGoal: number; onLearnGoalChange: (learn: number) => void } | undefined;
 }
 
 /**
@@ -57,6 +63,7 @@ export function LernrhythmusView({
   examples,
   deadlines,
   onChange,
+  daily,
 }: LernrhythmusViewProps) {
   const [retention, setRetention] = useState(settings.retention);
   const [box, setBox] = useState<number | null>(null);
@@ -70,6 +77,9 @@ export function LernrhythmusView({
   const set = (change: Partial<LearningSettings>) => {
     onChange({ ...settings, ...change });
   };
+  // Das Tageslimit für neue Karten liegt nie unter dem Tagesziel (dailyLimits.ts).
+  const floor = daily === undefined ? 0 : minNewPerDay(daily.learnGoal);
+  const presetOn = RETENTION_PRESETS.some((p) => p.retention === settings.retention);
 
   return (
     <Screen className={styles.screen}>
@@ -91,6 +101,14 @@ export function LernrhythmusView({
           </button>
         ))}
       </div>
+
+      {daily === undefined ? null : (
+        <p className={styles.help} data-addition>
+          {settings.algorithm === 'fsrs'
+            ? 'FSRS berechnet jeden Abstand einzeln aus deiner Ziel-Behaltensquote.'
+            : 'Leitner nutzt feste Abstände je Fach, die du unten selbst festlegst.'}
+        </p>
+      )}
 
       {settings.algorithm === 'fsrs' ? (
         <div className={cx(styles.block, rise.rise)}>
@@ -114,6 +132,13 @@ export function LernrhythmusView({
               );
             })}
           </div>
+          {daily === undefined ? null : (
+            <p className={styles.help} data-addition>
+              {presetOn
+                ? 'Die Voreinstellungen sind Abkürzungen für den Regler darunter.'
+                : `Eigener Wert: ${settings.retention} %. Die Voreinstellungen sind Abkürzungen für den Regler.`}
+            </p>
+          )}
           <label className={styles.slider}>
             <span className={styles.sliderHead}>
               <span>Ziel-Behaltensquote</span>
@@ -181,16 +206,45 @@ export function LernrhythmusView({
           <span className={styles.rowLabel}>Neue Karten pro Tag</span>
           <Stepper
             value={settings.newPerDay}
-            canDecrease={settings.newPerDay > 0}
+            canDecrease={settings.newPerDay > floor}
             canIncrease={settings.newPerDay < 100}
             onDecrease={() => {
-              set({ newPerDay: clampNewPerDay(stepNewPerDay(settings.newPerDay, -1)) });
+              set({ newPerDay: stepNewPerDay(settings.newPerDay, -1, floor) });
             }}
             onIncrease={() => {
-              set({ newPerDay: stepNewPerDay(settings.newPerDay, 1) });
+              set({ newPerDay: stepNewPerDay(settings.newPerDay, 1, floor) });
             }}
           />
         </div>
+        {daily === undefined ? null : (
+          <>
+            <div className={styles.row} data-addition>
+              <span className={styles.rowText}>
+                <span className={styles.rowLabel}>Tagesziel Lernen</span>
+                <span className={styles.rowSub}>
+                  Karten, die du am Tag bewertest (auch in Erfolge)
+                </span>
+              </span>
+              <Stepper
+                value={daily.learnGoal}
+                decreaseLabel="Tagesziel senken"
+                increaseLabel="Tagesziel erhöhen"
+                canDecrease={daily.learnGoal > LEARN_GOAL_MIN}
+                canIncrease={daily.learnGoal < LEARN_GOAL_MAX}
+                onDecrease={() => {
+                  daily.onLearnGoalChange(learnStep(daily.learnGoal, -1));
+                }}
+                onIncrease={() => {
+                  daily.onLearnGoalChange(learnStep(daily.learnGoal, 1));
+                }}
+              />
+            </div>
+            <p className={cx(styles.help, styles.rowNote)} data-addition>
+              Neue Karten pro Tag liegen nie unter dem Tagesziel. Hebst du das Ziel an, steigt das
+              Limit mit. Das Limit lässt sich nicht unter das Ziel senken.
+            </p>
+          </>
+        )}
         <div className={styles.row}>
           <span className={styles.rowLabel}>Längster Abstand</span>
           <span className={styles.rowValue}>{MAX_INTERVAL_DAYS} Tage</span>

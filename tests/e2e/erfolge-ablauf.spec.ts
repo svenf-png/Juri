@@ -57,6 +57,24 @@ test.describe('Erfolge', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
   });
 
+  test('ein Ziel über dem Tageslimit für neue Karten kündigt an, dass das Limit mitsteigt', async ({
+    page,
+  }) => {
+    await onboard(page);
+    await seedDeck(page, [['Frage eins?', 'Antwort eins.']]);
+    await page.goto('/Juri/erfolge');
+    const feier = page.getByRole('dialog', { name: 'Erste Karte' });
+    await feier.getByRole('button', { name: 'Super' }).click();
+    await expect(feier).toBeHidden();
+    await page.getByRole('button', { name: 'Tagesziele' }).click();
+    const sheet = page.getByRole('dialog', { name: 'Tagesziele' });
+    await expect(sheet.getByText(/Neue Karten pro Tag steigt/)).toHaveCount(0);
+    await sheet.getByRole('button', { name: 'Ziel Lernen erhöhen' }).click();
+    await expect(sheet.getByText('Neue Karten pro Tag steigt von 24 auf 28')).toBeVisible();
+    await sheet.getByRole('button', { name: 'Ziel Lernen senken' }).click();
+    await expect(sheet.getByText(/Neue Karten pro Tag steigt/)).toHaveCount(0);
+  });
+
   test('Leerzustand, erste Karte, Feier für den Meilenstein genau einmal', async ({
     page,
     baseURL,

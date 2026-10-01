@@ -43,6 +43,10 @@ async function openPreview(page: Page, layout: Layout | null) {
   }
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
+  // Ergänzung zum Design: Sidebar-Eintrag „Einstellungen“ (ohne Einfluss auf die Lage).
+  await page.locator('aside [data-addition]').evaluateAll((els) => {
+    for (const el of els) (el as HTMLElement).style.visibility = 'hidden';
+  });
 }
 
 /** Paare aus Design-Element und App-Element, die an derselben Stelle liegen müssen. */
@@ -201,9 +205,18 @@ test.describe('Shell und Navigation', () => {
     await expect(nav).toHaveCount(1);
     await expect(nav.getByRole('link', { name: 'Heute' })).toHaveAttribute('aria-current', 'page');
     await expect(page.getByRole('link', { name: 'Lernrhythmus' })).toHaveCount(wide ? 1 : 0);
+    await expect(page.getByRole('link', { name: 'Einstellungen', exact: true })).toHaveCount(
+      wide ? 1 : 0,
+    );
     await expect(page.getByRole('link', { name: 'Profil und Einstellungen' })).toHaveCount(
       wide ? 0 : 1,
     );
+    if (wide) {
+      // Die Sidebar führt direkt zu den Einstellungen (nicht nur über Lernrhythmus).
+      await page.getByRole('link', { name: 'Einstellungen', exact: true }).click();
+      await expect(page.getByRole('heading', { name: 'Einstellungen', level: 1 })).toBeVisible();
+      await nav.getByRole('link', { name: 'Heute' }).click();
+    }
 
     for (const [label, heading] of [
       ['Stapel', 'Stapel'],
