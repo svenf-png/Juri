@@ -209,8 +209,11 @@ const onList = (sheetHtml) =>
     sheetHtml,
   );
 
-const cardPreview =
-  '<div role="img" style="align-self: center; width: 216px; height: 270px; border-radius: 20px; background: #6A3FE0"></div>';
+/* Wie in der App ein <img> (gleiche Quelle wie PREVIEW_URL in designFixture.ts): WebKit zeichnet
+   ein Bild mit Rundung minimal anders als ein <div>. */
+const PREVIEW_URL =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='216' height='270'%3E%3Crect width='216' height='270' fill='%236A3FE0'/%3E%3C/svg%3E";
+const cardPreview = `<img alt="Bildkarte" src="${PREVIEW_URL}" style="align-self: center; width: 216px; aspect-ratio: 1080 / 1350; border-radius: 20px; background: #6A3FE0; object-fit: cover; display: block">`;
 const cardSheet = onList(
   sheet(
     'High five',
