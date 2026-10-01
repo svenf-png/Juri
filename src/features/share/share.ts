@@ -6,7 +6,10 @@ import {
   readMergeLocal,
   recordShared,
 } from '@/data/repositories/juri';
+import { ensureSenderId, planSocial, readHighFives } from '@/data/repositories/highfive';
 import { readMeta, readProfile, writeMeta } from '@/data/repositories/profile';
+import { outgoingHighFives } from '@/domain/highfive/give';
+import { socialFromManifest, type ReceivePlan } from '@/domain/highfive/incoming';
 import { buildPackage, juriFileName } from '@/domain/juri/build';
 import { decodeJuri, encodeJuri } from '@/domain/juri/codec';
 import { JURI_LIMITS, JURI_MIME, JuriError, type JuriPackage } from '@/domain/juri/format';
@@ -39,16 +42,21 @@ export async function prepareExport(
   now = Date.now(),
 ): Promise<PreparedExport> {
   const db = database();
-  const [source, profile, achievements] = await Promise.all([
+  const [source, profile, achievements, senderId, social] = await Promise.all([
     readExportSource(db, choice.deckIds),
     readProfile(db),
     choice.achievements ? readAchievements(db, now) : Promise.resolve(null),
+    ensureSenderId(db, newId),
+    readHighFives(db),
   ]);
   const built = buildPackage(source, {
     deckIds: choice.deckIds,
     notes: choice.notes,
     achievements,
     senderName: profile?.name,
+    senderId,
+    // Mitreise (A9): gegebene High fives reisen nur mit dem Schalter „Erfolge mitschicken“.
+    highFives: achievements ? outgoingHighFives(social.kudos, now) : [],
     now,
     appVersion: BUILD.version,
   });
@@ -109,16 +117,24 @@ export async function planIncoming(
   });
 }
 
-/** Rechnet den Plan noch einmal frisch und führt ihn in einer Transaktion aus. */
+/** Was Kontakt und High fives einer Datei bringen würden, gerechnet auf dem heutigen Stand. */
+export function planSocialOf(pack: JuriPackage, now = Date.now()): Promise<ReceivePlan> {
+  return planSocial(database(), socialFromManifest(pack.manifest), now);
+}
+
+/**
+ * Rechnet den Plan noch einmal frisch und führt ihn in einer Transaktion aus, samt Kontakt und
+ * High fives aus der Datei (M11): Scheitert etwas, bleibt alles unverändert.
+ */
 export async function commitIncoming(
   pack: JuriPackage,
   mode: MergeMode,
   decisions?: ReadonlyMap<string, Resolution>,
   now = Date.now(),
-): Promise<MergePlan> {
+): Promise<{ plan: MergePlan; social: ReceivePlan | null }> {
   const plan = await planIncoming(pack, mode, decisions, now);
-  await applyMerge(database(), plan, now);
-  return plan;
+  const social = await applyMerge(database(), plan, now, socialFromManifest(pack.manifest));
+  return { plan, social };
 }
 
 export function incomingErrorMessage(error: unknown): string {

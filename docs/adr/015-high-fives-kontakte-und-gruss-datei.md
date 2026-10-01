@@ -1,0 +1,27 @@
+# ADR-015: High fives, Kontakte und Gruß-Datei
+
+Status: angenommen · 01.10.2026 (Umsetzung in M11, Entscheidungen 2, 9, 11 und 12; schreibt ADR-003 und ADR-014 fort)
+
+## Kontext
+
+Juri motiviert über sichtbaren Fortschritt und Anerkennung, nicht über Druck. Lernpartner sollen sich kleine High fives geben können, ohne Server, ohne Konten und ohne Zähler zum Jagen. Es gibt keinen Weg, Menschen zu authentifizieren: Eine Datei kommt aus Nachrichten, Mail oder AirDrop, und ihr Absender steht nur als Name darin (ADR-003, Risiko „Absender nicht authentifiziert“).
+
+## Entscheidung
+
+- **Absender-ID.** Jedes Profil bekommt eine zufällige ID (`meta.senderId`, UUID, entsteht beim ersten Teilen, bleibt im Backup). Sie steht als optionales `sender.id` im Manifest. Gleiche ID heißt gleicher Kontakt; der Name dient nur der Anzeige und lässt sich beim Empfänger umbenennen (`contacts.alias`). **Fälschbar bleibt akzeptiert:** Wer eine fremde ID schreibt, kann nur ein High five oder einen Namen unterschieben. Es hängt kein Zugriff, keine Berechtigung und kein Datenabgleich an der ID.
+- **Formatversion 1 bleibt.** `sender.id` und `highFives` sind optionale Felder. Dateien aus M10 ohne diese Felder bleiben gültig und erzeugen keinen Kontakt. Das High-five-Feld bekommt die Form `{ id, at, to?, win? }` (vorher vorläufig `{ id, at, text }`; M10 hat nie welche geschrieben). Eine Datei aus einer künftigen Formatversion lehnt die App mit `neuere-version` ab. **Grenze:** Eine M10-App kennt `sender.id` noch nicht und liest eine M11-Datei mit ID über ihr strenges Schema als „beschädigt“. Nach dem Update (Service Worker, Hinweis „Neue Version verfügbar“) geht es; eine Formatversion 2 hätte der M10-App die klarere Meldung gegeben, aber alle neuen Dateien unlesbar gemacht, auch ohne High fives.
+- **High fives in der Datei** (`domain/juri/format.ts`): `id` (macht den Import wiederholbar), `at`, `to` (Empfänger-ID, falls bekannt), `win` (Anlass ohne Namen, höchstens 80 Zeichen). Höchstens 50 je Datei. **Mitreise** (A9): Eine `.juri`-Datei trägt die gegebenen High fives der letzten 30 Tage (neueste zuerst) nur, wenn „Erfolge mitschicken“ an ist; die ID reist immer mit dem Absender, damit Kontakte entstehen. Fremde Empfänger lesen nur eine opake ID.
+- **Gruß-Datei** (`.juri-gruss`, MIME `application/octet-stream`): ZIP nur mit `manifest.json`, `format: "juri-gruss"`, Absender mit ID Pflicht, mindestens ein High five, optional der Erfolgs-Snapshot. Gleicher Rahmen und gleiche Prüfung wie `.juri` (Grenzen, zod strikt, Whitelist: nur `manifest.json`), kein Import von Karten (`decodeGreeting` in `codec.ts`). Eine `.juri` ist keine Gruß-Datei und umgekehrt; beide Seiten melden das mit eigener Meldung (`ist-gruss`, `ist-stapel`).
+- **Kontakte** entstehen aus importierten Dateien mit `sender.id` (`contacts`: ID, gesendeter Name, optional eigener Name, zuletzt gesehen, letzter Erfolgs-Snapshot, gefeierte Erfolge). Ältere Snapshots überschreiben keinen neueren (Zeitpunkt der Datei). Beim ersten Kennenlernen zählen schon erreichte Meilensteine als gefeiert. Obergrenze 500 Kontakte.
+- **Erfolge zum Abklatschen** (`domain/highfive/wins.ts`): aus dem Snapshot eines Kontakts, Vorrang Meilenstein, Wiederholungen in 1.000er-Stufen, Karten in 100er-Stufen, Serie ab 3 Tagen. Reine Anzeige.
+- **Regeln.** Ein High five je Kontakt und Lerntag (04:00) beim Geben und je Absender und Lerntag beim Empfangen, damit es nichts zu jagen gibt (kein Zähler, keine Serie, kein Ranking, kein Meilenstein). Beim Empfangen zählt nichts von sich selbst (gleiche ID), nichts mit fremdem Empfänger (`to`), nichts doppelt (gleiche `id`), nichts über 50 je Datei; Zeitpunkte aus der Zukunft werden auf jetzt begrenzt. Ein wiederholter Import derselben Datei ändert nichts (`lastSeenAt` folgt dem Zeitpunkt der Datei, nicht der Uhr).
+- **Speicher und Transaktion.** Schema-Version 8: `contacts` (`id`) und `kudos` (`id, contactId, day`). Importiert eine `.juri` High fives, laufen Kontakt und High fives in **derselben** Transaktion wie der Karten-Import (`applyMerge`); scheitert etwas, bleibt alles unverändert. Es entstehen keine neuen Ereignisse: Tagesziel, Serie und Aggregate bleiben unberührt. Das Backup prüft Verweise (ein High five ohne Kontakt lehnt `hasIntegrity` ab). Entfernen eines Kontakts löscht seine High fives.
+- **Bildkarte.** Canvas zeichnet ein PNG (1080 × 1350) aus einem reinen Plan (`domain/highfive/card.ts`, `platform/canvas.ts`), nur Standard-API, kein Fremdcode. Texte stehen als Text im Plan, nie als HTML. Das Bild entsteht, sobald die Feier „High five!“ aufgeht, damit der Aufruf von Web Share direkt aus dem Tippen kommt (Entscheidung 12, `deliverFile`: Teilen-Menü nur nach `canShare`, sonst Download).
+- **Anzeige.** Texte aus Dateien nur als React-Text. Route `/high-fives` (Unterseite von Erfolge), Chip in Heute (iPad), Zeile und Kachel in Erfolge.
+
+## Konsequenzen
+
+- Kein Server und keine Authentifizierung: Ein Kontakt ist nur ein Name mit ID. Wer die Datei eines anderen weiterreicht, reicht dessen Identität mit.
+- Zwei Geräte derselben Person teilen die ID, wenn sie dasselbe Backup einspielen; das ist gewollt.
+- Ob Web Share ein PNG im Teilen-Menü anbietet und ob iOS die `.juri-gruss`-Datei aus „Dateien“ in der Dateiauswahl zeigt, prüft der Gerätetest (`docs/geraete-testliste.md`).
+- Eine spätere Formatversion kann mehr Felder tragen; ältere Apps lehnen sie mit `neuere-version` ab, sobald die Version steigt.

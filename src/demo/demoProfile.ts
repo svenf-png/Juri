@@ -1,6 +1,12 @@
-import type { BackupTables } from '@/domain/backup/codec';
+import type { BackupRecord, BackupTables } from '@/domain/backup/codec';
 import { addDays, dayKey, dayStart, learningDay } from '@/domain/calendar/day';
-import type { Deadline, MilestoneRecord, NewEvent, ReviewItem } from '@/domain/model/records';
+import type {
+  Achievements,
+  Deadline,
+  MilestoneRecord,
+  NewEvent,
+  ReviewItem,
+} from '@/domain/model/records';
 import { DEFAULT_GOALS } from '@/domain/progress/goals';
 import { MILESTONES, newlyReached } from '@/domain/progress/milestones';
 import { dayRows } from '@/domain/progress/rows';
@@ -134,13 +140,75 @@ function demoMilestones(
 }
 
 /**
+ * Kontakte und High fives des Demo-Profils (HighFive.dc.html): Mara mit 12 Tagen in Folge hat gestern
+ * ein High five „für 1.000 Wiederholungen“ geschickt, Jonas mit 200 Karten vor drei Tagen „einfach
+ * so“. Beide sind noch ungesehen, damit die Feier und die Zeile in Erfolge zu sehen sind.
+ */
+function demoHighFives(now: number): { contacts: BackupRecord[]; kudos: BackupRecord[] } {
+  const day = (ago: number) => dayKey(addDays(learningDay(new Date(now)), -ago));
+  const at = (ago: number) => now - ago * DAY;
+  const snapshot = (achievements: Achievements) => ({ at: now - DAY, achievements });
+  const mara: Achievements = {
+    streak: 12,
+    reviews: 940,
+    created: 64,
+    milestones: ['erste-karte'],
+  };
+  const jonas: Achievements = {
+    streak: 2,
+    reviews: 640,
+    created: 214,
+    milestones: ['erste-karte'],
+  };
+  return {
+    contacts: [
+      {
+        id: 'demo-mara',
+        sentName: 'Mara',
+        firstSeenAt: at(20),
+        lastSeenAt: at(1),
+        snapshot: snapshot(mara),
+        celebrated: ['m:erste-karte'],
+      },
+      {
+        id: 'demo-jonas',
+        sentName: 'Jonas',
+        firstSeenAt: at(30),
+        lastSeenAt: at(3),
+        snapshot: snapshot(jonas),
+        celebrated: ['m:erste-karte'],
+      },
+    ],
+    kudos: [
+      {
+        id: 'demo-kudo-mara',
+        direction: 'received',
+        contactId: 'demo-mara',
+        at: at(1),
+        day: day(1),
+        win: '1.000 Wiederholungen',
+        seen: false,
+      },
+      {
+        id: 'demo-kudo-jonas',
+        direction: 'received',
+        contactId: 'demo-jonas',
+        at: at(3),
+        day: day(3),
+        seen: false,
+      },
+    ],
+  };
+}
+
+/**
  * Demo-Profil der Testinstanz (Entscheidung 10), deterministisch aus `now`.
  * Grundgerüst aus M1: Profil seit 26 Wochen, noch kein Backup (die Erinnerung ist fällig).
  * Seit M3 mit den Demo-Stapeln (40 Karten, über 26 Wochen angelegt), seit M8 mit drei Fristen:
  * eine im Endspurt (Klausur in 5 Tagen), eine später (LL.M. in 109 Tagen, Umfang über den Tag
  * „Demo“) und eine ohne Datum (Examen). Seit M9 mit 26 Wochen Lernverlauf: Rekordtag vor acht
  * Tagen (86 Wiederholungen), Pausentage, laufender Serie, freigeschalteten und fast erreichten
- * Meilensteinen. Kontakte kommen in M11 dazu.
+ * Meilensteinen. Seit M11 mit zwei Kontakten (Mara, Jonas) und je einem bekommenen High five.
  */
 export function demoTables(now: number): BackupTables {
   const since = now - 26 * 7 * DAY;
@@ -158,6 +226,7 @@ export function demoTables(now: number): BackupTables {
     dayStats: rows,
     milestones: demoMilestones(now, events, rows, schemas),
     deadlines: demoDeadlines(now),
+    ...demoHighFives(now),
     profile: [{ id: 'me', name: 'Demo', createdAt: since, updatedAt: since }],
     meta: [{ key: 'onboardedAt', value: since }],
   };

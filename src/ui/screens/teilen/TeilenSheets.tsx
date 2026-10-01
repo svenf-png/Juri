@@ -145,10 +145,15 @@ export function ConflictSheet({
 /** Meldung nach dem Import mit den Zahlen. */
 export function ImportedSheet({
   summary,
+  highFives,
+  onHighFives,
   onOpenDeck,
   onClose,
 }: {
   summary: MergeSummary;
+  /** „ein High five“, wenn die Datei welche mitbrachte (M11). */
+  highFives?: string | null;
+  onHighFives?: () => void;
   onOpenDeck: () => void;
   onClose: () => void;
 }) {
@@ -163,6 +168,11 @@ export function ImportedSheet({
         ))}
       </dl>
       <p className={sheets.paraMuted}>Dein Lernfortschritt ist unverändert.</p>
+      {highFives && onHighFives ? (
+        <Button variant="soft" size="md" block onClick={onHighFives} data-addition>
+          Dazu {highFives} ansehen
+        </Button>
+      ) : null}
       <Button block onClick={onOpenDeck}>
         Zum Stapel
       </Button>

@@ -2,9 +2,11 @@ import { learningDay } from '@/domain/calendar/day';
 import { mediaIdsOf } from '@/domain/cards/card';
 import type { Achievements, JuriPackage } from '@/domain/juri/format';
 import type { ExportSource } from '@/domain/juri/build';
+import type { ReceivePlan } from '@/domain/highfive/incoming';
 import type { MergeLocal, MergePlan } from '@/domain/juri/merge';
 import type { Card, MediaRecord } from '@/domain/model/records';
 import type { JuriDb } from '../db';
+import { planSocial, writeSocial, type IncomingSocial } from './highfive';
 import { releaseMedia } from './media';
 import { readCounter, writeMeta } from './profile';
 import { readErfolge, recordActivity } from './progress';
@@ -66,10 +68,23 @@ export async function readMergeLocal(db: JuriDb, pack: JuriPackage): Promise<Mer
  * der Backup-Erinnerung, Tagesaggregate und Meilensteine in EINER Transaktion (ADR-013, ADR-014).
  * Scheitert etwas, bleibt alles unverändert. Ein leerer Plan schreibt nichts.
  */
-export async function applyMerge(db: JuriDb, plan: MergePlan, now: number): Promise<void> {
-  if (plan.empty) return;
+export async function applyMerge(
+  db: JuriDb,
+  plan: MergePlan,
+  now: number,
+  social?: IncomingSocial,
+): Promise<ReceivePlan | null> {
+  if (plan.empty && !social) return null;
   const w = plan.writes;
-  await db.transaction('rw', [...ACTIVITY_TABLES(db), db.areas, db.decks, db.media], async () => {
+  let received: ReceivePlan | null = null;
+  const tables = [...ACTIVITY_TABLES(db), db.areas, db.decks, db.media, db.contacts, db.kudos];
+  await db.transaction('rw', tables, async () => {
+    // Kontakt und High fives aus der Datei (M11): gleiche Transaktion wie die Karten.
+    if (social) {
+      received = await planSocial(db, social, now);
+      await writeSocial(db, received);
+    }
+    if (plan.empty) return;
     if (w.areas.length > 0) await db.areas.bulkAdd([...w.areas]);
     if (w.decks.length > 0) await db.decks.bulkAdd([...w.decks]);
     if (w.media.length > 0) await db.media.bulkAdd([...w.media]);
@@ -88,6 +103,7 @@ export async function applyMerge(db: JuriDb, plan: MergePlan, now: number): Prom
     await recordActivity(db, [now], now);
     if (w.releaseMedia.length > 0) await releaseMedia(db, w.releaseMedia);
   });
+  return received;
 }
 
 /**

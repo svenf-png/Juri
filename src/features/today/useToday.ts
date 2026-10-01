@@ -3,6 +3,8 @@ import { dayKey, learningDay, nextDayStart, parseDayKey } from '@/domain/calenda
 import { dueSummary } from '@/domain/scheduler/queue';
 import { todayInputFrom } from '@/domain/today/build';
 import { todayModel, type TodayModel } from '@/domain/today/today';
+import { heuteHighFive } from '@/domain/highfive/view';
+import { useHighFives } from '../highfive/queries';
 import { useTodayData } from '../library/queries';
 import { dueContext } from '../study/due';
 
@@ -38,13 +40,19 @@ export function useLearningDayKey(): string {
 export function useToday(): { model: TodayModel | null; failed: boolean } {
   const key = useLearningDayKey();
   const data = useTodayData(key);
+  const highFives = useHighFives();
   const model = useMemo(() => {
     if (data.status !== 'ready') return null;
     const { items, settings, startedToday, ...rest } = data.value;
     const due = dueSummary(items, dueContext(key, { settings, startedToday }));
-    return todayModel(
-      todayInputFrom(parseDayKey(key), { ...rest, dueByDeck: due.byDeck, dueTotal: due.total }),
-    );
-  }, [data, key]);
+    const input = todayInputFrom(parseDayKey(key), {
+      ...rest,
+      dueByDeck: due.byDeck,
+      dueTotal: due.total,
+    });
+    // Der Chip „Mara hat 12 Tage in Folge geschafft“ (A17) kommt aus den Kontakten (M11).
+    const highFive = highFives.model ? heuteHighFive(highFives.model) : null;
+    return todayModel({ ...input, highFive });
+  }, [data, key, highFives.model]);
   return { model, failed: data.status === 'error' };
 }

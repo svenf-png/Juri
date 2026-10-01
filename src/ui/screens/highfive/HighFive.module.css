@@ -1,0 +1,542 @@
+/* High fives nach HighFive.dc.html; Ergänzungen (Entscheidung 2) tragen dieselben Werte. */
+.screen {
+  --screen-top: 54px;
+  /* Die Designs lassen die Zeilenhöhe auf „normal“. */
+  line-height: normal;
+}
+
+.back {
+  height: 44px;
+  min-height: 44px;
+  margin: 0 0 0 -10px;
+  gap: 2px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: -8px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  line-height: normal;
+}
+
+.lead {
+  margin: 0;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.cols {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  /* Maße aus iPadErfolge.dc.html: Rand 44 px, Abstand 26 px. */
+  .screen {
+    max-width: none;
+    margin: 0;
+    padding: calc(40px + var(--top-inset)) 44px calc(40px + var(--bottom-inset));
+    gap: 26px;
+  }
+
+  .title {
+    font-size: 44px;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.person {
+  border-radius: 22px;
+  background: var(--surface);
+  padding: 14px 14px 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 21px;
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.personText {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.personName {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.win {
+  font-size: 13.5px;
+  color: var(--violet-700);
+  font-weight: 600;
+}
+
+.give {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 26px;
+  border: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--violet);
+  box-shadow: 0 4px 12px -6px rgba(46, 26, 115, 0.4);
+}
+
+.given {
+  background: var(--violet);
+  color: var(--bg);
+  box-shadow: none;
+}
+
+.justBecause {
+  height: 56px;
+  border-radius: 18px;
+  border: 1.5px dashed var(--violet-300);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.justBecause svg {
+  color: var(--violet);
+}
+
+.received {
+  display: flex;
+  flex-direction: column;
+}
+
+.receivedRow {
+  /* Im Design ohne border-box gezeichnet: 56 px Inhalt plus 1 px Rand. */
+  box-sizing: content-box;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.smallAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 17px;
+  background: var(--violet-100);
+  color: var(--violet-700);
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.receivedText {
+  flex-grow: 1;
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.when {
+  font-size: 13px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+/* Ergänzung: Leerzustand ohne Kontakte. */
+.empty {
+  border-radius: 22px;
+  border: 1.5px dashed var(--dash-chip);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.emptyTitle {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.emptyText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.go {
+  height: 50px;
+  border-radius: 16px;
+  border: 0;
+  background: var(--violet);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ergänzung: Fußzeilen wie in Teilen.dc.html („Alles sichern · Backup exportieren“). */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.footerMuted {
+  color: var(--muted);
+}
+
+.footerLink {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--link);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Feier und Bestätigung nach dem Geben (HighFive.dc.html: Schicht über dem Bildschirm). */
+.overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  overflow: hidden;
+  animation: fadein 0.3s ease both;
+}
+
+.overlay::backdrop {
+  background: transparent;
+}
+
+.overlay[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  padding: 0 36px;
+  text-align: center;
+  line-height: normal;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.burst {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wave,
+.wave2 {
+  position: absolute;
+  inset: 30px;
+  border-radius: 50%;
+  border: 3px solid var(--violet);
+  animation: wave 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s both;
+}
+
+.wave2 {
+  border-color: var(--violet-300);
+  animation-delay: 0.45s;
+}
+
+@keyframes wave {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.slap {
+  width: 120px;
+  height: 120px;
+  border-radius: 60px;
+  background: var(--violet);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: slap 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes slap {
+  0% {
+    transform: scale(0.3) rotate(-35deg);
+    opacity: 0;
+  }
+  45% {
+    transform: scale(1.25) rotate(8deg);
+    opacity: 1;
+  }
+  65% {
+    transform: scale(0.92) rotate(-3deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.overlayText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s both;
+}
+
+.overlayTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: normal;
+}
+
+.overlaySub {
+  margin: 0;
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.overlayActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.send {
+  height: 56px;
+  border-radius: 18px;
+  border: 0;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.close {
+  height: 48px;
+  border-radius: 16px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .wave,
+  .wave2,
+  .slap,
+  .overlayText,
+  .overlayActions {
+    animation: none;
+  }
+}
+
+/* Bildkarte-Vorschau, Kontaktliste und Gruß-Datei (Sheets, Entscheidung 2). */
+.cardPreview {
+  align-self: center;
+  width: 216px;
+  aspect-ratio: 1080 / 1350;
+  border-radius: 20px;
+  background: var(--violet);
+  object-fit: cover;
+  display: block;
+}
+
+.contactList {
+  display: flex;
+  flex-direction: column;
+}
+
+.contactRow {
+  width: 100%;
+  min-height: 64px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  text-align: left;
+}
+
+.contactText {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contactName {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.contactSub {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.chevron {
+  color: var(--chevron);
+  flex-shrink: 0;
+  display: flex;
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.whoText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.whoName {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.whoMeta {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.problem {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--danger);
+  line-height: 1.4;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+}

@@ -19,7 +19,7 @@ Alle Daten liegen in IndexedDB (ADR-002). Das Schema wächst mit jedem Meilenste
 
 ## Zielmodell (Tabellen kommen mit ihren Meilensteinen)
 
-`profile` und `meta` (M1); `areas`, `decks`, `cards`, `reviewItems` (M3); `reviewLog` (M4); `media` (M6, ArrayBuffer); `deadlines` (M8); `events`, `dayStats`, `milestones` (M9); `contacts`, `kudos` (M11). Felder und Indizes legt der jeweilige Meilenstein fest, mit Migration und Schema.
+`profile` und `meta` (M1); `areas`, `decks`, `cards`, `reviewItems` (M3); `reviewLog` (M4); `media` (M6, ArrayBuffer); `deadlines` (M8); `events`, `dayStats`, `milestones` (M9); `contacts`, `kudos` (M11, Schema-Version 8, ADR-015). Felder und Indizes legt der jeweilige Meilenstein fest, mit Migration und Schema.
 
 ## Konsequenzen
 

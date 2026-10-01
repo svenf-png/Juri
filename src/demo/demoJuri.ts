@@ -1,6 +1,6 @@
 /**
  * Demo-Datei zum Import (M10, Entscheidung 10): `testdaten/demo-amtshaftung.juri` mit zwei Stapeln,
- * Notizen, einem Bild mit Abdeckung, einem PDF als Herkunft und Verknüpfungen zwischen Schema und
+ * Notizen, einer Absender-ID mit einem High five, einem Bild mit Abdeckung, einem PDF als Herkunft und Verknüpfungen zwischen Schema und
  * Karten. So lässt sich Teilen und Import in der Testinstanz ohne zweites Gerät prüfen. Alles
  * deterministisch: gleiche Eingabe, gleiche Bytes.
  */
@@ -13,6 +13,8 @@ import { blocksPng } from './png';
 
 /** Fester Zeitpunkt der Demo-Datei (29.09.2026, 10:00 UTC). */
 export const DEMO_JURI_TIME = Date.UTC(2026, 8, 29, 10, 0, 0);
+/** Feste Absender-ID von „Mara“ in der Demo-Datei und im Demo-Profil. */
+export const DEMO_SENDER_ID = 'demo-mara';
 export const DEMO_JURI_NAME = 'Demo-Amtshaftung.juri';
 const DECKS = ['demo-amtshaftung', 'demo-schemata'];
 const PDF_ID = 'demo-skript';
@@ -101,8 +103,12 @@ export function demoJuriPackage(pdf: Uint8Array): JuriPackage {
       milestones: ['erste-karte', 'serie-7'],
     },
     senderName: 'Mara',
+    // Absender-ID und ein High five ohne Empfänger (M11): Kontakt und High five lassen sich ohne
+    // zweites Gerät prüfen. Die ID ist fest, die Datei bleibt deterministisch.
+    senderId: DEMO_SENDER_ID,
+    highFives: [{ id: 'demo-mara-hf-1', at: DEMO_JURI_TIME, win: '12 Tage in Folge' }],
     now: DEMO_JURI_TIME,
-    appVersion: '0.11.0',
+    appVersion: '0.12.0',
   }).pack;
 }
 

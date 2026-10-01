@@ -5,8 +5,7 @@ import { Heute } from '@/ui/screens/heute/Heute';
 import { Lernen } from '@/ui/screens/lernen/Lernen';
 import { Installieren } from '@/ui/screens/installieren/Installieren';
 import { Onboarding } from '@/ui/screens/onboarding/Onboarding';
-import { Platzhalter } from '@/ui/screens/platzhalter/Platzhalter';
-import { PLATZHALTER } from '@/ui/screens/platzhalter/texte';
+import type { HighFiveVariant } from '@/ui/screens/highfive/HighFiveVorschau';
 import { Erstellen } from '@/ui/screens/erstellen/Erstellen';
 import { KarteBearbeiten } from '@/ui/screens/erstellen/KarteBearbeiten';
 import type { AbdeckungVariant } from '@/ui/screens/erstellen/AbdeckungVorschau';
@@ -82,6 +81,25 @@ const TeilenVorschau = lazy(() =>
 );
 const Teilen = lazy(() =>
   import('@/ui/screens/teilen/Teilen').then((m) => ({ default: m.Teilen })),
+);
+const HIGHFIVE_VARIANTS: readonly HighFiveVariant[] = [
+  'liste',
+  'ipad',
+  'leer',
+  'gegeben',
+  'einfach',
+  'feier',
+  'karte',
+  'kontakte',
+  'kontakt',
+  'gruss',
+  'fehler',
+];
+const HighFiveVorschau = lazy(() =>
+  import('@/ui/screens/highfive/HighFiveVorschau').then((m) => ({ default: m.HighFiveVorschau })),
+);
+const HighFive = lazy(() =>
+  import('@/ui/screens/highfive/HighFive').then((m) => ({ default: m.HighFive })),
 );
 const FristenVorschau = lazy(() =>
   import('@/ui/screens/fristen/FristenVorschau').then((m) => ({ default: m.FristenVorschau })),
@@ -180,7 +198,14 @@ export function routes(
                 </Lazy>
               ),
             },
-            { path: '/high-fives', element: <Platzhalter {...PLATZHALTER.highFives} /> },
+            {
+              path: '/high-fives',
+              element: (
+                <Lazy>
+                  <HighFive />
+                </Lazy>
+              ),
+            },
             {
               path: '/einstellungen/lernrhythmus',
               element: (
@@ -280,6 +305,15 @@ export function routes(
       element: (
         <Lazy>
           <TeilenVorschau variant={variant} />
+        </Lazy>
+      ),
+    })),
+    // High fives (HighFive.dc.html und die M11-Artboards) mit Beispieldaten.
+    ...HIGHFIVE_VARIANTS.map((variant) => ({
+      path: `/styleguide/high-fives/${variant}`,
+      element: (
+        <Lazy>
+          <HighFiveVorschau variant={variant} />
         </Lazy>
       ),
     })),

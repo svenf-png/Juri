@@ -8,10 +8,14 @@ import { withoutLinks } from '../cards/schema';
 import { omit } from './omit';
 import type { Area, Card, Deck, MediaRecord } from '../model/records';
 import {
+  GREETING_EXTENSION,
+  GREETING_FORMAT,
   JURI_EXTENSION,
   JURI_FORMAT,
   JURI_FORMAT_VERSION,
+  MAX_HIGH_FIVES_PER_FILE,
   type Achievements,
+  type GreetingManifest,
   type HighFive,
   type JuriPackage,
   type PackDeck,
@@ -34,6 +38,8 @@ export interface ExportOptions {
   readonly achievements: Achievements | null;
   readonly highFives?: readonly HighFive[];
   readonly senderName?: string | undefined;
+  /** Absender-ID dieses Profils (M11); ohne sie entsteht beim Empfänger kein Kontakt. */
+  readonly senderId?: string | undefined;
   readonly now: number;
   readonly appVersion: string;
 }
@@ -124,7 +130,14 @@ export function buildPackage(source: ExportSource, options: ExportOptions): Expo
       formatVersion: JURI_FORMAT_VERSION,
       createdAt: options.now,
       app: { version: options.appVersion },
-      ...(options.senderName ? { sender: { name: options.senderName } } : {}),
+      ...(options.senderName
+        ? {
+            sender: {
+              name: options.senderName,
+              ...(options.senderId ? { id: options.senderId } : {}),
+            },
+          }
+        : {}),
       notes: options.notes,
       decks: decks.map((d) => ({
         id: d.id,
@@ -142,6 +155,42 @@ export function buildPackage(source: ExportSource, options: ExportOptions): Expo
     media,
   };
   return { pack, skipped, linksDropped, cardIds: cards.map((c) => c.id) };
+}
+
+export interface GreetingOptions {
+  readonly senderId: string;
+  readonly senderName: string;
+  /** Erfolgs-Snapshot; `null`, wenn er nicht mitreisen soll (A9). */
+  readonly achievements: Achievements | null;
+  readonly highFives: readonly HighFive[];
+  readonly now: number;
+  readonly appVersion: string;
+}
+
+/** Manifest einer Gruß-Datei (M11): Absender mit ID, High fives, optional der Erfolgs-Snapshot. */
+export function buildGreeting(options: GreetingOptions): GreetingManifest {
+  if (options.highFives.length === 0) throw new RangeError('Kein High five.');
+  return {
+    format: GREETING_FORMAT,
+    formatVersion: JURI_FORMAT_VERSION,
+    createdAt: options.now,
+    app: { version: options.appVersion },
+    sender: { name: options.senderName, id: options.senderId },
+    ...(options.achievements ? { achievements: options.achievements } : {}),
+    highFives: options.highFives.slice(0, MAX_HIGH_FIVES_PER_FILE),
+  };
+}
+
+/** Dateiname der Gruß-Datei: „High five von Sven.juri-gruss“. */
+export function greetingFileName(senderName: string): string {
+  const clean = senderName
+    // eslint-disable-next-line no-control-regex
+    .replace(/[\\/:*?"<>|\u0000-\u001f]/gu, ' ')
+    .replace(/\s+/gu, ' ')
+    .trim()
+    .slice(0, 40)
+    .trim();
+  return `High five${clean ? ` von ${clean}` : ''}${GREETING_EXTENSION}`;
 }
 
 /** Dateiname: ein Stapel heißt wie er, mehrere tragen das Datum der Gerätezeitzone. */

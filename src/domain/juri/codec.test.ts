@@ -83,13 +83,13 @@ describe('Roundtrip', () => {
       deckIds: ['deck-a'],
       notes: false,
       achievements: { streak: 5, reviews: 200, created: 30, milestones: ['erste-karte'] },
-      highFives: [{ id: 'h1', at: 1, text: 'Weiter so' }],
+      highFives: [{ id: 'h1', at: 1, win: 'Weiter so' }],
       now: NOW,
       appVersion: '0.11.0',
     }).pack;
     const back = decodeJuri(encodeJuri(withExtras));
     expect(back.manifest.achievements?.streak).toBe(5);
-    expect(back.manifest.highFives).toEqual([{ id: 'h1', at: 1, text: 'Weiter so' }]);
+    expect(back.manifest.highFives).toEqual([{ id: 'h1', at: 1, win: 'Weiter so' }]);
   });
 
   it('verwirft den Herkunftsstand aus einer fremden Datei', () => {

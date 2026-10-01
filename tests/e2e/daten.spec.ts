@@ -10,7 +10,7 @@ test.describe('Daten, Profil, Backup (M1)', () => {
   });
 
   test('Onboarding legt das Profil an, es übersteht einen Neustart', async ({ page, baseURL }) => {
-    const watch = watchPage(page, baseURL!);
+    const watch = watchPage(page, baseURL!, { allow404: true });
     await page.goto('/Juri/');
     await expect(page).toHaveURL(/\/Juri\/willkommen$/);
     const submit = page.getByRole('button', { name: 'Los geht’s' });

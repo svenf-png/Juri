@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
+import type { ReceivePlan } from '@/domain/highfive/incoming';
+import { countText } from '@/domain/highfive/text';
 import { shareShortcut } from '@/domain/device/shortcuts';
 import type { JuriPackage } from '@/domain/juri/format';
 import type { Conflict, MergePlan, MergeSummary, Resolution } from '@/domain/juri/merge';
@@ -19,6 +21,7 @@ import {
   commitIncoming,
   incomingErrorMessage,
   planIncoming,
+  planSocialOf,
   prepareExport,
   readIncoming,
   sendExport,
@@ -39,6 +42,8 @@ type Incoming =
       pack: JuriPackage;
       mode: ImportMode;
       plan: MergePlan;
+      /** Kontakt und High fives aus der Datei (M11). */
+      social: ReceivePlan;
       decisions: ReadonlyMap<string, Resolution>;
     };
 
@@ -71,6 +76,7 @@ export function Teilen() {
   const [imported, setImported] = useState<{
     summary: MergeSummary;
     deckId: string | undefined;
+    highFives: string | null;
   } | null>(null);
 
   const decks = snapshot?.library.decks;
@@ -125,9 +131,12 @@ export function Teilen() {
       if (!file) return;
       try {
         const pack = await readIncoming(file);
-        const plan = await planIncoming(pack, 'update');
+        const [plan, social] = await Promise.all([
+          planIncoming(pack, 'update'),
+          planSocialOf(pack),
+        ]);
         setImportFailed(false);
-        setIncoming({ kind: 'preview', pack, mode: 'update', plan, decisions: new Map() });
+        setIncoming({ kind: 'preview', pack, mode: 'update', plan, social, decisions: new Map() });
       } catch (error) {
         setIncoming({ kind: 'error', message: incomingErrorMessage(error) });
       }
@@ -184,14 +193,14 @@ export function Teilen() {
 
   let incomingModel: IncomingModel;
   if (incoming.kind === 'preview') {
-    const { plan, pack, mode } = incoming;
+    const { plan, social, pack, mode } = incoming;
     incomingModel = {
       kind: 'preview',
       view: describeIncoming(pack),
       mode,
       updateHint: updateHint(plan.summary),
       copyHint: COPY_HINT,
-      nothing: mode === 'update' && plan.empty ? NOTHING_TO_IMPORT : null,
+      nothing: mode === 'update' && plan.empty && social.empty ? NOTHING_TO_IMPORT : null,
       busy,
     };
   } else if (incoming.kind === 'error') {
@@ -202,9 +211,9 @@ export function Teilen() {
 
   const changeMode = (mode: ImportMode) => {
     if (incoming.kind !== 'preview' || incoming.mode === mode) return;
-    const { pack } = incoming;
+    const { pack, social } = incoming;
     void planIncoming(pack, mode).then((plan) => {
-      setIncoming({ kind: 'preview', pack, mode, plan, decisions: new Map() });
+      setIncoming({ kind: 'preview', pack, mode, plan, social, decisions: new Map() });
     });
   };
 
@@ -214,10 +223,14 @@ export function Teilen() {
     setBusy(true);
     setImportFailed(false);
     commitIncoming(pack, mode, decisions)
-      .then((plan) => {
+      .then(({ plan, social }) => {
         setOpen(null);
         setIncoming({ kind: 'idle' });
-        setImported({ summary: plan.summary, deckId: firstDeckId(pack, plan) });
+        setImported({
+          summary: plan.summary,
+          deckId: firstDeckId(pack, plan),
+          highFives: social && social.kudos.length > 0 ? countText(social.kudos.length) : null,
+        });
       })
       .catch(() => {
         setImportFailed(true);
@@ -308,6 +321,11 @@ export function Teilen() {
       {imported ? (
         <ImportedSheet
           summary={imported.summary}
+          highFives={imported.highFives}
+          onHighFives={() => {
+            setImported(null);
+            void navigate('/high-fives');
+          }}
           onOpenDeck={() => {
             const id = imported.deckId;
             setImported(null);

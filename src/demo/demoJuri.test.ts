@@ -3,7 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { decodeJuri } from '@/domain/juri/codec';
 import { planMerge } from '@/domain/juri/merge';
 import { EMPTY_LOCAL, counter } from '@/domain/juri/testkit';
-import { DEMO_JURI_NAME, DEMO_JURI_TIME, demoJuriBytes, demoJuriPackage } from './demoJuri';
+import {
+  DEMO_JURI_NAME,
+  DEMO_JURI_TIME,
+  DEMO_SENDER_ID,
+  demoJuriBytes,
+  demoJuriPackage,
+} from './demoJuri';
 
 const pdf = new Uint8Array(readFileSync('testdaten/demo-skript.pdf'));
 const FILE = `testdaten/${DEMO_JURI_NAME.toLowerCase()}`;
@@ -23,6 +29,14 @@ describe('Demo-Datei zum Import', () => {
     expect(pack.cards.some((c) => c.type === 'cover' && c.source?.mediaId === 'demo-skript')).toBe(
       true,
     );
+  });
+
+  it('trägt eine Absender-ID und ein High five (M11)', () => {
+    const { manifest } = demoJuriPackage(new Uint8Array([1]));
+    expect(manifest.sender).toEqual({ name: 'Mara', id: DEMO_SENDER_ID });
+    expect(manifest.highFives).toEqual([
+      { id: 'demo-mara-hf-1', at: DEMO_JURI_TIME, win: '12 Tage in Folge' },
+    ]);
   });
 
   it('besteht die Prüfung und ergibt beim Import einen konsistenten Plan', () => {

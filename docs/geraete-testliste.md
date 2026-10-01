@@ -162,6 +162,20 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Einstellungen, Testdaten: 
 9. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Importierte Karten und Stapel sind wieder da, nichts wird erneut gefeiert.
 10. **Rechner:** Teilen bei 1440 × 900: „Herunterladen“ lädt die `.juri`-Datei, „Datei öffnen“ und die Taste „I“ öffnen den Datei-Dialog, „E“ lädt herunter, nichts ist abgeschnitten.
 
+## M11: High fives (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Einstellungen, Testdaten: „Mit Demo-Profil starten“ (Mara und Jonas als Kontakte) sowie „Demo-Datei (.juri) vorbereiten“ und in „Dateien“ sichern. Für Schritt 4 und 5 hilft ein zweites Gerät.
+
+1. **Demo-Profil:** Erfolge zeigt „2 High fives bekommen“, die Zeile öffnet High fives. Die Feier „High five!“ kommt einmal („Schön“), danach stehen Mara und Jonas unter „Bekommen“ und „Neu von deinen Leuten“. Auf dem iPad steht der Chip „Mara hat 12 Tage in Folge geschafft“ in Heute.
+2. **Geben:** Auf die Hand bei Mara tippen: Feier, Hand bleibt lila, ein zweites Tippen zeigt dasselbe (ein High five je Kontakt und Tag).
+3. **Bildkarte im Teilen-Menü:** „Per Nachricht senden …“, „Bild teilen“. **Notieren:** Öffnet sich das Teilen-Menü sofort, bietet es das PNG zu Nachrichten, WhatsApp und „In Dateien sichern“ an, sieht das Bild richtig aus (Schrift, Hand, Satz)? Gibt es eine Fehlermeldung?
+4. **Gruß-Datei aus „Dateien“:** „Als Gruß-Datei für Juri“, in „Dateien“ sichern (Endung `.juri-gruss`). **Notieren:** Wird sie gesichert, graut die Dateiauswahl sie aus? Auf dem zweiten Gerät unter High fives „Gruß-Datei öffnen“: „Annehmen“, Feier. Auf demselben Gerät geöffnet: „Dieses High five hast du selbst geschickt.“
+5. **Mitreise:** Einen Stapel teilen und beim anderen importieren: Unter Teilen steht „Dazu ein High five ansehen“, wenn du vorher eines gegeben hast. Mit „Erfolge mitschicken“ aus kommt kein High five mit.
+6. **Demo-Datei:** Die Demo-Datei importieren: Mara wird Kontakt, ein High five „für 12 Tage in Folge“ kommt an. Dieselbe Datei noch einmal: „Alles schon auf dem neuesten Stand“.
+7. **Kontakte:** Unten „Alle anzeigen“, Mara umbenennen, speichern; entfernen.
+8. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Kontakte und High fives sind wieder da, die Feier kommt nicht erneut.
+9. **Rechner:** High fives bei 1440 × 900: nichts abgeschnitten; **H** gibt „einfach so“ (Esc schließt), **K** öffnet die Kontaktliste, **O** die Gruß-Datei.
+
 ## Updates (pro Gerät, ab Version 0.4.1)
 
 1. Nach einem neuen Deploy die App im App-Umschalter schließen und neu öffnen, dann etwa 20 Sekunden auf Heute bleiben: Unten erscheint „Neue Version verfügbar“. „Neu laden“ tippen, unter Einstellungen steht die neue Versionsnummer.
