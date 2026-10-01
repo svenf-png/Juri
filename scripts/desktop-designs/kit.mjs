@@ -196,18 +196,18 @@ export const backLink = (text, href = '#', { selfStart = true } = {}) =>
 export const textField = (
   name,
   value,
-  { rows = 0, h = 0, ring = false, placeholder = '', badge = '' } = {},
+  { rows = 0, h = 0, ring = false, placeholder = '', badge = '', lh = 1.4 } = {},
 ) =>
   `<label style="border-radius: 20px; background: #F6F4FB; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; ${ring ? 'box-shadow: 0 0 0 2px #6A3FE0;' : ''} ${h ? `min-height: ${h}px; box-sizing: border-box;` : ''}">
     <span style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">${name}</span>${badge}</span>
-    <span style="padding: 2px; font-size: ${rows ? 20 : 18}px; line-height: 1.4; ${value ? 'color: #17141F' : 'color: #726E7A'}">${value || placeholder}</span>
+    <span style="padding: 2px; font-size: ${rows ? 20 : 18}px; line-height: ${lh}; ${value ? 'color: #17141F' : 'color: #726E7A'}">${value || placeholder}</span>
   </label>`;
 
 /** Kleines Feld mit Rand (Norm, Stapel, Quelle) wie in iPadErstellen.dc.html. */
-export const miniField = (name, value, { link = false } = {}) =>
+export const miniField = (name, value, { link = false, input = false } = {}) =>
   `<label style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box; min-width: 0">
     <span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">${name}</span>
-    <span style="font-size: 15px; font-weight: 400; ${link ? 'color: #5B34D1; font-weight: 600' : 'color: #17141F'}">${value}</span>
+    <span style="font-size: 15px; font-weight: 400; ${input ? 'padding: 1px 2px;' : ''} ${link ? 'color: #5B34D1; font-weight: 600' : 'color: #17141F'}">${value}</span>
   </label>`;
 
 /** Kartentyp wie in der App (Erstellen.module.css `.types`): Abstand 4, Reiter 40 px, 13,5/700. */

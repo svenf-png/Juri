@@ -7,6 +7,7 @@ import type { CoverState } from '../erstellen/form';
 import { useBlobUrl } from '@/features/media/media';
 import { SurfaceImage } from '../../components/CoverSurface';
 import { TrashIcon } from '../../components/icons';
+import { useMediaQuery } from '../../useMediaQuery';
 import { MaskCanvas } from '../erstellen/MaskCanvas';
 import { PdfPageView } from './PdfPageView';
 import { PdfPane } from './PdfPane';
@@ -32,11 +33,12 @@ export function PdfWorkspace({
 }) {
   const { pdf } = media;
   const [selected, setSelected] = useState<number | null>(media.seed?.selected ?? null);
+  const desktop = useMediaQuery('(min-width: 1280px)');
   const url = useBlobUrl(media.mode === 'cover' ? (cover.draft?.record ?? null) : null);
   if (!pdf) return null;
   const cover_ = media.mode === 'cover';
   // Vorschauen (mit `seed`) zeigen die Texte des Designs, unabhängig vom Browser der Tests.
-  const hints = gestureHints(media.seed ? 'ios' : currentEnvironment());
+  const hints = gestureHints(media.seed ? (desktop ? 'desktop' : 'ios') : currentEnvironment());
   const phone = layout === 'phone';
   const hint = cover_
     ? phone

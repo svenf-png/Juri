@@ -70,7 +70,7 @@ const erstellen = (w, h) =>
       <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
         ${typeTabs(['Frage', 'Lücke', 'Schema', 'Abdeckung'], 0)}
         ${textField('Vorderseite', 'Was versteht man unter Gewahrsam?', { rows: 1, h: 132 })}
-        ${textField('Rückseite', 'Die von einem Herrschaftswillen getragene tatsächliche Sachherrschaft eines Menschen über eine Sache.', { rows: 1, h: 168 })}
+        ${textField('Rückseite', 'Die von einem Herrschaftswillen getragene tatsächliche Sachherrschaft eines Menschen über eine Sache.', { rows: 1, h: 168, lh: 1.45 })}
         <div style="display: flex; gap: 12px">${toolButton('file', 'PDF')}${toolButton('image', 'Foto / Bild')}</div>
         <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
           ${miniField('Norm', '§ 242 StGB')}${miniField('Stapel', 'Diebstahl &amp; Betrug · SR')}${miniField('Tags', '#Klausur')}
@@ -87,54 +87,53 @@ const erstellen = (w, h) =>
   });
 
 /* PDF neben dem Formular */
-const SKELETON = (widths) =>
-  widths
-    .map(
-      (n) =>
-        `<div style="height: 10px; border-radius: 5px; background: #E4DDF7; width: ${n}%"></div>`,
-    )
-    .join('');
+const pageLine = (width) =>
+  `<span style="width: ${width}; height: 8px; border-radius: 4px; background: #E6E2EE; flex-shrink: 0"></span>`;
+const pageGap = (height) => `<span style="height: ${height}px; flex-shrink: 0"></span>`;
 
-const pdfPane = `<div style="display: flex; flex-direction: column; height: 100%; min-width: 0; background: #FBFAFD; border-right: 1px solid #EFECF5; box-sizing: border-box; padding: 0 32px 24px">
-    <div style="height: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px">
-      ${backLink('Schließen', 'DesktopHeute.dc.html', { selfStart: false })}
-      <span style="font-size: 14.5px; font-weight: 700; flex-grow: 1; text-align: center">Skript Sachenrecht.pdf <span style="font-weight: 500; color: #6B6678">· S. 14 / 62</span></span>
-      <span style="display: flex; padding: 3px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 0 0 1px #EFECF5"><span style="height: 34px; padding: 0 16px; border-radius: 11px; background: #17141F; color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center">Text</span><span style="height: 34px; padding: 0 16px; border-radius: 11px; color: #6B6678; font-size: 14px; font-weight: 600; display: flex; align-items: center">Abdecken</span></span>
+/* Beispielseite wie die Vorschau der App (AbdeckungVorschau, Seite der iPad-Ansicht). */
+const pageText = (
+  extra = '',
+) => `<div style="position: absolute; inset: 0; box-sizing: border-box; padding: 40px 44px; display: flex; flex-direction: column; gap: 11px; overflow: hidden">
+      <span style="font-size: 12px; color: #8E8A99; font-weight: 600">§ 5 Gutgläubiger Erwerb beweglicher Sachen</span>
+      <span style="width: 70%; height: 12px; border-radius: 4px; background: #CFCAD9; margin-top: 6px; flex-shrink: 0"></span>
+      ${pageGap(4)}${pageLine('100%')}${pageLine('96%')}${pageLine('91%')}${pageGap(6)}
+      <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #17141F; font-family: Georgia, 'Times New Roman', serif"><span style="background: rgba(106,63,224,.18); box-shadow: 0 0 0 2px rgba(106,63,224,.18); border-radius: 2px">Der Erwerber ist nicht in gutem Glauben, wenn ihm bekannt oder infolge grober Fahrlässigkeit unbekannt ist, dass die Sache nicht dem Veräußerer gehört.</span> (§ 932 II BGB)</p>
+      ${pageGap(6)}${pageLine('100%')}${pageLine('94%')}${pageLine('98%')}${pageLine('60%')}${pageGap(8)}${pageLine('100%')}${pageLine('88%')}
+      ${extra}
+    </div>`;
+
+const popup = `<div style="position: absolute; left: 88px; top: 150px; border-radius: 14px; background: #17141F; color: #FFFFFF; padding: 4px; display: flex; gap: 2px; box-shadow: 0 12px 28px -12px rgba(0,0,0,.5)"><span style="height: 38px; padding: 0 12px; border-radius: 10px; background: #6A3FE0; display: flex; align-items: center; font-size: 13.5px; font-weight: 700">Als Antwort</span><span style="height: 38px; padding: 0 12px; display: flex; align-items: center; font-size: 13.5px; font-weight: 700">Als Frage</span><span style="height: 38px; padding: 0 12px; display: flex; align-items: center; font-size: 13.5px; font-weight: 700">Als Lücke</span></div>`;
+
+const pagerButton = (ic) =>
+  `<span class="tap hv-outline" style="width: 44px; height: 44px; border-radius: 22px; border: 1.5px solid #DCD6EA; box-sizing: border-box; background: #FFFFFF; display: flex; align-items: center; justify-content: center">${icon(ic, 22, 2.2)}</span>`;
+
+const pdfPane = `<div style="display: flex; flex-direction: column; height: 100%; min-width: 0; background: #FBFAFD; border-right: 1px solid #F3F1F8; box-sizing: border-box; padding: 0 32px 24px">
+    <div style="height: 72px; flex-shrink: 0; display: flex; align-items: center; gap: 16px">
+      <a href="DesktopHeute.dc.html" style="position: relative; height: 44px; margin-left: -10px; display: flex; align-items: center; gap: 2px; font-size: 16px; font-weight: 600; flex-shrink: 0">${icon('back', 24, 2.2)}Schließen</a>
+      <span style="flex: 1; min-width: 0; text-align: center; font-size: 14.5px; font-weight: 700">Skript Sachenrecht.pdf<span style="color: #6B6678; font-weight: 600"> · S. 14 / 62</span></span>
+      <span style="display: flex; gap: 4px; padding: 3px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 0 0 1px #EFECF5; flex-shrink: 0"><span style="height: 34px; padding: 0 16px; border-radius: 11px; background: #17141F; color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center">Text</span><span style="height: 34px; padding: 0 16px; border-radius: 11px; color: #6B6678; font-size: 14px; font-weight: 700; display: flex; align-items: center">Abdecken</span></span>
     </div>
-    <div style="flex: 1 1 0; min-height: 0; position: relative; border-radius: 20px; background: #FFFFFF; box-shadow: 0 24px 48px -28px rgba(46,26,115,.35); padding: 44px 56px; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; gap: 14px">
-      <div style="font-size: 12px; color: #6B6678">§ 5 Gutgläubiger Erwerb beweglicher Sachen</div>
-      <div style="height: 14px; width: 52%; border-radius: 7px; background: #DCD6EA; margin-bottom: 8px"></div>
-      ${SKELETON([100, 92, 70])}
-      <div style="position: relative; margin-top: 18px">
-        <div style="position: absolute; left: -8px; top: -58px; border-radius: 14px; background: #17141F; padding: 5px; display: flex; gap: 2px; box-shadow: 0 20px 44px -18px rgba(46,26,115,.45)"><span style="height: 38px; padding: 0 14px; border-radius: 10px; background: #6A3FE0; color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center">Als Antwort</span><span style="height: 38px; padding: 0 14px; color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center">Als Frage</span><span style="height: 38px; padding: 0 14px; color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center">Als Lücke</span></div>
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 17px; line-height: 1.5; color: #17141F"><span style="background: #DCD1FB">Der Erwerber ist nicht in gutem Glauben, wenn ihm bekannt oder infolge grober Fahrlässigkeit unbekannt ist, dass die Sache nicht dem Veräußerer gehört.</span> (§ 932 II BGB)</div>
-      </div>
-      <div style="margin-top: 22px; display: flex; flex-direction: column; gap: 14px">${SKELETON([100, 88, 96, 60])}</div>
-      <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 14px">${SKELETON([100, 74])}</div>
-    </div>
-    <div style="height: 64px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding-top: 16px; box-sizing: border-box">
-      <span style="font-size: 13px; color: #6B6678; font-weight: 500; display: flex; align-items: center; gap: 8px">Markieren mit der Maus · Zoom ${kbd('+')} ${kbd('−')} ${kbd('0')}</span>
-      <span style="display: flex; align-items: center; gap: 8px">
-        <span class="tap hv-outline" style="width: 44px; height: 44px; border-radius: 22px; background: #FFFFFF; box-shadow: 0 0 0 1.5px #EFECF5; display: flex; align-items: center; justify-content: center">${icon('back', 20, 2.2)}</span>
-        <span style="height: 44px; padding: 0 20px; border-radius: 22px; background: #FFFFFF; box-shadow: 0 0 0 1.5px #EFECF5; display: flex; align-items: center; font-size: 14px; font-weight: 700">S. 14 / 62</span>
-        <span class="tap hv-outline" style="width: 44px; height: 44px; border-radius: 22px; background: #FFFFFF; box-shadow: 0 0 0 1.5px #EFECF5; display: flex; align-items: center; justify-content: center">${icon('chevron', 20, 2.2)}</span>
-      </span>
+    <div style="position: relative; flex: 1 1 0; min-height: 0; border-radius: 20px; background: #FFFFFF; box-shadow: 0 24px 48px -28px rgba(46,26,115,.35); overflow: hidden">${pageText(popup)}</div>
+    <div style="height: 64px; flex-shrink: 0; box-sizing: border-box; padding-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+      <span style="font-size: 13px; color: #6B6678; font-weight: 500; display: flex; align-items: center; gap: 4px">Text mit der Maus markieren<span style="display: inline-flex; align-items: center; gap: 4px"> · Zoom ${kbd('+')} ${kbd('−')} ${kbd('0')}</span></span>
+      <span style="display: flex; align-items: center; gap: 6px">${pagerButton('back')}<span style="width: 104px; height: 44px; border-radius: 22px; border: 1.5px solid #DCD6EA; box-sizing: border-box; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700">S. 14 / 62</span>${pagerButton('chevron')}</span>
     </div>
   </div>`;
 
 const erstellenPdf = (
   w,
   h,
-) => `<div style="width: ${w}px; height: ${h}px; box-sizing: border-box; background: #FFFFFF; display: grid; grid-template-columns: 1.15fr 1fr; overflow: hidden">
+) => `<div style="width: ${w}px; height: ${h}px; box-sizing: border-box; background: #FFFFFF; display: grid; grid-template-columns: 53.4884% 1fr; overflow: hidden">
   ${pdfPane}
   <div style="display: flex; flex-direction: column; min-width: 0; box-sizing: border-box; padding: 0 48px 0 40px">
     <div style="height: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between">${title('Neue Karte')}${chip('3 von 5 heute')}</div>
     <div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 16px; padding-top: 8px">
       ${typeTabs(['Frage', 'Lücke', 'Schema', 'Abdeckung'], 0)}
-      ${textField('Vorderseite', 'Wann ist der Erwerb nach § 932 II BGB nicht in gutem Glauben?', { rows: 1, h: 120 })}
-      ${textField('Rückseite', 'Wenn ihm bekannt oder infolge grober Fahrlässigkeit unbekannt ist, dass die Sache nicht dem Veräußerer gehört.', { rows: 1, h: 150, badge: '<span style="height: 24px; padding: 0 10px; border-radius: 12px; background: #FFFFFF; color: #4B2AA8; font-size: 12px; font-weight: 700; display: flex; align-items: center; text-transform: none; letter-spacing: 0">aus PDF übernommen</span>' })}
+      ${textField('Vorderseite', 'Wann ist der Erwerber nach § 932 II BGB nicht in gutem Glauben?', { rows: 1, h: 120 })}
+      ${textField('Rückseite', 'Wenn ihm bekannt oder infolge grober Fahrlässigkeit unbekannt ist, dass die Sache nicht dem Veräußerer gehört.', { rows: 1, h: 150, lh: 1.45, badge: '<span style="height: 24px; padding: 0 9px; border-radius: 12px; background: #FFFFFF; color: #4B2AA8; font-size: 12px; font-weight: 700; display: flex; align-items: center; text-transform: none; letter-spacing: 0">aus PDF übernommen</span>' })}
       <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
-        ${miniField('Norm', '§ 932 II BGB')}${miniField('Stapel', 'Sachenrecht · ZR')}${miniField('Quelle', 'PDF S. 14', { link: true })}
+        ${miniField('Norm', '§ 932 II BGB', { input: true })}${miniField('Stapel', 'Sachenrecht · ZR')}${miniField('Quelle', 'PDF S. 14', { link: true })}
       </div>
     </div>
     <div style="flex-shrink: 0; height: 120px; display: flex; flex-direction: column; justify-content: center; gap: 14px">
