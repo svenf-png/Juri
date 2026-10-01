@@ -150,20 +150,25 @@ function wrapPage(proxy: PDFPageProxy): PdfPage {
 export async function openPdf(bytes: ArrayBuffer): Promise<PdfDocument> {
   const lib = await pdfjs();
   let doc: PDFDocumentProxy;
+  // Seit pdf.js 6 räumt die Lade-Aufgabe auf, nicht mehr das Dokument.
+  let task: ReturnType<typeof lib.getDocument> | undefined;
   try {
-    doc = await lib.getDocument({
+    task = lib.getDocument({
       data: new Uint8Array(bytes.slice(0)),
       useWasm: false,
       useSystemFonts: true,
       enableXfa: false,
-    }).promise;
+    });
+    doc = await task.promise;
   } catch (error) {
+    // Ein gescheiterter Ladevorgang (kaputt, Passwort) hält sonst den Worker fest.
+    await task?.destroy().catch(() => undefined);
     if (error instanceof Error && error.name === 'PasswordException')
       throw new PdfError('passwort');
     throw new PdfError('unlesbar');
   }
   if (doc.numPages > PDF_MAX_PAGES) {
-    await doc.destroy();
+    await task.destroy();
     throw new PdfError('zu-viele-seiten');
   }
   const cache = new Map<number, PDFPageProxy>();
@@ -208,7 +213,7 @@ export async function openPdf(bytes: ArrayBuffer): Promise<PdfDocument> {
     },
     async destroy() {
       cache.clear();
-      await doc.destroy();
+      await task.destroy();
     },
   };
 }

@@ -237,7 +237,7 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - Keine Nutzerdaten auf Servern, keine Geheimnisse im Code
 - Öffentlicher Code ist kein Risiko: Web-Apps sind ohnehin einsehbar
 - Wichtigster Schutz: das GitHub-Konto (Zwei-Faktor, Regeln für `main`)
-- Abhängigkeiten minimal, fest versioniert und überwacht
+- Abhängigkeiten minimal, fest versioniert und überwacht; `npm audit` ohne Befund (seit 1.0.0 mit pdf.js 6.3.289)
 - Schutz gegen Einbetten in fremde Seiten in der App selbst
 
 ## Testen
@@ -245,6 +245,9 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - Automatische Tests für Fachlogik, Abläufe und Aussehen
 - **Pixelvergleich:** Design und App im selben Browser gerendert, auch in Safaris Engine WebKit
 - Geprüft auf iPhone 14, iPhone 16 Pro Max und iPad Air 11 Zoll
+- **Zugänglichkeit:** axe-core (WCAG 2.2 AA) über alle Bildschirme, Sheets und Zustände, dazu Fokus, sichtbare Fokusanzeige und Trefferflächen von mindestens 44 px; das echte VoiceOver prüft der Gerätetest
+- **Leistung:** 5.000 Karten in 50 Stapeln, gemessen im Browser mit Grenzen (Bildschirm öffnen höchstens 1,5 s, Suche höchstens 0,5 s); auf dem Gerät noch nicht gemessen
+- **Update-Ablauf:** getestet mit einer zweiten Version auf einem Testserver (Hinweis, „Später“, „Neu laden“, Daten bleiben)
 - **Testinstanz** „Juri Test“ unter `svenf-png.github.io/Juri/test/`, getrennt von echten Daten
 - Dort per Knopfdruck: 26 Wochen Lernverlauf, Fristen, High fives, 5.000 Karten
 - **Demo-Stapel** mit echten juristischen Inhalten, als Demo gekennzeichnet
@@ -274,14 +277,15 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 <!-- layout: tabelle -->
 
-| Phase       | Inhalt                                                                            |
-| ----------- | --------------------------------------------------------------------------------- |
-| M0 bis M3   | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                        |
-| M4 bis M5   | Lern-Engine und Prüfungsschemata (fertig)                                         |
-| M6 bis M11  | PDF und Abdeckung, Browser-Version, Fristen, Erfolge, Teilen, High fives (fertig) |
-| M12 bis M13 | Feinschliff und Veröffentlichung, eigene Desktop-Gestaltung                       |
+| Phase      | Inhalt                                                                            |
+| ---------- | --------------------------------------------------------------------------------- |
+| M0 bis M3  | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                        |
+| M4 bis M5  | Lern-Engine und Prüfungsschemata (fertig)                                         |
+| M6 bis M11 | PDF und Abdeckung, Browser-Version, Fristen, Erfolge, Teilen, High fives (fertig) |
+| M12        | Feinschliff, Qualität und Veröffentlichung, Version 1.0.0 (fertig)                |
+| M13        | Eigene Desktop-Gestaltung (1.1.0)                                                 |
 
-> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M11 sind 30 von 37 PT (81 %) eingeplant erledigt. M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht (sieben Artboards, Umfang-Schritt), M9 mit rund 3 statt 2,5 PT (sechs Artboards, Verfügbarkeit aus dem Lernlog, Aufbau der Aggregate in Migration und Backup); M10 mit rund 3,5 statt 3 PT (acht Artboards, Prüfung fremder Dateien, gemeinsamer Stand pro Karte für Konflikte, Demo-Datei); alles Einschätzungen, nicht gemessen. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
+> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M12 sind 33 von 37 PT (89 %) eingeplant erledigt (M11 mit 1,5 PT, M12 mit seinem Planwert 3 PT). M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht (sieben Artboards, Umfang-Schritt), M9 mit rund 3 statt 2,5 PT (sechs Artboards, Verfügbarkeit aus dem Lernlog, Aufbau der Aggregate in Migration und Backup); M10 mit rund 3,5 statt 3 PT (acht Artboards, Prüfung fremder Dateien, gemeinsamer Stand pro Karte für Konflikte, Demo-Datei); alles Einschätzungen, nicht gemessen. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
 
 ## Stand heute
 
@@ -300,7 +304,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M10 fertig:** Teilen als `.juri`-Datei (Stapel wählen, Notizen und Erfolge nur mit Schalter, Teilen-Menü oder Download), Import mit Vorschau, „Aktualisieren“ (Fortschritt bleibt) und „Als Kopie“, Konflikte je Karte, Prüfung fremder und manipulierter Dateien, Import-Anleitung, Meilenstein „Teamplayer“, Demo-Datei in der Testinstanz
 - **M10.1 (Zwischenstand, 0.11.1):** Fehlerbehebung: Einstellungen in der Desktop-Sidebar, Schema-Editor ohne angeschnittene Nummer, Tageslimit nie unter dem Tagesziel, Fälligkeit an den Karten in der Stapelliste
 - **M11 fertig:** High fives ohne Server: Kontakte entstehen aus importierten Dateien (zufällige Absender-ID), High fives geben und bekommen mit Feier, Bildkarte per Canvas und Teilen-Menü, Gruß-Datei und Mitreise in `.juri`, ein High five je Kontakt und Tag, Chip in Heute, Zeile in Erfolge, Kontaktliste, Demo-Profil mit Kontakten
-- Automatische Prüfung bei jeder Änderung: 914 Unit-Tests, 11 Bildvergleiche für High fives, 8 für Teilen und Import, 7 für Erfolge, 8 für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
+- **M12 fertig (Version 1.0.0):** Update-Ablauf getestet, der Hinweis wartet in der Lernrunde; Install-Hinweis mit dem Schalter „Als Web-App öffnen“; Zugänglichkeit mit axe-core über alle Bildschirme und Sheets, Trefferflächen von 44 px (ein systematischer Fehler bei Rändern behoben), Fokus zurück an den Auslöser; 5.000 Karten gemessen (Bildschirme öffnen in 0,3 bis 1,2 s), pdf.js 6.3.289 gegen eine Sicherheitsmeldung, README und Geräte-Testliste bereinigt
+- Automatische Prüfung bei jeder Änderung: 919 Unit-Tests, Zugänglichkeit (axe-core) auf iPhone, iPad und Desktop, Leistung mit 5.000 Karten, Update-Ablauf, 11 Bildvergleiche für High fives, 8 für Teilen und Import, 7 für Erfolge, 8 für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
-- Fortschritt: 12 von 14 Meilensteinen (86 %), nach Planwerten 30 von 37 Personentagen (81 %)
-- Nächster Schritt: Gerätetest von M0 bis M11 (iPhone, iPad, Desktop-Browser; für M11 vor allem Bildkarte im Teilen-Menü und Gruß-Datei aus „Dateien“), dann M12 (Feinschliff)
+- Fortschritt: 13 von 14 Meilensteinen (93 %), nach Planwerten 33 von 37 Personentagen (89 %)
+- Nächster Schritt: Gerätetest (iPhone, iPad, Desktop-Browser; zuerst M12 mit VoiceOver und der großen Datenmenge, dann Bildkarte im Teilen-Menü und Gruß-Datei aus „Dateien“), danach M13 (eigene Desktop-Gestaltung)

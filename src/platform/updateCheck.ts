@@ -28,10 +28,20 @@ export function canUpdate(registration: UpdatableRegistration): boolean {
 
 /**
  * Zeigt Juri den Hinweis? Nur, wenn eine ältere Version diese Seite bedient (`controlled`).
- * Eine Seite ohne Worker hat nichts zu aktualisieren.
+ * Eine Seite ohne Worker hat nichts zu aktualisieren. Während einer Lernrunde (`studying`) bleibt
+ * der Hinweis zurück: Er läge sonst über den Bewertungsknöpfen. Danach erscheint er.
  */
-export function shouldPromptForUpdate(needRefresh: boolean, controlled: boolean): boolean {
-  return needRefresh && controlled;
+export function shouldPromptForUpdate(
+  needRefresh: boolean,
+  controlled: boolean,
+  studying = false,
+): boolean {
+  return needRefresh && controlled && !studying;
+}
+
+/** Läuft gerade eine Lernrunde? Die Adresse (ohne Basis) ist `/lernen`, gleich mit welcher Basis. */
+export function isStudyPath(pathname: string): boolean {
+  return pathname.replace(/\/+$/, '').endsWith('/lernen');
 }
 
 export interface VisibilitySource {

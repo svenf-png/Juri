@@ -130,6 +130,7 @@
 }
 
 .search {
+  position: relative;
   height: 46px;
   border-radius: var(--radius-field);
   background: var(--surface);
@@ -138,6 +139,13 @@
   gap: 10px;
   padding: 0 14px;
   color: var(--muted);
+}
+
+/* Mit 42 px (iPad, Desktop) wäre das Feld unter 44 px: Tippen aufs Label fokussiert das Feld. */
+.search::after {
+  content: '';
+  position: absolute;
+  inset: -1px 0;
 }
 
 .search:focus-within {
@@ -183,7 +191,8 @@
 .chip::after {
   content: '';
   position: absolute;
-  inset: -3px -2px;
+  /* border-box: Die Innenkante ist 35 px hoch (38 minus 2 × 1,5 px Rand): 35 + 2 × 4,5 = 44 px. */
+  inset: -4.5px -2px;
 }
 
 .chipOn {
@@ -202,7 +211,7 @@
 
 /* Rund und schmal: Trefferfläche 44 × 44 px. */
 .chipIcon::after {
-  inset: -3px;
+  inset: -4.5px;
 }
 
 .groups {
@@ -449,7 +458,7 @@
   }
 
   .chip::after {
-    inset: -5px -2px;
+    inset: -6.5px -2px;
   }
 
   .chipIcon {
@@ -458,7 +467,7 @@
   }
 
   .chipIcon::after {
-    inset: -5px;
+    inset: -6.5px;
   }
 
   .groups {
@@ -653,7 +662,7 @@
 .areaChip::after {
   content: '';
   position: absolute;
-  inset: -2px;
+  inset: -3.5px;
 }
 
 .areaChipOn {

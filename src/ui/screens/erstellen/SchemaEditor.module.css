@@ -345,6 +345,7 @@
 }
 
 .search {
+  position: relative;
   height: 42px;
   flex-shrink: 0;
   border-radius: 12px;
@@ -354,6 +355,13 @@
   gap: 8px;
   padding: 0 12px;
   color: var(--muted);
+}
+
+/* 42 px hoch: Trefferfläche auf 44 px erweitern (Tippen aufs Label fokussiert das Feld). */
+.search::after {
+  content: '';
+  position: absolute;
+  inset: -1px 0;
 }
 
 .searchInput {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   loadDemoDecks,
+  loadDemoLarge,
   loadDemoProfile,
   loadDemoSkript,
   prepareDemoJuri,
@@ -140,6 +141,25 @@ export function Testdaten() {
           Demo-Profil laden
         </Button>
         <Button
+          variant="soft"
+          size="md"
+          block
+          disabled={busy}
+          onClick={() => {
+            run(
+              'Großen Datensatz (5.000 Karten) laden? Alle Daten der Testinstanz werden ersetzt.',
+              async () => {
+                const added = await loadDemoLarge();
+                setMessage(
+                  `${String(added.cards)} Karten in ${String(added.decks)} Stapeln geladen.`,
+                );
+              },
+            );
+          }}
+        >
+          Großen Datensatz laden (5.000 Karten)
+        </Button>
+        <Button
           variant="outline"
           size="md"
           block
@@ -158,9 +178,10 @@ export function Testdaten() {
       ) : null}
       <p className={styles.help}>
         Die Demo-Stapel kommen zu deinen Daten dazu (6 Stapel, 40 Karten, Inhalte in testdaten/).
-        Das Demo-Skript bringt ein 50-seitiges PDF mit. Die Demo-Datei (.juri) enthält zwei Stapel
-        mit Notizen, Bild, PDF und Verknüpfungen zum Import unter „Teilen“. Nur in der Testinstanz,
-        die echte App bleibt unberührt.
+        Das Demo-Skript bringt ein 50-seitiges PDF mit. Der große Datensatz (5.000 Karten, 50
+        Stapel, Lernlog über 13 Wochen) dient den Messungen und ersetzt alle Daten. Die Demo-Datei
+        (.juri) enthält zwei Stapel mit Notizen, Bild, PDF und Verknüpfungen zum Import unter
+        „Teilen“. Nur in der Testinstanz, die echte App bleibt unberührt.
       </p>
     </section>
   );

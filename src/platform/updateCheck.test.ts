@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
   canUpdate,
+  isStudyPath,
   shouldPromptForUpdate,
   startUpdateChecks,
   UPDATE_CHECK_MIN_GAP_MS,
@@ -105,5 +106,19 @@ describe('erste Installation', () => {
     expect(shouldPromptForUpdate(true, true)).toBe(true);
     expect(shouldPromptForUpdate(true, false)).toBe(false);
     expect(shouldPromptForUpdate(false, true)).toBe(false);
+  });
+
+  it('der Hinweis wartet, bis die Lernrunde vorbei ist', () => {
+    expect(shouldPromptForUpdate(true, true, true)).toBe(false);
+    expect(shouldPromptForUpdate(true, true, false)).toBe(true);
+  });
+
+  it('erkennt die Lernrunde an der Adresse', () => {
+    expect(isStudyPath('/lernen')).toBe(true);
+    expect(isStudyPath('/Juri/test/lernen')).toBe(true);
+    expect(isStudyPath('/lernen/')).toBe(true);
+    expect(isStudyPath('/')).toBe(false);
+    expect(isStudyPath('/einstellungen/lernrhythmus')).toBe(false);
+    expect(isStudyPath('/stapel/lernen-recht')).toBe(false);
   });
 });

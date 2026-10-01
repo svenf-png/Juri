@@ -440,6 +440,8 @@ export function LernenView(view: LernenViewProps) {
 
   return (
     <main className={styles.screen} aria-label="Lernen">
+      {/* Gliederung für Screenreader; das Design zeigt keine Überschrift. */}
+      <h1 className={styles.srOnly}>Lernen</h1>
       <div className={styles.top}>
         <button
           type="button"

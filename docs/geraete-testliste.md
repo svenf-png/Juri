@@ -2,6 +2,22 @@
 
 Manuelle Prüfungen auf echten Geräten. Testgeräte (Entscheidung 7): iPhone 14, iPhone 16 Pro Max, iPad Air M4 11 Zoll, älteres iPad (Modell unter Einstellungen → Allgemein → Info).
 
+## Übersicht: offen zum Gerätetest (Stand 1.0.0)
+
+Alles hier lässt sich nur auf dem Gerät klären; die Cloud hat weder iOS noch VoiceOver. Die Abschnitte unten sind die Schrittlisten. Wer wenig Zeit hat, nimmt zuerst **M12** (VoiceOver, Leistung, Install-Hinweis), dann die offenen Punkte von **M11**, **M10** und **M8**.
+
+| Abschnitt | Offen auf dem Gerät                                                                                                            | Stand                         |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------- |
+| M0, M1    | persist(), Statusleiste, App-Entfernen-Marker, Service Worker nach Neustart (Nachtest M0); Wortlaut der Install-Schritte (M1)  | teilweise gemacht (M0 bis M4) |
+| M2 bis M7 | Schrittlisten je Meilenstein (Layout, Lernen, Schema, PDF und Abdeckung, Browser-Version)                                      | offen                         |
+| M8        | Kalenderdatei: Bietet das Teilen-Menü „Zum Kalender hinzufügen“?                                                               | offen                         |
+| M9        | Feier nach dem Lernen, Tageswechsel um 4 Uhr, Pausentag                                                                        | offen                         |
+| M10       | Teilen-Menü, MIME-Typ `application/octet-stream`, Dateiauswahl nach „Dateien“ (`.juri` wählbar?)                               | offen                         |
+| M11       | Bildkarte (PNG) im Teilen-Menü, `.juri-gruss` aus „Dateien“ (wählbar, nicht ausgegraut?)                                       | offen                         |
+| M12       | VoiceOver, Daumentest der Trefferflächen, 5.000 Karten auf dem Gerät, Schalter „Als Web-App öffnen“, pdf.js 6, Offline, Update | offen                         |
+
+Beim Notieren bitte Gerät, iOS-Version und Juri-Version (Einstellungen, ganz unten) dazuschreiben.
+
 ## M0: Geräte-Check (einmalig, pro Gerät)
 
 1. In Safari `https://svenf-png.github.io/Juri/test/` öffnen.
@@ -59,7 +75,7 @@ Manuelle Prüfungen auf echten Geräten. Testgeräte (Entscheidung 7): iPhone 14
 
 Vorher: Testinstanz `svenf-png.github.io/Juri/test/` installieren oder öffnen, Einstellungen → Testdaten → „Demo-Stapel hinzufügen“. In der echten App vorher ein paar eigene Karten anlegen.
 
-1. **Heute:** zeigt „N Karten warten heute“ (höchstens 20 neue plus fällige). „Lernen starten“ öffnet die Lernansicht; oben stehen Statusleiste und Zähler ohne Überlappung.
+1. **Heute:** zeigt „N Karten warten heute“ (höchstens 24 neue, das ist der Standard des Limits, plus fällige). „Lernen starten“ öffnet die Lernansicht; oben stehen Statusleiste und Zähler ohne Überlappung.
 2. **Umdrehen und bewerten:** Karte antippen oder „Antwort zeigen“. Die Karte dreht sich, unten stehen vier Knöpfe mit „1 min“, „6 min“, „10 min“ und einer Zahl in Tagen. „Leicht“ tippen: Die Karte fliegt nach rechts weg, die nächste erscheint.
 3. **Wischen:** Antwort aufdecken, mit dem Finger nach links ziehen: „Nochmal“, die Karte kommt nach etwa drei anderen wieder. Nach rechts: „Gut“. Ein kurzes Wischen unter etwa einem Daumenbreit springt zurück. Notieren: Stört das Wischen das Scrollen oder die Rand-Geste von Safari?
 4. **Rückgängig:** Nach einer Bewertung erscheint unter „Antwort zeigen“ „Letzte Bewertung zurücknehmen“. Tippen: Die vorige Karte steht mit Antwort wieder da.
@@ -70,7 +86,7 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/` installieren oder öffnen, 
 9. **Stapel:** Im Stapel-Detail lernt „N fällige lernen“ nur diesen Stapel; die Fortschrittsleiste zeigt „neu“, „im Lernen“ und „sicher“.
 10. **Lernrhythmus:** Einstellungen → „Lernrhythmus“ (iPad: Sidebar). Voreinstellung Examen wählen, Regler bewegen, „Neue Karten pro Tag“ ändern. Zu „Leitner-Kasten“ wechseln, Fach antippen, Tage ändern, zurück zu FSRS: Karten bleiben bewertet.
 11. **Tastatur (iPad mit Tastatur):** Leertaste dreht, 1 bis 4 bewerten, Strg/Cmd+Z nimmt zurück, Esc beendet.
-12. **Entwicklungsstand:** Einstellungen → „Entwicklungsstand“ aufklappen: M0 bis M6 mit Haken und Version, M7 „in Arbeit“.
+12. **Entwicklungsstand:** Einstellungen → „Entwicklungsstand“ aufklappen: Alle Meilensteine bis zur installierten Version haben einen Haken und die Version, der nächste steht „in Arbeit“ (ab 1.0.0: „13 von 14 Schritten fertig“, M13 „in Arbeit“).
 13. **Backup:** Nach dem Lernen ein Backup erstellen, App löschen, neu installieren, einspielen: Fälligkeiten und Lernstand sind wie vorher.
 14. **Bewegung:** Bei „Bewegung reduzieren“ (Bedienungshilfen) drehen und wechseln die Karten ohne Animation.
 
@@ -176,9 +192,48 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/`, Einstellungen, Testdaten: 
 8. **Backup:** Backup erstellen, App-Daten löschen, einspielen: Kontakte und High fives sind wieder da, die Feier kommt nicht erneut.
 9. **Rechner:** High fives bei 1440 × 900: nichts abgeschnitten; **H** gibt „einfach so“ (Esc schließt), **K** öffnet die Kontaktliste, **O** die Gruß-Datei.
 
-## Updates (pro Gerät, ab Version 0.4.1)
+## Updates (pro Gerät)
 
 1. Nach einem neuen Deploy die App im App-Umschalter schließen und neu öffnen, dann etwa 20 Sekunden auf Heute bleiben: Unten erscheint „Neue Version verfügbar“. „Neu laden“ tippen, unter Einstellungen steht die neue Versionsnummer.
 2. Die App im Hintergrund lassen, während ein neuer Deploy läuft, dann zurück in die App wechseln: Der Hinweis erscheint auch ohne Neustart (höchstens einmal pro Minute wird nachgefragt).
 3. Ohne Netz öffnen: kein Fehler, kein Hinweis.
-   Version 0.3.0 und 0.4.0 fragen nicht aktiv nach; dort entscheidet allein der Browser, wann er eine neue Version bemerkt.
+4. **Seit 1.0.0:** Liegt ein Update bereit und läuft eine Lernrunde, bleibt der Hinweis weg (er läge über den Bewertungsknöpfen). Die Runde beenden: Der Hinweis erscheint. „Später“ blendet ihn aus, nach einem Neustart der App kommt er wieder.
+
+## M12: Feinschliff und 1.0 (pro Gerät)
+
+Vorher: Testinstanz `svenf-png.github.io/Juri/test/` installiert, Demo-Profil geladen (Einstellungen, Testdaten). Ort für Notizen: je Punkt Gerät, iOS-Version, Befund.
+
+**VoiceOver** (Einstellungen → Bedienungshilfen → VoiceOver; ein- und ausschalten geht auch über die Seitentaste, wenn dort das Kürzel gelegt ist). Navigiert wird mit Wischen nach rechts und links, Doppeltippen aktiviert, Zwei-Finger-Z (Scrubben) schließt ein Sheet. Automatisch geprüft sind Rollen, Namen, Kontraste, Fokusreihenfolge und Fokusfalle im Browser (A91); das Vorlesen selbst nicht.
+
+1. **Heute:** Von oben wischen: Die Überschrift kommt zuerst („N Karten warten heute“), dann Fristen, Wochenansicht, Rechtsgebiete. Die Tab-Bar (iPhone) bzw. Sidebar (iPad) nennt jeden Eintrag mit Namen. **Notieren:** Stimmt die Reihenfolge, wird etwas doppelt oder gar nicht gelesen?
+2. **Lernen:** „Antwort zeigen“ wird als Knopf gelesen; nach dem Aufdecken kommen die vier Bewertungen mit Namen und Abstand („Gut, 6 Tage“). **Notieren:** Sagt VoiceOver beim Zähler „Karte 1 von 5“ oder nur „1/5“ (A91)? Wird nach einer Bewertung die nächste Karte vorgelesen oder bleibt der Fokus im Leeren? Lückentext: Wird die Lücke als „Lücke“ angesagt?
+3. **Sheets:** „+ Stapel“ in Stapel, „Tagesziele“ in Erfolge, „+ Frist hinzufügen“ in Fristen. Beim Öffnen springt der Fokus ins Sheet, die Seite dahinter ist nicht erreichbar, der Titel wird angesagt; Abbrechen oder Zwei-Finger-Z schließt, danach liegt der Fokus wieder auf dem Knopf.
+4. **Backup-Sheets:** „Backup erstellen“: Nach dem Schließen des Sheets liegt der Fokus auf „Backup erstellen“ (seit 1.0.0).
+5. **Stapel-Menü:** Im Stapel „Stapel-Menü“ öffnen: „Stapel bearbeiten“ und „Stapel löschen“ werden gelesen, Zwei-Finger-Z schließt es.
+6. **Schema-Editor:** Punkt wählen, „Mit Karte verknüpfen“: Das Feld meldet sich als Dialog, der Fokus liegt im Suchfeld, die Seite dahinter ist nicht erreichbar (`aria-modal`, seit 1.0.0); nach dem Schließen liegt der Fokus wieder am Punkt.
+7. **Lernrhythmus und Ziele:** Die Stepper „Tagesziel senken“ und „Tagesziel erhöhen“ sagen den neuen Wert an. Fristen: Der Countdown wird sinnvoll gelesen („in 5 Tagen“, nicht „5 T“).
+8. **Abdeckung:** Beim Lernen einer Abdeckung ist „Feld N aufdecken“ erreichbar, im Editor sind die Felder als Knöpfe („Feld 1, gewählt“) wählbar.
+9. **Feier-Dialoge:** „Neuer Meilenstein“ und „High five!“ werden mit Titel angesagt, „Super“ bzw. „Schön“ schließt.
+
+**Trefferflächen (Daumentest, ohne VoiceOver):** Die Flächen sind im Browser auf 44 × 44 px geprüft (A91). Trotzdem einmal mit dem Daumen: Filter-Chips und „Rechtsgebiete verwalten“ in Stapel, „Einfach“ und „Mehr“ in Erstellen, „Gelernt“ und „Angelegt“ in Erfolge, die Stepper im Lernrhythmus, „Backup exportieren“ in Teilen, die Chips im Sheet „Neue Frist“. **Notieren:** Gibt es Fehltipps, wo der Nachbar getroffen wird?
+
+**Große Datenmenge:** Einstellungen → Testdaten → „Großen Datensatz laden (5.000 Karten)“ (ersetzt alle Daten der Testinstanz, dauert beim Einspielen eine Weile). Mit der Stoppuhr, je Gerät notieren. Erwartung aus der Messung im Browser (A90): Öffnen eines Bildschirms unter 1,5 s, Suche („4711“) unter 0,5 s, Backup unter 5 s (Datei rund 0,7 MB). Auf einem älteren Gerät darf es langsamer sein; wichtig ist, ob es sich träge anfühlt.
+
+10. **Start:** App im Umschalter schließen, öffnen: Zeit bis „Karten warten heute“.
+11. **Stapel-Liste:** Tab „Stapel“: Zeit bis die Liste steht (laut A90 der langsamste Bildschirm, rund 1,2 s im Browser).
+12. **Suche:** In Stapel „4711“ eintippen: Zeit bis „1 Treffer“. Dann „Voraussetzungen“ (3.500 Treffer): Bleibt die Eingabe flüssig?
+13. **Lernen:** „Lernen starten“: Zeit bis zur ersten Karte; fünf Karten bewerten, fühlt sich jede gleich schnell an?
+14. **Backup:** „Backup erstellen“, Zeit und Größe notieren; App-Daten löschen, einspielen, Zeit notieren.
+15. **Speicher:** Einstellungen, „Belegt“ notieren.
+16. **Danach:** „Alles zurücksetzen“, dann Demo-Profil laden.
+
+**Install-Hinweis und Update:**
+
+17. **Safari-Tab:** `svenf-png.github.io/Juri/test/` in Safari öffnen: Die Anleitung erscheint. In „Zum Home-Bildschirm“ prüfen, ob es einen Schalter gibt und wie er genau heißt (Apple nennt ihn „Open as Web App“, die deutsche Beschriftung ist nicht belegt; Juri schreibt „Als Web-App öffnen“). **Notieren:** Wortlaut, und ob der Schalter schon an ist. Ausgeschaltet hinzufügen: Öffnet das Symbol Juri im Safari-Tab (dann zeigt es wieder die Anleitung)?
+18. **Update-Hinweis in der Lernrunde:** siehe Abschnitt „Updates“, Punkt 4.
+
+**Was sonst noch mit 1.0.0 neu ist:**
+
+19. **pdf.js 6:** Demo-Skript (50 Seiten) öffnen und durchblättern wie in M6, Punkt 4. **Notieren:** Rendert jede Seite, bleibt die App bedienbar, merkt man einen Unterschied zu vorher (Speicher, Tempo)?
+20. **Offline:** Flugmodus, Juri öffnen: Heute, Stapel, Lernen, Erfolge funktionieren; mit dem großen Datensatz ebenso.
+21. **Version:** Einstellungen zeigen „Version 1.0.0“, „13 von 14 Schritten fertig“, M13 „in Arbeit“.

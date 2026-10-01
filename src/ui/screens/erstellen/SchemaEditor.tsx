@@ -522,7 +522,12 @@ function LinkPicker({
   const keyboard = useKeyboardOpen();
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => {
+    // Der Fokus geht ins Suchfeld und beim Schließen zurück an die Stelle, von der das Popover kam.
+    const opener = document.activeElement;
     input.current?.focus();
+    return () => {
+      if (opener instanceof HTMLElement && opener.isConnected) opener.focus();
+    };
   }, []);
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -542,6 +547,7 @@ function LinkPicker({
       <div
         className={cx(styles.popover, keyboard && styles.popoverTop)}
         role="dialog"
+        aria-modal="true"
         aria-label="Mit Karte verknüpfen"
       >
         <label className={styles.search}>
