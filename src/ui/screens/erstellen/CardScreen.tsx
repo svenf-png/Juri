@@ -688,7 +688,7 @@ export function CardScreen({
         >
           {more ? 'Einfach' : 'Mehr'}
         </button>
-        {goal ? <span className={styles.chip}>{goal.text}</span> : null}
+        {desktop && goal ? <span className={styles.chip}>{goal.text}</span> : null}
       </div>
 
       {desktop ? (
@@ -781,7 +781,7 @@ export function CardScreen({
             <div className={styles.goalTrack} aria-hidden="true">
               <div className={styles.goalFill} style={{ width: `${goal.pct}%` }} />
             </div>
-            <span>{goal.text}</span>
+            <span>{desktop ? goal.remaining : goal.text}</span>
           </div>
         ) : null}
         {editing && onDelete && desktop ? (

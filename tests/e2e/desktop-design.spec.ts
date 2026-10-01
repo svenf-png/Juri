@@ -205,7 +205,8 @@ test.describe('Desktop: pixelnah zum Design', () => {
         );
         await page.setViewportSize({ width: size.width, height: size.height });
         await showDesign(page, `${c.design}${size.suffix}.dc.html`);
-        if (c.name === 'Dialog') await page.addStyleTag({ content: '[data-mask] { visibility: hidden }' });
+        if (c.name === 'Dialog')
+          await page.addStyleTag({ content: '[data-mask] { visibility: hidden }' });
         const design = await page.screenshot({ animations: 'disabled' });
         const designRects = await textRects(page);
 

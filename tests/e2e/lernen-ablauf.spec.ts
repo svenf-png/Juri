@@ -31,7 +31,9 @@ async function seedDeck(page: Page, cards: [string, string][], note = '') {
     await page.getByLabel('Vorderseite').fill(front);
     await page.getByLabel('Rückseite').fill(back);
     if (note && i === 0) {
-      await page.getByRole('button', { name: 'Mehr' }).click();
+      // Am Rechner (ab 1280 px) stehen alle Felder offen, „Mehr“ gibt es dort nicht.
+      const more = page.getByRole('button', { name: 'Mehr', exact: true });
+      if ((await more.count()) > 0) await more.click();
       await page.getByLabel('Notiz').fill(note);
     }
     await page.getByRole('button', { name: 'Speichern & nächste' }).click();

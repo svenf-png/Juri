@@ -165,7 +165,11 @@ export function SchemaEditor({
                     aria-label={`${labels[i] ?? ''} ${point.text || 'Punkt ohne Text'}${on && !desktop ? ', bearbeiten' : ''}`}
                     onClick={() => {
                       if (on && !desktop) setSheet('point');
-                      else setSelected(i);
+                      else {
+                        setSelected(i);
+                        // Die Suche gehört zum gewählten Punkt.
+                        if (!on) setLinking(false);
+                      }
                     }}
                   >
                     <span className={styles.label} aria-hidden="true">

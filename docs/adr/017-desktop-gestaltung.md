@@ -1,10 +1,10 @@
 # ADR-017: Eigene Desktop-Gestaltung
 
-Status: Entwurf, die Artboards warten auf die Freigabe · 01.10.2026 (M13, Entscheidungen 2 und 12; schreibt A8 und A51 fort, ADR-011 bleibt gültig)
+Status: angenommen, umgesetzt in M13 (Version 1.1.0) · 01.10.2026 (Entscheidungen 2 und 12; schreibt A8 und A51 fort, ADR-011 bleibt gültig)
 
 ## Kontext
 
-Seit M7 läuft Juri im Desktop-Browser, aber ohne eigene Gestaltung: Unter 768 px gilt das iPhone-Layout, von 768 bis 1099 px die Sidebar mit einspaltigem Inhalt, ab 1100 px die iPad-Designs (A8). Bei 1440 × 900 sind das die iPad-Designs, nur in die Breite gezogen; Lernen, Erstellen, Fristen, Teilen und Einstellungen stehen als schmale Handy-Spalte mitten im Fenster (A54). M13 entwirft nach Entscheidung 2 die fehlenden Desktop-Artboards strikt aus dem vorhandenen System und baut sie danach pixelnah.
+Seit M7 läuft Juri im Desktop-Browser, aber ohne eigene Gestaltung: Unter 768 px gilt das iPhone-Layout, von 768 bis 1099 px die Sidebar mit einspaltigem Inhalt, ab 1100 px die iPad-Designs (A8). Bei 1440 × 900 sind das die iPad-Designs, nur in die Breite gezogen; Lernen, Erstellen, Fristen, Teilen und Einstellungen stehen als schmale Handy-Spalte mitten im Fenster (A54). M13 entwirft nach Entscheidung 2 die fehlenden Desktop-Artboards strikt aus dem vorhandenen System und baut sie danach pixelnah. Sven hat die Artboards am 01.10.2026 freigegeben („Sieht gut aus“), alle sieben Punkte der früheren Liste „Offen zur Freigabe“ gelten damit.
 
 ## Entscheidung (am 01.10.2026 mit Sven abgestimmt)
 
@@ -43,12 +43,17 @@ Seit M7 läuft Juri im Desktop-Browser, aber ohne eigene Gestaltung: Unter 768 p
 - Die CI braucht für die Desktop-Bildvergleiche mehr Zeit (drei Browser, zwei Größen). Die Vergleiche bei 1920 × 1080 laufen deshalb nur in Chromium und WebKit, Firefox prüft 1440 × 900 und die Geometrie (offen, wird mit der ersten CI-Laufzeit entschieden).
 - Neue Elemente ohne Vorlage im bisherigen Design tragen `data-addition`, wo sie den Vergleich mit einem älteren Board stören würden; die Desktop-Boards selbst sind die Vorlage.
 
-## Offen zur Freigabe
+## Umsetzung (M13)
 
-1. Lernen: Seitenfeld mit Stand der Runde und Kürzeln, Zifferntasten am Bewertungsknopf.
-2. Erstellen: alle Felder sichtbar (kein „Einfach/Mehr“ am Rechner) und Vorschau der Karte mit Umschalter Vorderseite und Rückseite.
-3. Schema-Editor: Punkt bearbeiten als feste Spalte statt Sheet.
-4. Stapel: Tabelle statt Kachelraster.
-5. Sidebar: Eintrag „Suchen“.
-6. Dialog statt Sheet am Rechner.
-7. Willkommen mit geteilter Fläche.
+- **Muster:** Wo die Reihenfolge im DOM gleich bleibt, liegt die Desktop-Aufteilung als CSS hinter `@media (min-width: 1280px)` (Hüllen mit `display: contents` darunter, Spalten darüber). Wo sich die Lese- und Tab-Reihenfolge ändern würde (Neue Karte, Schema-Editor, Felder aufziehen, Willkommen), baut der Bildschirm den Desktop-Aufbau mit `useMediaQuery('(min-width: 1280px)')` getrennt, damit Vorlesegerät und Tabulator der Sichtfolge folgen. Das Handy- und das iPad-Layout behalten ihren DOM unverändert.
+- **Neue Bausteine:** `Kbd` (Tastenhinweis, nur ab 1280 px sichtbar, für Vorlesegeräte verborgen; das Kürzel steht als `aria-keyshortcuts` am Element), `DesktopShell` (rahmt Vorschauen mit der Sidebar), `useSearchAction` (Suchen in der Sidebar), `modifierLabel` (Strg oder Cmd), `domain/cards/preview.ts` (Vorschau der Karte beim Erstellen) und `CardPreview`.
+- **Neue Karte:** alle Felder offen (kein „Einfach/Mehr“), Vorschau mit Umschalter Vorder- und Rückseite, Fußleiste mit Tagesziel, „Speichern“ (speichert und schließt) und „Speichern & nächste“; Strg+Eingabe speichert.
+- **Schema-Editor:** „Punkt bearbeiten“ als feste Spalte, die Suche nach Karten als Liste in der Spalte (`LinkSearch`, am Handy weiter das Popover); Strg+Eingabe sichert. Die Vollbild-Ansichten haben eigene Kürzel, das Formular dahinter schweigt.
+- **Felder aufziehen:** Feldliste, Zoom-Knöpfe (`useZoomPan.step`, `MaskCanvas.onZoom`), Kürzel-Tabelle; Entf löscht das gewählte Feld.
+- **Dialog:** `Sheet` steht ab 1280 px als Fenster in der Mitte (560 px, Radius 30, Schatten, Einblenden 180 ms), ohne Griff.
+- **Hover:** nur mit `(min-width: 1280px) and (hover: hover)`, Farben aus den Tokens (Zeile `surface`, Navigation `line-soft`, Fläche `heat-0`, Primär `link`, Tinte `violet-900`, Umriss `dash-cloze`).
+- **Tests:** `desktop-design.spec.ts` vergleicht 19 Bildschirme in zwei Größen mit den Artboards (Chromium und WebKit beide Größen, Firefox 1440 × 900); `desktop.spec.ts` prüft Umbruch, Bedienung und 1280 × 720; axe, Touch-Ziele und Fokus laufen am Rechner wie am Handy.
+
+## Folgen für die Messung
+
+Die Boards wurden an die vorhandenen Maße der App angeglichen, wo ein Wert schon im Design-System stand (Zeilenhöhen, Schriftgrößen, Felder). Das Skript `scripts/build-desktop-designs.mjs` bleibt die einzige Quelle der Boards (nie von Hand ändern). Zwei Abweichungen vom Vergleich stehen mit Grund im Spec: der Dialog (halbe Pixelzeile, 1,5 %) und der Lernrhythmus (Regler des Browsers, 0,4 %); in den Einstellungen ersetzt der Test die veränderlichen Werte (Speicher, Commit, Datum).

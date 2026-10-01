@@ -221,27 +221,30 @@ test.describe('Zeiger und Tastatur', () => {
     expect(watch.errors).toEqual([]);
   });
 
-  test('Hover lässt das Design unverändert, Knöpfe zeigen den Zeiger, Fokus ist sichtbar', async ({
+  test('Hover zeigt die Farben des Zustände-Boards, Knöpfe den Zeiger, Fokus ist sichtbar', async ({
     page,
   }) => {
     await onboard(page);
-    const look = (el: Element) => {
-      const style = getComputedStyle(el);
-      return `${style.color}|${style.backgroundColor}|${style.boxShadow}`;
-    };
-    for (const control of [
-      page.getByRole('link', { name: 'Stapel', exact: true }),
-      page.getByRole('link', { name: 'Neue Karte' }).first(),
-    ]) {
-      const before = await control.evaluate(look);
-      await control.hover();
-      expect(await control.evaluate(look)).toBe(before);
-    }
+    const background = (el: Element) => getComputedStyle(el).backgroundColor;
+    // Navigation: Fläche `line-soft`, „Neue Karte“: Tinte `violet-900` (DesktopZustaende.dc.html).
+    const nav = page.getByRole('link', { name: 'Stapel', exact: true });
+    await nav.hover();
+    await expect.poll(() => nav.evaluate(background)).toBe('rgb(243, 241, 248)');
+    const create = page.getByRole('link', { name: 'Neue Karte' }).first();
+    await create.hover();
+    await expect.poll(() => create.evaluate(background)).toBe('rgb(46, 26, 115)');
     await page.goto('/Juri/stapel');
     const button = page.getByRole('button', { name: 'Ersten Stapel anlegen' });
     expect(await button.evaluate((el) => getComputedStyle(el).cursor)).toBe('pointer');
+    // Primär: Link-Violett.
+    await button.hover();
+    await expect.poll(() => button.evaluate(background)).toBe('rgb(91, 52, 209)');
     await page.mouse.move(0, 0);
-    await page.keyboard.press('Tab');
+    // Der erste Tab holt manchmal nur den Fokus in die Seite (activeElement bleibt `body`).
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press('Tab');
+      if (await page.evaluate(() => document.activeElement !== document.body)) break;
+    }
     const outline = await page.evaluate(() => {
       const style = getComputedStyle(document.activeElement!);
       return { width: style.outlineWidth, style: style.outlineStyle };
@@ -383,5 +386,175 @@ test.describe('Installierbarkeit als Desktop-PWA', () => {
       .map((e) => e.errorId)
       .filter((id) => id !== 'in-incognito');
     expect(errors).toEqual([]);
+  });
+});
+
+/*
+ * Eigene Desktop-Gestaltung (M13, ADR-017): Umbruch bei 1280 px, Aufbau und Bedienung der neuen
+ * Layouts. Die Bildvergleiche stehen in desktop-design.spec.ts, Zugänglichkeit in
+ * zugaenglichkeit.spec.ts.
+ */
+test.describe('Desktop-Gestaltung (M13)', () => {
+  test('Umbruch bei 1280 px: darunter die iPad-Aufteilung, ab 1280 px Suchen und Tastenhinweise', async ({
+    page,
+  }) => {
+    await onboard(page);
+    const search = page.getByRole('button', { name: 'Suchen', exact: true });
+    await page.setViewportSize({ width: 1279, height: 800 });
+    await expect(search).toBeHidden();
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await expect(search).toBeVisible();
+    // Der Hinweis „/“ steht am Eintrag, die Taste ist als Kürzel ausgewiesen.
+    await expect(search).toHaveAttribute('aria-keyshortcuts', '/');
+  });
+
+  test('Neue Karte: alle Felder offen, Vorschau folgt der Eingabe, Umschalter, Strg+Enter', async ({
+    page,
+  }) => {
+    await onboard(page);
+    await page.goto('/Juri/neu');
+    // Kein „Mehr“: Norm, Tags, Notiz und Stapel stehen offen.
+    await expect(page.getByRole('button', { name: 'Mehr', exact: true })).toHaveCount(0);
+    for (const label of ['Vorderseite', 'Rückseite', 'Norm', 'Tags', 'Notiz']) {
+      await expect(page.getByLabel(label, { exact: true })).toBeVisible();
+    }
+    const preview = page.getByRole('complementary', { name: 'Vorschau der Karte' });
+    await page.getByLabel('Vorderseite').fill('Was ist Gewahrsam?');
+    await page.getByLabel('Rückseite').fill('Tatsächliche Sachherrschaft.');
+    await page.getByLabel('Norm', { exact: true }).fill('§ 242 StGB');
+    await expect(preview.getByText('Was ist Gewahrsam?')).toBeVisible();
+    await expect(preview.getByText('§ 242 StGB')).toBeVisible();
+    await expect(preview.getByText('Tatsächliche Sachherrschaft.')).toHaveCount(0);
+    await preview.getByRole('button', { name: 'Rückseite' }).click();
+    await expect(preview.getByText('Tatsächliche Sachherrschaft.')).toBeVisible();
+    await expect(preview.getByRole('button', { name: 'Rückseite' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    // Die Lücke zeigt vorn […], hinten den Text.
+    await page.getByRole('button', { name: 'Lücke', exact: true }).click();
+    await expect(preview.getByText('Text mit Lücken')).toBeVisible();
+    await page.getByRole('button', { name: 'Frage', exact: true }).click();
+    // Der Stapel fehlt noch: Strg+Enter meldet es, speichert nichts.
+    await page.getByLabel('Vorderseite').press('Control+Enter');
+    await expect(page.getByLabel('Vorderseite')).toHaveValue('Was ist Gewahrsam?');
+  });
+
+  test('Schema: „Punkt bearbeiten“ steht als Spalte, ohne Sheet, mit Suche in der Spalte', async ({
+    page,
+  }) => {
+    await page.goto('/Juri/test/styleguide/schema/editor');
+    const detail = page.getByRole('complementary', { name: 'Punkt bearbeiten' });
+    await expect(detail).toBeVisible();
+    await expect(page.locator('dialog[open]')).toHaveCount(0);
+    await expect(detail.getByText('Punkt 2.b')).toBeVisible();
+    await expect(detail.getByLabel('Text')).toHaveValue('Drittbezogenheit');
+    // Ein anderer Punkt der Gliederung wählt ihn, die Spalte folgt.
+    await page.getByRole('button', { name: /^3\. Verschulden/ }).click();
+    await expect(detail.getByText('Punkt 3')).toBeVisible();
+    await detail.getByLabel('Text').fill('Verschulden (Vorsatz oder Fahrlässigkeit)');
+    await expect(
+      page.getByRole('button', { name: /^3\. Verschulden \(Vorsatz oder Fahrlässigkeit\)/ }),
+    ).toBeVisible();
+    // Verknüpfen: die Suche steht in der Spalte, Escape schließt sie.
+    await detail.getByRole('button', { name: 'Mit Karte verknüpfen' }).click();
+    const search = detail.getByRole('group', { name: 'Mit Karte verknüpfen' });
+    await expect(search.getByRole('textbox', { name: 'Karte suchen' })).toBeFocused();
+    await expect(page.locator('dialog[open]')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(search).toHaveCount(0);
+  });
+
+  test('Felder aufziehen: Liste, Auswahl, Anlegen, Löschen und Zoom neben der Fläche', async ({
+    page,
+  }) => {
+    await page.goto('/Juri/test/styleguide/abdeckung/editor');
+    const list = page
+      .getByRole('list')
+      .filter({ has: page.getByRole('button', { name: /Feld 1/ }) });
+    await expect(list.getByRole('button')).toHaveCount(3);
+    await expect(list.getByRole('button', { name: /Feld 2/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await list.getByRole('button', { name: /Feld 1/ }).click();
+    await expect(list.getByRole('button', { name: /Feld 1/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await page.getByRole('button', { name: 'Feld in der Mitte anlegen' }).click();
+    await expect(list.getByRole('button')).toHaveCount(4);
+    await page.getByRole('button', { name: 'Feld löschen' }).click();
+    await expect(list.getByRole('button')).toHaveCount(3);
+    await expect(page.getByRole('button', { name: 'Feld löschen' })).toBeDisabled();
+    // Zoom: „−“ ist bei 100 % gesperrt, „+“ geht auf 150 % und zurück.
+    const zoomOut = page.getByRole('button', { name: 'Verkleinern' });
+    await expect(zoomOut).toBeDisabled();
+    await page.getByRole('button', { name: 'Vergrößern' }).click();
+    await expect(page.getByText('150 %')).toBeVisible();
+    await expect(zoomOut).toBeEnabled();
+    await page.keyboard.press('0');
+    await expect(page.getByText('100 %')).toBeVisible();
+  });
+
+  test('Dialog: Sheets stehen als Fenster in der Mitte (560 px, Radius 30)', async ({ page }) => {
+    await page.goto('/Juri/test/styleguide/fristen/neu');
+    const sheet = page.locator('dialog[open]');
+    await expect(sheet).toBeVisible();
+    await expect
+      .poll(async () => {
+        const box = (await sheet.boundingBox())!;
+        return [Math.round(box.width), Math.round(box.x + box.width / 2)];
+      })
+      .toEqual([560, 720]);
+    const box = (await sheet.boundingBox())!;
+    // Mittig in der Höhe (auf einen Pixel genau) und nicht am Rand verankert.
+    expect(Math.abs(box.y + box.height / 2 - 450)).toBeLessThanOrEqual(1);
+    const radii = await sheet.evaluate((el) => {
+      const style = getComputedStyle(el);
+      return [
+        style.borderTopLeftRadius,
+        style.borderBottomLeftRadius,
+        style.borderBottomRightRadius,
+      ];
+    });
+    expect(radii).toEqual(['30px', '30px', '30px']);
+  });
+
+  test('Willkommen: Fläche links, Formular rechts, Name sichern führt zu Heute', async ({
+    page,
+  }) => {
+    await page.goto('/Juri/');
+    await expect(page.getByText('Karteikarten für das Referendariat.')).toBeVisible();
+    const form = page.getByLabel('Wie heißt du?');
+    const panel = await page.getByText('Karteikarten für das Referendariat.').boundingBox();
+    const field = await form.boundingBox();
+    expect(panel!.x + panel!.width).toBeLessThan(field!.x);
+    await form.fill('Sven');
+    await page.getByRole('button', { name: 'Los geht’s' }).click();
+    await expect(page.getByRole('heading', HEUTE_LEER)).toBeVisible();
+  });
+
+  test('Abnahme 1280 × 720: Neue Karte, Schema, Felder, PDF und Dialog ohne Abschneiden', async ({
+    page,
+  }) => {
+    test.setTimeout(90_000);
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await onboard(page);
+    for (const route of [
+      '/Juri/test/styleguide/erstellen',
+      '/Juri/test/styleguide/abdeckung/ipad',
+      '/Juri/test/styleguide/abdeckung/ipad-abdecken',
+      '/Juri/test/styleguide/abdeckung/editor',
+      '/Juri/test/styleguide/schema/editor',
+      '/Juri/test/styleguide/schema/punkt',
+      '/Juri/test/styleguide/lernen/schema',
+      '/Juri/test/styleguide/fristen/neu',
+    ]) {
+      await page.goto(route);
+      await page.waitForFunction(() => document.querySelectorAll('#root *').length > 20);
+      await page.waitForTimeout(400);
+      await expectNothingCut(page, `${route} bei 1280 × 720`);
+    }
   });
 });

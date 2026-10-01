@@ -495,6 +495,54 @@ test('Vorschauen: axe und Touch-Ziele in Feier, Fertig, Fehler, Editoren und She
   expect(found).toEqual([]);
 });
 
+/*
+ * Die Desktop-Gestaltung (M13, ADR-017) in ihren Zuständen: PDF neben dem Formular, Felder
+ * aufziehen, Schema-Editor mit der Spalte „Punkt bearbeiten“, Dialog und die übrigen Bildschirme bei
+ * 1440 × 900 und bei der kleinsten Größe der Gestaltung, 1280 × 720.
+ */
+const DESKTOP_PREVIEWS: string[] = [
+  'heute',
+  'lernrhythmus',
+  'erstellen',
+  'stapel/desktop',
+  ...['frage', 'antwort', 'schema', 'geschafft'].map((v) => `lernen/${v}`),
+  ...['lernen', 'ipad', 'ipad-abdecken', 'editor', 'editor-leer', 'bild', 'pdf'].map(
+    (v) => `abdeckung/${v}`,
+  ),
+  ...['editor', 'punkt', 'verknuepfen', 'verknuepfen-leer', 'neue-karte', 'editor-leer'].map(
+    (v) => `schema/${v}`,
+  ),
+  ...['liste', 'neu', 'bearbeiten', 'umfang'].map((v) => `fristen/${v}`),
+  ...['liste', 'ziele', 'fertig'].map((v) => `erfolge/${v}`),
+  ...['bereit', 'import'].map((v) => `teilen/${v}`),
+  ...['ipad', 'kontakte', 'karte'].map((v) => `high-fives/${v}`),
+];
+
+for (const size of [
+  { width: 1440, height: 900 },
+  { width: 1280, height: 720 },
+]) {
+  test(`Vorschauen am Rechner (${String(size.width)} × ${String(size.height)}): axe und Touch-Ziele`, async ({
+    page,
+  }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium-desktop', 'nur Chromium Desktop');
+    test.setTimeout(600_000);
+    await page.setViewportSize(size);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const found: string[] = [];
+    for (const path of DESKTOP_PREVIEWS) {
+      await page.goto(`/Juri/test/styleguide/${path}`);
+      await page.waitForLoadState('networkidle');
+      await page.waitForFunction(() => document.querySelectorAll('#root *').length > 10);
+      await page.waitForTimeout(150);
+      const label = `${String(size.width)} · ${path}`;
+      found.push(...(await violations(page, label, undefined, true)));
+      for (const item of await smallTargets(page)) found.push(`${label} | ${item}`);
+    }
+    expect(found).toEqual([]);
+  });
+}
+
 test('Willkommen: axe und Touch-Ziele', async ({ page }, testInfo) => {
   await asInstalledApp(page);
   await page.emulateMedia({ reducedMotion: 'reduce' });

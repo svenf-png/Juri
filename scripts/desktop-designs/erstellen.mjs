@@ -83,7 +83,7 @@ const erstellen = (w, h) =>
         <span style="font-size: 13px; color: #6B6678; line-height: 1.4">So erscheint die Karte beim Lernen. Die Rückseite zeigst du mit dem Umschalter.</span>
       </div>
     </div>`,
-    foot: `${progress(3, 5, '3 von 5 heute')}${saveButtons('Speichern &amp; nächste')}`,
+    foot: `${progress(3, 5, 'noch 2 bis zum Tagesziel')}${saveButtons('Speichern &amp; nächste')}`,
   });
 
 /* PDF neben dem Formular */
