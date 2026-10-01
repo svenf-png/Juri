@@ -199,60 +199,78 @@ const highFive = (w, h) =>
     </div>`,
   );
 
-/* Einstellungen */
-const valueRow = (name, value, { link = false } = {}) =>
-  `<div class="${link ? 'hv-row' : ''}" style="min-height: 58px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EFECF5; ${link ? 'margin: 0 -10px; padding: 0 10px; border-radius: 12px' : ''}"><span style="font-size: 16px; font-weight: 600">${name}</span><span style="font-size: 16px; font-weight: 700; color: #6B6678; display: flex; align-items: center; gap: 6px">${value}${link ? icon('chevron', 16, 2.2, '#B3AEC0') : ''}</span></div>`;
+/* Einstellungen: Maße der App (Einstellungen.module.css, Entwicklungsstand.module.css). */
+const valueRow = (name, value) =>
+  `<div style="min-height: 58px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #EFECF5"><span style="font-size: 16px; font-weight: 600">${name}</span><span style="font-size: 16px; font-weight: 700; color: #6B6678; text-align: right">${value}</span></div>`;
 
 const section = (name, inner) =>
-  `<section style="display: flex; flex-direction: column; gap: 10px"><span style="font-size: 12px; font-weight: 800; color: #6B6678; letter-spacing: .06em; text-transform: uppercase">${name}</span>${inner}</section>`;
+  `<section style="margin-top: 8px; display: flex; flex-direction: column; gap: 12px"><span style="font-size: 12px; font-weight: 800; color: #6B6678; letter-spacing: .06em; text-transform: uppercase">${name}</span>${inner}</section>`;
+
+const softButton = (text, { h = 52, size = 16, radius = 18 } = {}) =>
+  `<a href="#" class="tap hv-row" style="height: ${h}px; border-radius: ${radius}px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center; padding: 0 ${radius === 18 ? 20 : 16}px; font-size: ${size}px; font-weight: 700">${text}</a>`;
 
 const einstellungen = (w, h) =>
   shell(
     w,
     h,
     'einstellungen',
-    `${pageHead('Einstellungen')}
-    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; margin-top: 28px; align-items: start">
-      <div style="display: flex; flex-direction: column; gap: 28px; min-width: 0">
-        <div style="display: flex; align-items: center; gap: 14px"><span style="width: 56px; height: 56px; border-radius: 28px; background: #EEE8FD; color: #4B2AA8; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">S</span><label style="flex-grow: 1; border-radius: 20px; background: #F6F4FB; padding: 12px 18px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Name</span><span style="font-size: 18px">Sven</span></label></div>
-        ${section('Lernen', `<div class="hv-row" style="min-height: 72px; margin: 0 -10px; padding: 0 10px; border-radius: 12px; border-top: 1px solid #EFECF5; border-bottom: 1px solid #EFECF5; display: flex; align-items: center; justify-content: space-between"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Lernrhythmus</span><span style="font-size: 13px; color: #6B6678">FSRS, 90 % Behaltensquote</span></span>${icon('chevron', 16, 2.2, '#B3AEC0')}</div>`)}
-        ${section('Speicher', `<div style="border-top: 1px solid #EFECF5">${valueRow('Dauerhaft gespeichert', 'Nein')}${valueRow('Belegt', '3,1 MB von 947 MB')}</div>${ghostButton('Dauerhaft speichern anfordern', { h: 48, size: 15 })}<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #6B6678">Dauerhaft gespeicherte Daten löscht der Browser nicht von sich aus, um Platz zu schaffen. Die Daten liegen nur in diesem Browser. Gegen das Löschen der Website-Daten oder den Verlust des Geräts hilft nur ein Backup.</p>`)}
+    `<div style="display: contents; line-height: 1.4">${pageHead('Einstellungen')}
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; margin-top: 28px; align-items: start">
+      <div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+        <div style="display: flex; align-items: center; gap: 14px"><span style="width: 56px; height: 56px; border-radius: 28px; background: #EEE8FD; color: #4B2AA8; font-size: 22px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0">S</span><label style="flex: 1; min-width: 0; border-radius: 20px; background: #F6F4FB; padding: 12px 8px 12px 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Name</span><span style="min-height: 28px; font-size: 18px">Sven</span></label></div>
+        ${section('Lernen', `<div style="border-top: 1px solid #EFECF5"><div class="hv-row" style="min-height: 64px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #EFECF5"><span style="display: flex; flex-direction: column; gap: 2px; padding: 8px 0"><span style="font-size: 16px; font-weight: 600">Lernrhythmus</span><span style="font-size: 13px; color: #6B6678">FSRS, 90 % Behaltensquote</span></span>${icon('chevron', 16, 2.2, '#B3AEC0')}</div></div>`)}
+        ${section('Speicher', `<div style="border-top: 1px solid #EFECF5">${valueRow('Dauerhaft gespeichert', 'Nein')}${valueRow('Belegt', '3,1 MB von 947 MB')}</div>${softButton('Dauerhaft speichern anfordern', { h: 44, size: 15, radius: 14 })}<p style="margin: 0; font-size: 13px; line-height: 1.4; color: #6B6678">Dauerhaft gespeicherte Daten löscht der Browser nicht von sich aus, um Platz zu schaffen. Die Daten liegen nur in diesem Browser. Gegen das Löschen der Website-Daten oder den Verlust des Geräts hilft nur ein Backup.</p>`)}
       </div>
-      <div style="display: flex; flex-direction: column; gap: 28px; min-width: 0">
-        ${section('Backup', `<div style="border-top: 1px solid #EFECF5">${valueRow('Letztes Backup', 'Noch keins')}</div><div style="display: flex; gap: 12px">${inkButton('Backup erstellen', { h: 52, size: 15, grow: true })}${ghostButton('Backup einspielen', { h: 52, size: 15, grow: true })}</div><p style="margin: 0; font-size: 13px; line-height: 1.45; color: #6B6678">Tipp: Das Backup landet im Download-Ordner dieses Browsers. Leg es an einem sicheren Ort ab, dann hilft es auch auf einem neuen Gerät.</p>`)}
-        ${section('Entwicklungsstand', `<div style="border-radius: 24px; background: #F6F4FB; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px"><div style="display: flex; justify-content: space-between; align-items: center"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">13 von 14 Schritten fertig</span><span style="font-size: 13px; color: #6B6678; font-weight: 600">Version 1.0.1</span></span>${icon('chevron', 18, 2.2, '#B3AEC0')}</div><div style="height: 8px; border-radius: 4px; background: #E4DDF7; overflow: hidden"><div style="width: 93%; height: 8px; border-radius: 4px; background: #6A3FE0"></div></div></div>`)}
+      <div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+        ${section('Backup', `<div style="border-top: 1px solid #EFECF5">${valueRow('Letztes Backup', 'Noch keins')}</div><div style="display: flex; flex-direction: column; gap: 10px">${inkButton('Backup erstellen', { h: 52, size: 16 })}${ghostButton('Backup einspielen', { h: 52, size: 16 })}</div><p style="margin: 0; font-size: 13px; line-height: 1.4; color: #6B6678">Tipp: Das Backup landet im Download-Ordner dieses Browsers. Leg es an einem sicheren Ort ab, dann hilft es auch auf einem neuen Gerät.</p>`)}
+        ${section('Entwicklungsstand', `<div style="border-radius: 20px; background: #F6F4FB; padding: 14px 16px; box-sizing: border-box; min-height: 44px; display: grid; grid-template-columns: 1fr auto; gap: 10px 12px; align-items: center"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700">13 von 14 Schritten fertig</span><span style="font-size: 13px; font-weight: 600; color: #6B6678">Version 1.0.1</span></span><span style="width: 10px; height: 10px; margin-right: 4px; border-right: 2.2px solid #B3AEC0; border-bottom: 2.2px solid #B3AEC0; transform: rotate(45deg); grid-column: 2; grid-row: 1"></span><span style="grid-column: 1 / -1; grid-row: 2; display: block; height: 8px; border-radius: 4px; background: #E4DDF7; overflow: hidden"><span style="display: block; width: 93%; height: 8px; border-radius: 4px; background: #6A3FE0"></span></span></div>`)}
+        ${section('Entwicklung', `<div style="display: flex; flex-direction: column; gap: 10px">${softButton('Testinstanz öffnen')}${softButton('Styleguide ansehen')}${softButton('Heute mit Beispieldaten')}</div>`)}
       </div>
-    </div>`,
+    </div>
+    <p style="margin: auto 0 0; padding-top: 12px; font-size: 13px; color: #6B6678; text-align: center">Juri · Version 1.0.1 (1afa43c)</p></div>`,
   );
 
-/* Lernrhythmus */
+/* Lernrhythmus: Maße der App (Lernrhythmus.module.css). */
 const preset = (name, ret, load, on) =>
-  `<span style="border-radius: 20px; box-sizing: border-box; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; ${on ? 'background: #6A3FE0; color: #FFFFFF' : 'border: 1.5px solid #EFECF5'}"><span style="font-size: 14px; font-weight: 700">${name}</span><span class="d" style="font-size: 28px; font-weight: 750; letter-spacing: -0.02em">${ret}</span><span style="font-size: 12px; font-weight: 600; opacity: .8">${load}</span></span>`;
+  `<span style="border-radius: 20px; box-sizing: border-box; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; ${on ? 'background: #6A3FE0; color: #FFFFFF' : 'border: 1.5px solid #E4DDF7'}"><span style="font-size: 14px; font-weight: 700">${name}</span><span class="d" style="font-size: 26px; font-weight: 750; letter-spacing: -0.02em">${ret}</span><span style="font-size: 11.5px; font-weight: 600; opacity: .8">${load}</span></span>`;
 
 const stepper = (v) =>
   `<span style="display: flex; align-items: center; gap: 4px"><span style="width: 36px; height: 36px; border-radius: 12px; background: #F6F4FB; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600">−</span><span style="min-width: 36px; text-align: center; font-size: 17px; font-weight: 800">${v}</span><span style="width: 36px; height: 36px; border-radius: 12px; background: #F6F4FB; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600">+</span></span>`;
+
+/* Zeile wie in der App: ohne border-box, die Trennlinie kommt zur Mindesthöhe dazu. */
+const rhythmRow = (inner, { min = 58, last = false, link = false } = {}) =>
+  `<div class="${link ? 'hv-row' : ''}" style="min-height: ${min}px; display: flex; align-items: center; justify-content: space-between; gap: 12px; ${last ? '' : 'border-bottom: 1px solid #EFECF5'}">${inner}</div>`;
+
+const rhythmValue = (name, value) =>
+  rhythmRow(
+    `<span style="font-size: 16px; font-weight: 600">${name}</span><span style="font-size: 16px; font-weight: 700; color: #6B6678; white-space: nowrap">${value}</span>`,
+  );
 
 const lernrhythmus = (w, h) =>
   shell(
     w,
     h,
     'rhythmus',
-    `${pageHead('Lernrhythmus')}
-    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; margin-top: 28px; align-items: start">
-      <div style="display: flex; flex-direction: column; gap: 18px; min-width: 0">
-        <div style="display: flex; padding: 3px; border-radius: 16px; background: #F6F4FB"><span style="flex: 1 1 0; height: 44px; border-radius: 13px; background: #FFFFFF; box-shadow: 0 2px 8px -3px rgba(46,26,115,.3); display: flex; align-items: center; justify-content: center; font-size: 14.5px; font-weight: 700">FSRS (empfohlen)</span><span style="flex: 1 1 0; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 14.5px; font-weight: 600; color: #6B6678">Leitner-Kasten</span></div>
-        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">${preset('Entspannt', '85 %', 'weniger Last', false)}${preset('Standard', '90 %', 'ausgewogen', true)}${preset('Examen', '95 %', 'mehr Last', false)}</div>
-        <div style="display: flex; flex-direction: column; gap: 8px"><span style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 600"><span>Ziel-Behaltensquote</span><span style="font-weight: 800; color: #6A3FE0">90 %</span></span><div style="height: 28px; display: flex; align-items: center"><div style="position: relative; width: 100%; height: 8px; border-radius: 4px; background: #E4DDF7"><div style="width: 59%; height: 8px; border-radius: 4px; background: #6A3FE0"></div><span style="position: absolute; left: 59%; top: -6px; width: 20px; height: 20px; margin-left: -10px; border-radius: 10px; background: #6A3FE0; box-shadow: 0 0 0 3px #FFFFFF, 0 2px 6px rgba(46,26,115,.4)"></span></div></div><span style="font-size: 13px; color: #6B6678; line-height: 1.4">Wahrscheinlichkeit, eine Karte bei Fälligkeit noch zu wissen. Höher heißt: kürzere Abstände, mehr Wiederholungen pro Tag.</span></div>
-        <div style="border-radius: 20px; background: #F6F4FB; padding: 16px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Beispiel: immer „Gut“ (ca.)</span><div style="display: flex; gap: 6px; flex-wrap: wrap">${['3 T', '→ 9 T', '→ 25 T', '→ 2 Mon', '→ 4 Mon'].map((t) => `<span style="height: 30px; padding: 0 10px; border-radius: 15px; background: #FFFFFF; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">${t}</span>`).join('')}</div></div>
+    `<div style="display: contents; line-height: normal">${pageHead('Lernrhythmus')}
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; margin-top: 28px; align-items: start">
+      <div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: #F6F4FB"><span style="height: 42px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 2px 8px -3px rgba(46,26,115,.3); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700">FSRS (empfohlen)</span><span style="height: 42px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #6B6678">Leitner-Kasten</span></div>
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">${preset('Entspannt', '85 %', 'weniger Last', false)}${preset('Standard', '90 %', 'ausgewogen', true)}${preset('Examen', '95 %', 'mehr Last', false)}</div>
+          <div style="display: flex; flex-direction: column; gap: 8px"><span style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 600"><span>Ziel-Behaltensquote</span><span style="font-weight: 800; color: #6A3FE0">90 %</span></span><div style="height: 28px; margin: 2px 0; display: flex; align-items: center"><div style="position: relative; width: 100%; height: 8px; border-radius: 4px; background: #E4DDF7"><div style="width: 59%; height: 8px; border-radius: 4px; background: #6A3FE0"></div><span style="position: absolute; left: 59%; top: -6px; width: 20px; height: 20px; margin-left: -10px; border-radius: 10px; background: #6A3FE0; box-shadow: 0 0 0 3px #FFFFFF, 0 2px 6px rgba(46,26,115,.4)"></span></div></div><span style="font-size: 13px; color: #6B6678; line-height: 1.4">Wahrscheinlichkeit, eine Karte bei Fälligkeit noch zu wissen. Höher heißt: kürzere Abstände, mehr Wiederholungen pro Tag.</span></div>
+          <div style="border-radius: 20px; background: #F6F4FB; padding: 16px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Beispiel: immer „Gut“ (ca.)</span><div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center">${['3 T', '→ 9 T', '→ 25 T', '→ 2 Mon', '→ 4 Mon'].map((t) => `<span style="height: 30px; padding: 0 10px; border-radius: 15px; background: #FFFFFF; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">${t}</span>`).join('')}</div></div>
+        </div>
       </div>
-      <div style="display: flex; flex-direction: column; border-top: 1px solid #EFECF5; min-width: 0">
-        <div style="min-height: 58px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EFECF5"><span style="font-size: 16px; font-weight: 600">Neue Karten pro Tag</span>${stepper(20)}</div>
-        ${valueRow('Längster Abstand', '180 Tage')}
-        <div class="hv-row" style="min-height: 72px; margin: 0 -10px; padding: 0 10px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EFECF5"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Fristen</span><span style="font-size: 13px; color: #6B6678">Examen, Klausuren, LL.M.: Abstände enden rechtzeitig davor</span></span><span style="display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; color: #6A3FE0">3${icon('chevron', 16, 2.2, '#B3AEC0')}</span></div>
-        ${valueRow('Lernschritte bei „Nochmal“', '1 min · 10 min')}
-        <div class="hv-row" style="min-height: 58px; margin: 0 -10px; padding: 0 10px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between"><span style="font-size: 16px; font-weight: 600">Profil, Speicher und Backup</span>${icon('chevron', 16, 2.2, '#B3AEC0')}</div>
+      <div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+        <div style="display: flex; flex-direction: column; border-top: 1px solid #EFECF5">
+          ${rhythmRow(`<span style="font-size: 16px; font-weight: 600">Neue Karten pro Tag</span>${stepper(20)}`)}
+          ${rhythmValue('Längster Abstand', '180 Tage')}
+          ${rhythmRow(`<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Fristen</span><span style="font-size: 13px; color: #6B6678">Examen, Klausuren, LL.M.: Abstände enden rechtzeitig davor</span></span><span style="display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; color: #6B6678; white-space: nowrap"><span style="color: #6A3FE0">3</span>${icon('chevron', 16, 2.2, '#B3AEC0')}</span>`, { min: 72, link: true })}
+          ${rhythmValue('Lernschritte bei „Nochmal“', '1 min · 10 min')}
+        </div>
+        <div class="hv-row" style="margin-top: -8px; min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 12px"><span style="font-size: 16px; font-weight: 600">Profil, Speicher und Backup</span>${icon('chevron', 16, 2.2, '#B3AEC0')}</div>
       </div>
-    </div>`,
+    </div></div>`,
   );
 
 /* Dialog: Sheets stehen am Rechner als Fenster in der Mitte (statt unten am Rand). */

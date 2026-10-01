@@ -15,6 +15,7 @@ import {
   primaryButton,
   segmented,
   textField,
+  typeTabs,
   typeTag,
 } from './kit.mjs';
 
@@ -33,7 +34,7 @@ const fullscreen = (
   <div style="flex: 1 1 0; min-height: 0; display: flex; justify-content: center">
     <div style="width: 100%; max-width: ${DESKTOP.maxContent}px; box-sizing: border-box; padding: 8px ${DESKTOP.padX}px 0">${body}</div>
   </div>
-  ${foot ? `<div style="flex-shrink: 0; border-top: 1px solid #EFECF5; display: flex; justify-content: center"><div style="width: 100%; max-width: ${DESKTOP.maxContent}px; box-sizing: border-box; height: 88px; padding: 0 ${DESKTOP.padX}px; display: flex; align-items: center; justify-content: space-between; gap: 24px">${foot}</div></div>` : ''}
+  ${foot ? `<div style="flex-shrink: 0; border-top: 1px solid #EFECF5; display: flex; justify-content: center"><div style="width: 100%; max-width: ${DESKTOP.maxContent}px; box-sizing: border-box; height: 87px; padding: 0 ${DESKTOP.padX}px; display: flex; align-items: center; justify-content: space-between; gap: 24px">${foot}</div></div>` : ''}
 </div>`;
 
 const title = (text) =>
@@ -50,7 +51,7 @@ const saveButtons = (nextLabel) => `<div style="display: flex; gap: 12px">
   </div>`;
 
 const toolButton = (ic, text) =>
-  `<span class="tap hv-outline" style="flex: 1 1 0; height: 52px; border-radius: 16px; border: 1.5px solid #EFECF5; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 700"><span style="color: #6A3FE0; display: flex">${icon(ic, 18)}</span>${text}</span>`;
+  `<span class="tap hv-outline" style="flex: 1 1 0; height: 52px; border-radius: 16px; border: 1.5px solid #EFECF5; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700"><span style="color: #6A3FE0; display: flex">${icon(ic, 18)}</span>${text}</span>`;
 
 const previewCard = (face) =>
   `<div style="height: 380px; box-sizing: border-box; border-radius: 32px; background: #FFFFFF; box-shadow: 0 30px 60px -36px rgba(46,26,115,.4); padding: 28px; display: flex; flex-direction: column; gap: 18px; border: 1px solid #F3F1F8">${face}</div>`;
@@ -67,14 +68,14 @@ const erstellen = (w, h) =>
     right: chip('3 von 5 heute'),
     body: `<div style="display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 56px; align-items: start">
       <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
-        ${segmented(['Frage', 'Lücke', 'Schema', 'Abdeckung'], 0)}
-        ${textField('Vorderseite', 'Was versteht man unter Gewahrsam?', { rows: 1, h: 132, ring: true })}
+        ${typeTabs(['Frage', 'Lücke', 'Schema', 'Abdeckung'], 0)}
+        ${textField('Vorderseite', 'Was versteht man unter Gewahrsam?', { rows: 1, h: 132 })}
         ${textField('Rückseite', 'Die von einem Herrschaftswillen getragene tatsächliche Sachherrschaft eines Menschen über eine Sache.', { rows: 1, h: 168 })}
         <div style="display: flex; gap: 12px">${toolButton('file', 'PDF')}${toolButton('image', 'Foto / Bild')}</div>
         <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
           ${miniField('Norm', '§ 242 StGB')}${miniField('Stapel', 'Diebstahl &amp; Betrug · SR')}${miniField('Tags', '#Klausur')}
         </div>
-        ${textField('Notiz', '', { placeholder: 'Eigene Notiz, erscheint beim Lernen unter der Antwort', h: 96 })}
+        ${textField('Notiz', '', { placeholder: 'Eigene Notiz, erscheint beim Lernen unter der Antwort', h: 102 })}
       </div>
       <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 4px; min-width: 0">
         <div style="display: flex; align-items: center; justify-content: space-between">${label('Vorschau')}${segmented(['Vorderseite', 'Rückseite'], 0, { h: 36, size: 13, w: '210px' })}</div>
@@ -129,7 +130,7 @@ const erstellenPdf = (
   <div style="display: flex; flex-direction: column; min-width: 0; box-sizing: border-box; padding: 0 48px 0 40px">
     <div style="height: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between">${title('Neue Karte')}${chip('3 von 5 heute')}</div>
     <div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 16px; padding-top: 8px">
-      ${segmented(['Frage', 'Lücke', 'Schema', 'Abdeckung'], 0)}
+      ${typeTabs(['Frage', 'Lücke', 'Schema', 'Abdeckung'], 0)}
       ${textField('Vorderseite', 'Wann ist der Erwerb nach § 932 II BGB nicht in gutem Glauben?', { rows: 1, h: 120 })}
       ${textField('Rückseite', 'Wenn ihm bekannt oder infolge grober Fahrlässigkeit unbekannt ist, dass die Sache nicht dem Veräußerer gehört.', { rows: 1, h: 150, badge: '<span style="height: 24px; padding: 0 10px; border-radius: 12px; background: #FFFFFF; color: #4B2AA8; font-size: 12px; font-weight: 700; display: flex; align-items: center; text-transform: none; letter-spacing: 0">aus PDF übernommen</span>' })}
       <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">

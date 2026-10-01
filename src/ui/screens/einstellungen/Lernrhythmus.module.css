@@ -12,6 +12,12 @@
   margin: 0 0 0 -10px;
 }
 
+/* Spalten der Desktop-Gestaltung; darunter ohne eigene Box (alles steht untereinander). */
+.cols,
+.col {
+  display: contents;
+}
+
 .title {
   margin-top: -8px;
   font-family: var(--font-display);
@@ -297,4 +303,41 @@
   margin: 0;
   padding: 10px 0 12px;
   border-bottom: 1px solid var(--line-soft);
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopLernrhythmus.dc.html): zwei Spalten, links
+ * Algorithmus, Voreinstellung, Regler und Beispiel, rechts die Zeilen.
+ */
+@media (min-width: 1280px) {
+  .screen {
+    /* 40 px oben wie die übrigen Bildschirme: Screen rechnet --screen-top plus --top-shift (47 px weniger). */
+    --screen-top: 87px;
+    max-width: none;
+  }
+
+  .back {
+    display: none;
+  }
+
+  .title {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 44px;
+    line-height: 1.05;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 48px;
+    align-items: start;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
 }

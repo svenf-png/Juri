@@ -198,21 +198,32 @@ export const textField = (
   value,
   { rows = 0, h = 0, ring = false, placeholder = '', badge = '' } = {},
 ) =>
-  `<label style="border-radius: 20px; background: #F6F4FB; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; ${ring ? 'box-shadow: 0 0 0 2px #6A3FE0;' : ''} ${h ? `min-height: ${h}px; box-sizing: border-box;` : ''}">
+  `<label style="border-radius: 20px; background: #F6F4FB; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; ${ring ? 'box-shadow: 0 0 0 2px #6A3FE0;' : ''} ${h ? `min-height: ${h}px; box-sizing: border-box;` : ''}">
     <span style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">${name}</span>${badge}</span>
-    <span style="font-size: ${rows ? 20 : 18}px; line-height: 1.4; ${value ? 'color: #17141F' : 'color: #726E7A'}">${value || placeholder}</span>
+    <span style="padding: 2px; font-size: ${rows ? 20 : 18}px; line-height: 1.4; ${value ? 'color: #17141F' : 'color: #726E7A'}">${value || placeholder}</span>
   </label>`;
 
 /** Kleines Feld mit Rand (Norm, Stapel, Quelle) wie in iPadErstellen.dc.html. */
 export const miniField = (name, value, { link = false } = {}) =>
   `<label style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box; min-width: 0">
-    <span style="font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">${name}</span>
-    <span style="font-size: 15px; font-weight: 500; ${link ? 'color: #5B34D1; font-weight: 600' : 'color: #17141F'}">${value}</span>
+    <span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">${name}</span>
+    <span style="font-size: 15px; font-weight: 400; ${link ? 'color: #5B34D1; font-weight: 600' : 'color: #17141F'}">${value}</span>
   </label>`;
+
+/** Kartentyp wie in der App (Erstellen.module.css `.types`): Abstand 4, Reiter 40 px, 13,5/700. */
+export const typeTabs = (items, active) =>
+  `<div style="display: grid; grid-template-columns: repeat(${items.length}, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: #F6F4FB">
+    ${items
+      .map(
+        (t, i) =>
+          `<span style="height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 13.5px; font-weight: 700; ${i === active ? 'background: #FFFFFF; color: #17141F; box-shadow: 0 2px 8px -3px rgba(46,26,115,.3)' : 'color: #6B6678'}">${t}</span>`,
+      )
+      .join('')}
+  </div>`;
 
 /** Reiter Frage / Lücke / Schema / Abdeckung (Segmentleiste der App). */
 export const segmented = (items, active, { h = 48, size = 14.5, w = '' } = {}) =>
-  `<div style="display: flex; padding: 3px; border-radius: 16px; background: #F6F4FB; gap: 0; ${w ? `width: ${w};` : ''}">
+  `<div style="display: flex; box-sizing: border-box; padding: 3px; border-radius: 16px; background: #F6F4FB; gap: 0; ${w ? `width: ${w};` : ''}">
     ${items
       .map(
         (t, i) =>

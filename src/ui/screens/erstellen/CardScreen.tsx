@@ -1,6 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { gestureHints } from '@/domain/device/environment';
 import { currentEnvironment } from '@/features/app/install';
+import { currentModifierLabel } from '@/features/app/keys';
 import { formShortcut } from '@/domain/device/shortcuts';
 import { useKeys } from '../../useKeys';
 import {
@@ -11,6 +12,7 @@ import {
   type CardFields,
 } from '@/domain/cards/card';
 import { draftToMarkup, EMPTY_DRAFT } from '@/domain/cards/clozeDraft';
+import { cardPreview } from '@/domain/cards/preview';
 import type { CreateGoal } from '@/domain/cards/goal';
 import { ordinals } from '@/domain/cards/occlusion';
 import { formatBytes } from '@/domain/format/bytes';
@@ -23,7 +25,14 @@ import {
   SurfaceMissing,
   type SurfaceMask,
 } from '../../components/CoverSurface';
-import { ChevronRightIcon, FileIcon, ImageIcon, TrashIcon } from '../../components/icons';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  FileIcon,
+  ImageIcon,
+  TrashIcon,
+} from '../../components/icons';
+import { Kbd } from '../../components/Kbd';
 import { plural } from '@/domain/session/present';
 import { TextField } from '../../components/TextField';
 import { cx } from '../../cx';
@@ -31,6 +40,7 @@ import { useMediaQuery } from '../../useMediaQuery';
 import rise from '../../motion/rise.module.css';
 import tap from '../../motion/tap.module.css';
 import { PdfWorkspace } from '../pdf/PdfWorkspace';
+import { CardPreview } from './CardPreview';
 import { ClozeEditor } from './ClozeEditor';
 import { CoverDrop, CoverPanel, CoverWorking } from './CoverPanel';
 import { CoverEditor } from './CoverEditor';
@@ -112,6 +122,8 @@ export function CardScreen({
   const media = useCardMedia(form, setForm, editing, seed);
   // Geteilte Ansicht: PDF links, Formular rechts (iPad quer, Design ab 1100 px, A8).
   const wide = useMediaQuery('(min-width: 1100px)');
+  // Desktop-Gestaltung (ADR-017): alle Felder sichtbar, Vorschau der Karte, Fußleiste.
+  const desktop = useMediaQuery('(min-width: 1280px)');
   const draftUrl = useBlobUrl(form.cover.draft?.record ?? null);
   const stored = useMediaUrl(form.cover.draft ? null : form.cover.mediaId);
   const coverUrl = draftUrl ?? (stored.status === 'ready' ? stored.url : null);
@@ -468,164 +480,129 @@ export function CardScreen({
     );
   }
 
-  return (
-    <main className={styles.screen}>
-      <div className={styles.top}>
-        <button type="button" className={styles.topLink} onClick={onClose}>
-          {editing ? 'Abbrechen' : 'Schließen'}
-        </button>
-        <h1 className={styles.topTitle}>{editing ? 'Karte bearbeiten' : 'Neue Karte'}</h1>
+  const mod = currentModifierLabel();
+  const typePicker = editing ? (
+    <div className={styles.typeFixed}>
+      <span>Kartentyp</span>
+      <span className={styles.typeFixedValue}>{TABS.find((t) => t.value === form.tab)?.label}</span>
+    </div>
+  ) : (
+    <div className={styles.types} role="group" aria-label="Kartentyp">
+      {TABS.map((t) => (
         <button
+          key={t.value}
           type="button"
-          className={cx(styles.more, tap.tap)}
-          aria-pressed={more}
+          className={cx(styles.type, tap.tap, form.tab === t.value && styles.typeOn)}
+          aria-pressed={form.tab === t.value}
           onClick={() => {
-            setMore(!more);
+            setErrors({});
+            set({ tab: t.value });
           }}
         >
-          {more ? 'Einfach' : 'Mehr'}
+          {t.label}
         </button>
+      ))}
+    </div>
+  );
+  const qaFields =
+    form.tab === 'qa' ? (
+      <div className={cx(styles.fields, rise.rise)}>
+        <TextField
+          label="Vorderseite"
+          multiline
+          rows={desktop ? 2 : 3}
+          value={form.front}
+          onChange={(front) => {
+            set({ front });
+          }}
+          placeholder="Frage, z. B. Was ist Gewahrsam?"
+          error={errors.front}
+          inputRef={frontRef}
+          inputStyle={{ fontSize: 'var(--front-size, 18px)', lineHeight: 1.4 }}
+          className={styles.qaField}
+        />
+        <TextField
+          label="Rückseite"
+          multiline
+          rows={desktop ? 3 : 4}
+          value={form.back}
+          onChange={(back) => {
+            set({ back });
+          }}
+          placeholder="Antwort"
+          error={errors.back}
+          inputRef={backRef}
+          inputStyle={{ fontSize: 'var(--back-size, 17px)', lineHeight: 1.45 }}
+          className={cx(styles.qaField, styles.qaBack)}
+        />
       </div>
-
-      {editing ? (
-        <div className={styles.typeFixed}>
-          <span>Kartentyp</span>
-          <span className={styles.typeFixedValue}>
-            {TABS.find((t) => t.value === form.tab)?.label}
-          </span>
-        </div>
-      ) : (
-        <div className={styles.types} role="group" aria-label="Kartentyp">
-          {TABS.map((t) => (
-            <button
-              key={t.value}
-              type="button"
-              className={cx(styles.type, tap.tap, form.tab === t.value && styles.typeOn)}
-              aria-pressed={form.tab === t.value}
-              onClick={() => {
-                setErrors({});
-                set({ tab: t.value });
-              }}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {form.tab === 'qa' ? (
-        <div className={cx(styles.fields, rise.rise)}>
-          <TextField
-            label="Vorderseite"
-            multiline
-            rows={3}
-            value={form.front}
-            onChange={(front) => {
-              set({ front });
-            }}
-            placeholder="Frage, z. B. Was ist Gewahrsam?"
-            error={errors.front}
-            inputRef={frontRef}
-            inputStyle={{ fontSize: 18, lineHeight: 1.4 }}
-          />
-          <TextField
-            label="Rückseite"
-            multiline
-            rows={4}
-            value={form.back}
-            onChange={(back) => {
-              set({ back });
-            }}
-            placeholder="Antwort"
-            error={errors.back}
-            inputRef={backRef}
-            inputStyle={{ fontSize: 17, lineHeight: 1.45 }}
-          />
-        </div>
+    ) : null;
+  const typePanel =
+    form.tab === 'cloze' ? (
+      clozePanel
+    ) : form.tab === 'schema' ? (
+      schemaPanel
+    ) : form.tab === 'cover' ? (
+      <div className={rise.rise}>{coverPanel}</div>
+    ) : null;
+  const normField = (
+    <label className={styles.mini}>
+      <span className={styles.miniLabel}>Norm</span>
+      <input
+        className={styles.miniInput}
+        value={form.norm}
+        onChange={(e) => {
+          set({ norm: e.target.value });
+        }}
+        placeholder="§ 242 StGB"
+        autoComplete="off"
+        spellCheck={false}
+        aria-invalid={errors.norm ? true : undefined}
+      />
+      {errors.norm ? (
+        <span className={styles.errorText} role="alert">
+          {errors.norm}
+        </span>
       ) : null}
-      {form.tab === 'cloze' ? clozePanel : null}
-      {form.tab === 'schema' ? schemaPanel : null}
-      {form.tab === 'cover' ? <div className={rise.rise}>{coverPanel}</div> : null}
-
-      {more ? (
-        <div className={cx(styles.extra, rise.rise)}>
-          <label className={styles.mini}>
-            <span className={styles.miniLabel}>Norm</span>
-            <input
-              className={styles.miniInput}
-              value={form.norm}
-              onChange={(e) => {
-                set({ norm: e.target.value });
-              }}
-              placeholder="§ 242 StGB"
-              autoComplete="off"
-              spellCheck={false}
-              aria-invalid={errors.norm ? true : undefined}
-            />
-            {errors.norm ? (
-              <span className={styles.errorText} role="alert">
-                {errors.norm}
-              </span>
-            ) : null}
-          </label>
-          <label className={styles.mini}>
-            <span className={styles.miniLabel}>Tags</span>
-            <input
-              className={styles.miniInput}
-              value={form.tags}
-              onChange={(e) => {
-                set({ tags: e.target.value });
-              }}
-              placeholder="#Klausur #AG"
-              autoComplete="off"
-              autoCapitalize="none"
-              spellCheck={false}
-            />
-          </label>
-          <label className={styles.mini}>
-            <span className={styles.miniLabel}>Notiz</span>
-            <textarea
-              className={cx(styles.miniInput, styles.miniArea)}
-              value={form.note}
-              onChange={(e) => {
-                set({ note: e.target.value });
-              }}
-              placeholder="Merksatz, Eselsbrücke oder Fundstelle. Erscheint beim Lernen unter der Antwort."
-              rows={3}
-              aria-invalid={errors.note ? true : undefined}
-            />
-            {errors.note ? (
-              <span className={styles.errorText} role="alert">
-                {errors.note}
-              </span>
-            ) : null}
-          </label>
-        </div>
-      ) : null}
-
-      {editing ? null : (
-        <div className={styles.media}>
-          <button
-            type="button"
-            className={cx(styles.mediaButton, tap.tap)}
-            onClick={() => {
-              if (media.pdf) media.showPdf();
-              else media.choosePdf('text');
-            }}
-          >
-            <FileIcon size={18} />
-            PDF
-          </button>
-          <button
-            type="button"
-            className={cx(styles.mediaButton, tap.tap)}
-            onClick={media.chooseImage}
-          >
-            <ImageIcon size={18} />
-            Foto / Bild
-          </button>
-        </div>
-      )}
+    </label>
+  );
+  const tagsField = (
+    <label className={styles.mini}>
+      <span className={styles.miniLabel}>Tags</span>
+      <input
+        className={styles.miniInput}
+        value={form.tags}
+        onChange={(e) => {
+          set({ tags: e.target.value });
+        }}
+        placeholder="#Klausur #AG"
+        autoComplete="off"
+        autoCapitalize="none"
+        spellCheck={false}
+      />
+    </label>
+  );
+  const mediaButtons = editing ? null : (
+    <div className={styles.media}>
+      <button
+        type="button"
+        className={cx(styles.mediaButton, tap.tap)}
+        onClick={() => {
+          if (media.pdf) media.showPdf();
+          else media.choosePdf('text');
+        }}
+      >
+        <FileIcon size={18} />
+        PDF
+      </button>
+      <button type="button" className={cx(styles.mediaButton, tap.tap)} onClick={media.chooseImage}>
+        <ImageIcon size={18} />
+        Foto / Bild
+      </button>
+    </div>
+  );
+  const sourceRows = (
+    <>
       {media.pdf && !editing ? (
         <div className={styles.sourceRow}>
           <span className={styles.sourceText}>
@@ -644,20 +621,157 @@ export function CardScreen({
           <span className={styles.sourceText}>Quelle: {sourceLabel(form.source)}</span>
         </div>
       ) : null}
+    </>
+  );
+  const deckLabelText = `Stapel: ${deckLabel ?? 'noch keiner gewählt'}. Ändern`;
+  const editedNote = edited ? <p className={styles.note}>{edited}</p> : null;
+  const preview = cardPreview({
+    kind: form.tab,
+    front: form.front,
+    back: form.back,
+    cloze: draftToMarkup(form.draft),
+    title: form.title,
+    points: form.points,
+  });
+  const previewPane = desktop ? (
+    <CardPreview
+      preview={preview}
+      area={deck?.areaCodes ?? ''}
+      norm={form.norm.trim()}
+      empty={
+        form.tab === 'qa'
+          ? { front: 'Vorderseite', back: 'Rückseite' }
+          : form.tab === 'cloze'
+            ? { front: 'Text mit Lücken', back: 'Text mit Lücken' }
+            : { front: 'Titel des Schemas', back: 'Punkte der Gliederung' }
+      }
+      cover={
+        form.tab === 'cover'
+          ? {
+              front: (
+                <CoverSurface ratio={coverRatio} masks={surfaceMasks} label="Vorderseite">
+                  {coverImage}
+                </CoverSurface>
+              ),
+              back: (
+                <CoverSurface
+                  ratio={coverRatio}
+                  masks={surfaceMasks.map((m) => ({ ...m, look: 'revealed' as const }))}
+                  label="Rückseite"
+                >
+                  {coverImage}
+                </CoverSurface>
+              ),
+            }
+          : undefined
+      }
+    />
+  ) : null;
 
-      <button
-        type="button"
-        className={styles.deckRow}
-        onClick={onPickDeck}
-        aria-label={`Stapel: ${deckLabel ?? 'noch keiner gewählt'}. Ändern`}
-      >
-        <span className={styles.deckLabel}>Stapel</span>
-        <span className={styles.deckValue}>
-          {deckLabel ?? 'Stapel wählen'}
-          <ChevronRightIcon size={16} />
-        </span>
-      </button>
-      {edited ? <p className={styles.note}>{edited}</p> : null}
+  return (
+    <main className={styles.screen}>
+      <div className={styles.top}>
+        <button type="button" className={styles.topLink} onClick={onClose}>
+          <ChevronLeftIcon size={24} strokeWidth={2.2} className={styles.topIcon} />
+          {editing ? 'Abbrechen' : 'Schließen'}
+        </button>
+        <h1 className={styles.topTitle}>{editing ? 'Karte bearbeiten' : 'Neue Karte'}</h1>
+        <button
+          type="button"
+          className={cx(styles.more, tap.tap)}
+          aria-pressed={more}
+          onClick={() => {
+            setMore(!more);
+          }}
+        >
+          {more ? 'Einfach' : 'Mehr'}
+        </button>
+        {goal ? <span className={styles.chip}>{goal.text}</span> : null}
+      </div>
+
+      {desktop ? (
+        <div className={styles.body}>
+          <div className={styles.formCol}>
+            {typePicker}
+            {qaFields}
+            {typePanel}
+            {mediaButtons}
+            {sourceRows}
+            <div className={styles.minis}>
+              {normField}
+              <button
+                type="button"
+                className={cx(styles.mini, styles.miniButton)}
+                onClick={onPickDeck}
+                aria-label={deckLabelText}
+              >
+                <span className={styles.miniLabel}>Stapel</span>
+                <span className={styles.miniValue}>{deckLabel ?? 'Stapel wählen'}</span>
+              </button>
+              {tagsField}
+            </div>
+            <TextField
+              label="Notiz"
+              multiline
+              rows={2}
+              value={form.note}
+              onChange={(note) => {
+                set({ note });
+              }}
+              placeholder="Eigene Notiz, erscheint beim Lernen unter der Antwort"
+              error={errors.note}
+              className={styles.noteField}
+            />
+            {editedNote}
+          </div>
+          {previewPane}
+        </div>
+      ) : (
+        <>
+          {typePicker}
+          {qaFields}
+          {typePanel}
+          {more ? (
+            <div className={cx(styles.extra, rise.rise)}>
+              {normField}
+              {tagsField}
+              <label className={styles.mini}>
+                <span className={styles.miniLabel}>Notiz</span>
+                <textarea
+                  className={cx(styles.miniInput, styles.miniArea)}
+                  value={form.note}
+                  onChange={(e) => {
+                    set({ note: e.target.value });
+                  }}
+                  placeholder="Merksatz, Eselsbrücke oder Fundstelle. Erscheint beim Lernen unter der Antwort."
+                  rows={3}
+                  aria-invalid={errors.note ? true : undefined}
+                />
+                {errors.note ? (
+                  <span className={styles.errorText} role="alert">
+                    {errors.note}
+                  </span>
+                ) : null}
+              </label>
+            </div>
+          ) : null}
+          {mediaButtons}
+          {sourceRows}
+          <button
+            type="button"
+            className={styles.deckRow}
+            onClick={onPickDeck}
+            aria-label={deckLabelText}
+          >
+            <span className={styles.deckLabel}>Stapel</span>
+            <span className={styles.deckValue}>
+              {deckLabel ?? 'Stapel wählen'}
+              <ChevronRightIcon size={16} />
+            </span>
+          </button>
+          {editedNote}
+        </>
+      )}
 
       <div className={styles.footer}>
         {goal ? (
@@ -668,15 +782,40 @@ export function CardScreen({
             <span>{goal.text}</span>
           </div>
         ) : null}
+        {editing && onDelete && desktop ? (
+          <button type="button" className={styles.delete} onClick={onDelete}>
+            <TrashIcon size={18} />
+            Karte löschen
+          </button>
+        ) : null}
         {failed ? (
           <p className={styles.failed} role="alert">
             Das hat nicht geklappt. Bitte versuche es noch einmal.
           </p>
         ) : null}
-        <Button block disabled={busy} onClick={() => void submit()}>
-          {editing ? 'Speichern' : 'Speichern & nächste'}
-        </Button>
-        {editing && onDelete ? (
+        <div className={styles.actions}>
+          {desktop && !editing ? (
+            <Button
+              variant="outline"
+              disabled={busy}
+              onClick={() => {
+                void submit(true);
+              }}
+            >
+              Speichern
+            </Button>
+          ) : null}
+          <Button
+            block
+            disabled={busy}
+            aria-keyshortcuts="Control+Enter Meta+Enter"
+            onClick={() => void submit()}
+          >
+            {editing ? 'Speichern' : 'Speichern & nächste'}
+            <Kbd tone="dark">{mod} ↵</Kbd>
+          </Button>
+        </div>
+        {editing && onDelete && !desktop ? (
           <button type="button" className={styles.delete} onClick={onDelete}>
             <TrashIcon size={18} />
             Karte löschen
