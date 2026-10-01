@@ -2,8 +2,8 @@
 titel: Juri benutzen
 untertitel: Das Handbuch für iPhone, iPad und den Browser am Rechner
 zielgruppe: Referendarinnen und Referendare
-stand: 2026-09-29
-version: 0.10 (bis M9 gegen die App geprüft, übrige Kapitel Entwurf nach Design)
+stand: 2026-10-01
+version: 1.0 (bis M9 gegen die App geprüft, übrige Kapitel Entwurf nach Design; Bedienungshilfen und Updates neu in 1.0)
 ---
 
 <!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke, Schema, Abdeckung, PDF, Notiz), Lernen, Lernrhythmus, Stapel, Fristen, Erfolge und Serie sind gegen die App geprüft (bis M9). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
@@ -19,10 +19,11 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 1. In **Safari** die Adresse `svenf-png.github.io/Juri` öffnen; Juri zeigt dort diese Anleitung
 2. Auf **„Teilen“** tippen, je nach Ansicht zuerst auf **„•••“**
 3. **„Zum Home-Bildschirm“** wählen; fehlt der Eintrag, in der Liste nach unten blättern
-4. **„Hinzufügen“** tippen
-5. Juri ab jetzt nur noch über das neue Symbol öffnen
+4. Gibt es den Schalter **„Als Web-App öffnen“**, lass ihn **an**
+5. **„Hinzufügen“** tippen
+6. Juri ab jetzt nur noch über das neue Symbol öffnen
 
-> **Notizen:** Wichtig ist Schritt 5: Juri speichert deine Daten in der installierten App, nicht im Safari-Tab. Im Safari-Tab legt Juri deshalb gar keine Daten an. Quelle der Schritte: Apple Support, „Turn a website into an app in Safari on iPhone“.
+> **Notizen:** Wichtig ist der letzte Schritt: Juri speichert deine Daten in der installierten App, nicht im Safari-Tab. Im Safari-Tab legt Juri deshalb gar keine Daten an. Apple beschreibt den Schalter als „Open as Web App“ einschalten; wie er auf Deutsch heißt, wird auf dem Gerät geprüft. Ist er aus, öffnet das Symbol eine Lesezeichen-Ansicht im Safari-Tab, und Juri zeigt wieder die Anleitung. Quelle der Schritte: Apple Support, „Turn a website into an app in Safari on iPhone“.
 
 ## Juri auf dem iPad installieren
 
@@ -30,7 +31,7 @@ In zwei Minuten installiert, ohne Konto und ohne App Store.
 
 1. In **Safari** `svenf-png.github.io/Juri` öffnen
 2. Oben rechts auf das **Teilen-Symbol** tippen
-3. **„Zum Home-Bildschirm“**, dann **„Hinzufügen“**
+3. **„Zum Home-Bildschirm“**; gibt es den Schalter **„Als Web-App öffnen“**, lass ihn an, dann **„Hinzufügen“**
 4. Juri über das neue Symbol öffnen
 
 > **Notizen:** iPhone und iPad haben jeweils eigene Daten. Um Karten von einem Gerät auf das andere zu bringen, nutzt du Backup oder Teilen (Kapitel „Deine Daten“).
@@ -519,6 +520,28 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - Wiederherstellen: **Backup einspielen**, Datei wählen, bestätigen. Das Backup **ersetzt** alle Daten auf dem Gerät
 
 > **Notizen:** Das Backup ist eine Datei mit der Endung .juri-backup. Juri prüft sie vollständig, bevor etwas überschrieben wird; eine falsche oder beschädigte Datei ändert nichts. Unter „Speicher“ zeigen die Einstellungen, ob iOS die Daten dauerhaft aufbewahrt und wie viel Platz sie belegen.
+
+## Neue Version
+
+<!-- status: 1.0.0 umgesetzt (A92); auf dem Gerät pruefen (Testliste, Abschnitt Updates) -->
+
+- Gibt es eine neue Version, erscheint unten **„Neue Version verfügbar“** mit **„Neu laden“** und **„Später“**. Juri lädt nie von allein neu und unterbricht dich nicht
+- **„Neu laden“** übernimmt die neue Version; **deine Daten bleiben erhalten**
+- **„Später“** blendet den Hinweis aus; beim nächsten Öffnen der App kommt er wieder
+- **Während einer Lernrunde** erscheint der Hinweis nicht, damit er nicht über den Bewertungsknöpfen liegt; nach der Runde ist er da
+- Juri fragt beim Start und beim Zurückkehren in die App nach (höchstens einmal pro Minute). Ohne Netz passiert nichts
+
+## Bedienungshilfen
+
+<!-- status: 1.0.0 automatisch geprüft (A91, axe-core und eigene Tests); VoiceOver auf dem Gerät noch nicht geprüft (Testliste M12) -->
+
+- **VoiceOver:** Knöpfe, Felder, Sheets und Menüs tragen Namen und Rollen; ein geöffnetes Sheet nimmt den Fokus, schließt mit Abbrechen oder der Zwei-Finger-Geste „Z“ und gibt den Fokus an den Knopf zurück
+- **Tastatur:** Alle Knöpfe und Felder sind mit **Tab** erreichbar und zeigen einen sichtbaren Rahmen; die Kürzel stehen im Abschnitt „Juri am Rechner“
+- **Kontrast:** Text hat mindestens das Verhältnis **4,5 zu 1**
+- **Trefferflächen:** Tippflächen sind mindestens **44 × 44 Punkte** groß, auch wenn das sichtbare Element kleiner ist
+- **Bewegung:** Mit „Bewegung reduzieren“ (Einstellungen, Bedienungshilfen) laufen die Animationen nicht
+
+> **Notizen:** Geprüft ist das im Browser mit automatischen Tests; wie VoiceOver Juri auf dem iPhone vorliest, klärt der Gerätetest. Auffälligkeiten bitte melden, mit Gerät und iOS-Version.
 
 ## Version und Entwicklungsstand
 

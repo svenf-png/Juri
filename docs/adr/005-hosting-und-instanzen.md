@@ -13,6 +13,7 @@ Hosting kostenlos und statisch, keine eigene Domain (Entscheidung 1). GitHub Pag
 - Der Service Worker der echten App beantwortet `/Juri/test/` nicht (`navigateFallbackDenylist`), damit sich die Instanzen nicht überlagern.
 - **Deep Links:** `404.html` leitet auf `<basis>?p=<pfad>` der passenden Instanz um, die App stellt die Adresse vor dem Router wieder her. Pfade mit Schema oder Backslash werden verworfen.
 - **Content-Security-Policy** als Meta-Tag ohne fremde Origins und ohne Inline-Skripte. Da `frame-ancestors` per Meta-Tag nicht wirkt, rendert die App nicht, wenn sie eingebettet ist.
+- **Update-Ablauf** (M12, ADR-016): Eine neue Version meldet die App mit einem Hinweis statt still neu zu laden; in einer Lernrunde wartet der Hinweis.
 - **Lieferkette:** Actions auf Commit-Hashes gepinnt, minimale Workflow-Rechte, Dependabot, Lockfile, wenige Abhängigkeiten.
 - **Konto:** Zwei-Faktor bzw. Passkey im GitHub-Konto und eine Regel für `main` (nur per PR, kein Force-Push) liegen beim Repo-Inhaber.
 - Keine weiteren GitHub-Pages-Projekte im Account `svenf-png`, weil sie sich die Origin (Gerätespeicher) mit Juri teilen würden.

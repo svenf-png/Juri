@@ -529,7 +529,7 @@ async function focusIndicatorVisible(page: Page): Promise<{ ok: boolean; what: s
       if (s.outline || s.shadow) return { ok: true, what: '' };
     }
     if (own.shadow) return { ok: true, what: '' };
-    const label = el.getAttribute('aria-label') ?? el.textContent?.trim().slice(0, 30) ?? '';
+    const label = el.getAttribute('aria-label') ?? el.textContent.trim().slice(0, 30);
     return { ok: false, what: `${el.tagName.toLowerCase()} "${label}"` };
   });
 }
