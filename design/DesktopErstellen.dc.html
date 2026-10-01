@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Desktop: Erstellen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button{font-family:inherit;cursor:pointer}
+input,textarea{font-family:inherit}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,box-shadow .2s,border-color .2s}
+.tap:active{transform:scale(.97)}
+.hv-nav:hover{background:#F3F1F8}
+.hv-row:hover{background:#F6F4FB}
+.hv-card:hover{background:#F1EEF7}
+.hv-primary:hover{background:#5B34D1}
+.hv-ink:hover{background:#2E1A73}
+.hv-ghost:hover{background:#F6F4FB}
+.hv-outline:hover{border-color:#A08BEA}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #6A3FE0;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #FFFFFF; display: flex; flex-direction: column; overflow: hidden">
+  <div style="flex-shrink: 0; display: flex; justify-content: center">
+    <div style="width: 100%; max-width: 1440px; box-sizing: border-box; height: 72px; padding: 0 48px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center"><div style="justify-self: start"><a href="DesktopHeute.dc.html" style="height: 44px; display: flex; align-items: center; gap: 2px; font-size: 16px; font-weight: 600; margin-left: -10px; "><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Schließen</a></div><div><h1 class="d" style="margin: 0; font-size: 22px; font-weight: 750; letter-spacing: -0.02em">Neue Karte</h1></div><div style="justify-self: end"><span style="height: 30px; padding: 0 12px; border-radius: 15px; background: #EEE8FD; color: #4B2AA8; font-size: 13px; font-weight: 700; display: flex; align-items: center">3 von 5 heute</span></div></div>
+  </div>
+  <div style="flex: 1 1 0; min-height: 0; display: flex; justify-content: center">
+    <div style="width: 100%; max-width: 1440px; box-sizing: border-box; padding: 8px 48px 0"><div style="display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 56px; align-items: start">
+      <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
+        <div style="display: flex; padding: 3px; border-radius: 16px; background: #F6F4FB; gap: 0; ">
+    <span style="flex: 1 1 0; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 14.5px; font-weight: 700; background: #FFFFFF; color: #17141F; box-shadow: 0 2px 8px -3px rgba(46,26,115,.3)">Frage</span><span style="flex: 1 1 0; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 14.5px; font-weight: 600; color: #6B6678">Lücke</span><span style="flex: 1 1 0; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 14.5px; font-weight: 600; color: #6B6678">Schema</span><span style="flex: 1 1 0; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 14.5px; font-weight: 600; color: #6B6678">Abdeckung</span>
+  </div>
+        <label style="border-radius: 20px; background: #F6F4FB; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 0 0 2px #6A3FE0; min-height: 132px; box-sizing: border-box;">
+    <span style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Vorderseite</span></span>
+    <span style="font-size: 20px; line-height: 1.4; color: #17141F">Was versteht man unter Gewahrsam?</span>
+  </label>
+        <label style="border-radius: 20px; background: #F6F4FB; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px;  min-height: 168px; box-sizing: border-box;">
+    <span style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Rückseite</span></span>
+    <span style="font-size: 20px; line-height: 1.4; color: #17141F">Die von einem Herrschaftswillen getragene tatsächliche Sachherrschaft eines Menschen über eine Sache.</span>
+  </label>
+        <div style="display: flex; gap: 12px"><span class="tap hv-outline" style="flex: 1 1 0; height: 52px; border-radius: 16px; border: 1.5px solid #EFECF5; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 700"><span style="color: #6A3FE0; display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path></svg></span>PDF</span><span class="tap hv-outline" style="flex: 1 1 0; height: 52px; border-radius: 16px; border: 1.5px solid #EFECF5; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 700"><span style="color: #6A3FE0; display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M21 16l-5-5-8 8"></path></svg></span>Foto / Bild</span></div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+          <label style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box; min-width: 0">
+    <span style="font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Norm</span>
+    <span style="font-size: 15px; font-weight: 500; color: #17141F">§ 242 StGB</span>
+  </label><label style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box; min-width: 0">
+    <span style="font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Stapel</span>
+    <span style="font-size: 15px; font-weight: 500; color: #17141F">Diebstahl &amp; Betrug · SR</span>
+  </label><label style="border-radius: 16px; border: 1.5px solid #EFECF5; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box; min-width: 0">
+    <span style="font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Tags</span>
+    <span style="font-size: 15px; font-weight: 500; color: #17141F">#Klausur</span>
+  </label>
+        </div>
+        <label style="border-radius: 20px; background: #F6F4FB; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px;  min-height: 96px; box-sizing: border-box;">
+    <span style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">Notiz</span></span>
+    <span style="font-size: 18px; line-height: 1.4; color: #726E7A">Eigene Notiz, erscheint beim Lernen unter der Antwort</span>
+  </label>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 4px; min-width: 0">
+        <div style="display: flex; align-items: center; justify-content: space-between"><span style="font-size: 12px; font-weight: 800; color: #6B6678; letter-spacing: .06em; text-transform: uppercase">Vorschau</span><div style="display: flex; padding: 3px; border-radius: 16px; background: #F6F4FB; gap: 0; width: 210px;">
+    <span style="flex: 1 1 0; height: 30px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: #FFFFFF; color: #17141F; box-shadow: 0 2px 8px -3px rgba(46,26,115,.3)">Vorderseite</span><span style="flex: 1 1 0; height: 30px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #6B6678">Rückseite</span>
+  </div></div>
+        <div style="height: 380px; box-sizing: border-box; border-radius: 32px; background: #FFFFFF; box-shadow: 0 30px 60px -36px rgba(46,26,115,.4); padding: 28px; display: flex; flex-direction: column; gap: 18px; border: 1px solid #F3F1F8"><div style="display: flex; gap: 8px; align-items: center"><span style="height: 26px; padding: 0 9px; border-radius: 8px; background: #F6F4FB; color: #4B2AA8; font-size: 12px; font-weight: 800; display: flex; align-items: center">SR</span><span style="height: 26px; padding: 0 10px; border-radius: 8px; border: 1.5px solid #E4DDF7; box-sizing: border-box; color: #6B6678; font-size: 12px; font-weight: 700; display: flex; align-items: center">Frage</span><span style="margin-left: auto; font-size: 13px; font-weight: 700; color: #6A3FE0">§ 242 StGB</span></div>
+      <div style="flex-grow: 1; display: flex; align-items: center"><div class="d" style="font-size: 30px; line-height: 1.18; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance">Was versteht man unter Gewahrsam?</div></div>
+      <div style="font-size: 13px; font-weight: 600; color: #6B6678; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"></path><path d="M18 3v4h-4M6 21v-4h4"></path></svg>Klicken zum Umdrehen</div></div>
+        <span style="font-size: 13px; color: #6B6678; line-height: 1.4">So erscheint die Karte beim Lernen. Die Rückseite zeigst du mit dem Umschalter.</span>
+      </div>
+    </div></div>
+  </div>
+  <div style="flex-shrink: 0; border-top: 1px solid #EFECF5; display: flex; justify-content: center"><div style="width: 100%; max-width: 1440px; box-sizing: border-box; height: 88px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; gap: 24px"><div style="display: flex; align-items: center; gap: 14px">
+    <div style="width: 280px; height: 8px; border-radius: 4px; background: #EEE8FD; overflow: hidden"><div style="width: 60%; height: 8px; border-radius: 4px; background: #6A3FE0"></div></div>
+    <span style="font-size: 14px; color: #6B6678; font-weight: 500">3 von 5 heute</span>
+  </div><div style="display: flex; gap: 12px">
+    <a href="#" class="tap hv-outline" style="height: 56px; border-radius: 18px; border: 1.5px solid #DCD6EA; background: #FFFFFF; color: #17141F; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 22px; font-size: 16px; font-weight: 700; ">Speichern</a>
+    <a href="#" class="tap hv-primary" style="height: 56px; border-radius: 18px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 22px; font-size: 16px; font-weight: 700;  box-shadow: 0 14px 30px -14px rgba(106,63,224,.6)">Speichern &amp; nächste<kbd style="min-width: 22px; height: 22px; padding: 0 6px; box-sizing: border-box; border-radius: 8px; border: 1.5px solid rgba(255,255,255,.3); background: rgba(255,255,255,.14); color: #FFFFFF; font-family: inherit; font-size: 12px; font-weight: 700; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0">Strg ↵</kbd></a>
+  </div></div></div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Desktop: Geschafft (1920 × 1080)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Figtree',-apple-system,system-ui,sans-serif;color:#17141F;background:#FFFFFF;-webkit-font-smoothing:antialiased}
+a{color:#5B34D1;text-decoration:none}a:hover{color:#4B2AA8}
+button{font-family:inherit;cursor:pointer}
+input,textarea{font-family:inherit}
+.d{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.tap{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s,box-shadow .2s,border-color .2s}
+.tap:active{transform:scale(.97)}
+.hv-nav:hover{background:#F3F1F8}
+.hv-row:hover{background:#F6F4FB}
+.hv-card:hover{background:#F1EEF7}
+.hv-primary:hover{background:#5B34D1}
+.hv-ink:hover{background:#2E1A73}
+.hv-ghost:hover{background:#F6F4FB}
+.hv-outline:hover{border-color:#A08BEA}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #6A3FE0;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; box-sizing: border-box; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; overflow: hidden">
+  <div style="position: relative; width: 170px; height: 170px">
+    <svg width="170" height="170" viewBox="0 0 170 170" aria-hidden="true"><circle cx="85" cy="85" r="74" fill="none" stroke="#EEE8FD" stroke-width="12"></circle><circle cx="85" cy="85" r="74" fill="none" stroke="#6A3FE0" stroke-width="12" stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="0" transform="rotate(-90 85 85)"></circle></svg>
+    <div style="position: absolute; left: 45px; top: 45px; width: 80px; height: 80px; border-radius: 40px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></div>
+  </div>
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+    <h1 class="d" style="margin: 0; font-size: 56px; font-weight: 750; letter-spacing: -0.03em">Geschafft.</h1>
+    <p style="margin: 0; font-size: 18px; color: #6B6678; line-height: 1.45">4 Karten in dieser Runde. Morgen kommen 9 dazu.</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: 560px">
+    <div style="height: 88px; border-radius: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: #FFFFFF; border: 1.5px solid #DCD6EA; color: #17141F"><span class="d" style="font-size: 28px; font-weight: 750; line-height: 1">1</span><span style="font-size: 13px; font-weight: 700">Nochmal</span></div><div style="height: 88px; border-radius: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: #EEE8FD; color: #2E1A73"><span class="d" style="font-size: 28px; font-weight: 750; line-height: 1">1</span><span style="font-size: 13px; font-weight: 700">Schwer</span></div><div style="height: 88px; border-radius: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: #C9B8F7; color: #17141F"><span class="d" style="font-size: 28px; font-weight: 750; line-height: 1">1</span><span style="font-size: 13px; font-weight: 700">Gut</span></div><div style="height: 88px; border-radius: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: #6A3FE0; color: #FFFFFF"><span class="d" style="font-size: 28px; font-weight: 750; line-height: 1">1</span><span style="font-size: 13px; font-weight: 700">Leicht</span></div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 10px; width: 560px">
+    <a href="DesktopHeute.dc.html" class="tap hv-primary" style="height: 64px; border-radius: 20px; background: #6A3FE0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; box-shadow: 0 14px 30px -14px rgba(106,63,224,.6)">Zurück zu Heute</a>
+    <span class="tap hv-card" style="height: 52px; border-radius: 18px; background: #F6F4FB; color: #17141F; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">2 Karten noch einmal lernen</span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
