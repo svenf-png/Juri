@@ -502,6 +502,11 @@
   resize: none;
 }
 
+/* Der Rahmen zeigt den Fokus (:focus-within); ohne dies zeichnet das globale :focus-visible einen zweiten Kasten ins Feld. */
+.fieldInput:focus-visible {
+  outline: none;
+}
+
 .fieldArea {
   font-size: 16px;
   line-height: 1.45;

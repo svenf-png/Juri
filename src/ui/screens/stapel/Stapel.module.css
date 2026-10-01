@@ -165,6 +165,11 @@
   appearance: none;
 }
 
+/* Der Rahmen zeigt den Fokus (:focus-within); ohne dies zeichnet das globale :focus-visible einen zweiten Kasten ins Feld. */
+.search input:focus-visible {
+  outline: none;
+}
+
 .search input::-webkit-search-cancel-button {
   -webkit-appearance: none;
 }
