@@ -144,6 +144,46 @@ function coverFace(asked: boolean): Face {
   };
 }
 
+/** Seite des Desktop-Boards (DesktopAbdeckungEditor.dc.html, 640 × 460), alles in Bruchteilen der Fläche. */
+const DESKTOP_PAGE = { width: 640, height: 460 };
+const DESKTOP_LINES: readonly (readonly [number, number, number, number, string])[] = [
+  [36, 34, 280, 14, '#DCD6EA'],
+  [36, 70, 560, 10, '#E4DDF7'],
+  [36, 92, 500, 10, '#E4DDF7'],
+  [36, 114, 540, 10, '#E4DDF7'],
+  [36, 322, 520, 10, '#E4DDF7'],
+  [36, 344, 430, 10, '#E4DDF7'],
+];
+
+function DesktopPage() {
+  const x = (n: number) => `${String((n / DESKTOP_PAGE.width) * 100)}%`;
+  const y = (n: number) => `${String((n / DESKTOP_PAGE.height) * 100)}%`;
+  return (
+    <div className={styles.skeleton} style={{ background: '#fff' }}>
+      {DESKTOP_LINES.map(([left, top, width, height, color]) => (
+        <span
+          key={top}
+          style={{
+            position: 'absolute',
+            left: x(left),
+            top: y(top),
+            width: x(width),
+            height: y(height),
+            borderRadius: 7,
+            background: color,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+const DESKTOP_MASKS: Mask[] = [
+  { n: 1, x: 36 / 640, y: 160 / 460, w: 190 / 640, h: 44 / 460 },
+  { n: 2, x: 250 / 640, y: 160 / 460, w: 150 / 640, h: 44 / 460 },
+  { n: 3, x: 36 / 640, y: 240 / 460, w: 250 / 640, h: 44 / 460 },
+];
+
 const EDITOR_MASKS: Mask[] = [
   { n: 1, x: 0.1, y: 0.24, w: 0.42, h: 0.1 },
   { n: 2, x: 0.3, y: 0.5, w: 0.5, h: 0.1 },
@@ -318,9 +358,9 @@ export function AbdeckungVorschau({ variant }: { variant: AbdeckungVariant }) {
   if (variant === 'editor' || variant === 'editor-leer') {
     return (
       <CoverEditor
-        ratio={348 / 464}
-        image={editorImage}
-        initial={variant === 'editor' ? EDITOR_MASKS : []}
+        ratio={desktop ? DESKTOP_PAGE.width / DESKTOP_PAGE.height : 348 / 464}
+        image={desktop ? <DesktopPage /> : editorImage}
+        initial={variant === 'editor' ? (desktop ? DESKTOP_MASKS : EDITOR_MASKS) : []}
         initialSelected={variant === 'editor' ? 2 : null}
         onDone={noop}
         onBack={noop}

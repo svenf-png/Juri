@@ -143,23 +143,27 @@ const erstellenPdf = (
   </div>
 </div>`;
 
-/* Felder aufziehen */
+/* Felder aufziehen: Seite und Felder in Prozent der Fläche (640 x 460), Aussehen wie CoverSurface. */
+const pct = (v, total) => `${(v / total) * 100}%`;
 const maskBox = (n, x, y, bw, bh, selected) =>
-  `<div style="position: absolute; left: ${x}px; top: ${y}px; width: ${bw}px; height: ${bh}px; box-sizing: border-box; border-radius: 10px; background: ${selected ? 'rgba(106,63,224,.9)' : '#17141F'}; color: #FFFFFF; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; ${selected ? 'box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 5px #6A3FE0' : ''}">${n}${
+  `<div style="position: absolute; left: ${pct(x, 640)}; top: ${pct(y, 460)}; width: ${pct(bw, 640)}; height: ${pct(bh, 460)}; box-sizing: border-box; border-radius: 8px; background: ${selected ? '#6A3FE0' : '#C9B8F7'}; color: ${selected ? '#FFFFFF' : '#2E1A73'}; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; ${selected ? 'box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #17141F' : 'overflow: hidden'}">${n}${
     selected
       ? [
-          [-7, -7],
-          [bw - 7, -7],
-          [-7, bh - 7],
-          [bw - 7, bh - 7],
+          [0, 0],
+          [1, 0],
+          [0, 1],
+          [1, 1],
         ]
           .map(
             ([hx, hy]) =>
-              `<span style="position: absolute; left: ${hx}px; top: ${hy}px; width: 14px; height: 14px; border-radius: 7px; background: #FFFFFF; box-shadow: 0 0 0 2px #6A3FE0"></span>`,
+              `<span style="position: absolute; left: ${hx * 100}%; top: ${hy * 100}%; width: 14px; height: 14px; margin: -7px 0 0 -7px; box-sizing: border-box; border-radius: 7px; background: #FFFFFF; border: 2px solid #6A3FE0"></span>`,
           )
           .join('')
       : ''
   }</div>`;
+
+const pageBar = (x, y, bw, bh, color) =>
+  `<div style="position: absolute; left: ${pct(x, 640)}; top: ${pct(y, 460)}; width: ${pct(bw, 640)}; height: ${pct(bh, 460)}; border-radius: 7px; background: ${color}"></div>`;
 
 const FIELDS = ['Feld 1', 'Feld 2', 'Feld 3'];
 
@@ -170,18 +174,18 @@ const abdeckungEditor = (w, h) =>
     right: `<span class="tap hv-primary" style="height: 44px; padding: 0 22px; border-radius: 22px; background: #6A3FE0; color: #FFFFFF; font-size: 15px; font-weight: 700; display: flex; align-items: center">Fertig</span>`,
     body: `<div style="display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; height: 100%; padding-bottom: 32px; box-sizing: border-box">
       <div style="display: flex; flex-direction: column; gap: 14px; min-width: 0; min-height: 0">
-        <div style="display: flex; align-items: center; justify-content: space-between"><span style="font-size: 14.5px; color: #6B6678">Felder über Begriffe aufziehen.</span><span style="display: flex; align-items: center; gap: 8px"><span style="width: 36px; height: 36px; border-radius: 12px; background: #F6F4FB; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600">−</span><span style="min-width: 56px; text-align: center; font-size: 14px; font-weight: 700">100 %</span><span style="width: 36px; height: 36px; border-radius: 12px; background: #F6F4FB; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600">+</span></span></div>
+        <div style="display: flex; align-items: center; justify-content: space-between"><span style="font-size: 14px; font-weight: 500; color: #6B6678">Felder über Begriffe aufziehen.</span><span style="display: flex; align-items: center; gap: 8px"><span style="width: 36px; height: 36px; border-radius: 12px; background: #F6F4FB; opacity: .45; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600">−</span><span style="min-width: 56px; text-align: center; font-size: 14px; font-weight: 700">100 %</span><span style="width: 36px; height: 36px; border-radius: 12px; background: #F6F4FB; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600">+</span></span></div>
         <div style="flex: 1 1 0; min-height: 0; border-radius: 24px; background: #F6F4FB; display: flex; align-items: center; justify-content: center; overflow: hidden">
-          <div style="position: relative; width: 640px; height: 460px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 24px 48px -28px rgba(46,26,115,.35); overflow: hidden">
-            <div style="position: absolute; left: 36px; top: 34px; width: 280px; height: 14px; border-radius: 7px; background: #DCD6EA"></div>
-            <div style="position: absolute; left: 36px; top: 70px; width: 560px; height: 10px; border-radius: 5px; background: #E4DDF7"></div>
-            <div style="position: absolute; left: 36px; top: 92px; width: 500px; height: 10px; border-radius: 5px; background: #E4DDF7"></div>
-            <div style="position: absolute; left: 36px; top: 114px; width: 540px; height: 10px; border-radius: 5px; background: #E4DDF7"></div>
+          <div style="position: relative; flex-shrink: 0; width: 100%; aspect-ratio: 640 / 460; background: #FFFFFF; overflow: hidden">
+            ${pageBar(36, 34, 280, 14, '#DCD6EA')}
+            ${pageBar(36, 70, 560, 10, '#E4DDF7')}
+            ${pageBar(36, 92, 500, 10, '#E4DDF7')}
+            ${pageBar(36, 114, 540, 10, '#E4DDF7')}
             ${maskBox(1, 36, 160, 190, 44, false)}
             ${maskBox(2, 250, 160, 150, 44, true)}
             ${maskBox(3, 36, 240, 250, 44, false)}
-            <div style="position: absolute; left: 36px; top: 322px; width: 520px; height: 10px; border-radius: 5px; background: #E4DDF7"></div>
-            <div style="position: absolute; left: 36px; top: 344px; width: 430px; height: 10px; border-radius: 5px; background: #E4DDF7"></div>
+            ${pageBar(36, 322, 520, 10, '#E4DDF7')}
+            ${pageBar(36, 344, 430, 10, '#E4DDF7')}
           </div>
         </div>
       </div>

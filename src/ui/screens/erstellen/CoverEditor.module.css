@@ -172,3 +172,288 @@
   opacity: 1;
   pointer-events: auto;
 }
+
+/* Die Elemente der Desktop-Gestaltung stehen nur in deren Aufbau (CoverEditor.tsx, ab 1280 px). */
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopAbdeckungEditor.dc.html): Kopfzeile in drei
+ * Teilen, links die Fläche mit Zoom-Knöpfen, rechts Feldliste, Aktionen und Kürzel. Der Inhalt
+ * steht bis 1440 px (mit Innenabstand) mittig; `--edge` ist der seitliche Abstand.
+ */
+@media (min-width: 1280px) {
+  .screen {
+    --edge: max(48px, calc(50% - 672px));
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .top {
+    box-sizing: border-box;
+    height: 72px;
+    padding: 0 var(--edge);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .back {
+    justify-self: start;
+    margin-left: -10px;
+  }
+
+  .topTitle {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+  }
+
+  .done {
+    justify-self: end;
+    height: 44px;
+    padding: 0 22px;
+    border-radius: 22px;
+    font-size: 15px;
+  }
+
+  .done::after {
+    inset: 0;
+  }
+
+  .bar {
+    display: none;
+  }
+
+  .body {
+    flex: 1 1 0;
+    min-height: 0;
+    box-sizing: border-box;
+    padding: 8px var(--edge) 32px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    column-gap: 40px;
+  }
+
+  .work {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .workHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .zoom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zoomButton {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .zoomButton::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
+
+  .zoomButton:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  .zoomValue {
+    min-width: 56px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .stage {
+    border: 0;
+    border-radius: 24px;
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sideLabel {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .fieldList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .fieldsEmpty {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .field {
+    width: 100%;
+    min-height: 56px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 16px;
+    /* Der Rand als Innenschatten, damit die Auswahl (2 px) die Größe nicht ändert. */
+    box-shadow: inset 0 0 0 1.5px var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .fieldOn {
+    background: var(--surface);
+    box-shadow: inset 0 0 0 2px var(--violet);
+  }
+
+  .fieldNumber {
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .fieldOn .fieldNumber {
+    background: var(--violet);
+  }
+
+  .fieldName {
+    flex-grow: 1;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .fieldState {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .sideActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .outline {
+    height: 48px;
+    box-sizing: border-box;
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14.5px;
+    font-weight: 700;
+  }
+
+  .removeSide {
+    height: 48px;
+    border: 0;
+    border-radius: 16px;
+    background: transparent;
+    color: var(--danger);
+    font-size: 14.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .removeSide:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  .keys {
+    margin-top: auto;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .keyList {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .keyRow {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .keyRow dt {
+    width: 140px;
+    flex-shrink: 0;
+    display: flex;
+    gap: 4px;
+  }
+
+  .keyRow dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
