@@ -25,7 +25,7 @@
     "demo:pdf": "node scripts/build-demo-pdf.mjs",
     "demo:juri": "JURI_TESTDATEN=1 vitest run src/demo/demoJuri.test.ts",
     "design:desktop": "node scripts/build-desktop-designs.mjs",
-    "docs:bilder": "JURI_BILDER=1 playwright test tests/e2e/heute.spec.ts tests/e2e/stapel.spec.ts tests/e2e/lernen.spec.ts tests/e2e/schema.spec.ts tests/e2e/abdeckung.spec.ts tests/e2e/fristen.spec.ts tests/e2e/erfolge.spec.ts tests/e2e/teilen.spec.ts tests/e2e/highfive.spec.ts -g Bildschirmfoto",
+    "docs:bilder": "JURI_BILDER=1 playwright test tests/e2e/heute.spec.ts tests/e2e/stapel.spec.ts tests/e2e/lernen.spec.ts tests/e2e/schema.spec.ts tests/e2e/abdeckung.spec.ts tests/e2e/fristen.spec.ts tests/e2e/erfolge.spec.ts tests/e2e/teilen.spec.ts tests/e2e/highfive.spec.ts tests/e2e/desktop-design.spec.ts -g Bildschirmfoto",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build && npm run e2e"
   },
   "dependencies": {

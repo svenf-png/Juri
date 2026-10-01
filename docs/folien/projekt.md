@@ -3,7 +3,7 @@ titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
 stand: 2026-10-01
-version: 0.12 (nach M11)
+version: 1.1 (nach M13)
 ---
 
 # Die Idee
@@ -283,9 +283,9 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 | M4 bis M5  | Lern-Engine und Prüfungsschemata (fertig)                                         |
 | M6 bis M11 | PDF und Abdeckung, Browser-Version, Fristen, Erfolge, Teilen, High fives (fertig) |
 | M12        | Feinschliff, Qualität und Veröffentlichung, Version 1.0.0 (fertig)                |
-| M13        | Eigene Desktop-Gestaltung (1.1.0)                                                 |
+| M13        | Eigene Desktop-Gestaltung, Version 1.1.0 (fertig)                                 |
 
-> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M12 sind 33 von 37 PT (89 %) eingeplant erledigt (M11 mit 1,5 PT, M12 mit seinem Planwert 3 PT). M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht (sieben Artboards, Umfang-Schritt), M9 mit rund 3 statt 2,5 PT (sechs Artboards, Verfügbarkeit aus dem Lernlog, Aufbau der Aggregate in Migration und Backup); M10 mit rund 3,5 statt 3 PT (acht Artboards, Prüfung fremder Dateien, gemeinsamer Stand pro Karte für Konflikte, Demo-Datei); alles Einschätzungen, nicht gemessen. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
+> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M13 sind 37 von 37 PT (100 %) eingeplant erledigt (M11 mit 1,5 PT, M12 mit 3 PT, M13 mit seinem Planwert 4 PT). M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht (sieben Artboards, Umfang-Schritt), M9 mit rund 3 statt 2,5 PT (sechs Artboards, Verfügbarkeit aus dem Lernlog, Aufbau der Aggregate in Migration und Backup); M10 mit rund 3,5 statt 3 PT (acht Artboards, Prüfung fremder Dateien, gemeinsamer Stand pro Karte für Konflikte, Demo-Datei); M13 mit geschätzt 6 bis 7 statt 4 PT (19 Bildschirme in zwei Größen, Vorschau, feste Spalten, Tests in drei Browsern); alles Einschätzungen, nicht gemessen. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
 
 ## Stand heute
 
@@ -305,8 +305,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M10.1 (Zwischenstand, 0.11.1):** Fehlerbehebung: Einstellungen in der Desktop-Sidebar, Schema-Editor ohne angeschnittene Nummer, Tageslimit nie unter dem Tagesziel, Fälligkeit an den Karten in der Stapelliste
 - **M11 fertig:** High fives ohne Server: Kontakte entstehen aus importierten Dateien (zufällige Absender-ID), High fives geben und bekommen mit Feier, Bildkarte per Canvas und Teilen-Menü, Gruß-Datei und Mitreise in `.juri`, ein High five je Kontakt und Tag, Chip in Heute, Zeile in Erfolge, Kontaktliste, Demo-Profil mit Kontakten
 - **M12 fertig (Version 1.0.0):** Update-Ablauf getestet, der Hinweis wartet in der Lernrunde; Install-Hinweis mit dem Schalter „Als Web-App öffnen“; Zugänglichkeit mit axe-core über alle Bildschirme und Sheets, Trefferflächen von 44 px (ein systematischer Fehler bei Rändern behoben), Fokus zurück an den Auslöser; 5.000 Karten gemessen (Bildschirme öffnen in 0,3 bis 1,2 s), pdf.js 6.3.289 gegen eine Sicherheitsmeldung, README und Geräte-Testliste bereinigt
-- **M13 (in Arbeit, Version 1.1.0):** Eigene Desktop-Gestaltung ab 1280 px Breite, Inhalt bis 1440 px mittig. Der Entwurf liegt als 39 Artboards vor (19 Bildschirme bei 1440 × 900 und 1920 × 1080, dazu die Zustände Hover und Fokus): Lernen mit Seitenfeld, Erstellen mit Vorschau, Schema-Editor mit fester Bearbeitungsspalte, Stapel als Tabelle, Sheets als Fenster. Die Umsetzung folgt nach der Freigabe
-- Automatische Prüfung bei jeder Änderung: 919 Unit-Tests, Zugänglichkeit (axe-core) auf iPhone, iPad und Desktop, Leistung mit 5.000 Karten, Update-Ablauf, 11 Bildvergleiche für High fives, 8 für Teilen und Import, 7 für Erfolge, 8 für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
+- **M13 fertig (Version 1.1.0):** Eigene Desktop-Gestaltung ab 1280 px Breite, Inhalt bis 1440 px mittig. 19 Bildschirme pixelnah zu den Artboards (1440 × 900 und 1920 × 1080): Lernen mit Seitenfeld, Neue Karte mit Vorschau und Fußleiste, PDF neben dem Formular, Felder aufziehen mit Liste und Zoom, Schema-Editor mit fester Bearbeitungsspalte, Stapel als Tabelle, Sheets als Fenster in der Mitte, Willkommen mit geteilter Fläche, Hover und Tastenhinweise; Touch-Layouts unverändert
+- Automatische Prüfung bei jeder Änderung: 928 Unit-Tests, Zugänglichkeit (axe-core) auf iPhone, iPad und Desktop, Leistung mit 5.000 Karten, Update-Ablauf, 11 Bildvergleiche für High fives, 8 für Teilen und Import, 7 für Erfolge, 8 für Fristen, 12 für Abdeckung und PDF, 19 Bildschirme mal zwei Größen für die Desktop-Gestaltung, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
-- Fortschritt: 13 von 14 Meilensteinen (93 %), nach Planwerten 33 von 37 Personentagen (89 %)
-- Nächster Schritt: Gerätetest (iPhone, iPad, Desktop-Browser; zuerst M12 mit VoiceOver und der großen Datenmenge, dann Bildkarte im Teilen-Menü und Gruß-Datei aus „Dateien“), parallel M13 (eigene Desktop-Gestaltung: Entwurf zur Freigabe, danach Umsetzung)
+- Fortschritt: 14 von 14 Meilensteinen (100 %), nach Planwerten 37 von 37 Personentagen (100 %); M13 hat mit geschätzt 6 bis 7 statt 4 PT mehr gebraucht (19 Bildschirme in zwei Größen, neue Bedienelemente, Tests)
+- Nächster Schritt: Gerätetest (iPhone, iPad, Desktop-Browser; zuerst M12 mit VoiceOver und der großen Datenmenge, dann Bildkarte im Teilen-Menü und Gruß-Datei aus „Dateien“, für M13 iPad Pro 13 Zoll quer, Safari und Trackpad)
