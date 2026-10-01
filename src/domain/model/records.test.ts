@@ -53,6 +53,8 @@ describe('Tabellen', () => {
       'deadlines',
       'dayStats',
       'milestones',
+      'contacts',
+      'kudos',
     ]);
     for (const key of DEVICE_META_KEYS) {
       expect(metaEntrySchema.safeParse({ key, value: 0 }).success).toBe(true);

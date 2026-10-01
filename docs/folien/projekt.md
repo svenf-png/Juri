@@ -2,8 +2,8 @@
 titel: Juri
 untertitel: Karteikarten für das Referendariat. Idee, Design, Technik und Fahrplan
 zielgruppe: Interessierte, Mitwirkende, Entscheider
-stand: 2026-09-29
-version: 0.11 (nach M10)
+stand: 2026-10-01
+version: 0.12 (nach M11)
 ---
 
 # Die Idee
@@ -58,7 +58,7 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - Stapel werden als Datei verschickt, nicht über einen Katalog
 - Empfänger wählen: aktualisieren oder als Kopie anlegen
 - Beim Aktualisieren bleibt der eigene Fortschritt erhalten
-- High fives und Erfolge reisen in den Dateien mit
+- High fives und Erfolge reisen in den Dateien mit (abschaltbar), dazu die kleine Gruß-Datei
 
 # Design
 
@@ -274,14 +274,14 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 
 <!-- layout: tabelle -->
 
-| Phase       | Inhalt                                                                           |
-| ----------- | -------------------------------------------------------------------------------- |
-| M0 bis M3   | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                       |
-| M4 bis M5   | Lern-Engine und Prüfungsschemata (fertig)                                        |
-| M6 bis M10  | PDF und Abdeckung, Browser-Version, Fristen, Erfolge, Teilen und Import (fertig) |
-| M11 bis M13 | High fives, Feinschliff und Veröffentlichung, eigene Desktop-Gestaltung          |
+| Phase       | Inhalt                                                                            |
+| ----------- | --------------------------------------------------------------------------------- |
+| M0 bis M3   | Fundament, Daten und Backup, Oberfläche, Karten und Stapel                        |
+| M4 bis M5   | Lern-Engine und Prüfungsschemata (fertig)                                         |
+| M6 bis M11  | PDF und Abdeckung, Browser-Version, Fristen, Erfolge, Teilen, High fives (fertig) |
+| M12 bis M13 | Feinschliff und Veröffentlichung, eigene Desktop-Gestaltung                       |
 
-> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M10 sind 28,5 von 37 PT (77 %) eingeplant erledigt. M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht (sieben Artboards, Umfang-Schritt), M9 mit rund 3 statt 2,5 PT (sechs Artboards, Verfügbarkeit aus dem Lernlog, Aufbau der Aggregate in Migration und Backup); M10 mit rund 3,5 statt 3 PT (acht Artboards, Prüfung fremder Dateien, gemeinsamer Stand pro Karte für Konflikte, Demo-Datei); alles Einschätzungen, nicht gemessen. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
+> **Notizen:** Geschätzt rund 41 Personentage, davon 37 für die 14 Meilensteine (Planwerte); nach M11 sind 30 von 37 PT (81 %) eingeplant erledigt. M8 hat mit rund 2 statt 1,5 PT etwas mehr gebraucht (sieben Artboards, Umfang-Schritt), M9 mit rund 3 statt 2,5 PT (sechs Artboards, Verfügbarkeit aus dem Lernlog, Aufbau der Aggregate in Migration und Backup); M10 mit rund 3,5 statt 3 PT (acht Artboards, Prüfung fremder Dateien, gemeinsamer Stand pro Karte für Konflikte, Demo-Datei); alles Einschätzungen, nicht gemessen. Jeder Meilenstein endet mit grünen Tests, einer kurzen Demo und aktualisierter Dokumentation.
 
 ## Stand heute
 
@@ -299,7 +299,8 @@ Eine Lern-App, die so ruhig und klar ist wie ein gutes Skript.
 - **M9 fertig:** Erfolge mit Serie und Pausentag, Heatmap (12 und 26 Wochen) mit Rekordtag, Tagesziele einstellbar, Meilensteine mit Feier, „Tagesziel erreicht“ nach der Lernrunde, Heute mit echtem Ziel und Verlauf, Demo-Profil mit 26 Wochen Verlauf
 - **M10 fertig:** Teilen als `.juri`-Datei (Stapel wählen, Notizen und Erfolge nur mit Schalter, Teilen-Menü oder Download), Import mit Vorschau, „Aktualisieren“ (Fortschritt bleibt) und „Als Kopie“, Konflikte je Karte, Prüfung fremder und manipulierter Dateien, Import-Anleitung, Meilenstein „Teamplayer“, Demo-Datei in der Testinstanz
 - **M10.1 (Zwischenstand, 0.11.1):** Fehlerbehebung: Einstellungen in der Desktop-Sidebar, Schema-Editor ohne angeschnittene Nummer, Tageslimit nie unter dem Tagesziel, Fälligkeit an den Karten in der Stapelliste
-- Automatische Prüfung bei jeder Änderung: 831 Unit-Tests, 8 Bildvergleiche für Teilen und Import, 7 für Erfolge, 8 für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
+- **M11 fertig:** High fives ohne Server: Kontakte entstehen aus importierten Dateien (zufällige Absender-ID), High fives geben und bekommen mit Feier, Bildkarte per Canvas und Teilen-Menü, Gruß-Datei und Mitreise in `.juri`, ein High five je Kontakt und Tag, Chip in Heute, Zeile in Erfolge, Kontaktliste, Demo-Profil mit Kontakten
+- Automatische Prüfung bei jeder Änderung: 914 Unit-Tests, 11 Bildvergleiche für High fives, 8 für Teilen und Import, 7 für Erfolge, 8 für Fristen, 12 für Abdeckung und PDF, Abläufe mit Foto und PDF, Desktop-Läufe in Chromium, Firefox und WebKit, E2E-Szenarien auf iPhone-, iPad- und Desktop-Größen
 - Geräte-Check M0 (iPhone 16 Pro Max): Datenbank, Teilen, Kalender und Fotos funktionieren, Bilder werden als JPEG statt WebP gespeichert; einige Punkte werden nachgetestet
-- Fortschritt: 11 von 14 Meilensteinen (79 %), nach Planwerten 28,5 von 37 Personentagen (77 %)
-- Nächster Schritt: Gerätetest von M0 bis M10 (iPhone, iPad, Desktop-Browser; für M10 vor allem Teilen-Menü, MIME-Typ und Dateiauswahl), dann M11 (High fives)
+- Fortschritt: 12 von 14 Meilensteinen (86 %), nach Planwerten 30 von 37 Personentagen (81 %)
+- Nächster Schritt: Gerätetest von M0 bis M11 (iPhone, iPad, Desktop-Browser; für M11 vor allem Bildkarte im Teilen-Menü und Gruß-Datei aus „Dateien“), dann M12 (Feinschliff)

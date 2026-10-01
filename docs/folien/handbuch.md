@@ -431,14 +431,59 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - Neue Ziele gelten ab heute, frühere Tage behalten ihr Ergebnis
 - Ohne Verlauf zeigt Erfolge **„Noch kein Verlauf“**; mit der ersten Karte fängt es an
 
-## High fives
+## High fives geben
 
-<!-- status: entwurf nach HighFive.dc.html, pruefen in M11 -->
+<!-- layout: bild-gross -->
+<!-- status: M11 umgesetzt, Bild mit Beispieldaten -->
 
-- Unter **Erfolge** siehst du neue Erfolge deiner Lernpartner
-- Mit einem Tipp ein **High five** geben, oder einfach so
-- **„Per Nachricht senden“** verschickt ein Bild, z. B. über WhatsApp
-- High fives reisen auch in geteilten `.juri`-Dateien mit
+![High fives: Leute mit einem Erfolg, einfach so, bekommene High fives](../bilder/highfive-iphone.png)
+
+- In Erfolge auf die Zeile **„High fives“** tippen
+- Unter **„Neu von deinen Leuten“** stehen Leute aus deinen Kontakten mit einem Erfolg, z. B. „12 Tage in Folge“
+- Auf die **Hand** tippen: Dann steht dort „High five!“ und die Hand bleibt lila
+- Pro Person und Tag geht ein High five. Es gibt keinen Zähler und keine Rangliste
+- **„Einfach so ein High five“** geht auch ohne Anlass
+
+> **Notizen:** Ein High five soll Anerkennung sein, kein Druck. Deshalb zählt es nirgends: nicht für Serie, Tagesziel oder Meilensteine.
+
+## Ein High five verschicken
+
+<!-- layout: zwei-spalten -->
+<!-- status: M11 umgesetzt, Bildkarte und Teilen-Menü auf dem Gerät prüfen -->
+
+![Bildkarte mit „Per Nachricht senden“](../bilder/highfive-karte-iphone.png)
+
+- **„Per Nachricht senden …“** zeigt eine Bildkarte
+- **„Bild teilen“** schickt das Bild z. B. über Nachrichten oder WhatsApp, am Rechner lädt es herunter
+- **„Als Gruß-Datei für Juri“** (nur bei Kontakten) ist eine kleine Datei, die Juri beim anderen annimmt
+- High fives reisen außerdem in jeder geteilten `.juri`-Datei mit, wenn **„Erfolge mitschicken“** an ist
+
+> **Notizen:** Die Bildkarte zeichnet Juri selbst auf deinem Gerät. Nichts wird hochgeladen.
+
+## High fives bekommen
+
+<!-- layout: bild-gross -->
+<!-- status: M11 umgesetzt, Feier mit Beispieldaten -->
+
+![Feier: Mara schickt dir ein High five](../bilder/highfive-feier-iphone.png)
+
+- Eine Datei mit High five öffnest du wie jeden Stapel unter **„Teilen“**; Gruß-Dateien unter **„High fives“** mit **„Gruß-Datei öffnen“**
+- Dann erscheint die **Feier** „High five!“, einmal
+- Unter **„Bekommen“** steht, von wem und wofür
+- Ein High five, das für jemand anderen war, von dir selbst kam oder schon da war, wird nicht angenommen
+
+## Kontakte
+
+<!-- layout: bild-gross -->
+<!-- status: M11 umgesetzt, Kontaktliste mit Beispieldaten -->
+
+![Kontaktliste „Deine Leute“](../bilder/highfive-kontakte-iphone.png)
+
+- Kontakte entstehen aus Dateien, die jemand mit Juri geteilt hat
+- **„Alle anzeigen“** (unten auf der Seite) öffnet **„Deine Leute“**
+- Antippen: für dich **umbenennen** oder **entfernen** (mit den High fives dieser Person)
+- Der Name kommt aus der Datei und ist nicht geprüft; ein Kontakt ist nur ein Name mit einer Kennung
+- Ohne Kontakte steht dort **„Noch keine Kontakte“**
 
 # Deine Daten
 

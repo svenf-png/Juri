@@ -538,7 +538,7 @@ describe('Erfolge', () => {
       ...base,
       rows: [row('2026-09-23', 1284, 1, true)],
       streak: { current: 1, best: 1, todayMet: true, pauseUsedThisWeek: false },
-      highFives: { count: 2, names: 'Mara und Jonas' },
+      highFives: { received: 2, open: 2, names: 'Mara und Jonas' },
     });
     expect(m.reviews.value).toBe('1.284');
     expect(m.created).toEqual({ value: '1', label: 'Karte angelegt' });

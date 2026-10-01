@@ -49,6 +49,20 @@ export function shareShortcut(input: KeyInput): ShareAction | null {
   return null;
 }
 
+export type HighFiveAction = 'just-because' | 'open-file' | 'contacts';
+
+/**
+ * Kürzel auf der Seite High fives: „h“ ein High five einfach so, „o“ öffnet eine Gruß-Datei,
+ * „k“ die Kontaktliste.
+ */
+export function highFiveShortcut(input: KeyInput): HighFiveAction | null {
+  if (input.editable || input.ctrlKey || input.metaKey || input.altKey) return null;
+  if (input.key === 'h') return 'just-because';
+  if (input.key === 'o') return 'open-file';
+  if (input.key === 'k') return 'contacts';
+  return null;
+}
+
 export type PdfAction =
   'previous' | 'next' | 'first' | 'last' | 'zoom-in' | 'zoom-out' | 'zoom-reset';
 

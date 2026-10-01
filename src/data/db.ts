@@ -4,9 +4,11 @@ import type {
   AppEvent,
   Area,
   Card,
+  Contact,
   Deadline,
   DayRow,
   Deck,
+  Kudo,
   MediaRecord,
   MetaEntry,
   MetaKey,
@@ -33,6 +35,8 @@ export class JuriDb extends Dexie {
   declare deadlines: EntityTable<Deadline, 'id'>;
   declare dayStats: EntityTable<DayRow, 'day'>;
   declare milestones: EntityTable<MilestoneRecord, 'id'>;
+  declare contacts: EntityTable<Contact, 'id'>;
+  declare kudos: EntityTable<Kudo, 'id'>;
 
   constructor(
     name: string,

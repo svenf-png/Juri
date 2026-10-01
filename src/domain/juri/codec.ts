@@ -9,6 +9,7 @@ import { linkedCardIds } from '../cards/schema';
 import { sniffMedia } from '../media/media';
 import type { Card } from '../model/records';
 import {
+  GREETING_FORMAT,
   JURI_FORMAT,
   JURI_FORMAT_VERSION,
   JURI_LIMITS,
@@ -16,6 +17,8 @@ import {
   MEDIA_EXTENSIONS,
   PACK_ID,
   cardsFileSchema,
+  greetingManifestSchema,
+  type GreetingManifest,
   manifestSchema,
   mediaPath,
   type JuriLimits,
@@ -54,6 +57,7 @@ export function decodeJuri(bytes: Uint8Array, limits: JuriLimits = JURI_LIMITS):
   const raw = parseJson(manifestBytes);
   if (!isRecord(raw)) throw new JuriError('kein-juri');
   if (raw.format === 'juri-backup') throw new JuriError('ist-backup');
+  if (raw.format === GREETING_FORMAT) throw new JuriError('ist-gruss');
   if (raw.format !== JURI_FORMAT) throw new JuriError('kein-juri');
   if (typeof raw.formatVersion === 'number' && raw.formatVersion > JURI_FORMAT_VERSION) {
     throw new JuriError('neuere-version');
@@ -95,6 +99,41 @@ export function decodeJuri(bytes: Uint8Array, limits: JuriLimits = JURI_LIMITS):
   }
   verify(pack);
   return pack;
+}
+
+/** Gruß-Datei schreiben (M11): nur `manifest.json`, deterministisch wie `encodeJuri`. */
+export function encodeGreeting(manifest: GreetingManifest): Uint8Array<ArrayBuffer> {
+  const mtime = manifest.createdAt;
+  return zipSync({
+    [MANIFEST]: [strToU8(JSON.stringify(manifest, null, 2)), { level: 6, mtime }],
+  });
+}
+
+/**
+ * Gruß-Datei prüfen (M11): gleiche Grenzen und Whitelist wie `decodeJuri`, aber nur
+ * `manifest.json` ist erlaubt. Eine `.juri`-Datei oder ein Backup ist keine Gruß-Datei.
+ */
+export function decodeGreeting(
+  bytes: Uint8Array,
+  limits: JuriLimits = JURI_LIMITS,
+): GreetingManifest {
+  if (bytes.length === 0) throw new JuriError('leer');
+  if (!isZip(bytes)) throw new JuriError('kein-juri');
+  const { files, unexpected } = unzip(bytes, limits, (name) => name === MANIFEST);
+  const manifestBytes = files[MANIFEST];
+  if (!manifestBytes) throw new JuriError('kein-juri');
+  const raw = parseJson(manifestBytes);
+  if (!isRecord(raw)) throw new JuriError('kein-juri');
+  if (raw.format === 'juri-backup') throw new JuriError('ist-backup');
+  if (raw.format === JURI_FORMAT) throw new JuriError('ist-stapel');
+  if (raw.format !== GREETING_FORMAT) throw new JuriError('kein-juri');
+  if (typeof raw.formatVersion === 'number' && raw.formatVersion > JURI_FORMAT_VERSION) {
+    throw new JuriError('neuere-version');
+  }
+  if (unexpected.length > 0) throw new JuriError('beschaedigt');
+  const manifest = greetingManifestSchema.safeParse(raw);
+  if (!manifest.success) throw new JuriError('beschaedigt', { cause: manifest.error });
+  return manifest.data;
 }
 
 /** Verweise und Zahlen: Nichts darf ins Leere zeigen, alles muss zum Manifest passen. */
@@ -150,6 +189,8 @@ function isZip(bytes: Uint8Array): boolean {
 function unzip(
   bytes: Uint8Array,
   limits: JuriLimits,
+  allowed: (name: string) => boolean = (name) =>
+    name === MANIFEST || name === CARDS || MEDIA_PATH.test(name),
 ): { files: Record<string, Uint8Array>; unexpected: string[] } {
   let entries = 0;
   let total = 0;
@@ -175,7 +216,7 @@ function unzip(
         ) {
           throw new JuriError('zu-gross');
         }
-        if (file.name !== MANIFEST && file.name !== CARDS && !MEDIA_PATH.test(file.name)) {
+        if (!allowed(file.name)) {
           unexpected.push(file.name);
           return false;
         }

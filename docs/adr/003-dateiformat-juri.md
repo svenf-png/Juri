@@ -22,3 +22,5 @@ Teilen läuft ausschließlich über Dateien von Mensch zu Mensch (AirDrop, Nachr
 ## Umsetzung (M10)
 
 Umgesetzt wie beschrieben, mit diesen Festlegungen: Formatversion 1, Absender optional und nur zur Anzeige, Notizen nur mit Schalter (`manifest.notes`), Erfolgs-Snapshot und High-five-Feld optional, Whitelist der ZIP-Einträge, Grenzen und Prüfungen siehe ADR-014. Die Datei enthält keine Lernzustände und keine Abfragen.
+
+**Fortschreibung M11 (ADR-015):** Das Manifest trägt optional `sender.id` (zufällige Absender-ID, nicht authentifiziert) und `highFives` in der Form `{ id, at, to?, win? }`. Die Formatversion bleibt 1. Dazu gibt es die kleine Gruß-Datei `.juri-gruss` (nur `manifest.json`, gleiche Prüfung, keine Karten).

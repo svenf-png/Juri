@@ -15,6 +15,8 @@ export function hasIntegrity(tables: {
   reviewItems?: Rows;
   media?: Rows;
   deadlines?: Rows;
+  contacts?: Rows;
+  kudos?: Rows;
 }): boolean {
   const areaIds = new Set((tables.areas ?? []).map((a) => a.id));
   const decks = new Map((tables.decks ?? []).map((d) => [d.id as string, d]));
@@ -27,6 +29,11 @@ export function hasIntegrity(tables: {
     const scope = row.scope as { areaIds: string[]; deckIds: string[] };
     if (!scope.areaIds.every((a) => areaIds.has(a))) return false;
     if (!scope.deckIds.every((d) => deckIds.has(d))) return false;
+  }
+  // High fives gehören zu einem vorhandenen Kontakt (M11).
+  const contactIds = new Set((tables.contacts ?? []).map((c) => c.id));
+  for (const row of tables.kudos ?? []) {
+    if (!contactIds.has(row.contactId)) return false;
   }
   const expected = new Map<string, { cardId: string; deckId: string; sub: string }>();
   const cardIds = new Set((tables.cards ?? []).map((c) => c.id));

@@ -3,6 +3,7 @@ import {
   deadlinesShortcut,
   formShortcut,
   pdfShortcut,
+  highFiveShortcut,
   shareShortcut,
   shellShortcut,
   type KeyInput,
@@ -95,5 +96,21 @@ describe('shareShortcut', () => {
     expect(shareShortcut(key('e', { metaKey: true }))).toBeNull();
     expect(shareShortcut(key('i', { altKey: true }))).toBeNull();
     expect(shareShortcut(key('x'))).toBeNull();
+  });
+});
+
+describe('highFiveShortcut', () => {
+  it('„h“, „o“ und „k“', () => {
+    expect(highFiveShortcut(key('h'))).toBe('just-because');
+    expect(highFiveShortcut(key('o'))).toBe('open-file');
+    expect(highFiveShortcut(key('k'))).toBe('contacts');
+  });
+
+  it('schweigt beim Tippen und mit Strg, Cmd oder Alt', () => {
+    expect(highFiveShortcut(key('h', { editable: true }))).toBeNull();
+    expect(highFiveShortcut(key('o', { ctrlKey: true }))).toBeNull();
+    expect(highFiveShortcut(key('k', { metaKey: true }))).toBeNull();
+    expect(highFiveShortcut(key('h', { altKey: true }))).toBeNull();
+    expect(highFiveShortcut(key('x'))).toBeNull();
   });
 });

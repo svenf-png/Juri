@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { parseDayKey } from '@/domain/calendar/day';
 import { readErfolge, readGoals } from '@/data/repositories/progress';
+import { erfolgeHighFives } from '@/domain/highfive/view';
 import { erfolgeModel } from '@/domain/progress/erfolge';
 import type { Goals } from '@/domain/progress/goals';
+import { useHighFives } from '../highfive/queries';
 import { useLive, type Live } from '../library/useLive';
 import { useLearningDayKey } from '../today/useToday';
 
@@ -14,12 +16,17 @@ export function useErfolge() {
     [key],
   );
   const data = useLive(`erfolge:${key}`, query);
+  const highFives = useHighFives();
   const model = useMemo(
     () =>
-      data.status === 'ready'
-        ? erfolgeModel({ ...data.value, today: parseDayKey(key), highFives: null })
+      data.status === 'ready' && (highFives.model || highFives.failed)
+        ? erfolgeModel({
+            ...data.value,
+            today: parseDayKey(key),
+            highFives: highFives.model ? erfolgeHighFives(highFives.model) : null,
+          })
         : null,
-    [data, key],
+    [data, key, highFives],
   );
   return {
     model,

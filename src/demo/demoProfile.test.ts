@@ -6,7 +6,8 @@ import { deadlineStatus } from '@/domain/deadlines/status';
 import { learningDay } from '@/domain/calendar/day';
 import { streak } from '@/domain/progress/streak';
 import { dayStats } from '@/domain/progress/stats';
-import type { DayRow } from '@/domain/model/records';
+import { highFivesModel } from '@/domain/highfive/view';
+import type { Contact, DayRow, Kudo } from '@/domain/model/records';
 import { demoDayReviews, demoDeadlines, demoTables } from './demoProfile';
 
 describe('Demo-Profil', () => {
@@ -23,6 +24,24 @@ describe('Demo-Profil', () => {
     expect(tables.profile).toEqual([
       expect.objectContaining({ name: 'Demo', createdAt: now - 182 * 86_400_000 }),
     ]);
+  });
+
+  it('hat zwei Kontakte mit je einem bekommenen High five wie in HighFive.dc.html', () => {
+    const tables = demoTables(now);
+    const model = highFivesModel(
+      (tables.contacts ?? []) as unknown as Contact[],
+      (tables.kudos ?? []) as unknown as Kudo[],
+      now,
+    );
+    expect(model.people.map((p) => [p.name, p.win])).toEqual([
+      ['Mara', '12 Tage in Folge'],
+      ['Jonas', '200 Karten angelegt'],
+    ]);
+    expect(model.received.map((r) => [r.name, r.reason, r.when])).toEqual([
+      ['Mara', 'für 1.000 Wiederholungen', 'gestern'],
+      ['Jonas', 'einfach so', 'Fr'],
+    ]);
+    expect(model.unseen).toHaveLength(2);
   });
 
   it('hat drei Fristen: eine im Endspurt, eine später, eine ohne Datum', () => {

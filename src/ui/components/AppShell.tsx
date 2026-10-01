@@ -42,8 +42,10 @@ export function AppShell({
     return false;
   });
   const context: unknown = useOutletContext();
-  const current = active ?? navKeyFor(pathname);
-  const isPushed = pushed ?? /^\/stapel\/[^/]+$/.test(pathname);
+  // High fives sind eine Unterseite von Erfolge (HighFive.dc.html, Rücksprung „Erfolge“).
+  const highFives = pathname === '/high-fives';
+  const current = active ?? (highFives ? 'erfolge' : navKeyFor(pathname));
+  const isPushed = pushed ?? (highFives || /^\/stapel\/[^/]+$/.test(pathname));
   return (
     <div className={styles.shell} data-pushed={isPushed || undefined}>
       <Sidebar active={current} />

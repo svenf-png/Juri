@@ -13,8 +13,11 @@ import type { StreakResult } from './streak';
 import { activity, metricOf, type Mode } from './summary';
 
 export interface HighFivesInput {
-  readonly count: number;
-  /** „Mara und Jonas“ */
+  /** Neu bekommene High fives, die noch niemand gefeiert hat. */
+  readonly received: number;
+  /** Erfolge von Kontakten, für die ein High five noch offen ist. */
+  readonly open: number;
+  /** „Mara und Jonas“: die Leute mit offenem Erfolg, sonst die Absender. */
   readonly names: string;
 }
 
@@ -25,7 +28,7 @@ export interface ErfolgeInput {
   readonly streak: StreakResult;
   readonly metrics: Metrics;
   readonly unlocked: ReadonlyMap<string, Unlock>;
-  /** Kommt mit M11; bis dahin `null`. */
+  /** Aus Kontakten und High fives (M11); `null` ohne beides. */
   readonly highFives?: HighFivesInput | null;
 }
 
@@ -147,14 +150,24 @@ export function erfolgeModel(input: ErfolgeInput): ErfolgeModel {
     heat: { learn: heatView(rows, 'learn', today), make: heatView(rows, 'make', today) },
     badges: all,
     fresh: all.filter((b) => b.fresh),
-    highFives:
-      highFives && highFives.count > 0
-        ? {
-            title: `${highFives.count} ${unit(highFives.count, 'High five', 'High fives')} bekommen`,
-            sub: `${highFives.names} · ${highFives.count} ${unit(highFives.count, 'Erfolg', 'Erfolge')} zum Abklatschen`,
-          }
-        : null,
+    highFives: highFivesRow(highFives),
   };
+}
+
+/**
+ * Zeile „2 High fives bekommen · Mara und Jonas · 2 Erfolge zum Abklatschen“ (Erfolge.dc.html).
+ * Die Kachel auf dem iPad zerlegt den Titel in Zahl und Beschriftung, er beginnt also mit der Zahl.
+ */
+function highFivesRow(input: HighFivesInput | null | undefined): ErfolgeModel['highFives'] {
+  if (!input || (input.received <= 0 && input.open <= 0)) return null;
+  const openText = `${String(input.open)} ${unit(input.open, 'Erfolg', 'Erfolge')} zum Abklatschen`;
+  if (input.received > 0) {
+    return {
+      title: `${String(input.received)} ${unit(input.received, 'High five', 'High fives')} bekommen`,
+      sub: input.open > 0 ? `${input.names} · ${openText}` : `von ${input.names}`,
+    };
+  }
+  return { title: openText, sub: input.names };
 }
 
 /** Schlüssel des heutigen Tages für Aufrufer, die nur ein `Day` haben. */

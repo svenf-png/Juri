@@ -305,7 +305,7 @@ describe('Migration und Backup', () => {
     expect(tables.dayStats).toEqual([
       { day: '2026-09-27', reviews: 0, learned: 0, created: 1, met: false },
     ]);
-    expect(schemaVersion()).toBe(7);
+    expect(schemaVersion()).toBe(8);
   });
 
   it('ein Backup mit ungültigem Aggregat wird abgelehnt', () => {

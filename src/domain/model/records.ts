@@ -2,8 +2,8 @@
  * Gespeicherte Datensätze (IndexedDB über Dexie, src/data/). Die zod-Schemas sind die einzige
  * Quelle der Typen und prüfen Datensätze beim Einspielen eines Backups.
  *
- * Stand M10: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog,
- * Ereignisse, Medien, Fristen, Tagesaggregate und Meilensteine. Die übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen
+ * Stand M11: Profil, Metadaten, Rechtsgebiete, Stapel, Karten, Abfragen mit Lernzustand, Lernlog,
+ * Ereignisse, Medien, Fristen, Tagesaggregate, Meilensteine, Kontakte und High fives. Die übrigen Tabellen des Zielmodells (ADR-006) kommen mit ihren Meilensteinen
  * dazu, jeweils mit Schema und Migration. Zeitpunkte sind Millisekunden seit 1970 (UTC).
  */
 import { parseDayKey } from '../calendar/day';
@@ -12,6 +12,10 @@ import { normalizeName } from '../profile/name';
 import { z } from '../zod';
 
 const millis = z.number().int().nonnegative();
+
+/** ID eines Absenders oder High fives: sie reist in Dateien und darf kein Pfad oder Fremdes sein. */
+export const SENDER_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,79}$/;
+const senderId = z.string().regex(SENDER_ID);
 
 export const profileSchema = z.strictObject({
   id: z.literal('me'),
@@ -57,6 +61,8 @@ export const metaEntrySchema = z.discriminatedUnion('key', [
   z.strictObject({ key: z.literal('goals'), value: goalsSchema }),
   /** Erfolgs-Snapshot in `.juri`-Dateien mitschicken (M10, A9); fehlt der Eintrag, gilt „ja“. */
   z.strictObject({ key: z.literal('shareAchievements'), value: z.boolean() }),
+  /** Zufällige Absender-ID dieses Profils (M11, ADR-015); entsteht beim ersten Teilen. */
+  z.strictObject({ key: z.literal('senderId'), value: senderId }),
 ]);
 
 export type MetaEntry = z.infer<typeof metaEntrySchema>;
@@ -469,6 +475,63 @@ export const milestoneSchema = z.strictObject({
 });
 export type MilestoneRecord = z.infer<typeof milestoneSchema>;
 
+/** Erfolgs-Snapshot eines Absenders (A9): reine Anzeige, nicht authentifiziert. */
+export const achievementsSchema = z.strictObject({
+  streak: z.number().int().min(0).max(100_000),
+  reviews: z.number().int().min(0).max(100_000_000),
+  created: z.number().int().min(0).max(10_000_000),
+  milestones: z.array(z.string().regex(/^[a-z0-9-]{1,40}$/)).max(50),
+});
+export type Achievements = z.infer<typeof achievementsSchema>;
+
+const personName = z.string().refine((name) => name !== '' && name === normalizeName(name));
+
+/** Wie viele Kontakte Juri höchstens anlegt (Schutz vor einer Flut aus Dateien). */
+export const MAX_CONTACTS = 500;
+
+/** Wie viele Schlüssel schon gefeierter Erfolge ein Kontakt höchstens merkt. */
+export const MAX_CELEBRATED = 100;
+
+/**
+ * Kontakt (M11, ADR-015): entsteht aus einer importierten Datei mit `sender.id`. Die ID ist nicht
+ * authentifiziert (A69); der Name dient nur der Anzeige und lässt sich hier umbenennen.
+ */
+export const contactSchema = z.strictObject({
+  /** Absender-ID aus der Datei (`manifest.sender.id`). */
+  id: senderId,
+  /** Name, wie der Absender ihn zuletzt geschickt hat. */
+  sentName: personName,
+  /** Eigener Name für den Kontakt; gewinnt gegen `sentName`. */
+  alias: personName.optional(),
+  firstSeenAt: millis,
+  lastSeenAt: millis,
+  /** Letzter Erfolgs-Snapshot und Zeitpunkt der Datei, aus der er stammt. */
+  snapshot: z.strictObject({ at: millis, achievements: achievementsSchema }).optional(),
+  /** Schlüssel der Erfolge, für die schon ein High five gegeben wurde oder die nichts Neues sind. */
+  celebrated: z
+    .array(z.string().min(1).max(60))
+    .max(MAX_CELEBRATED)
+    .refine((keys) => new Set(keys).size === keys.length),
+});
+export type Contact = z.infer<typeof contactSchema>;
+
+/** Ein High five, gegeben oder bekommen (M11, ADR-015). Nur mit Kontakt gespeichert. */
+export const kudoSchema = z.strictObject({
+  /** Bei bekommenen die ID aus der Datei, bei gegebenen eine neue; Grundlage gegen Doppelte. */
+  id: senderId,
+  direction: z.enum(['given', 'received']),
+  contactId: senderId,
+  /** Zeitpunkt des Gebens (bei bekommenen: laut Datei, nie nach dem Empfang). */
+  at: millis,
+  /** Lerntag von `at` („JJJJ-MM-TT“): ein High five je Kontakt und Lerntag. */
+  day: dayKeyText,
+  /** Anlass ohne Namen, z. B. „12 Tage in Folge“; fehlt bei „einfach so“. */
+  win: singleLine(80).optional(),
+  /** Bekommene: Feier schon gezeigt. Gegebene sind immer gesehen. */
+  seen: z.boolean(),
+});
+export type Kudo = z.infer<typeof kudoSchema>;
+
 /** Schema je Tabelle; jede Tabelle der Datenbank braucht hier einen Eintrag. */
 export const RECORD_SCHEMAS: Readonly<Record<string, z.ZodType>> = {
   profile: profileSchema,
@@ -483,4 +546,6 @@ export const RECORD_SCHEMAS: Readonly<Record<string, z.ZodType>> = {
   deadlines: deadlineSchema,
   dayStats: dayStatSchema,
   milestones: milestoneSchema,
+  contacts: contactSchema,
+  kudos: kudoSchema,
 };

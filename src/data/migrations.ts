@@ -89,6 +89,13 @@ export const MIGRATIONS: readonly Migration[] = [
       }),
     },
   },
+  {
+    // M11: Kontakte (aus importierten Dateien mit Absender-ID) und High fives (gegeben und
+    // bekommen, ADR-015). Beide Tabellen sind klein; Zugriffe lesen sie über den Kontakt oder den
+    // Lerntag. Die Absender-ID dieses Profils liegt in `meta` (`senderId`), ohne Umformung.
+    version: 8,
+    stores: { contacts: 'id', kudos: 'id, contactId, day' },
+  },
 ];
 
 export function schemaVersion(migrations: readonly Migration[] = MIGRATIONS): number {
