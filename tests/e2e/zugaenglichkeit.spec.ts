@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { watchPage } from './helpers';
+import { asInstalledApp, watchPage } from './helpers';
 
 /*
  * Zugänglichkeit (M12, A91): axe-core (WCAG 2.2 AA und Best Practices) auf allen Hauptbildschirmen
@@ -23,6 +23,8 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-prac
 const TOUCH_MIN = 44;
 
 async function startDemo(page: Page) {
+  // Wie die installierte App: Auf iPhone und iPad greift im Safari-Tab sonst das Sperrbild (A13).
+  await asInstalledApp(page);
   page.on('dialog', (dialog) => void dialog.accept());
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/Juri/test/');
@@ -302,6 +304,11 @@ const SHEETS: {
   },
 ];
 
+/** Tab-Tests nur in Chromium: Das Tastaturverhalten hängt von Engine und System ab, iOS bedient man per Wischen. */
+function onlyChromium(testInfo: { project: { name: string } }) {
+  test.skip(!testInfo.project.name.startsWith('chromium'), 'Tab-Navigation nur in Chromium');
+}
+
 test.describe.configure({ mode: 'serial' });
 
 test('axe: alle Bildschirme ohne Verstöße (WCAG 2.2 AA)', async ({ page }, testInfo) => {
@@ -335,6 +342,7 @@ test('Touch-Ziele: mindestens 44 px auf allen Bildschirmen', async ({ page }, te
 test('Sheets: axe, Fokus hinein, Fokus bleibt im Sheet, Escape gibt den Fokus zurück, Touch-Ziele', async ({
   page,
 }, testInfo) => {
+  onlyChromium(testInfo);
   test.setTimeout(420_000);
   await startDemo(page);
   const found: string[] = [];
@@ -388,6 +396,7 @@ test('Sheets: axe, Fokus hinein, Fokus bleibt im Sheet, Escape gibt den Fokus zu
 test('Menü: Einträge mit Namen, axe, Escape schließt und gibt den Fokus zurück', async ({
   page,
 }, testInfo) => {
+  onlyChromium(testInfo);
   await startDemo(page);
   await page.goto('/Juri/test/stapel/demo-deliktsrecht');
   const button = page.getByRole('button', { name: 'Stapel-Menü' }).first();
@@ -481,6 +490,7 @@ test('Vorschauen: axe und Touch-Ziele in Feier, Fertig, Fehler, Editoren und She
 });
 
 test('Willkommen: axe und Touch-Ziele', async ({ page }, testInfo) => {
+  await asInstalledApp(page);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/Juri/test/');
   await expect(page.getByLabel('Wie heißt du?')).toBeVisible();
@@ -540,6 +550,7 @@ async function focusIndicatorVisible(page: Page): Promise<{ ok: boolean; what: s
 test('Tastatur: jedes anfokussierte Element zeigt eine sichtbare Fokusanzeige', async ({
   page,
 }, testInfo) => {
+  onlyChromium(testInfo);
   test.setTimeout(300_000);
   await startDemo(page);
   const found: string[] = [];
