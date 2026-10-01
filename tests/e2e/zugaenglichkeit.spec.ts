@@ -474,6 +474,11 @@ const PREVIEWS: string[] = [
 test('Vorschauen: axe und Touch-Ziele in Feier, Fertig, Fehler, Editoren und Sheets', async ({
   page,
 }, testInfo) => {
+  // 60 Seiten je Projekt: nur die beiden Touch-Layouts in Chromium, sonst wird die CI zu lang.
+  test.skip(
+    !/^chromium-(iphone14|ipad-quer)$/.test(testInfo.project.name),
+    'nur Chromium iPhone und iPad',
+  );
   test.setTimeout(600_000);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const found: string[] = [];
