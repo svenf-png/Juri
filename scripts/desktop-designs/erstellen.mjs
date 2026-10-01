@@ -236,15 +236,15 @@ const schemaRow = ([n, text, norm, level, selected]) =>
   `<div class="${selected ? '' : 'hv-row'}" style="display: flex; align-items: center; gap: 14px; min-height: ${level ? 52 : 56}px; border-bottom: 1px solid #F3F1F8; ${level ? 'padding-left: 36px;' : ''} ${selected ? 'margin: 0 -12px; padding: 0 12px 0 48px; border-radius: 14px; background: #F6F4FB; box-shadow: inset 0 0 0 2px #6A3FE0; border-bottom-color: transparent' : ''}">
     <span style="width: ${level ? 22 : 26}px; font-size: 14px; font-weight: ${level ? 700 : 800}; color: ${level ? '#6B6678' : '#6A3FE0'}">${n}</span>
     <span style="font-size: ${level ? 16.5 : 17.5}px; font-weight: ${level ? 500 : 600}; flex-grow: 1">${text}</span>
-    ${selected ? `<span style="height: 28px; padding: 0 10px; border-radius: 14px; background: #6A3FE0; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px">${icon('link', 12, 2.6)}verknüpft</span>` : ''}
+    ${selected ? `<span style="height: 28px; padding: 0 10px; border-radius: 14px; background: #6A3FE0; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px">${icon('link', 12, 2.6)}verknüpfen</span>` : ''}
     ${norm ? `<span style="font-size: 13px; color: #6B6678">${norm}</span>` : ''}
   </div>`;
 
-const iconButton = (name, aria) =>
-  `<span class="tap hv-card" aria-label="${aria}" style="width: 48px; height: 48px; border-radius: 14px; background: #F6F4FB; display: flex; align-items: center; justify-content: center">${icon(name, 20)}</span>`;
+const iconButton = (name, aria, disabled = false) =>
+  `<span class="tap hv-card" aria-label="${aria}" style="${disabled ? 'opacity: .4; ' : ''}width: 48px; height: 48px; border-radius: 14px; background: #F6F4FB; display: flex; align-items: center; justify-content: center">${icon(name, 20)}</span>`;
 
 const detailField = (name, value, { placeholder = '', h = 0 } = {}) =>
-  `<label style="display: flex; flex-direction: column; gap: 6px; border-radius: 16px; background: #F6F4FB; padding: 12px 16px; ${h ? `min-height: ${h}px; box-sizing: border-box;` : ''}"><span style="font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">${name}</span><span style="font-size: 16px; line-height: 1.4; ${value ? 'color: #17141F' : 'color: #726E7A'}">${value || placeholder}</span></label>`;
+  `<label style="display: flex; flex-direction: column; gap: 6px; border-radius: 16px; background: #F6F4FB; padding: 12px 16px; ${h ? `min-height: ${h}px; box-sizing: border-box;` : ''}"><span style="font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6B6678">${name}</span><span style="font-size: 16px; line-height: 1.4; ${value ? 'color: #17141F' : 'color: #726E7A'}">${value || placeholder}</span></label>`;
 
 const schemaEditor = (w, h) =>
   fullscreen(w, h, {
@@ -262,21 +262,21 @@ const schemaEditor = (w, h) =>
         </div>
       </div>
       <aside style="border-radius: 28px; border: 1.5px solid #EFECF5; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0">
-        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .06em; color: #6A3FE0">PUNKT 2 b)</span><span class="d" style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em">Punkt bearbeiten</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .08em; color: #6A3FE0">PUNKT 2.B</span><span class="d" style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em">Punkt bearbeiten</span></div>
         ${detailField('Text', 'Drittbezogenheit')}
         ${detailField('Norm', '', { placeholder: '§ 839 BGB' })}
-        ${detailField('Inhalt', '', { placeholder: 'Definition oder Prüfungsinhalt. Erscheint beim Lernen unter dem Punkt.', h: 92 })}
+        ${detailField('Inhalt', '', { placeholder: 'Definition oder Prüfungsinhalt. Erscheint beim Lernen unter dem Punkt.' })}
         <div style="display: flex; flex-direction: column; gap: 8px">
           ${label('Verknüpfung')}
           <div style="border-radius: 18px; background: #FFFFFF; box-shadow: 0 20px 44px -18px rgba(46,26,115,.45), 0 0 0 1px #EFECF5; padding: 10px; display: flex; flex-direction: column; gap: 6px">
             <label style="height: 42px; border-radius: 12px; background: #F6F4FB; display: flex; align-items: center; gap: 8px; padding: 0 12px; color: #6B6678">${icon('search', 16)}<span style="font-size: 15px; color: #17141F">Drittbezogenheit</span></label>
-            <div style="min-height: 50px; border-radius: 12px; background: #EEE8FD; padding: 6px 12px; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 15px; font-weight: 700">Drittbezogenheit der Amtspflicht</span><span style="font-size: 12.5px; color: #4B2AA8; font-weight: 600">Frage · Amtshaftung</span></div>
-            <div style="min-height: 50px; border-radius: 12px; padding: 6px 12px; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 15px; font-weight: 700">Drittschutz im Baurecht</span><span style="font-size: 12.5px; color: #6B6678; font-weight: 600">Schema · Baurecht</span></div>
-            <div style="height: 40px; padding: 0 12px; display: flex; align-items: center; font-size: 14px; font-weight: 700; color: #5B34D1">+ Neue Karte „Drittbezogenheit“ anlegen</div>
+            <div style="min-height: 50px; box-sizing: border-box; border-radius: 12px; background: #EEE8FD; padding: 6px 12px; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 15px; font-weight: 700">Drittbezogenheit der Amtspflicht</span><span style="font-size: 12.5px; color: #4B2AA8; font-weight: 600">Frage · Amtshaftung</span></div>
+            <div style="min-height: 50px; box-sizing: border-box; border-radius: 12px; padding: 6px 12px; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 15px; font-weight: 700">Drittschutz im Baurecht</span><span style="font-size: 12.5px; color: #6B6678; font-weight: 600">Schema · Baurecht</span></div>
+            <div style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-size: 14px; font-weight: 700; color: #5B34D1">+ Neue Karte „Drittbezogenheit“ anlegen</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 8px; border-top: 1px solid #EFECF5; padding-top: 14px">
-          ${iconButton('up', 'Nach oben')}${iconButton('down', 'Nach unten')}
+          ${iconButton('up', 'Nach oben')}${iconButton('down', 'Nach unten', true)}
           <span style="flex-grow: 1"></span>
           <span class="tap hv-ghost" style="height: 48px; padding: 0 14px; border-radius: 14px; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: #B42318">${icon('trash', 18)}Punkt löschen</span>
         </div>

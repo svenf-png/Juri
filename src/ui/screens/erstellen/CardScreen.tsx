@@ -139,6 +139,8 @@ export function CardScreen({
 
   // Strg oder Cmd plus Eingabe speichert, auch aus einem Textfeld heraus (Desktop).
   useKeys((input) => {
+    // Die Vollbild-Ansichten (Gliederung, Felder) haben ihre eigenen Kürzel.
+    if (outline || media.editor) return false;
     if (formShortcut(input) !== 'save') return false;
     void submit();
     return true;

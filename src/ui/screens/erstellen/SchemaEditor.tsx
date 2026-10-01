@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { checkCard } from '@/domain/cards/card';
+import { formShortcut } from '@/domain/device/shortcuts';
 import {
   addPoint,
   canAddPoint,
@@ -15,6 +16,7 @@ import {
   updatePoint,
   type DraftPoint,
 } from '@/domain/cards/schema';
+import { currentModifierLabel } from '@/features/app/keys';
 import { linkServices, type LinkServices } from '@/features/library/links';
 import { Button } from '../../components/Button';
 import {
@@ -27,11 +29,15 @@ import {
   OutdentIcon,
   PlusIcon,
   SearchIcon,
+  TrashIcon,
 } from '../../components/icons';
+import { Kbd } from '../../components/Kbd';
 import { Sheet } from '../../components/Sheet';
 import { cx } from '../../cx';
 import tap from '../../motion/tap.module.css';
 import { useKeyboardOpen } from '../../useKeyboardOpen';
+import { useKeys } from '../../useKeys';
+import { useMediaQuery } from '../../useMediaQuery';
 import styles from './SchemaEditor.module.css';
 
 export interface SchemaEditorProps {
@@ -80,7 +86,12 @@ export function SchemaEditor({
   const [points, setPoints] = useState<DraftPoint[]>([...initial]);
   const [selected, setSelected] = useState<number | null>(start?.selected ?? null);
   const [sheet, setSheet] = useState<Sheets>(start?.sheet ?? null);
+  // Desktop-Gestaltung (ADR-017): Punkt bearbeiten steht als feste Spalte statt als Sheet, die
+  // Suche nach Karten als Liste in dieser Spalte.
+  const desktop = useMediaQuery('(min-width: 1280px)');
+  const [linking, setLinking] = useState(start?.sheet === 'link');
   const changed = useRef(false);
+  const mod = currentModifierLabel();
   const labels = pointLabels(points);
   const paths = pointPaths(points);
   const sub = [norm, areaCodes].filter((t) => t !== '').join(' · ');
@@ -95,114 +106,253 @@ export function SchemaEditor({
   const add = () => {
     const out = addPoint(points, selected);
     change(out.points, out.index);
-    setSheet('point');
+    if (desktop) setLinking(false);
+    else setSheet('point');
   };
+
+  // Strg oder Cmd plus Eingabe sichert, auch aus einem Textfeld heraus.
+  useKeys((input) => {
+    if (formShortcut(input) !== 'save') return false;
+    onSave(points);
+    return true;
+  });
 
   const back = () => {
     if (changed.current) setSheet('discard');
     else onBack();
   };
 
-  return (
-    <main className={styles.screen}>
-      <div className={styles.top}>
-        <button type="button" className={styles.back} onClick={back}>
-          <ChevronLeftIcon size={24} strokeWidth={2.2} />
-          Zurück
-        </button>
-        <h1 className={styles.topTitle}>Schema</h1>
-        <button
-          type="button"
-          className={cx(styles.save, tap.tap)}
-          onClick={() => {
-            onSave(points);
-          }}
-        >
-          Sichern
-        </button>
-      </div>
+  const titleBlock = (
+    <>
       <div className={cx(styles.title, title === '' && styles.titleEmpty)}>
         {title === '' ? 'Titel fehlt noch' : title}
       </div>
       {sub !== '' ? <div className={styles.sub}>{sub}</div> : null}
+    </>
+  );
 
-      {points.length === 0 ? (
-        <div className={styles.empty}>
-          <span className={styles.emptyTitle}>Noch keine Punkte</span>
-          <span className={styles.emptyText}>
-            Lege die Gliederung Punkt für Punkt an. Mit Einrücken bildest du Unterpunkte (a, aa).
-          </span>
-          <button type="button" className={cx(styles.emptyAction, tap.tap)} onClick={add}>
-            Ersten Punkt hinzufügen
-          </button>
-        </div>
-      ) : (
-        <>
-          <ol className={styles.list} role="list" aria-label="Gliederung">
-            {points.map((point, i) => {
-              const on = selected === i;
-              const error = pointErrors?.[point.id];
-              return (
-                <li key={point.id}>
-                  <div
-                    className={cx(
-                      styles.row,
-                      point.level > 1 && styles.rowNested,
-                      point.level > 2 && styles.rowDeep,
-                      on && styles.rowOn,
-                    )}
+  const outline =
+    points.length === 0 ? (
+      <div className={styles.empty}>
+        <span className={styles.emptyTitle}>Noch keine Punkte</span>
+        <span className={styles.emptyText}>
+          Lege die Gliederung Punkt für Punkt an. Mit Einrücken bildest du Unterpunkte (a, aa).
+        </span>
+        <button type="button" className={cx(styles.emptyAction, tap.tap)} onClick={add}>
+          Ersten Punkt hinzufügen
+        </button>
+      </div>
+    ) : (
+      <>
+        <ol className={styles.list} role="list" aria-label="Gliederung">
+          {points.map((point, i) => {
+            const on = selected === i;
+            const error = pointErrors?.[point.id];
+            return (
+              <li key={point.id}>
+                <div
+                  className={cx(
+                    styles.row,
+                    point.level > 1 && styles.rowNested,
+                    point.level > 2 && styles.rowDeep,
+                    on && styles.rowOn,
+                  )}
+                >
+                  <button
+                    type="button"
+                    className={styles.main}
+                    aria-current={on ? 'true' : undefined}
+                    aria-label={`${labels[i] ?? ''} ${point.text || 'Punkt ohne Text'}${on && !desktop ? ', bearbeiten' : ''}`}
+                    onClick={() => {
+                      if (on && !desktop) setSheet('point');
+                      else setSelected(i);
+                    }}
                   >
+                    <span className={styles.label} aria-hidden="true">
+                      {labels[i]}
+                    </span>
+                    <span className={cx(styles.text, point.text === '' && styles.textEmpty)}>
+                      {point.text === '' ? 'Punkt ohne Text' : point.text}
+                    </span>
+                    {point.norm !== '' ? <span className={styles.norm}>{point.norm}</span> : null}
+                  </button>
+                  {on || point.link !== null ? (
                     <button
                       type="button"
-                      className={styles.main}
-                      aria-current={on ? 'true' : undefined}
-                      aria-label={`${labels[i] ?? ''} ${point.text || 'Punkt ohne Text'}${on ? ', bearbeiten' : ''}`}
+                      className={cx(styles.chip, on && styles.chipOn)}
                       onClick={() => {
-                        if (on) setSheet('point');
-                        else setSelected(i);
+                        setSelected(i);
+                        if (desktop) setLinking(true);
+                        else setSheet('link');
                       }}
+                      aria-label={
+                        point.link === null ? 'Mit Karte verknüpfen' : 'Verknüpfte Karte ändern'
+                      }
                     >
-                      <span className={styles.label} aria-hidden="true">
-                        {labels[i]}
-                      </span>
-                      <span className={cx(styles.text, point.text === '' && styles.textEmpty)}>
-                        {point.text === '' ? 'Punkt ohne Text' : point.text}
-                      </span>
-                      {point.norm !== '' ? <span className={styles.norm}>{point.norm}</span> : null}
+                      <LinkIcon size={12} strokeWidth={2.6} />
+                      {point.link === null ? 'verknüpfen' : desktop ? 'verknüpft' : 'Karte'}
                     </button>
-                    {on || point.link !== null ? (
-                      <button
-                        type="button"
-                        className={cx(styles.chip, on && styles.chipOn)}
-                        onClick={() => {
-                          setSelected(i);
-                          setSheet('link');
-                        }}
-                        aria-label={
-                          point.link === null ? 'Mit Karte verknüpfen' : 'Verknüpfte Karte ändern'
-                        }
-                      >
-                        <LinkIcon size={12} strokeWidth={2.6} />
-                        {point.link === null ? 'verknüpfen' : 'Karte'}
-                      </button>
-                    ) : null}
-                  </div>
-                  {error ? (
-                    <p className={styles.rowError} role="alert">
-                      {error}
-                    </p>
                   ) : null}
-                </li>
-              );
-            })}
-          </ol>
-          {selected === null ? (
-            <p className={styles.hint}>
-              Punkt antippen zum Auswählen, nochmal antippen zum Bearbeiten.
-            </p>
-          ) : null}
-        </>
-      )}
+                </div>
+                {error ? (
+                  <p className={styles.rowError} role="alert">
+                    {error}
+                  </p>
+                ) : null}
+              </li>
+            );
+          })}
+        </ol>
+        {selected === null && !desktop ? (
+          <p className={styles.hint}>
+            Punkt antippen zum Auswählen, nochmal antippen zum Bearbeiten.
+          </p>
+        ) : null}
+      </>
+    );
+
+  const indent = (
+    <button
+      type="button"
+      className={cx(styles.tool, tap.tap)}
+      aria-label="Einrücken"
+      disabled={selected === null || !canIndent(points, selected)}
+      onClick={() => {
+        if (selected !== null) change(indentPoint(points, selected));
+      }}
+    >
+      <IndentIcon size={desktop ? 20 : 22} />
+    </button>
+  );
+  const outdent = (
+    <button
+      type="button"
+      className={cx(styles.tool, tap.tap)}
+      aria-label="Ausrücken"
+      disabled={selected === null || !canOutdent(points, selected)}
+      onClick={() => {
+        if (selected !== null) change(outdentPoint(points, selected));
+      }}
+    >
+      <OutdentIcon size={desktop ? 20 : 22} />
+    </button>
+  );
+
+  const top = (
+    <div className={styles.top}>
+      <button type="button" className={styles.back} onClick={back}>
+        <ChevronLeftIcon size={24} strokeWidth={2.2} />
+        Zurück
+      </button>
+      <h1 className={styles.topTitle}>Schema</h1>
+      <button
+        type="button"
+        className={cx(styles.save, tap.tap)}
+        aria-keyshortcuts="Control+Enter Meta+Enter"
+        onClick={() => {
+          onSave(points);
+        }}
+      >
+        Sichern
+        <Kbd tone="dark">{mod} ↵</Kbd>
+      </button>
+    </div>
+  );
+
+  const discard = (
+    <Sheet
+      open={sheet === 'discard'}
+      onClose={() => {
+        setSheet((s) => (s === 'discard' ? null : s));
+      }}
+      eyebrow="Schema"
+      title="Änderungen verwerfen?"
+    >
+      <p className={styles.note}>
+        Die Änderungen an der Gliederung sind noch nicht gesichert und gehen verloren.
+      </p>
+      <Button variant="danger" block onClick={onBack}>
+        Verwerfen
+      </Button>
+      <Button
+        variant="ghost"
+        size="md"
+        block
+        onClick={() => {
+          setSheet(null);
+        }}
+      >
+        Weiter bearbeiten
+      </Button>
+    </Sheet>
+  );
+
+  if (desktop) {
+    return (
+      <main className={styles.screen}>
+        {top}
+        <div className={styles.body}>
+          <div className={styles.outline}>
+            {titleBlock}
+            {outline}
+            <div className={styles.toolbarDesk} role="toolbar" aria-label="Gliederung bearbeiten">
+              <button
+                type="button"
+                className={cx(styles.addPoint, tap.tap)}
+                disabled={!canAddPoint(points)}
+                onClick={add}
+              >
+                <PlusIcon size={18} strokeWidth={2.2} />
+                Punkt hinzufügen
+              </button>
+              {indent}
+              {outdent}
+            </div>
+          </div>
+          <PointDetail
+            key={sel?.id ?? 'none'}
+            point={sel}
+            label={selected === null ? '' : (paths[selected] ?? '')}
+            error={sel ? pointErrors?.[sel.id] : undefined}
+            services={services}
+            canUp={selected !== null && canMove(points, selected, -1)}
+            canDown={selected !== null && canMove(points, selected, 1)}
+            linking={linking}
+            selfId={selfId}
+            deckId={deckId}
+            deckName={deckName}
+            initialQuery={start?.query}
+            initialCreating={start?.creating}
+            onChange={(patch) => {
+              if (selected !== null) change(updatePoint(points, selected, patch));
+            }}
+            onMove={(dir) => {
+              if (selected === null) return;
+              const out = movePoint(points, selected, dir);
+              change(out.points, out.index);
+            }}
+            onRemove={() => {
+              if (selected === null) return;
+              change(removePoint(points, selected), null);
+              setLinking(false);
+            }}
+            onLinking={setLinking}
+            onPick={(link) => {
+              if (selected !== null) change(updatePoint(points, selected, { link }));
+              setLinking(false);
+            }}
+          />
+        </div>
+        {discard}
+      </main>
+    );
+  }
+
+  return (
+    <main className={styles.screen}>
+      {top}
+      {titleBlock}
+      {outline}
 
       <div className={styles.toolbar} role="toolbar" aria-label="Gliederung bearbeiten">
         <button
@@ -214,28 +364,8 @@ export function SchemaEditor({
         >
           <PlusIcon size={22} strokeWidth={2.2} />
         </button>
-        <button
-          type="button"
-          className={cx(styles.tool, tap.tap)}
-          aria-label="Einrücken"
-          disabled={selected === null || !canIndent(points, selected)}
-          onClick={() => {
-            if (selected !== null) change(indentPoint(points, selected));
-          }}
-        >
-          <IndentIcon size={22} />
-        </button>
-        <button
-          type="button"
-          className={cx(styles.tool, tap.tap)}
-          aria-label="Ausrücken"
-          disabled={selected === null || !canOutdent(points, selected)}
-          onClick={() => {
-            if (selected !== null) change(outdentPoint(points, selected));
-          }}
-        >
-          <OutdentIcon size={22} />
-        </button>
+        {indent}
+        {outdent}
         <button
           type="button"
           className={cx(styles.tool, styles.toolOn, tap.tap)}
@@ -277,7 +407,8 @@ export function SchemaEditor({
         />
       ) : null}
       {sheet === 'link' && sel && selected !== null ? (
-        <LinkPicker
+        <LinkSearch
+          variant="popover"
           point={sel}
           selfId={selfId}
           deckId={deckId}
@@ -294,31 +425,7 @@ export function SchemaEditor({
           }}
         />
       ) : null}
-      <Sheet
-        open={sheet === 'discard'}
-        onClose={() => {
-          setSheet((s) => (s === 'discard' ? null : s));
-        }}
-        eyebrow="Schema"
-        title="Änderungen verwerfen?"
-      >
-        <p className={styles.note}>
-          Die Änderungen an der Gliederung sind noch nicht gesichert und gehen verloren.
-        </p>
-        <Button variant="danger" block onClick={onBack}>
-          Verwerfen
-        </Button>
-        <Button
-          variant="ghost"
-          size="md"
-          block
-          onClick={() => {
-            setSheet(null);
-          }}
-        >
-          Weiter bearbeiten
-        </Button>
-      </Sheet>
+      {discard}
     </main>
   );
 }
@@ -492,8 +599,13 @@ function PointSheet({
   );
 }
 
-/** Verknüpfen (SchemaEditor.dc.html, SchemaVerknuepfen.dc.html): Suche, Treffer, neue Karte. */
-function LinkPicker({
+/**
+ * Verknüpfen (SchemaEditor.dc.html, SchemaVerknuepfen.dc.html): Suche, Treffer, neue Karte. Auf dem
+ * Handy und dem iPad ein Popover über der Leiste, am Rechner (`inline`) die Liste in der Spalte
+ * „Punkt bearbeiten“.
+ */
+function LinkSearch({
+  variant,
   point,
   selfId,
   deckId,
@@ -504,6 +616,7 @@ function LinkPicker({
   onPick,
   onClose,
 }: {
+  variant: 'popover' | 'inline';
   point: DraftPoint;
   selfId: string | undefined;
   deckId: string | null;
@@ -541,100 +654,114 @@ function LinkPicker({
 
   const trimmed = query.trim();
 
-  return (
+  const content = (
     <>
-      <button type="button" className={styles.scrim} aria-label="Schließen" onClick={onClose} />
-      <div
-        className={cx(styles.popover, keyboard && styles.popoverTop)}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Mit Karte verknüpfen"
-      >
-        <label className={styles.search}>
-          <SearchIcon size={16} />
-          <span className="visually-hidden">Karte suchen</span>
-          <input
-            ref={input}
-            className={styles.searchInput}
-            value={query}
-            placeholder="Karte suchen"
-            autoComplete="off"
-            autoCapitalize="none"
-            spellCheck={false}
-            enterKeyHint="search"
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setActive(0);
-            }}
-            onKeyDown={(e) => {
-              const count = rows?.length ?? 0;
-              if (e.key === 'ArrowDown' && count > 0) {
-                e.preventDefault();
-                setActive((a) => Math.min(a + 1, count - 1));
-              } else if (e.key === 'ArrowUp' && count > 0) {
-                e.preventDefault();
-                setActive((a) => Math.max(a - 1, 0));
-              } else if (e.key === 'Enter') {
-                e.preventDefault();
-                const row = rows?.[active];
-                if (row) onPick(row.id);
-              }
-            }}
-          />
-        </label>
-        <div className={styles.hits}>
-          {(rows ?? []).map((row, i) => {
-            const linked = row.id === point.link;
-            const on = i === active;
-            return (
-              <button
-                key={row.id}
-                type="button"
-                className={cx(styles.hit, on && styles.hitOn, tap.tap)}
-                aria-pressed={linked}
-                onClick={() => {
-                  onPick(row.id);
-                }}
-              >
-                <span className={styles.hitText}>
-                  <span className={styles.hitTitle}>{row.title}</span>
-                  <span className={styles.hitMeta}>{row.meta}</span>
-                </span>
-                {linked ? (
-                  <CheckIcon size={18} strokeWidth={2.6} className={styles.hitCheck} />
-                ) : null}
-              </button>
-            );
-          })}
-          {rows !== null && rows.length === 0 ? (
-            <div className={styles.none}>
-              {trimmed === '' ? 'Noch keine Karten vorhanden.' : 'Keine Karte gefunden.'}
-            </div>
-          ) : null}
-        </div>
-        {trimmed !== '' && deckId !== null ? (
-          <button
-            type="button"
-            className={cx(styles.action, tap.tap)}
-            onClick={() => {
-              setCreating(true);
-            }}
-          >
-            {`+ Neue Karte „${trimmed}“ anlegen`}
-          </button>
-        ) : null}
-        {point.link !== null ? (
-          <button
-            type="button"
-            className={cx(styles.action, styles.actionDanger, tap.tap)}
-            onClick={() => {
-              onPick(null);
-            }}
-          >
-            Verknüpfung lösen
-          </button>
+      <label className={styles.search}>
+        <SearchIcon size={16} />
+        <span className="visually-hidden">Karte suchen</span>
+        <input
+          ref={input}
+          className={styles.searchInput}
+          value={query}
+          placeholder="Karte suchen"
+          autoComplete="off"
+          autoCapitalize="none"
+          spellCheck={false}
+          enterKeyHint="search"
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setActive(0);
+          }}
+          onKeyDown={(e) => {
+            const count = rows?.length ?? 0;
+            if (e.key === 'ArrowDown' && count > 0) {
+              e.preventDefault();
+              setActive((a) => Math.min(a + 1, count - 1));
+            } else if (e.key === 'ArrowUp' && count > 0) {
+              e.preventDefault();
+              setActive((a) => Math.max(a - 1, 0));
+            } else if (e.key === 'Enter') {
+              e.preventDefault();
+              const row = rows?.[active];
+              if (row) onPick(row.id);
+            }
+          }}
+        />
+      </label>
+      <div className={styles.hits}>
+        {(rows ?? []).map((row, i) => {
+          const linked = row.id === point.link;
+          const on = i === active;
+          return (
+            <button
+              key={row.id}
+              type="button"
+              className={cx(styles.hit, on && styles.hitOn, tap.tap)}
+              aria-pressed={linked}
+              onClick={() => {
+                onPick(row.id);
+              }}
+            >
+              <span className={styles.hitText}>
+                <span className={styles.hitTitle}>{row.title}</span>
+                <span className={styles.hitMeta}>{row.meta}</span>
+              </span>
+              {linked ? (
+                <CheckIcon size={18} strokeWidth={2.6} className={styles.hitCheck} />
+              ) : null}
+            </button>
+          );
+        })}
+        {rows !== null && rows.length === 0 ? (
+          <div className={styles.none}>
+            {trimmed === '' ? 'Noch keine Karten vorhanden.' : 'Keine Karte gefunden.'}
+          </div>
         ) : null}
       </div>
+      {trimmed !== '' && deckId !== null ? (
+        <button
+          type="button"
+          className={cx(styles.action, tap.tap)}
+          onClick={() => {
+            setCreating(true);
+          }}
+        >
+          {`+ Neue Karte „${trimmed}“ anlegen`}
+        </button>
+      ) : null}
+      {point.link !== null ? (
+        <button
+          type="button"
+          className={cx(styles.action, styles.actionDanger, tap.tap)}
+          onClick={() => {
+            onPick(null);
+          }}
+        >
+          Verknüpfung lösen
+        </button>
+      ) : null}
+    </>
+  );
+
+  return (
+    <>
+      {variant === 'popover' ? (
+        <>
+          <button type="button" className={styles.scrim} aria-label="Schließen" onClick={onClose} />
+          <div
+            className={cx(styles.popover, keyboard && styles.popoverTop)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mit Karte verknüpfen"
+          >
+            {content}
+          </div>
+        </>
+      ) : (
+        <div className={styles.inlineSearch} role="group" aria-label="Mit Karte verknüpfen">
+          {content}
+        </div>
+      )}
       {creating && deckId !== null ? (
         <NewCardSheet
           front={trimmed}
@@ -650,6 +777,174 @@ function LinkPicker({
         />
       ) : null}
     </>
+  );
+}
+
+/**
+ * Punkt bearbeiten als feste Spalte (nur ab 1280 px, DesktopSchemaEditor.dc.html): Text, Norm,
+ * Inhalt, Verknüpfung mit der Suche als Liste, Verschieben und Löschen. Die Änderungen gelten sofort
+ * im Entwurf der Gliederung; gesichert wird mit „Sichern“.
+ */
+function PointDetail({
+  point,
+  label,
+  error,
+  services,
+  canUp,
+  canDown,
+  linking,
+  selfId,
+  deckId,
+  deckName,
+  initialQuery,
+  initialCreating,
+  onChange,
+  onMove,
+  onRemove,
+  onLinking,
+  onPick,
+}: {
+  point: DraftPoint | undefined;
+  label: string;
+  error: string | undefined;
+  services: LinkServices;
+  canUp: boolean;
+  canDown: boolean;
+  linking: boolean;
+  selfId: string | undefined;
+  deckId: string | null;
+  deckName: string | null;
+  initialQuery: string | undefined;
+  initialCreating: boolean | undefined;
+  onChange: (patch: Partial<Omit<DraftPoint, 'id'>>) => void;
+  onMove: (dir: -1 | 1) => void;
+  onRemove: () => void;
+  onLinking: (linking: boolean) => void;
+  onPick: (link: string | null) => void;
+}) {
+  const linked = services.useLinked(point?.link ?? null);
+  if (!point) {
+    return (
+      <aside className={styles.detail} aria-label="Punkt bearbeiten">
+        <p className={styles.detailEmpty}>Wähle links einen Punkt, um ihn zu bearbeiten.</p>
+      </aside>
+    );
+  }
+  return (
+    <aside className={styles.detail} aria-label="Punkt bearbeiten">
+      <div className={styles.detailHead}>
+        <span className={styles.detailEyebrow}>Punkt {label}</span>
+        <h2 className={styles.detailTitle}>Punkt bearbeiten</h2>
+      </div>
+      <Field
+        label="Text"
+        value={point.text}
+        onChange={(text) => {
+          onChange({ text });
+        }}
+        autoFocus={point.text === '' && !linking}
+        error={error}
+      />
+      <Field
+        label="Norm"
+        value={point.norm}
+        placeholder="§ 839 BGB"
+        onChange={(norm) => {
+          onChange({ norm });
+        }}
+      />
+      <Field
+        label="Inhalt"
+        value={point.content}
+        rows={2}
+        placeholder="Definition oder Prüfungsinhalt. Erscheint beim Lernen unter dem Punkt."
+        onChange={(content) => {
+          onChange({ content });
+        }}
+      />
+      <div className={styles.linkBlock}>
+        <span className={styles.detailLabel}>Verknüpfung</span>
+        {linking ? (
+          <LinkSearch
+            variant="inline"
+            point={point}
+            selfId={selfId}
+            deckId={deckId}
+            deckName={deckName}
+            services={services}
+            initialQuery={initialQuery}
+            initialCreating={initialCreating}
+            onPick={onPick}
+            onClose={() => {
+              onLinking(false);
+            }}
+          />
+        ) : point.link === null ? (
+          <button
+            type="button"
+            className={cx(styles.linkRow, tap.tap)}
+            onClick={() => {
+              onLinking(true);
+            }}
+          >
+            <LinkIcon size={18} />
+            Mit Karte verknüpfen
+          </button>
+        ) : (
+          <div className={styles.linked}>
+            <span className={styles.linkedIcon}>
+              <LinkIcon size={16} />
+            </span>
+            <div className={styles.linkedText}>
+              <span className={styles.linkedTitle}>
+                {linked === 'missing' ? 'Karte nicht gefunden' : (linked?.title ?? '')}
+              </span>
+              {linked !== null && linked !== 'missing' ? (
+                <span className={styles.linkedMeta}>{linked.meta}</span>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              className={styles.linkedButton}
+              onClick={() => {
+                onLinking(true);
+              }}
+            >
+              Ändern
+            </button>
+          </div>
+        )}
+      </div>
+      <div className={styles.detailFoot}>
+        <button
+          type="button"
+          className={cx(styles.tool, tap.tap)}
+          aria-label="Nach oben"
+          disabled={!canUp}
+          onClick={() => {
+            onMove(-1);
+          }}
+        >
+          <ArrowUpIcon size={20} strokeWidth={2.2} />
+        </button>
+        <button
+          type="button"
+          className={cx(styles.tool, tap.tap)}
+          aria-label="Nach unten"
+          disabled={!canDown}
+          onClick={() => {
+            onMove(1);
+          }}
+        >
+          <ArrowDownIcon size={20} strokeWidth={2.2} />
+        </button>
+        <span className={styles.spacer} />
+        <button type="button" className={cx(styles.removePoint, tap.tap)} onClick={onRemove}>
+          <TrashIcon size={18} />
+          Punkt löschen
+        </button>
+      </div>
+    </aside>
   );
 }
 
