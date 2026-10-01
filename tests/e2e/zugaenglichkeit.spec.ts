@@ -506,3 +506,49 @@ test.describe('Install-Hinweis im Safari-Tab (A13)', () => {
     expect(await smallTargets(page)).toEqual([]);
   });
 });
+
+/**
+ * Hat das fokussierte Element eine sichtbare Fokusanzeige (WCAG 2.4.7)? Eigener Rahmen
+ * (`outline`) oder ein Elternelement mit `:focus-within` und Rahmen oder Schatten (Felder in Labels).
+ */
+async function focusIndicatorVisible(page: Page): Promise<{ ok: boolean; what: string }> {
+  return page.evaluate(() => {
+    const el = document.activeElement;
+    if (!el || el === document.body) return { ok: true, what: '' };
+    const shows = (e: Element) => {
+      const s = getComputedStyle(e);
+      const outline = s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) > 0;
+      const shadow = s.boxShadow !== 'none';
+      return { outline, shadow };
+    };
+    const own = shows(el);
+    if (own.outline) return { ok: true, what: '' };
+    for (let p = el.parentElement; p; p = p.parentElement) {
+      if (!p.matches(':focus-within')) break;
+      const s = shows(p);
+      if (s.outline || s.shadow) return { ok: true, what: '' };
+    }
+    if (own.shadow) return { ok: true, what: '' };
+    const label = el.getAttribute('aria-label') ?? el.textContent?.trim().slice(0, 30) ?? '';
+    return { ok: false, what: `${el.tagName.toLowerCase()} "${label}"` };
+  });
+}
+
+test('Tastatur: jedes anfokussierte Element zeigt eine sichtbare Fokusanzeige', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(300_000);
+  await startDemo(page);
+  const found: string[] = [];
+  for (const screen of SCREENS) {
+    await screen.open(page);
+    await closeCelebrations(page);
+    await page.locator('body').click({ position: { x: 1, y: 1 } });
+    for (let i = 0; i < 30; i++) {
+      await page.keyboard.press('Tab');
+      const result = await focusIndicatorVisible(page);
+      if (!result.ok) found.push(`${testInfo.project.name} · ${screen.name} | ${result.what}`);
+    }
+  }
+  expect([...new Set(found)]).toEqual([]);
+});

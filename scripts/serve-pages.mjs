@@ -7,7 +7,9 @@ import { extname, join, normalize, resolve } from 'node:path';
 const args = process.argv.slice(2);
 const portArg = args.indexOf('--port');
 const port = Number(portArg >= 0 ? args[portArg + 1] : (process.env.PORT ?? 4173));
-const root = resolve('dist');
+// `--root <Ordner>` liefert eine Kopie von dist/ aus (E2E-Test des Update-Ablaufs).
+const rootArg = args.indexOf('--root');
+const root = resolve(rootArg >= 0 ? (args[rootArg + 1] ?? 'dist') : 'dist');
 const prefix = '/Juri/';
 
 const types = {
@@ -32,7 +34,7 @@ function send(res, status, file) {
   createReadStream(file).pipe(res);
 }
 
-createServer((req, res) => {
+const server = createServer((req, res) => {
   const url = new URL(req.url ?? '/', 'http://localhost');
   const notFound = join(root, '404.html');
   if (!url.pathname.startsWith(prefix)) {
@@ -54,6 +56,11 @@ createServer((req, res) => {
     res.writeHead(404);
     res.end('404');
   }
-}).listen(port, '127.0.0.1', () => {
-  console.log(`Juri läuft unter http://127.0.0.1:${port}${prefix}`);
+});
+
+// Port 0 wählt einen freien Port (E2E-Test des Update-Ablaufs).
+server.listen(port, '127.0.0.1', () => {
+  const address = server.address();
+  const actual = typeof address === 'object' && address ? address.port : port;
+  console.log(`Juri läuft unter http://127.0.0.1:${actual}${prefix}`);
 });

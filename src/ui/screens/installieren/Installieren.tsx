@@ -9,7 +9,11 @@ const STEPS: { title: string; sub?: string }[] = [
     title: '„Zum Home-Bildschirm“ wählen',
     sub: 'Fehlt der Eintrag, in der Liste nach unten blättern.',
   },
-  { title: '„Hinzufügen“ tippen und Juri über das neue Symbol öffnen' },
+  {
+    title: '„Hinzufügen“ tippen und Juri über das neue Symbol öffnen',
+    // Apple Support, „Turn a website into an app in Safari on iPhone“: „Open as Web App“ einschalten.
+    sub: 'Gibt es den Schalter „Als Web-App öffnen“, lass ihn an.',
+  },
 ];
 
 /**

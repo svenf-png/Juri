@@ -13,7 +13,7 @@ export function App() {
       <div className={isTest ? 'after-banner' : undefined}>
         <RouterProvider router={router} />
       </div>
-      <UpdatePrompt />
+      <UpdatePrompt router={router} />
     </>
   );
 }
