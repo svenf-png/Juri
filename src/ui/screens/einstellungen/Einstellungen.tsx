@@ -1,4 +1,12 @@
-import { lazy, Suspense, useRef, useState, type ChangeEvent, type SyntheticEvent } from 'react';
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type SyntheticEvent,
+} from 'react';
 import { BUILD, buildLabel } from '@/app/build';
 import { fileCopy } from '@/domain/device/environment';
 import { formatBytes } from '@/domain/format/bytes';
@@ -192,6 +200,14 @@ function BackupSection({ data }: { data: AppData }) {
   const [message, setMessage] = useState<{ text: string; error: boolean } | null>(null);
   const input = useRef<HTMLInputElement>(null);
   const copy = fileCopy(currentEnvironment());
+  // Der auslösende Knopf ist während der Arbeit gesperrt und verliert den Fokus: Nach dem Schließen
+  // der Sheets bekommt er ihn zurück (sonst landet er auf der Seite, VoiceOver verliert die Stelle).
+  const trigger = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (file !== null || preview !== null) return;
+    trigger.current?.focus();
+    trigger.current = null;
+  }, [file, preview]);
 
   async function run(task: () => Promise<void>) {
     setBusy(true);
@@ -231,7 +247,10 @@ function BackupSection({ data }: { data: AppData }) {
           size="md"
           block
           disabled={busy}
-          onClick={() => void run(async () => setFile(await createBackupFile()))}
+          onClick={(event) => {
+            trigger.current = event.currentTarget;
+            void run(async () => setFile(await createBackupFile()));
+          }}
         >
           Backup erstellen
         </Button>
@@ -240,7 +259,10 @@ function BackupSection({ data }: { data: AppData }) {
           size="md"
           block
           disabled={busy}
-          onClick={() => input.current?.click()}
+          onClick={(event) => {
+            trigger.current = event.currentTarget;
+            input.current?.click();
+          }}
         >
           Backup einspielen
         </Button>

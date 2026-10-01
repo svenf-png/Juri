@@ -26,11 +26,11 @@
   color: var(--ink);
 }
 
-/* Trefferfläche 44 px: 38 px hoch plus 3 px oben und unten. */
+/* Trefferfläche 44 px: Die Innenkante ist 35 px hoch (38 minus 2 × 1,5 px Rand), plus 4,5 px oben und unten. */
 .kind::after {
   content: '';
   position: absolute;
-  inset: -3px 0;
+  inset: -4.5px 0;
 }
 
 .kindOn {
@@ -128,11 +128,11 @@
   align-items: center;
 }
 
-/* Trefferfläche 44 px: 34 px hoch plus 5 px oben und unten. */
+/* Trefferfläche 44 px: 34 px hoch plus 5 px oben und unten, seitlich 2 px (schmale Chips unter 44 px). */
 .chip::after {
   content: '';
   position: absolute;
-  inset: -5px 0;
+  inset: -5px -2px;
 }
 
 /* Im Design ein <span> ohne border-box: 34 px Inhalt plus 1,5 px Rand. */
@@ -143,20 +143,25 @@
   color: var(--muted);
 }
 
-.chipAdd::after {
-  inset: -4px 0;
-}
-
 .pick {
   border: 1.5px solid var(--track);
   background: var(--bg);
   color: var(--ink);
 }
 
+/* Mit Rand (border-box) ist die Innenkante 31 px hoch: 31 + 2 × 6,5 = 44 px. */
+.pick::after {
+  inset: -6.5px -2px;
+}
+
 .pickOn {
   border: 0;
   background: var(--ink);
   color: var(--bg);
+}
+
+.pickOn::after {
+  inset: -5px -2px;
 }
 
 .switch {

@@ -49,6 +49,7 @@
 }
 
 .close {
+  position: relative;
   height: 44px;
   padding: 0;
   border: 0;
@@ -59,6 +60,13 @@
   font-weight: 600;
   color: var(--link);
   flex-shrink: 0;
+}
+
+/* „Karte“ ist nur 39 px breit: Trefferfläche seitlich auf 45 px erweitern. */
+.close::after {
+  content: '';
+  position: absolute;
+  inset: 0 -3px;
 }
 
 .title {

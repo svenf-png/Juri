@@ -409,7 +409,15 @@
 }
 
 .footerLink {
+  position: relative;
   font-weight: 700;
+}
+
+/* 17 px hoch: Trefferfläche auf 44 px erweitern. */
+.footerLink::after {
+  content: '';
+  position: absolute;
+  inset: -14px -8px;
 }
 
 /* Sheets */

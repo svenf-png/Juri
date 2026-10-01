@@ -63,7 +63,8 @@
 .more::after {
   content: '';
   position: absolute;
-  inset: -5px -4px;
+  /* border-box: Die Innenkante ist 31 px hoch (34 minus 2 × 1,5 px Rand): 31 + 2 × 6,5 = 44 px. */
+  inset: -6.5px -4px;
 }
 
 .types {
