@@ -26,6 +26,7 @@ const ADDITIONS = [
   'button:has-text("+ Stapel")',
   'button[aria-label="Rechtsgebiete verwalten"]',
   'button[aria-label="Stapel-Menü"]',
+  'aside [data-addition]',
 ];
 
 const CASES: Case[] = [

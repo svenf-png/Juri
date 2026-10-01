@@ -177,6 +177,15 @@ describe('deckModel', () => {
     expect(model.cardCount).toBe('2 Karten');
   });
 
+  it('trägt die Fälligkeit je Karte ein, sonst keine Angabe', () => {
+    const model = deckModel({ ...base, dueLabels: new Map([['k1', 'fällig morgen']]) });
+    expect(model.cards.map((c) => [c.id, c.due])).toEqual([
+      ['k1', 'fällig morgen'],
+      ['k2', undefined],
+    ]);
+    expect(deckModel(base).cards.every((c) => !('due' in c))).toBe(true);
+  });
+
   it('wählt den Hauptknopf nach Lage', () => {
     expect(deckModel(base).cta).toEqual({
       kind: 'learn',

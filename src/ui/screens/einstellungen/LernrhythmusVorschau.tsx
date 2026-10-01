@@ -9,7 +9,7 @@ export function LernrhythmusVorschau() {
   return (
     <LernrhythmusView
       back={{ to: '/', label: 'Heute' }}
-      settings={DEFAULT_LEARNING}
+      settings={{ ...DEFAULT_LEARNING, newPerDay: 20 }}
       examples={EXAMPLES}
       deadlines={3}
       onChange={() => undefined}

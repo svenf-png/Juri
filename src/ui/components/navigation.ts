@@ -1,8 +1,17 @@
 import type { ComponentType } from 'react';
-import { CalendarIcon, HomeIcon, ShareIcon, SlidersIcon, StackIcon, TrophyIcon } from './icons';
+import {
+  CalendarIcon,
+  HomeIcon,
+  SettingsIcon,
+  ShareIcon,
+  SlidersIcon,
+  StackIcon,
+  TrophyIcon,
+} from './icons';
 
 /** Ziele der Hauptnavigation (Tab-Bar in Main.dc.html, Sidebar in iPadHeute.dc.html). */
-export type NavKey = 'heute' | 'stapel' | 'erfolge' | 'fristen' | 'teilen' | 'rhythmus';
+export type NavKey =
+  'heute' | 'stapel' | 'erfolge' | 'fristen' | 'teilen' | 'rhythmus' | 'einstellungen';
 
 export interface NavItem {
   key: NavKey;
@@ -24,6 +33,14 @@ export const NAV: Record<NavKey, NavItem> = {
     label: 'Lernrhythmus',
     Icon: SlidersIcon,
   },
+  // Ergänzung zum Design (Sidebar: `data-addition`): Profil, Speicher und Backup. Nach `rhythmus`,
+  // damit `navKeyFor` für /einstellungen/lernrhythmus weiter „Lernrhythmus“ findet.
+  einstellungen: {
+    key: 'einstellungen',
+    to: '/einstellungen',
+    label: 'Einstellungen',
+    Icon: SettingsIcon,
+  },
 };
 
 /** Tab-Bar (iPhone): links zwei, in der Mitte „Neue Karte“, rechts zwei. */
@@ -42,6 +59,7 @@ export const SIDEBAR: readonly NavKey[] = [
   'fristen',
   'teilen',
   'rhythmus',
+  'einstellungen',
 ];
 
 export const NEW_CARD_PATH = '/neu';
