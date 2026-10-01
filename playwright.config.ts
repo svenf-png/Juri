@@ -99,6 +99,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: 0,
+  // In der CI endet der Lauf nach 25 Minuten kontrolliert (mit Log und Bericht), statt am Job-Limit abgebrochen zu werden.
+  globalTimeout: process.env.CI ? 25 * 60_000 : 0,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: {
     baseURL: `http://127.0.0.1:${port}`,
