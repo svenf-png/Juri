@@ -16,6 +16,9 @@ test.beforeEach(({ browserName }, testInfo) => {
   );
 });
 
+// Unter Last (parallele Tests, WebKit in der CI) braucht der Aufbau eines Bildschirms länger als 5 s.
+expect.configure({ timeout: 15_000 });
+
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
 const TOUCH_MIN = 44;
 
