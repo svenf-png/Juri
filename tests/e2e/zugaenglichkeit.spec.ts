@@ -309,7 +309,8 @@ function onlyChromium(testInfo: { project: { name: string } }) {
   test.skip(!testInfo.project.name.startsWith('chromium'), 'Tab-Navigation nur in Chromium');
 }
 
-test.describe.configure({ mode: 'serial' });
+// Die Tests sind unabhängig: einzeln auf die CI-Teile verteilbar (serial machte je Projekt einen Block von rund 10 Minuten).
+test.describe.configure({ mode: 'parallel' });
 
 test('axe: alle Bildschirme ohne Verstöße (WCAG 2.2 AA)', async ({ page }, testInfo) => {
   test.setTimeout(300_000);
