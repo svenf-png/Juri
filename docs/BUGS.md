@@ -26,3 +26,11 @@ Format: laufende Nummer, Titel, Umgebung, Beschreibung, erwartetes Verhalten, St
 - **Beschreibung:** „Neue Karten pro Tag“ (Lernrhythmus, Standard 20) und Tagesziel „Lernen“ (Erfolge, Standard 24) waren unabhängig einstellbar. Lag das Limit unter dem Ziel, war das Ziel mit neuen Karten allein nicht erreichbar (Heute: „Alles erledigt“ bei „20 von 40“), und die Serie zählte den Tag nicht. Beide Werte standen auf getrennten Bildschirmen.
 - **Behoben:** Das Limit liegt nie unter dem Ziel (`domain/scheduler/dailyLimits.ts`, wirksam beim Speichern und Lesen, auch für ältere Stände). Ein höheres Ziel hebt das Limit mit an, der Regler des Limits geht nicht unter das Ziel. Tagesziel und Limit stehen zusammen in Lernrhythmus (Ergänzung zum Design), das Sheet „Tagesziele“ kündigt die Anhebung an. Standard-Limit jetzt 24, Ziel höchstens 100. Lernrhythmus erklärt den Unterschied FSRS und Leitner sowie Voreinstellung und Regler.
 - **Status:** [x] behoben am 01.10.2026 (M10.1, PR #20)
+
+## B4: Doppelter Fokus-Kasten in Textfeldern (iPhone)
+
+- **Umgebung:** iPhone, installierte App, Testinstanz, Neue Karte (Vorderseite), gemeldet am 01.10.2026
+- **Beschreibung:** Ein fokussiertes Textfeld zeigte neben dem Ring des Rahmens (`:focus-within`) einen zweiten, inneren Kasten. Ursache: `outline: none` am Feld hat dieselbe Spezifität wie das globale `:focus-visible` und verliert, wenn dessen Stylesheet später geladen wird.
+- **Erwartet:** Nur der Ring des Rahmens.
+- **Behoben:** `…:focus-visible { outline: none }` an den Feldern mit Rahmen-Ring (Textfläche, Mini-Felder, Felder in Fristen und Schema-Editor, Suche in Stapel, `Field`). Felder ohne Rahmen-Ring (PDF-Seitenfeld, Suche im Link-Popover, Mini-Felder im Split-Formular) behalten den Ring als einzige Anzeige. Der Test `zugaenglichkeit.spec.ts` meldet einen doppelten Rahmen.
+- **Status:** [x] behoben am 01.10.2026 (1.0.1)

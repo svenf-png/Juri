@@ -540,7 +540,15 @@ async function focusIndicatorVisible(page: Page): Promise<{ ok: boolean; what: s
       return { outline, shadow };
     };
     const own = shows(el);
-    if (own.outline) return { ok: true, what: '' };
+    // Ein eigener Ring plus der Ring des Rahmens (`:focus-within`) wären zwei Kästen (B4).
+    if (own.outline) {
+      for (let p = el.parentElement; p; p = p.parentElement) {
+        if (p.matches(':focus-within') && shows(p).outline) {
+          return { ok: false, what: `doppelter Fokusrahmen an ${el.tagName.toLowerCase()}` };
+        }
+      }
+      return { ok: true, what: '' };
+    }
     for (let p = el.parentElement; p; p = p.parentElement) {
       if (!p.matches(':focus-within')) break;
       const s = shows(p);

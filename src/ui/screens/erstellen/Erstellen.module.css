@@ -234,6 +234,11 @@
   appearance: none;
 }
 
+/* Der Rahmen zeigt den Fokus (:focus-within); ohne dies zeichnet das globale :focus-visible einen zweiten Kasten ins Feld. */
+.area:focus-visible {
+  outline: none;
+}
+
 .area::selection {
   background: rgba(106, 63, 224, 0.25);
   -webkit-text-fill-color: transparent;
@@ -387,6 +392,11 @@
   background: transparent;
   font-size: 15px;
   color: var(--ink);
+  outline: none;
+}
+
+/* Der Rahmen zeigt den Fokus (:focus-within); ohne dies zeichnet das globale :focus-visible einen zweiten Kasten ins Feld. */
+.miniInput:focus-visible {
   outline: none;
 }
 
