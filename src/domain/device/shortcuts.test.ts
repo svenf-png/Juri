@@ -117,9 +117,11 @@ describe('highFiveShortcut', () => {
 });
 
 describe('modifierLabel', () => {
-  it('Cmd auf dem Mac, sonst Strg', () => {
-    expect(modifierLabel('Mac')).toBe('⌘');
-    for (const platform of ['iPhone', 'iPad', 'Android', 'Andere'] as const) {
+  it('Cmd auf dem Mac und am iPad, sonst Strg', () => {
+    for (const platform of ['Mac', 'iPad', 'iPhone'] as const) {
+      expect(modifierLabel(platform)).toBe('⌘');
+    }
+    for (const platform of ['Android', 'Andere'] as const) {
       expect(modifierLabel(platform)).toBe('Strg');
     }
   });

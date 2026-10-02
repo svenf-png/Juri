@@ -98,7 +98,10 @@ export function pdfShortcut(input: KeyInput): PdfAction | null {
   }
 }
 
-/** Beschriftung der Strg- oder Cmd-Taste in Tastenhinweisen: Cmd auf dem Mac, sonst Strg. */
+/**
+ * Beschriftung der Strg- oder Cmd-Taste in Tastenhinweisen: Cmd auf dem Mac und an einer
+ * Hardware-Tastatur am iPad (dort gilt Cmd), sonst Strg.
+ */
 export function modifierLabel(platform: Platform): string {
-  return platform === 'Mac' ? '⌘' : 'Strg';
+  return platform === 'Mac' || platform === 'iPad' || platform === 'iPhone' ? '⌘' : 'Strg';
 }

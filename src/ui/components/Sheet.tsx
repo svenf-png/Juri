@@ -46,7 +46,11 @@ export function Sheet({
       opener.current = document.activeElement;
       dialog.showModal();
     }
-    if (!open && dialog.open) dialog.close();
+    if (!open) {
+      if (dialog.open) dialog.close();
+      // Das Fenster ist zu: Der Browser hat den Fokus zurückgegeben, ein späterer Abbau holt ihn nicht noch einmal.
+      opener.current = null;
+    }
   }, [open]);
 
   useEffect(

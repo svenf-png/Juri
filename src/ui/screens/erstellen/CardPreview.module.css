@@ -123,7 +123,8 @@
   letter-spacing: -0.02em;
   text-wrap: balance;
   overflow-wrap: anywhere;
-  white-space: pre-line;
+  /* pre-wrap: Die Einrückung der Schema-Punkte (Leerzeichen am Zeilenanfang) bleibt stehen. */
+  white-space: pre-wrap;
   max-height: 100%;
   overflow: hidden;
 }

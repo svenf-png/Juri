@@ -13,6 +13,7 @@ import { CoverEditor } from './CoverEditor';
 import { EMPTY_COVER, EMPTY_FORM, type FormState } from './form';
 import { ProblemSheet, SourceSheet } from './MediaSheets';
 import { cx } from '../../cx';
+import { useMediaQuery } from '../../useMediaQuery';
 import styles from './AbdeckungVorschau.module.css';
 
 const noop = () => undefined;
@@ -315,7 +316,7 @@ function PageText({
 export function AbdeckungVorschau({ variant }: { variant: AbdeckungVariant }) {
   const learn = variant === 'lernen' || variant === 'antwort';
   // Ab 1280 px gilt die Desktop-Gestaltung samt Seitenfeld und Texten für Maus und Tastatur.
-  const desktop = window.matchMedia('(min-width: 1280px)').matches;
+  const desktop = useMediaQuery('(min-width: 1280px)');
   useEffect(() => {
     setSurfaceColor(document, learn || variant === 'pdf' ? colors.surface : null);
     return () => {

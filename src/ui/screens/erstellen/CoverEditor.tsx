@@ -13,6 +13,7 @@ import { ChevronLeftIcon, TrashIcon } from '../../components/icons';
 import { Kbd } from '../../components/Kbd';
 import { Sheet } from '../../components/Sheet';
 import { cx } from '../../cx';
+import { useKeys } from '../../useKeys';
 import { useMediaQuery } from '../../useMediaQuery';
 import tap from '../../motion/tap.module.css';
 import { MaskCanvas } from './MaskCanvas';
@@ -62,17 +63,27 @@ export function CoverEditor({
   }>({ percent: 100, step: () => undefined });
   const mod = currentModifierLabel();
   const ordered = [...masks].sort((a, b) => (labels.get(a.n) ?? 0) - (labels.get(b.n) ?? 0));
-  const remove = () => {
-    if (!current) return;
-    change(removeMask(masks, current.n), 0);
-    setSelected(null);
-  };
-
   const change = (next: Mask[], used: number) => {
     setChanged(true);
     setEverUsed((before) => Math.max(before, used));
     setMasks(next);
   };
+  const remove = () => {
+    if (!current) return;
+    change(removeMask(masks, current.n), 0);
+    setSelected(null);
+  };
+  // Entf löscht das gewählte Feld auch dann, wenn der Fokus in der Feldliste statt auf der Maske liegt
+  // (die Maske behandelt die Taste selbst; ein Feld in der Eingabe und ein offenes Sheet schweigen).
+  useKeys((input) => {
+    if (!desktop || !current || input.editable || input.ctrlKey || input.metaKey || input.altKey) {
+      return false;
+    }
+    if (input.key !== 'Delete' && input.key !== 'Backspace') return false;
+    remove();
+    return true;
+  });
+
   const back = () => {
     if (changed) setAsking(true);
     else onBack();

@@ -90,6 +90,15 @@ export function SchemaEditor({
   // Suche nach Karten als Liste in dieser Spalte.
   const desktop = useMediaQuery('(min-width: 1280px)');
   const [linking, setLinking] = useState(start?.sheet === 'link');
+  // Über der Schwelle steht der Punkt in der Spalte, darunter im Sheet: Beim Wechsel gilt das offene
+  // Fenster der anderen Form nicht weiter (sonst bliebe es unsichtbar offen und ginge beim Zurückwechseln auf).
+  const wasDesktop = useRef(desktop);
+  useEffect(() => {
+    if (wasDesktop.current === desktop) return;
+    wasDesktop.current = desktop;
+    setLinking(false);
+    setSheet((s) => (s === 'point' || s === 'link' ? null : s));
+  }, [desktop]);
   const changed = useRef(false);
   const mod = currentModifierLabel();
   const labels = pointLabels(points);

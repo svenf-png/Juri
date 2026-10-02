@@ -427,6 +427,11 @@ test.describe('Desktop-Gestaltung (M13)', () => {
     await expect(preview.getByText('Tatsächliche Sachherrschaft.')).toHaveCount(0);
     await preview.getByRole('button', { name: 'Rückseite' }).click();
     await expect(preview.getByText('Tatsächliche Sachherrschaft.')).toBeVisible();
+    // pre-wrap: Die Einrückung der Schema-Punkte (Leerzeichen am Zeilenanfang) bleibt in der Vorschau.
+    await expect(preview.getByText('Tatsächliche Sachherrschaft.')).toHaveCSS(
+      'white-space',
+      'pre-wrap',
+    );
     await expect(preview.getByRole('button', { name: 'Rückseite' })).toHaveAttribute(
       'aria-pressed',
       'true',
@@ -486,6 +491,11 @@ test.describe('Desktop-Gestaltung (M13)', () => {
     await expect(list.getByRole('button')).toHaveCount(4);
     await page.getByRole('button', { name: 'Feld löschen' }).click();
     await expect(list.getByRole('button')).toHaveCount(3);
+    await expect(page.getByRole('button', { name: 'Feld löschen' })).toBeDisabled();
+    // Entf löscht das gewählte Feld auch, wenn der Fokus auf dem Listenknopf liegt (wie der Hinweis am Knopf sagt).
+    await list.getByRole('button', { name: /Feld 1/ }).click();
+    await page.keyboard.press('Delete');
+    await expect(list.getByRole('button')).toHaveCount(2);
     await expect(page.getByRole('button', { name: 'Feld löschen' })).toBeDisabled();
     // Zoom: „−“ ist bei 100 % gesperrt, „+“ geht auf 150 % und zurück.
     const zoomOut = page.getByRole('button', { name: 'Verkleinern' });
