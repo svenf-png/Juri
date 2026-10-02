@@ -156,7 +156,8 @@ test.describe('Erfolge', () => {
     await page.getByRole('button', { name: /^Gut/ }).click();
     await expect(page.getByText('Frage zwei?').first()).toBeVisible();
     await page.getByRole('button', { name: /zurücknehmen/ }).click();
-    await expect(page.getByText('Frage eins?').first()).toBeVisible();
+    // Undo: die erste Karte steht mit aufgedeckter Antwort wieder da (die Vorderseite ist dann verborgen).
+    await expect(page.getByText('Antwort eins.')).toBeVisible();
     await page.getByRole('button', { name: 'Lernen beenden' }).click();
     await page.goto('/Juri/');
     await expect(page.getByLabel('Tagesziel')).toContainText('0 von 24');

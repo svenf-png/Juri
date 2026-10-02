@@ -270,18 +270,6 @@ test.describe('Desktop: pixelnah zum Design', () => {
           writeFileSync(`test-results/diff/${tag}-app.png`, app);
           await test.info().attach('design.png', { body: design, contentType: 'image/png' });
           await test.info().attach('app.png', { body: app, contentType: 'image/png' });
-          if (process.env.CI && browserName !== 'chromium') {
-            // Fehlersuche ohne Zugriff auf die Berichte: beide Bilder in 1x als JPEG ins Protokoll.
-            const appJpg = await page.screenshot({ scale: 'css', type: 'jpeg', quality: 70 });
-            // Eine neue Seite: Die der App trägt noch deren Sicherheitsrichtlinie (kein Inline-Stil).
-            const other = await context.newPage();
-            await other.setViewportSize({ width: size.width, height: size.height });
-            await showBoard(other, `${c.design}${size.suffix}.dc.html`);
-            const designJpg = await other.screenshot({ scale: 'css', type: 'jpeg', quality: 70 });
-            await other.close();
-            console.log(`IMGAPP ${tag} ${appJpg.toString('base64')}`);
-            console.log(`IMGDESIGN ${tag} ${designJpg.toString('base64')}`);
-          }
         }
         expect(diff.sameSize).toBe(true);
         expect(
