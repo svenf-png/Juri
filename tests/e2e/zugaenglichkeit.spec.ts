@@ -295,7 +295,11 @@ const SHEETS: {
   {
     name: 'Deine Leute',
     screen: 'High fives',
-    opener: (p) => p.getByRole('button', { name: 'Alle anzeigen' }),
+    // Ab 1280 px steht die Liste fest neben den Spalten; ein Kontakt öffnet dort sein Sheet.
+    opener: (p) =>
+      (p.viewportSize()?.width ?? 0) >= 1280
+        ? p.getByRole('complementary', { name: 'Deine Leute' }).getByRole('button').first()
+        : p.getByRole('button', { name: 'Alle anzeigen' }),
   },
   {
     name: 'Backup erstellen',

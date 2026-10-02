@@ -35,13 +35,29 @@ export function Sheet({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  // Das Element, das vor dem Öffnen den Fokus hatte: Ein Sheet, das ohne `close()` abgebaut wird
+  // (der Bildschirm blendet es per Zustand aus), gibt den Fokus sonst an `body` ab.
+  const opener = useRef<Element | null>(null);
 
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
+    if (open && !dialog.open) {
+      opener.current = document.activeElement;
+      dialog.showModal();
+    }
     if (!open && dialog.open) dialog.close();
   }, [open]);
+
+  useEffect(
+    () => () => {
+      const el = opener.current;
+      if (el instanceof HTMLElement && el.isConnected && document.activeElement === document.body) {
+        el.focus();
+      }
+    },
+    [],
+  );
 
   return (
     <dialog
