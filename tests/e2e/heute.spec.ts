@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { expect, test, type Locator, type Page } from '@playwright/test';
-import { pixelDiff, showDesign } from './design';
+import { pixelDiff, showDesign, simulateStatusBar } from './design';
 import { asInstalledApp, HEUTE_LEER, onboard, watchPage } from './helpers';
 
 /*
@@ -36,12 +36,8 @@ function layoutOf(page: Page): Layout | null {
 async function openPreview(page: Page, layout: Layout | null) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/Juri/styleguide/heute');
-  if (layout === 'iphone') {
-    await page.evaluate(() => {
-      document.documentElement.style.setProperty('--sim-safe-top', '47px');
-    });
-  }
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  if (layout === 'iphone') await simulateStatusBar(page);
   await page.evaluate(() => document.fonts.ready);
   // Ergänzung zum Design: Sidebar-Eintrag „Einstellungen“ (ohne Einfluss auf die Lage).
   await page.locator('aside [data-addition]').evaluateAll((els) => {

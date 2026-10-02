@@ -27,6 +27,8 @@ export interface ZoomPan {
   /** CSS-Transformation der Fläche; Ursprung oben links. */
   transform: string;
   reset: () => void;
+  /** Einen Zoom-Schritt vor (`1`) oder zurück (`-1`), wie die Tasten „+“ und „−“. */
+  step: (direction: 1 | -1) => void;
   /** Zeiger-Ereignisse für den Rahmen. */
   bind: {
     onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
@@ -180,8 +182,16 @@ export function useZoomPan(
     pointers.current.delete(event.pointerId);
   };
 
+  const step = useCallback(
+    (direction: 1 | -1) => {
+      update(stepZoom(view.current, direction, size()));
+    },
+    [size, update],
+  );
+
   return {
     viewport,
+    step,
     transform: `translate(${String(viewport.x)}px, ${String(viewport.y)}px) scale(${String(viewport.zoom)})`,
     reset: () => {
       update(HOME);

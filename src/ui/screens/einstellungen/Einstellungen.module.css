@@ -3,6 +3,12 @@
   --screen-top: 54px;
 }
 
+/* Spalten der Desktop-Gestaltung; darunter ohne eigene Box (die Abschnitte stehen untereinander). */
+.cols,
+.col {
+  display: contents;
+}
+
 .title {
   margin-top: -8px;
   font-family: var(--font-display);
@@ -215,4 +221,51 @@
 .chevron {
   color: var(--chevron);
   display: flex;
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopEinstellungen.dc.html): zwei Spalten, links
+ * Profil, Lernen und Speicher, rechts Backup und Entwicklungsstand.
+ */
+@media (min-width: 1280px) {
+  .screen {
+    /* 40 px oben wie die übrigen Bildschirme: Screen rechnet --screen-top plus --top-shift (47 px weniger). */
+    --screen-top: 87px;
+    max-width: none;
+  }
+
+  .back {
+    display: none;
+  }
+
+  .title {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 44px;
+    line-height: 1.05;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 48px;
+    align-items: start;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+}
+
+/* Hover am Rechner (ADR-017): Zeile mit Fläche, die Fläche reicht 10 px über den Rand hinaus. */
+@media (min-width: 1280px) and (hover: hover) {
+  .linkRow:hover {
+    background: var(--surface);
+    box-shadow:
+      -10px 0 0 var(--surface),
+      10px 0 0 var(--surface);
+  }
 }

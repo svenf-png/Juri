@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { pdfShortcut } from '@/domain/device/shortcuts';
 import { pageLabel, parsePage } from '@/domain/media/pdfPlan';
 import { ChevronLeftIcon, ChevronRightIcon } from '../../components/icons';
+import { Kbd } from '../../components/Kbd';
 import { cx } from '../../cx';
 import { useKeys } from '../../useKeys';
 import styles from './PdfPane.module.css';
@@ -144,6 +145,9 @@ export function PdfPane({
     <section className={cx(styles.pane, phone ? styles.phone : styles.pad)} aria-label="PDF">
       <div className={styles.head}>
         <button type="button" className={styles.close} onClick={onClose}>
+          {phone ? null : (
+            <ChevronLeftIcon size={24} strokeWidth={2.2} className={styles.closeIcon} />
+          )}
           {closeLabel}
         </button>
         <span className={styles.title}>
@@ -173,17 +177,25 @@ export function PdfPane({
           </div>
         ) : null}
       </div>
-      <div className={styles.page}>
-        {children}
-        {phone ? null : (
-          <>
-            <span className={styles.padHint}>{hint}</span>
+      {phone ? (
+        <div className={styles.page}>{children}</div>
+      ) : (
+        <div className={styles.stage}>
+          <div className={styles.page}>{children}</div>
+          <div className={styles.padFoot}>
+            <span className={styles.padHint}>
+              {hint}
+              <span className={styles.zoomKeys}>
+                {' · Zoom '}
+                <Kbd>+</Kbd> <Kbd>−</Kbd> <Kbd>0</Kbd>
+              </span>
+            </span>
             <div className={styles.padPager} data-addition="">
               <Pager page={page} pages={pages} onPage={onPage} compact />
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
       {phone ? (
         <>
           <div className={styles.hint}>{hint}</div>

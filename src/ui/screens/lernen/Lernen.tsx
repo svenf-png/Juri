@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'rea
 import { useNavigate, useSearchParams } from 'react-router';
 import { cardPreview, cardTitle } from '@/domain/cards/card';
 import { counter, isBundle, progressPercent } from '@/domain/session/session';
-import { endSummary, faceOf, plural } from '@/domain/session/present';
+import { faceOf, plural } from '@/domain/session/present';
 import type { RatingKey } from '@/domain/scheduler/rating';
 import { gestureHints, pointerVerbs } from '@/domain/device/environment';
 import { currentEnvironment } from '@/features/app/install';
@@ -11,17 +11,16 @@ import { useCard } from '@/features/library/queries';
 import type { FertigModel } from '@/domain/progress/celebrate';
 import { acknowledgeMilestones, celebrationAfterSession } from '@/features/progress/actions';
 import { useMediaUrl } from '@/features/media/media';
-import { areaCodeOf, useStudySession, type SessionEnd } from '@/features/study/useSession';
+import { areaCodeOf, useStudySession } from '@/features/study/useSession';
 import { Button } from '../../components/Button';
-import { Celebration } from '../../components/Celebration';
 import { SurfaceImage, SurfaceMissing } from '../../components/CoverSurface';
 import { Sheet } from '../../components/Sheet';
 import { StorageError } from '../../components/StorageError';
-import { cx } from '../../cx';
 import { useMediaQuery } from '../../useMediaQuery';
 import { useGoBack } from '../../useGoBack';
 import { colors } from '../../tokens/tokens';
 import { Fertig } from './Fertig';
+import { Geschafft } from './Geschafft';
 import { LernenView, type Exit } from './LernenView';
 import { SourceViewer } from '../pdf/SourceViewer';
 import { LinkedCardSheet } from './LinkedCardSheet';
@@ -267,6 +266,8 @@ export function Lernen() {
         exit={exit}
         drag={drag}
         undoable={session.undoable && !animating}
+        counts={state.counts}
+        open={state.queue.length}
         coverHint={gestureHints(currentEnvironment()).coverStudy}
         flipHint={`${pointerVerbs(currentEnvironment()).tap} zum Umdrehen`}
         onClose={close}
@@ -370,56 +371,6 @@ function LinkedCard({
         if (card) onStudy(card.id);
       }}
     />
-  );
-}
-
-const TILES: readonly { key: RatingKey; label: string; className: string }[] = [
-  { key: 'again', label: 'Nochmal', className: styles.statAgain ?? '' },
-  { key: 'hard', label: 'Schwer', className: styles.statHard ?? '' },
-  { key: 'good', label: 'Gut', className: styles.statGood ?? '' },
-  { key: 'easy', label: 'Leicht', className: styles.statEasy ?? '' },
-];
-
-/** Ende einer Session (Lernen.dc.html „Geschafft.“). */
-function Geschafft({
-  end,
-  back,
-  onBack,
-  onMore,
-}: {
-  end: SessionEnd;
-  back: string;
-  onBack: () => void;
-  onMore: () => void;
-}) {
-  return (
-    <main className={styles.done} aria-label="Geschafft">
-      <div className={styles.doneInner}>
-        <Celebration />
-        <div className={styles.doneText}>
-          <h1 className={styles.doneTitle}>Geschafft.</h1>
-          <p className={styles.doneLead}>{endSummary(end)}</p>
-        </div>
-        <div className={styles.stats}>
-          {TILES.map((tile) => (
-            <div key={tile.key} className={cx(styles.stat, tile.className)}>
-              <span className={styles.statNumber}>{end.counts[tile.key]}</span>
-              <span className={styles.statLabel}>{tile.label}</span>
-            </div>
-          ))}
-        </div>
-        <div className={styles.doneActions}>
-          <Button variant="primary" block onClick={onBack}>
-            {back}
-          </Button>
-          {end.stillDue > 0 ? (
-            <Button variant="soft" size="md" block onClick={onMore}>
-              {plural(end.stillDue, 'Karte', 'Karten')} noch einmal lernen
-            </Button>
-          ) : null}
-        </div>
-      </div>
-    </main>
   );
 }
 

@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { pixelDiff, showDesign } from './design';
+import { pixelDiff, showDesign, simulateStatusBar } from './design';
 
 /*
  * Erfolge (M9): pixelnah zu Erfolge.dc.html (iPhone 14), iPadErfolge.dc.html (iPad quer), Fertig.dc.html
@@ -117,12 +117,8 @@ test.describe('Erfolge: pixelnah zum Design', () => {
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto(`/Juri/styleguide/erfolge/${c.route}`);
-      if (c.layout === 'iphone') {
-        await page.evaluate(() => {
-          document.documentElement.style.setProperty('--sim-safe-top', '47px');
-        });
-      }
       await expect(page.getByRole('heading', { level: 1 })).toBeAttached();
+      if (c.layout === 'iphone') await simulateStatusBar(page);
       await page.evaluate(() => document.fonts.ready);
       await page.locator('[data-addition]').evaluateAll((els) => {
         for (const el of els) (el as HTMLElement).style.setProperty('display', 'none');

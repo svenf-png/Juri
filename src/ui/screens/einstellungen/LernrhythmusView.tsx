@@ -86,201 +86,210 @@ export function LernrhythmusView({
       <BackLink to={back.to} label={back.label} className={styles.back} />
       <h1 className={styles.title}>Lernrhythmus</h1>
 
-      <div className={styles.algos} role="group" aria-label="Lernalgorithmus">
-        {ALGORITHMS.map((a) => (
-          <button
-            key={a.value}
-            type="button"
-            className={cx(styles.algo, tap.tap, settings.algorithm === a.value && styles.algoOn)}
-            aria-pressed={settings.algorithm === a.value}
-            onClick={() => {
-              set({ algorithm: a.value });
-            }}
-          >
-            {a.label}
-          </button>
-        ))}
-      </div>
-
-      {daily === undefined ? null : (
-        <p className={styles.help} data-addition>
-          {settings.algorithm === 'fsrs'
-            ? 'FSRS berechnet jeden Abstand einzeln aus deiner Ziel-Behaltensquote.'
-            : 'Leitner nutzt feste Abstände je Fach, die du unten selbst festlegst.'}
-        </p>
-      )}
-
-      {settings.algorithm === 'fsrs' ? (
-        <div className={cx(styles.block, rise.rise)}>
-          <div className={styles.presets} role="group" aria-label="Voreinstellung">
-            {RETENTION_PRESETS.map((p) => {
-              const on = settings.retention === p.retention;
-              return (
-                <button
-                  key={p.name}
-                  type="button"
-                  className={cx(styles.preset, tap.tap, on && styles.presetOn)}
-                  aria-pressed={on}
-                  onClick={() => {
-                    set({ retention: p.retention });
-                  }}
-                >
-                  <span className={styles.presetName}>{p.name}</span>
-                  <span className={styles.presetValue}>{p.retention} %</span>
-                  <span className={styles.presetLoad}>{p.load}</span>
-                </button>
-              );
-            })}
-          </div>
-          {daily === undefined ? null : (
-            <p className={styles.help} data-addition>
-              {presetOn
-                ? 'Die Voreinstellungen sind Abkürzungen für den Regler darunter.'
-                : `Eigener Wert: ${settings.retention} %. Die Voreinstellungen sind Abkürzungen für den Regler.`}
-            </p>
-          )}
-          <label className={styles.slider}>
-            <span className={styles.sliderHead}>
-              <span>Ziel-Behaltensquote</span>
-              <span className={styles.sliderValue}>{retention} %</span>
-            </span>
-            <input
-              type="range"
-              className={styles.range}
-              min={RETENTION_MIN}
-              max={RETENTION_MAX}
-              step={1}
-              value={retention}
-              onChange={(e) => {
-                const value = clampRetention(Number(e.target.value));
-                setRetention(value);
-                set({ retention: value });
-              }}
-            />
-            <span className={styles.help}>
-              Wahrscheinlichkeit, eine Karte bei Fälligkeit noch zu wissen. Höher heißt: kürzere
-              Abstände, mehr Wiederholungen pro Tag.
-            </span>
-          </label>
-          <div className={styles.example}>
-            <span className={styles.exampleLabel}>Beispiel: immer „Gut“ (ca.)</span>
-            <div className={styles.chips}>
-              {examples.map((text, i) => (
-                <span key={i} className={styles.chip}>
-                  {text}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className={cx(styles.block, rise.rise)} style={{ gap: 12 }}>
-          <span className={styles.leitnerLead}>
-            Klassisches Karteikasten-System: gewusst rückt ein Fach weiter, nicht gewusst zurück in
-            Fach 1.
-          </span>
-          <div className={styles.boxes}>
-            {settings.leitnerDays.map((days, i) => (
+      <div className={styles.cols}>
+        <div className={styles.col}>
+          <div className={styles.algos} role="group" aria-label="Lernalgorithmus">
+            {ALGORITHMS.map((a) => (
               <button
-                key={i}
+                key={a.value}
                 type="button"
-                className={cx(styles.box, tap.tap, i === LEITNER_BOXES - 1 && styles.boxLast)}
-                style={{ background: BOX_FILLS[i] }}
-                aria-label={`Fach ${i + 1}, ${days} ${days === 1 ? 'Tag' : 'Tage'}, ändern`}
+                className={cx(
+                  styles.algo,
+                  tap.tap,
+                  settings.algorithm === a.value && styles.algoOn,
+                )}
+                aria-pressed={settings.algorithm === a.value}
                 onClick={() => {
-                  setBox(i + 1);
+                  set({ algorithm: a.value });
                 }}
               >
-                <span className={styles.boxName}>Fach {i + 1}</span>
-                <span className={styles.boxDays}>{days}</span>
-                <span className={styles.boxUnit}>Tage</span>
+                {a.label}
               </button>
             ))}
           </div>
-          <span className={styles.hintSmall}>Fach antippen, um Tage zu ändern.</span>
-        </div>
-      )}
 
-      <div className={styles.rows}>
-        <div className={styles.row}>
-          <span className={styles.rowLabel}>Neue Karten pro Tag</span>
-          <Stepper
-            value={settings.newPerDay}
-            canDecrease={settings.newPerDay > floor}
-            canIncrease={settings.newPerDay < 100}
-            onDecrease={() => {
-              set({ newPerDay: stepNewPerDay(settings.newPerDay, -1, floor) });
-            }}
-            onIncrease={() => {
-              set({ newPerDay: stepNewPerDay(settings.newPerDay, 1, floor) });
-            }}
-          />
-        </div>
-        {daily === undefined ? null : (
-          <>
-            <div className={styles.row} data-addition>
-              <span className={styles.rowText}>
-                <span className={styles.rowLabel}>Tagesziel Lernen</span>
-                <span className={styles.rowSub}>
-                  Karten, die du am Tag bewertest (auch in Erfolge)
+          {daily === undefined ? null : (
+            <p className={styles.help} data-addition>
+              {settings.algorithm === 'fsrs'
+                ? 'FSRS berechnet jeden Abstand einzeln aus deiner Ziel-Behaltensquote.'
+                : 'Leitner nutzt feste Abstände je Fach, die du unten selbst festlegst.'}
+            </p>
+          )}
+
+          {settings.algorithm === 'fsrs' ? (
+            <div className={cx(styles.block, rise.rise)}>
+              <div className={styles.presets} role="group" aria-label="Voreinstellung">
+                {RETENTION_PRESETS.map((p) => {
+                  const on = settings.retention === p.retention;
+                  return (
+                    <button
+                      key={p.name}
+                      type="button"
+                      className={cx(styles.preset, tap.tap, on && styles.presetOn)}
+                      aria-pressed={on}
+                      onClick={() => {
+                        set({ retention: p.retention });
+                      }}
+                    >
+                      <span className={styles.presetName}>{p.name}</span>
+                      <span className={styles.presetValue}>{p.retention} %</span>
+                      <span className={styles.presetLoad}>{p.load}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {daily === undefined ? null : (
+                <p className={styles.help} data-addition>
+                  {presetOn
+                    ? 'Die Voreinstellungen sind Abkürzungen für den Regler darunter.'
+                    : `Eigener Wert: ${settings.retention} %. Die Voreinstellungen sind Abkürzungen für den Regler.`}
+                </p>
+              )}
+              <label className={styles.slider}>
+                <span className={styles.sliderHead}>
+                  <span>Ziel-Behaltensquote</span>
+                  <span className={styles.sliderValue}>{retention} %</span>
                 </span>
+                <input
+                  type="range"
+                  className={styles.range}
+                  min={RETENTION_MIN}
+                  max={RETENTION_MAX}
+                  step={1}
+                  value={retention}
+                  onChange={(e) => {
+                    const value = clampRetention(Number(e.target.value));
+                    setRetention(value);
+                    set({ retention: value });
+                  }}
+                />
+                <span className={styles.help}>
+                  Wahrscheinlichkeit, eine Karte bei Fälligkeit noch zu wissen. Höher heißt: kürzere
+                  Abstände, mehr Wiederholungen pro Tag.
+                </span>
+              </label>
+              <div className={styles.example}>
+                <span className={styles.exampleLabel}>Beispiel: immer „Gut“ (ca.)</span>
+                <div className={styles.chips}>
+                  {examples.map((text, i) => (
+                    <span key={i} className={styles.chip}>
+                      {text}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className={cx(styles.block, rise.rise)} style={{ gap: 12 }}>
+              <span className={styles.leitnerLead}>
+                Klassisches Karteikasten-System: gewusst rückt ein Fach weiter, nicht gewusst zurück
+                in Fach 1.
               </span>
+              <div className={styles.boxes}>
+                {settings.leitnerDays.map((days, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={cx(styles.box, tap.tap, i === LEITNER_BOXES - 1 && styles.boxLast)}
+                    style={{ background: BOX_FILLS[i] }}
+                    aria-label={`Fach ${i + 1}, ${days} ${days === 1 ? 'Tag' : 'Tage'}, ändern`}
+                    onClick={() => {
+                      setBox(i + 1);
+                    }}
+                  >
+                    <span className={styles.boxName}>Fach {i + 1}</span>
+                    <span className={styles.boxDays}>{days}</span>
+                    <span className={styles.boxUnit}>Tage</span>
+                  </button>
+                ))}
+              </div>
+              <span className={styles.hintSmall}>Fach antippen, um Tage zu ändern.</span>
+            </div>
+          )}
+        </div>
+        <div className={styles.col}>
+          <div className={styles.rows}>
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Neue Karten pro Tag</span>
               <Stepper
-                value={daily.learnGoal}
-                decreaseLabel="Tagesziel senken"
-                increaseLabel="Tagesziel erhöhen"
-                canDecrease={daily.learnGoal > LEARN_GOAL_MIN}
-                canIncrease={daily.learnGoal < LEARN_GOAL_MAX}
+                value={settings.newPerDay}
+                canDecrease={settings.newPerDay > floor}
+                canIncrease={settings.newPerDay < 100}
                 onDecrease={() => {
-                  daily.onLearnGoalChange(learnStep(daily.learnGoal, -1));
+                  set({ newPerDay: stepNewPerDay(settings.newPerDay, -1, floor) });
                 }}
                 onIncrease={() => {
-                  daily.onLearnGoalChange(learnStep(daily.learnGoal, 1));
+                  set({ newPerDay: stepNewPerDay(settings.newPerDay, 1, floor) });
                 }}
               />
             </div>
-            <p className={cx(styles.help, styles.rowNote)} data-addition>
-              Neue Karten pro Tag liegen nie unter dem Tagesziel. Hebst du das Ziel an, steigt das
-              Limit mit. Das Limit lässt sich nicht unter das Ziel senken.
-            </p>
-          </>
-        )}
-        <div className={styles.row}>
-          <span className={styles.rowLabel}>Längster Abstand</span>
-          <span className={styles.rowValue}>{MAX_INTERVAL_DAYS} Tage</span>
-        </div>
-        <Link to="/fristen" className={cx(styles.row, styles.rowLink)}>
-          <span className={styles.rowText}>
-            <span className={styles.rowLabel}>Fristen</span>
-            <span className={styles.rowSub}>
-              Examen, Klausuren, LL.M.: Abstände enden rechtzeitig davor
-            </span>
-          </span>
-          <span
-            className={styles.rowValue}
-            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
-          >
-            {deadlines === undefined ? null : (
-              <span style={{ color: 'var(--violet)' }}>{deadlines}</span>
+            {daily === undefined ? null : (
+              <>
+                <div className={styles.row} data-addition>
+                  <span className={styles.rowText}>
+                    <span className={styles.rowLabel}>Tagesziel Lernen</span>
+                    <span className={styles.rowSub}>
+                      Karten, die du am Tag bewertest (auch in Erfolge)
+                    </span>
+                  </span>
+                  <Stepper
+                    value={daily.learnGoal}
+                    decreaseLabel="Tagesziel senken"
+                    increaseLabel="Tagesziel erhöhen"
+                    canDecrease={daily.learnGoal > LEARN_GOAL_MIN}
+                    canIncrease={daily.learnGoal < LEARN_GOAL_MAX}
+                    onDecrease={() => {
+                      daily.onLearnGoalChange(learnStep(daily.learnGoal, -1));
+                    }}
+                    onIncrease={() => {
+                      daily.onLearnGoalChange(learnStep(daily.learnGoal, 1));
+                    }}
+                  />
+                </div>
+                <p className={cx(styles.help, styles.rowNote)} data-addition>
+                  Neue Karten pro Tag liegen nie unter dem Tagesziel. Hebst du das Ziel an, steigt
+                  das Limit mit. Das Limit lässt sich nicht unter das Ziel senken.
+                </p>
+              </>
             )}
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Längster Abstand</span>
+              <span className={styles.rowValue}>{MAX_INTERVAL_DAYS} Tage</span>
+            </div>
+            <Link to="/fristen" className={cx(styles.row, styles.rowLink)}>
+              <span className={styles.rowText}>
+                <span className={styles.rowLabel}>Fristen</span>
+                <span className={styles.rowSub}>
+                  Examen, Klausuren, LL.M.: Abstände enden rechtzeitig davor
+                </span>
+              </span>
+              <span
+                className={styles.rowValue}
+                style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+              >
+                {deadlines === undefined ? null : (
+                  <span style={{ color: 'var(--violet)' }}>{deadlines}</span>
+                )}
+                <span className={styles.rowChevron}>
+                  <ChevronRightIcon size={16} strokeWidth={2.2} />
+                </span>
+              </span>
+            </Link>
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Lernschritte bei „Nochmal“</span>
+              <span className={styles.rowValue}>1 min · 10 min</span>
+            </div>
+          </div>
+
+          {/* Ergänzung: auf dem iPad führt die Sidebar hierher, der Weg zu Profil und Backup bleibt. */}
+          <Link to="/einstellungen" className={cx(styles.row, styles.rowBorderless)} data-addition>
+            <span className={styles.rowLabel}>Profil, Speicher und Backup</span>
             <span className={styles.rowChevron}>
               <ChevronRightIcon size={16} strokeWidth={2.2} />
             </span>
-          </span>
-        </Link>
-        <div className={styles.row}>
-          <span className={styles.rowLabel}>Lernschritte bei „Nochmal“</span>
-          <span className={styles.rowValue}>1 min · 10 min</span>
+          </Link>
         </div>
       </div>
-
-      {/* Ergänzung: auf dem iPad führt die Sidebar hierher, der Weg zu Profil und Backup bleibt. */}
-      <Link to="/einstellungen" className={cx(styles.row, styles.rowBorderless)} data-addition>
-        <span className={styles.rowLabel}>Profil, Speicher und Backup</span>
-        <span className={styles.rowChevron}>
-          <ChevronRightIcon size={16} strokeWidth={2.2} />
-        </span>
-      </Link>
 
       <Sheet
         open={box !== null}

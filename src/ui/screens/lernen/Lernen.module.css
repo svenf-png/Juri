@@ -150,6 +150,16 @@
   transition: none !important;
 }
 
+/* Hülle für die Desktop-Gestaltung: darunter ohne eigene Box (die Kinder liegen in .screen). */
+.deck {
+  display: contents;
+}
+
+/* Seitenfeld nur am Rechner. */
+.panel {
+  display: none;
+}
+
 /* Kopf einer Karte: Rechtsgebiet, Typ, Norm. */
 .head {
   display: flex;
@@ -1019,4 +1029,393 @@
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+/*
+ * Desktop-Gestaltung (ab 1280 px, ADR-017, DesktopLernen*.dc.html): Karte (720 px) und Seitenfeld
+ * (320 px) mittig im Fenster. Die Bühne ist so hoch wie die größte Karte samt Kopfzeile und Knopf
+ * (Karte plus 232 px), damit die Kopfzeile bei jeder Karte an derselben Stelle bleibt. Die Karte
+ * folgt der Fensterhöhe zwischen 440 und 560 px; Schema ist 40 px höher, Abdeckung 20 px.
+ */
+@media (min-width: 1280px) {
+  .screen {
+    --card-h: clamp(440px, calc(100dvh - var(--shell-top, 0px) - 252px), 560px);
+    max-width: none;
+    padding: 0;
+    flex-direction: row;
+    overflow: auto;
+  }
+
+  .deck {
+    display: grid;
+    grid-template-columns: 720px 320px;
+    grid-template-rows: auto auto auto;
+    column-gap: 40px;
+    align-content: start;
+    height: calc(var(--card-h) + 232px);
+    margin: auto;
+    flex-shrink: 0;
+  }
+
+  .top {
+    grid-column: 1;
+    margin: 0;
+  }
+
+  .stage {
+    grid-column: 1;
+    margin: 0;
+    padding: 20px 0 44px;
+    flex: none;
+    min-height: auto;
+  }
+
+  .frame {
+    flex: none;
+    height: var(--card-h);
+    max-height: none;
+  }
+
+  .stageTall .frame {
+    height: calc(var(--card-h) + 40px);
+  }
+
+  .stageCover .frame {
+    height: calc(var(--card-h) + 20px);
+  }
+
+  .stageTall,
+  .stageCover {
+    padding-bottom: 44px;
+  }
+
+  .bottom {
+    grid-column: 1;
+    margin: 20px 0 0;
+    height: auto;
+  }
+
+  .panel {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    align-self: start;
+    box-sizing: border-box;
+    border-radius: var(--radius-card);
+    background: var(--bg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .panelBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .panelLabel {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .panelStats {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .panelStat {
+    height: 64px;
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .panelStatCount {
+    font-size: 22px;
+    font-weight: 750;
+    line-height: 1;
+  }
+
+  .panelStatName {
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .panelStat_again {
+    background: var(--rating-again-bg);
+    border: 1.5px solid var(--rating-again-border);
+    color: var(--rating-again-fg);
+  }
+
+  .panelStat_hard {
+    background: var(--rating-hard-bg);
+    color: var(--rating-hard-fg);
+  }
+
+  .panelStat_good {
+    background: var(--rating-good-bg);
+    color: var(--rating-good-fg);
+  }
+
+  .panelStat_easy {
+    background: var(--rating-easy-bg);
+    color: var(--rating-easy-fg);
+  }
+
+  .panelOpen {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .panelKeys {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+  }
+
+  .keyList {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .keyRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 40px;
+  }
+
+  .keyChips {
+    width: 128px;
+    flex-shrink: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .keyText {
+    font-size: 14.5px;
+    font-weight: 600;
+  }
+
+  .panelUndo {
+    height: 48px;
+    border: 0;
+    border-radius: 16px;
+    background: var(--surface);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .panelUndo:disabled {
+    color: var(--placeholder);
+    cursor: default;
+  }
+
+  /* Die Textzeilen unter dem Knopf gelten nur auf dem Handy; am Rechner trägt das Seitenfeld sie. */
+  .undo,
+  .hintSwipe {
+    display: none;
+  }
+
+  /* Karte: 720 × 560 mit 36 px Innenabstand und größerer Schrift. */
+  .flipButton,
+  .pairButton {
+    height: 64px;
+    border-radius: var(--radius-button);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .pair {
+    gap: 10px;
+  }
+
+  /* Karte: 720 px breit, Radius und Schatten wie auf dem iPad, 36 px Innenabstand, größere Schrift. */
+  .frame {
+    --card-radius: var(--radius-card-ipad);
+    --card-shadow: var(--shadow-card-ipad);
+    --card-pad: 36px;
+  }
+
+  .behind {
+    border-radius: var(--radius-card-ipad);
+  }
+
+  .bundle,
+  .schema,
+  .cover {
+    border-radius: var(--radius-card-ipad);
+    box-shadow: var(--shadow-card-ipad);
+    padding: 36px;
+  }
+
+  .norm,
+  .backNorm {
+    font-size: 14px;
+  }
+
+  .frontBody {
+    gap: 22px;
+  }
+
+  .question {
+    font-size: 36px;
+    max-width: 560px;
+  }
+
+  .clozeText,
+  .backCloze,
+  .bundleText {
+    font-size: 30px;
+  }
+
+  .flipHint {
+    font-size: 14px;
+  }
+
+  .coverQuestion {
+    font-size: 24px;
+  }
+
+  .backBody {
+    gap: 22px;
+  }
+
+  .answerBlock {
+    gap: 16px;
+  }
+
+  .answerQuestion {
+    font-size: 16px;
+  }
+
+  .answer {
+    font-size: 24px;
+    max-width: 600px;
+  }
+
+  /* Schema: 36 px Innenabstand, Zeilen wie DesktopLernenSchema.dc.html (56 px, Nummer 28 px). */
+  .schema {
+    gap: 22px;
+  }
+
+  .schemaTitle {
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .row {
+    min-height: 56px;
+    gap: 12px;
+  }
+
+  .rowCurrent {
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+
+  .num {
+    width: 28px;
+    height: 28px;
+    margin-top: 14px;
+    border-radius: 14px;
+  }
+
+  .rowText {
+    min-height: 56px;
+  }
+
+  .rowTitle {
+    font-size: 18px;
+  }
+
+  .rowNorm {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .linkChip {
+    margin-top: 13px;
+    height: 30px;
+    padding: 0 11px;
+    border-radius: 15px;
+    font-size: 12.5px;
+    gap: 6px;
+  }
+
+  /* „Geschafft.“ mittig im Fenster (DesktopFertig.dc.html): Bilanz und Knöpfe 560 px breit. */
+  .doneInner {
+    max-width: none;
+    padding: 0 28px;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .doneTitle {
+    font-size: 56px;
+  }
+
+  .doneLead {
+    font-size: 18px;
+  }
+
+  .doneText {
+    max-width: 560px;
+  }
+
+  .stats {
+    max-width: 560px;
+    gap: 10px;
+  }
+
+  .stat {
+    height: 88px;
+    border-radius: var(--radius-button);
+  }
+
+  .statNumber {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .statLabel {
+    font-size: 13px;
+  }
+
+  .doneActions {
+    margin-top: 0;
+    max-width: 560px;
+  }
+
+  .doneActions > :first-child {
+    height: 64px;
+  }
 }

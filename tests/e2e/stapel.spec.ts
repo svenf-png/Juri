@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { pixelDiff, showDesign } from './design';
+import { pixelDiff, showDesign, simulateStatusBar } from './design';
 
 /*
  * Stapel und Erstellen (M3): pixelnah zu Bibliothek.dc.html, Stapel.dc.html, Erstellen.dc.html
@@ -79,12 +79,8 @@ const MAX_DIFF_RATIO = { chromium: 0.001, webkit: 0.002 };
 async function openPreview(page: Page, c: Case) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(c.route);
-  if (c.width === 390) {
-    await page.evaluate(() => {
-      document.documentElement.style.setProperty('--sim-safe-top', '47px');
-    });
-  }
   await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+  if (c.width === 390) await simulateStatusBar(page);
   await page.evaluate(() => document.fonts.ready);
   // Die CSP der App erlaubt keine eingefügten Stylesheets; Eigenschaften am Element gehen.
   for (const selector of c.hide) {

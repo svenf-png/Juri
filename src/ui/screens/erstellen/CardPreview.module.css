@@ -1,0 +1,162 @@
+/* Vorschau der Karte (DesktopErstellen.dc.html): 460 px breit, Karte 380 px hoch. */
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 4px;
+  min-width: 0;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.switch {
+  width: 210px;
+  box-sizing: border-box;
+  height: 36px;
+  display: flex;
+  padding: 3px;
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.option {
+  position: relative;
+  flex: 1 1 0;
+  border: 0;
+  border-radius: 13px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Trefferfläche 44 px: 30 px sichtbar plus 7 px je Seite. */
+.option::after {
+  content: '';
+  position: absolute;
+  inset: -7px 0;
+}
+
+.selected {
+  background: var(--bg);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: var(--shadow-segment);
+}
+
+.card {
+  height: 380px;
+  box-sizing: border-box;
+  border: 1px solid var(--line-soft);
+  border-radius: 32px;
+  background: var(--bg);
+  box-shadow: 0 30px 60px -36px rgba(46, 26, 115, 0.4);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.area {
+  height: 26px;
+  padding: 0 9px;
+  border-radius: var(--radius-tag);
+  background: var(--surface);
+  color: var(--violet-700);
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+}
+
+.type {
+  height: 26px;
+  padding: 0 10px;
+  border-radius: var(--radius-tag);
+  border: 1.5px solid var(--track);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  /* Wie die Karte beim Lernen: Der Rand kommt zur Höhe dazu. */
+  box-sizing: content-box;
+}
+
+.norm {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--violet);
+}
+
+.middle {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1.18;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  /* pre-wrap: Die Einrückung der Schema-Punkte (Leerzeichen am Zeilenanfang) bleibt stehen. */
+  white-space: pre-wrap;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.placeholder {
+  color: var(--muted);
+}
+
+.cover {
+  width: 100%;
+  min-width: 0;
+}
+
+.hint {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.help {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* Hover am Rechner (ADR-017). */
+@media (min-width: 1280px) and (hover: hover) {
+  .option:not(.selected):hover {
+    background: var(--heat-0);
+  }
+}

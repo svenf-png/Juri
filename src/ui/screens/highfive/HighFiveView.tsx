@@ -1,7 +1,8 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import type { HighFivesModel, PersonView, ReceivedView } from '@/domain/highfive/view';
-import { HighFiveIcon } from '../../components/icons';
+import { ChevronRightIcon, HighFiveIcon } from '../../components/icons';
+import { Kbd } from '../../components/Kbd';
 import { BackLink, Screen } from '../../components/Screen';
 import { cx } from '../../cx';
 import tap from '../../motion/tap.module.css';
@@ -12,6 +13,8 @@ export interface HighFiveViewProps {
   onGive: (person: PersonView) => void;
   onJustBecause: () => void;
   onContacts: () => void;
+  /** Ein Kontakt in der Liste neben den Spalten (ab 1280 px): bearbeiten oder entfernen. */
+  onContact: (id: string) => void;
   onOpenGreeting: () => void;
 }
 
@@ -93,9 +96,11 @@ export function HighFiveView(props: HighFiveViewProps) {
             type="button"
             className={cx(styles.justBecause, tap.tap)}
             onClick={props.onJustBecause}
+            aria-keyshortcuts="H"
           >
             <HighFiveIcon size={20} />
             Einfach so ein High five
+            <Kbd>H</Kbd>
           </button>
         </div>
 
@@ -111,6 +116,51 @@ export function HighFiveView(props: HighFiveViewProps) {
             </section>
           ) : null}
         </div>
+
+        {/* Ab 1280 px (ADR-017): „Deine Leute“ fest sichtbar statt hinter „Alle anzeigen“. */}
+        <aside className={styles.people} aria-label="Deine Leute">
+          <div className={styles.peopleHead}>
+            <span className={styles.label}>
+              {model.empty ? 'Kontakte' : `Deine Leute (${String(model.contacts.length)})`}
+            </span>
+            {model.empty ? null : <Kbd>K</Kbd>}
+          </div>
+          {model.empty ? null : (
+            <div className={styles.contactList}>
+              {model.contacts.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  className={styles.contactRow}
+                  onClick={() => {
+                    props.onContact(c.id);
+                  }}
+                >
+                  <span className={styles.contactAvatar} aria-hidden="true">
+                    {c.initial}
+                  </span>
+                  <span className={styles.contactText}>
+                    <span className={styles.contactName}>{c.name}</span>
+                    <span className={styles.contactSub}>{c.sub}</span>
+                  </span>
+                  <ChevronRightIcon size={16} strokeWidth={2.2} className={styles.contactChevron} />
+                </button>
+              ))}
+            </div>
+          )}
+          <div className={styles.greeting}>
+            <span className={styles.footerMuted}>Gruß von jemandem?</span>
+            <button
+              type="button"
+              className={cx(styles.footerLink, styles.greetingLink)}
+              onClick={props.onOpenGreeting}
+              aria-keyshortcuts="O"
+            >
+              Gruß-Datei öffnen
+              <Kbd>O</Kbd>
+            </button>
+          </div>
+        </aside>
       </div>
 
       <div className={styles.footer} data-addition>

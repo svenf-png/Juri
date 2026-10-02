@@ -130,3 +130,47 @@
     opacity: 1;
   }
 }
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopDialog.dc.html): Sheets stehen als Fenster in
+ * der Mitte (560 px, Radius 30) statt unten am Rand; kein Griff, Innenabstand 28 px.
+ */
+@media (min-width: 1280px) {
+  .sheet {
+    margin: auto;
+    border-radius: var(--radius-sheet);
+    box-shadow: 0 30px 60px -20px rgba(46, 26, 115, 0.45);
+  }
+
+  .sheet[open] {
+    animation: dialog-in var(--dur-tap) var(--ease-standard) both;
+  }
+
+  .handle {
+    display: none;
+  }
+
+  .body,
+  .titled {
+    padding: 28px;
+  }
+
+  .titled {
+    gap: 16px;
+  }
+
+  .headTitle {
+    font-size: 26px;
+  }
+}

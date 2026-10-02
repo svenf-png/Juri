@@ -1,5 +1,7 @@
 import type { ReactNode, RefObject } from 'react';
 import type { CardErrors } from '@/domain/cards/card';
+import { currentModifierLabel } from '@/features/app/keys';
+import { Kbd } from '../../components/Kbd';
 import { TextField } from '../../components/TextField';
 import { cx } from '../../cx';
 import tap from '../../motion/tap.module.css';
@@ -94,7 +96,7 @@ export function SplitForm({
             error={errors.front}
             inputRef={frontRef}
             className={styles.field}
-            inputStyle={{ fontSize: 19, lineHeight: 1.4 }}
+            inputStyle={{ fontSize: 'var(--front-size, 19px)', lineHeight: 1.4 }}
           />
           <TextField
             label="Rückseite"
@@ -107,7 +109,7 @@ export function SplitForm({
             error={errors.back}
             inputRef={backRef}
             className={styles.field}
-            inputStyle={{ fontSize: 17, lineHeight: 1.45 }}
+            inputStyle={{ fontSize: 'var(--back-size, 17px)', lineHeight: 1.45 }}
             labelExtra={
               applied.back ? <span className={styles.applied}>aus PDF übernommen</span> : undefined
             }
@@ -144,40 +146,44 @@ export function SplitForm({
       </div>
 
       <div className={styles.spacer} />
-      {goal ? (
-        <div className={styles.goal}>
-          <div className={styles.goalTrack} aria-hidden="true">
-            <div className={styles.goalFill} style={{ width: `${String(goal.pct)}%` }} />
+      <div className={styles.bottom}>
+        {goal ? (
+          <div className={styles.goal}>
+            <div className={styles.goalTrack} aria-hidden="true">
+              <div className={styles.goalFill} style={{ width: `${String(goal.pct)}%` }} />
+            </div>
+            <span>{goal.text}</span>
           </div>
-          <span>{goal.text}</span>
+        ) : null}
+        {failed ? (
+          <p className={styles.failed} role="alert">
+            Das hat nicht geklappt. Bitte versuche es noch einmal.
+          </p>
+        ) : null}
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={cx(styles.save, tap.tap)}
+            disabled={busy}
+            onClick={() => {
+              onSave(false);
+            }}
+          >
+            Speichern
+          </button>
+          <button
+            type="button"
+            className={cx(styles.next, tap.tap)}
+            disabled={busy}
+            aria-keyshortcuts="Control+Enter Meta+Enter"
+            onClick={() => {
+              onSave(true);
+            }}
+          >
+            Speichern &amp; nächste aus PDF
+            <Kbd tone="dark">{currentModifierLabel()} ↵</Kbd>
+          </button>
         </div>
-      ) : null}
-      {failed ? (
-        <p className={styles.failed} role="alert">
-          Das hat nicht geklappt. Bitte versuche es noch einmal.
-        </p>
-      ) : null}
-      <div className={styles.actions}>
-        <button
-          type="button"
-          className={cx(styles.save, tap.tap)}
-          disabled={busy}
-          onClick={() => {
-            onSave(false);
-          }}
-        >
-          Speichern
-        </button>
-        <button
-          type="button"
-          className={cx(styles.next, tap.tap)}
-          disabled={busy}
-          onClick={() => {
-            onSave(true);
-          }}
-        >
-          Speichern &amp; nächste aus PDF
-        </button>
       </div>
       {toast}
     </main>

@@ -77,6 +77,11 @@
   gap: 10px;
 }
 
+/* Nur am Rechner (ab 1280 px). */
+.people {
+  display: none;
+}
+
 .label {
   font-size: 12px;
   font-weight: 700;
@@ -539,4 +544,120 @@
   font-size: 13px;
   color: var(--muted);
   line-height: 1.4;
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopHighFive.dc.html): drei Spalten, die dritte
+ * zeigt „Deine Leute“ und die Gruß-Datei fest; die Fußzeilen darunter entfallen.
+ */
+@media (min-width: 1280px) {
+  .screen {
+    padding: calc(40px + var(--top-inset)) 48px calc(40px + var(--bottom-inset));
+  }
+
+  .cols {
+    grid-template-columns: 1.1fr 1fr 0.9fr;
+  }
+
+  .people {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .peopleHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .contactList {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contactRow {
+    width: calc(100% + 20px);
+    min-height: 60px;
+    margin: 0 -10px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    color: var(--ink);
+  }
+
+  .contactAvatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 19px;
+    flex-shrink: 0;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contactText {
+    flex-grow: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .contactName {
+    font-size: 15.5px;
+    font-weight: 700;
+  }
+
+  .contactSub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .contactChevron {
+    flex-shrink: 0;
+    color: var(--chevron);
+  }
+
+  .greeting {
+    min-height: 44px;
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .greetingLink {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .footer {
+    display: none;
+  }
+}
+
+/* Mit Zeiger: Zeile in Fläche, Umriss mit Rand in Violett (Artboard DesktopZustaende). */
+@media (min-width: 1280px) and (hover: hover) {
+  .contactRow:hover {
+    background: var(--surface);
+  }
+
+  .justBecause:hover {
+    border-color: var(--dash-cloze);
+  }
 }

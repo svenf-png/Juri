@@ -29,6 +29,9 @@ describe('routes', () => {
       '/styleguide/heute-erledigt',
       '/styleguide/lernen/frage',
       '/styleguide/lernen/luecke',
+      '/styleguide/lernen/antwort',
+      '/styleguide/lernen/schema',
+      '/styleguide/lernen/geschafft',
       '/styleguide/schema/lernen',
       '/styleguide/schema/inhalt',
       '/styleguide/schema/editor',
@@ -87,6 +90,7 @@ describe('routes', () => {
       '/styleguide/stapel/liste',
       '/styleguide/stapel/detail',
       '/styleguide/stapel/ipad',
+      '/styleguide/stapel/desktop',
       '/styleguide/erstellen',
       '*',
     ]);

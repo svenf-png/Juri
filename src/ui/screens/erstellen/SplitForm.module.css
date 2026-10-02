@@ -246,3 +246,125 @@
   font-weight: 600;
   color: var(--danger);
 }
+
+.bottom {
+  display: contents;
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopErstellenPdf.dc.html): Kopf 72 px hoch, feste
+ * Fußzeile mit Tagesziel und beiden Knöpfen, Felder in der Höhe des Boards.
+ */
+@media (min-width: 1280px) {
+  .form {
+    --front-size: 20px;
+    --back-size: 20px;
+    padding: 0 48px 0 40px;
+    gap: 16px;
+  }
+
+  .head {
+    height: 72px;
+    margin-bottom: -8px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .type {
+    font-size: 13.5px;
+  }
+
+  .field {
+    padding: 14px 16px;
+    box-sizing: border-box;
+    min-height: 120px;
+  }
+
+  .field + .field {
+    min-height: 150px;
+  }
+
+  .grid {
+    gap: 12px;
+  }
+
+  .miniValue {
+    font-weight: 400;
+  }
+
+  .miniLink {
+    font-weight: 600;
+  }
+
+  .bottom {
+    flex-shrink: 0;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .goal {
+    gap: 14px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .goalTrack {
+    flex: 0 0 280px;
+    height: 8px;
+    border-radius: 4px;
+  }
+
+  .goalFill {
+    height: 8px;
+    border-radius: 4px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .save,
+  .next {
+    height: 56px;
+    border-radius: 18px;
+    font-size: 16px;
+  }
+
+  .save {
+    padding: 0 22px;
+  }
+
+  .next {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 22px;
+  }
+}
+
+/* Hover am Rechner (ADR-017). */
+@media (min-width: 1280px) and (hover: hover) {
+  .save:hover:not(:disabled) {
+    border-color: var(--dash-cloze);
+  }
+
+  .next:hover:not(:disabled) {
+    background: var(--link);
+  }
+
+  .type:not(.typeOn):hover {
+    background: var(--heat-0);
+  }
+
+  button.mini:hover {
+    border-color: var(--dash-cloze);
+  }
+}

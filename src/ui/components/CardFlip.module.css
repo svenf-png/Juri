@@ -20,10 +20,10 @@
   position: absolute;
   inset: 0;
   border: 0;
-  border-radius: var(--radius-card);
+  border-radius: var(--card-radius, var(--radius-card));
   background: var(--bg);
-  box-shadow: var(--shadow-card);
-  padding: 26px;
+  box-shadow: var(--card-shadow, var(--shadow-card));
+  padding: var(--card-pad, 26px);
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -34,4 +34,26 @@
 
 .back {
   transform: rotateY(180deg);
+}
+
+/*
+ * Zusätzlich zu `backface-visibility`: Zeichnet eine Engine die 3D-Drehung nicht (WebKit ohne
+ * Beschleunigung, z. B. in der CI unter Linux), stünde die verdeckte Rückseite gespiegelt über der
+ * Vorderseite. Die Seiten wechseln deshalb in der Mitte der Drehung ihre Sichtbarkeit.
+ */
+.face {
+  visibility: visible;
+  transition: visibility 0s linear calc(var(--dur-flip) / 2);
+}
+
+.back {
+  visibility: hidden;
+}
+
+.flipped .back {
+  visibility: visible;
+}
+
+.flipped > .face:first-child {
+  visibility: hidden;
 }

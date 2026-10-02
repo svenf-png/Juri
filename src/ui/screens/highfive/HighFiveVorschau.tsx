@@ -47,6 +47,7 @@ export function HighFiveVorschau({ variant }: { variant: HighFiveVariant }) {
         onGive={noop}
         onJustBecause={noop}
         onContacts={noop}
+        onContact={noop}
         onOpenGreeting={noop}
       />
       {variant === 'gegeben' || variant === 'einfach' ? (

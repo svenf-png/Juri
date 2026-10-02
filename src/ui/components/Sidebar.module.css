@@ -95,3 +95,56 @@
   font-size: 15px;
   font-weight: 700;
 }
+
+/*
+ * Desktop-Gestaltung (ab 1280 px, ADR-017): „Suchen“ mit Kürzel über „Neue Karte“, das den
+ * Hinweis „N“ trägt. Hover (nur mit Zeiger): Zeile in Linie-weich, Fläche in Heat-0, Tinte in
+ * Violett-900 (Artboard DesktopZustaende).
+ */
+.search {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .search {
+    height: 44px;
+    flex-shrink: 0;
+    margin-bottom: 8px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--surface);
+    padding: 0 10px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .searchLabel,
+  .createLabel {
+    flex-grow: 1;
+  }
+
+  .create,
+  .create:hover {
+    gap: 10px;
+    padding: 0 14px 0 18px;
+  }
+}
+
+@media (min-width: 1280px) and (hover: hover) {
+  .item:not(.active):hover {
+    background: var(--line-soft);
+  }
+
+  .search:hover {
+    background: var(--heat-0);
+  }
+
+  .create:hover {
+    background: var(--violet-900);
+  }
+}

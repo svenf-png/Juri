@@ -4,6 +4,7 @@ import {
   formShortcut,
   pdfShortcut,
   highFiveShortcut,
+  modifierLabel,
   shareShortcut,
   shellShortcut,
   type KeyInput,
@@ -112,5 +113,16 @@ describe('highFiveShortcut', () => {
     expect(highFiveShortcut(key('k', { metaKey: true }))).toBeNull();
     expect(highFiveShortcut(key('h', { altKey: true }))).toBeNull();
     expect(highFiveShortcut(key('x'))).toBeNull();
+  });
+});
+
+describe('modifierLabel', () => {
+  it('Cmd auf dem Mac und am iPad, sonst Strg', () => {
+    for (const platform of ['Mac', 'iPad', 'iPhone'] as const) {
+      expect(modifierLabel(platform)).toBe('⌘');
+    }
+    for (const platform of ['Android', 'Andere'] as const) {
+      expect(modifierLabel(platform)).toBe('Strg');
+    }
   });
 });

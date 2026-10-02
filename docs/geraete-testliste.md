@@ -2,9 +2,9 @@
 
 Manuelle Prüfungen auf echten Geräten. Testgeräte (Entscheidung 7): iPhone 14, iPhone 16 Pro Max, iPad Air M4 11 Zoll, älteres iPad (Modell unter Einstellungen → Allgemein → Info).
 
-## Übersicht: offen zum Gerätetest (Stand 1.0.0)
+## Übersicht: offen zum Gerätetest (Stand 1.1.0)
 
-Alles hier lässt sich nur auf dem Gerät klären; die Cloud hat weder iOS noch VoiceOver. Die Abschnitte unten sind die Schrittlisten. Wer wenig Zeit hat, nimmt zuerst **M12** (VoiceOver, Leistung, Install-Hinweis), dann die offenen Punkte von **M11**, **M10** und **M8**.
+Alles hier lässt sich nur auf dem Gerät klären; die Cloud hat weder iOS noch VoiceOver. Die Abschnitte unten sind die Schrittlisten. Wer wenig Zeit hat, nimmt zuerst **M12** (VoiceOver, Leistung, Install-Hinweis) und **M13** (iPad Pro 13 Zoll, Rechner), dann die offenen Punkte von **M11**, **M10** und **M8**.
 
 | Abschnitt | Offen auf dem Gerät                                                                                                            | Stand                         |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------- |
@@ -15,6 +15,7 @@ Alles hier lässt sich nur auf dem Gerät klären; die Cloud hat weder iOS noch 
 | M10       | Teilen-Menü, MIME-Typ `application/octet-stream`, Dateiauswahl nach „Dateien“ (`.juri` wählbar?)                               | offen                         |
 | M11       | Bildkarte (PNG) im Teilen-Menü, `.juri-gruss` aus „Dateien“ (wählbar, nicht ausgegraut?)                                       | offen                         |
 | M12       | VoiceOver, Daumentest der Trefferflächen, 5.000 Karten auf dem Gerät, Schalter „Als Web-App öffnen“, pdf.js 6, Offline, Update | offen                         |
+| M13       | iPad Pro 13 Zoll quer (bekommt es die Desktop-Gestaltung?), Safari und Firefox am Rechner, Hover, Tastenhinweise, Trackpad     | offen                         |
 
 Beim Notieren bitte Gerät, iOS-Version und Juri-Version (Einstellungen, ganz unten) dazuschreiben.
 
@@ -236,4 +237,16 @@ Vorher: Testinstanz `svenf-png.github.io/Juri/test/` installiert, Demo-Profil ge
 
 19. **pdf.js 6:** Demo-Skript (50 Seiten) öffnen und durchblättern wie in M6, Punkt 4. **Notieren:** Rendert jede Seite, bleibt die App bedienbar, merkt man einen Unterschied zu vorher (Speicher, Tempo)?
 20. **Offline:** Flugmodus, Juri öffnen: Heute, Stapel, Lernen, Erfolge funktionieren; mit dem großen Datensatz ebenso.
-21. **Version:** Einstellungen zeigen „Version 1.0.0“, „13 von 14 Schritten fertig“, M13 „in Arbeit“.
+21. **Version:** Einstellungen zeigen ab 1.1.0 „Alle Schritte fertig“ (davor „Version 1.0.0“, „13 von 14 Schritten fertig“, M13 „in Arbeit“).
+
+## M13: Eigene Desktop-Gestaltung (Rechner und iPad Pro)
+
+Die Gestaltung gilt ab 1280 px Fensterbreite, erkannt nur an der Breite (A95). In Chromium, WebKit und Firefox ist sie in der CI gegen die Artboards geprüft (1440 × 900 und 1920 × 1080); offen bleibt, was nur auf der echten Hardware auffällt.
+
+1. **iPad Pro 13 Zoll quer (falls vorhanden):** Juri als installierte App öffnen. Der Viewport ist laut Sekundärquellen 1376 px breit, die Desktop-Gestaltung greift also. **Notieren:** Ist die Seitenleiste mit „Suchen“ und „Neue Karte“ sinnvoll bedienbar mit dem Finger? Stören die Tastenhinweise (Chips mit Tasten) ohne Tastatur? Lässt sich Lernen mit dem Finger bedienen (Karte, Seitenfeld, Bewertungsknöpfe)? Entscheidung danach: Umbruch weiter nur nach Breite, oder Touch-Geräte bleiben auf den iPad-Designs (dann braucht der Umbruch eine zweite Bedingung).
+2. **iPad Air 11 Zoll quer (1180 px):** Es bleibt bei den iPad-Designs, nichts hat sich geändert. Heute, Lernen, Erstellen und Schema-Editor kurz durchgehen.
+3. **Safari am Mac (Fenster ab 1280 px):** Heute, Stapel (Tabelle), Lernen mit Seitenfeld, Neue Karte mit Vorschau, Schema-Editor mit Spalte „Punkt bearbeiten“. **Notieren:** Wirken Hover (Zeile, Knopf) und Tastenhinweise richtig? Schließt „Esc“ die Fenster in der Mitte? Zeigt der Dialog „Neue Frist“ ein Datumsfeld, das Safari selbst zeichnet?
+4. **Trackpad im Editor „Felder aufziehen“ (Safari am Mac):** Mit zwei Fingern zwicken zoomt die Fläche, „+“ und „−“ in der Zoom-Leiste ebenso. **Notieren:** Bleibt die Seite selbst unberührt (kein Seitenzoom)?
+5. **Firefox am Rechner:** dieselben Bildschirme wie bei Safari; zusätzlich ein Feld im Dialog „Neue Frist“ anklicken: Fokusring sichtbar, Datumsfeld bedienbar.
+6. **Kürzel am Rechner:** „/“ (Suche), „N“ (neue Karte), in „Neue Karte“ **Strg Eingabe** (Mac: **Cmd Eingabe**) zum Speichern, im Lernen Leertaste, 1 bis 4 und Pfeile, im Schema-Editor und in „Felder“ die Tasten aus der Kürzel-Tabelle (Tab, Pfeile, Umschalt+Pfeile, Entf).
+7. **Größen:** Das Fenster auf 1280 px verkleinern (nichts darf abgeschnitten sein) und auf einem großen Bildschirm (über 1920 px) maximieren (der Inhalt steht mittig, der Rand ist gleichmäßig).

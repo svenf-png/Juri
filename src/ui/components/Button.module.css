@@ -88,3 +88,29 @@
   display: flex;
   width: 100%;
 }
+
+/*
+ * Hover am Rechner (Desktop-Gestaltung, ADR-017, DesktopZustaende.dc.html): Farben aus dem
+ * vorhandenen System. Auf Touch-Geräten und unter 1280 px bleibt es bei der Skalierung beim Antippen.
+ */
+@media (min-width: 1280px) and (hover: hover) {
+  .primary:hover:not(:disabled) {
+    background: var(--link);
+  }
+
+  .ink:hover:not(:disabled) {
+    background: var(--violet-900);
+  }
+
+  .soft:hover:not(:disabled) {
+    background: var(--heat-0);
+  }
+
+  .outline:hover:not(:disabled) {
+    border-color: var(--dash-cloze);
+  }
+
+  .ghost:hover:not(:disabled) {
+    background: var(--surface);
+  }
+}

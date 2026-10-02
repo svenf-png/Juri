@@ -10,6 +10,7 @@ import {
 } from '../../components/icons';
 import { Menu } from '../../components/Menu';
 import { cx } from '../../cx';
+import { useMediaQuery } from '../../useMediaQuery';
 import rise from '../../motion/rise.module.css';
 import tap from '../../motion/tap.module.css';
 import styles from './Stapel.module.css';
@@ -92,6 +93,8 @@ export function StapelDetail({
   onPickAreas,
 }: StapelDetailProps) {
   const members = model.areas.filter((a) => a.on);
+  // Kacheln oder Tabelle, nie beides im DOM: Ein Stapel kann tausende Karten haben.
+  const table = useMediaQuery('(min-width: 1280px)');
   return (
     <div className={styles.detail}>
       {/* iPhone */}
@@ -278,6 +281,28 @@ export function StapelDetail({
           <div className={styles.dashed}>
             <p className={styles.dashedTitle}>Hier erscheinen deine Karten</p>
             <p className={styles.dashedText}>Lege die erste an, dann steht hier der Überblick.</p>
+          </div>
+        ) : /* Ab 1280 px (ADR-017) statt der Kacheln: Tabelle mit Typ, Karte, Norm und Fälligkeit. */
+        table ? (
+          <div className={styles.table}>
+            <div className={styles.tHead} aria-hidden="true">
+              <span>Typ</span>
+              <span>Karte</span>
+              <span>Norm</span>
+              <span>Fällig</span>
+            </div>
+            <ul className={styles.tRows}>
+              {model.cards.map((c) => (
+                <li key={c.id}>
+                  <Link to={`/karte/${c.id}`} className={styles.tRow}>
+                    <span className={styles.tType}>{c.type}</span>
+                    <span className={styles.tTitle}>{c.title}</span>
+                    <span className={styles.tNorm}>{c.norm}</span>
+                    <span className={styles.tDue}>{c.due ?? ''}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         ) : (
           <div className={styles.grid}>

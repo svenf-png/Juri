@@ -51,3 +51,76 @@
 .arrow {
   margin-left: auto;
 }
+
+/* Zwei Sätze des Textes: auf dem Handy ein Absatz, am Rechner Leitsatz und Zeile darunter. */
+.claim,
+.sub {
+  display: inline;
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopWillkommen.dc.html): links eine Fläche in
+ * Violett mit dem Zeichen und dem Text, rechts das Formular.
+ */
+@media (min-width: 1280px) {
+  .split {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    background: var(--bg);
+  }
+
+  .panel {
+    box-sizing: border-box;
+    padding: 56px;
+    background: var(--violet);
+    color: var(--bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .panelLead {
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .claim {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 56px;
+    line-height: 1;
+    font-weight: 780;
+    letter-spacing: -0.035em;
+  }
+
+  .sub {
+    display: block;
+    font-size: 18px;
+    line-height: 1.45;
+    opacity: 0.9;
+  }
+
+  .formSide {
+    box-sizing: border-box;
+    padding: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form {
+    flex: none;
+    width: 100%;
+    max-width: 440px;
+  }
+
+  .title {
+    font-size: 48px;
+    line-height: 0.98;
+    font-weight: 780;
+    letter-spacing: -0.035em;
+  }
+}

@@ -8,6 +8,8 @@ import {
 import type { Face, Piece, SchemaRow, SourceRef } from '@/domain/session/present';
 import type { IntervalPreview } from '@/domain/scheduler/schedule';
 import type { RatingKey } from '@/domain/scheduler/rating';
+import { currentModifierLabel } from '@/features/app/keys';
+import { rating as ratingTokens } from '../../tokens/tokens';
 import { CardFlip } from '../../components/CardFlip';
 import { CoverSurface } from '../../components/CoverSurface';
 import {
@@ -18,6 +20,7 @@ import {
   NoteIcon,
   UndoIcon,
 } from '../../components/icons';
+import { Kbd } from '../../components/Kbd';
 import { RatingBar } from '../../components/RatingBar';
 import { cx } from '../../cx';
 import { useZoomPan } from '../../useZoomPan';
@@ -46,6 +49,9 @@ export interface LernenViewProps {
   /** Kartenbewegung durch den Finger, in Pixeln. */
   drag?: number | undefined;
   undoable: boolean;
+  /** Stand der Runde je Stufe und noch offene Karten; das Seitenfeld am Rechner (ADR-017) zeigt sie. */
+  counts?: Readonly<Record<RatingKey, number>> | undefined;
+  open?: number | undefined;
   /** Hinweis unter der Vorderseite; Standard „Tippen zum Umdrehen“, auf dem Desktop „Klicken …“. */
   flipHint?: string | undefined;
   /** Hinweis unter einer Abdeckung; Standard für Touch, auf dem Desktop mit Rad und Klick. */
@@ -399,6 +405,70 @@ function SchemaCard({
   );
 }
 
+const PANEL_ORDER: readonly RatingKey[] = ['again', 'hard', 'good', 'easy'];
+
+/**
+ * Seitenfeld der Desktop-Gestaltung (ab 1280 px, ADR-017): Stand der Runde je Stufe, Kürzel und
+ * „Zurücknehmen“. Darunter unsichtbar (`display: none`), dort gilt die Textzeile unter dem Knopf.
+ */
+function RoundPanel({ view }: { view: LernenViewProps }) {
+  const counts = view.counts ?? { again: 0, hard: 0, good: 0, easy: 0 };
+  const open = view.open ?? 0;
+  const mod = currentModifierLabel();
+  const shortcuts: [string[], string][] = [
+    [['Leertaste'], 'Umdrehen'],
+    [['1', '2', '3', '4'], 'Bewerten'],
+    [['←', '→'], 'Nochmal, Gut'],
+    [[mod, 'Z'], 'Zurücknehmen'],
+    [['Esc'], 'Beenden'],
+  ];
+  return (
+    <aside className={styles.panel} aria-label="Stand der Runde">
+      <section className={styles.panelBlock}>
+        <h2 className={styles.panelLabel}>Diese Runde</h2>
+        <ul className={styles.panelStats}>
+          {PANEL_ORDER.map((key) => (
+            <li key={key} className={cx(styles.panelStat, styles[`panelStat_${key}`])}>
+              <span className={cx('display', styles.panelStatCount)}>{counts[key]}</span>
+              <span className={styles.panelStatName}>{ratingTokens[key].label}</span>
+            </li>
+          ))}
+        </ul>
+        <p className={styles.panelOpen}>
+          {open} {open === 1 ? 'Karte' : 'Karten'} offen
+        </p>
+      </section>
+      <section className={styles.panelKeys}>
+        <h2 className={styles.panelLabel}>Kürzel</h2>
+        <ul className={styles.keyList}>
+          {shortcuts.map(([keys, text]) => (
+            <li key={text} className={styles.keyRow}>
+              <span className={styles.keyChips}>
+                {keys.map((k) => (
+                  <Kbd key={k} tone="surface">
+                    {k}
+                  </Kbd>
+                ))}
+              </span>
+              <span className={styles.keyText}>{text}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <button
+        type="button"
+        className={cx(styles.panelUndo, tap.tap)}
+        aria-label="Letzte Bewertung zurücknehmen"
+        disabled={!view.undoable}
+        onClick={view.onUndo}
+      >
+        <UndoIcon size={18} strokeWidth={2.2} />
+        Zurücknehmen
+      </button>
+    </aside>
+  );
+}
+
 /**
  * Lernansicht: Kopfzeile mit Beenden, Fortschritt und Zähler, die Karte (Frage, Lücke oder
  * gebündelte Lücken) und unten „Antwort zeigen“, „Nächste Lücke“ oder die vier Bewertungen.
@@ -442,94 +512,104 @@ export function LernenView(view: LernenViewProps) {
     <main className={styles.screen} aria-label="Lernen">
       {/* Gliederung für Screenreader; das Design zeigt keine Überschrift. */}
       <h1 className={styles.srOnly}>Lernen</h1>
-      <div className={styles.top}>
-        <button
-          type="button"
-          className={cx(styles.close, tap.tap)}
-          aria-label="Lernen beenden"
-          onClick={view.onClose}
-        >
-          <CloseIcon size={22} strokeWidth={2.2} />
-        </button>
-        <div
-          className={styles.track}
-          role="progressbar"
-          aria-label="Fortschritt"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={view.percent}
-        >
-          <div className={styles.fill} style={{ width: `${view.percent}%` }} />
-        </div>
-        <div className={styles.counter} aria-label={`Karte ${view.counter.replace('/', ' von ')}`}>
-          {view.counter}
-        </div>
-      </div>
-
-      <div className={cx(styles.stage, schema && styles.stageTall, cover && styles.stageCover)}>
-        <div className={styles.frame}>
-          {view.behind >= 2 ? <div className={cx(styles.behind, styles.behind2)} /> : null}
-          {view.behind >= 1 ? <div className={cx(styles.behind, styles.behind1)} /> : null}
-          <div
-            className={cx(
-              styles.wrap,
-              view.exit !== '' && styles[view.exit],
-              moving && styles.dragging,
-              view.exit === 'enter' && styles.instant,
-            )}
-            style={cardStyle}
-            {...(view.flipped ? view.cardEvents : {})}
+      <div className={styles.deck}>
+        <div className={styles.top}>
+          <button
+            type="button"
+            className={cx(styles.close, tap.tap)}
+            aria-label="Lernen beenden"
+            onClick={view.onClose}
           >
-            {card}
+            <CloseIcon size={22} strokeWidth={2.2} />
+          </button>
+          <div
+            className={styles.track}
+            role="progressbar"
+            aria-label="Fortschritt"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={view.percent}
+          >
+            <div className={styles.fill} style={{ width: `${view.percent}%` }} />
+          </div>
+          <div
+            className={styles.counter}
+            aria-label={`Karte ${view.counter.replace('/', ' von ')}`}
+          >
+            {view.counter}
           </div>
         </div>
-      </div>
 
-      <div className={styles.bottom}>
-        {view.flipped ? (
-          <>
-            <RatingBar animated intervals={view.intervals} onRate={view.onRate} />
-            <div className={styles.hint}>Wischen: links Nochmal, rechts Gut</div>
-          </>
-        ) : bundle ? (
-          <div className={styles.pair}>
-            <button
-              type="button"
-              className={cx(styles.pairButton, styles.pairAll, tap.tap)}
-              onClick={view.onRevealAll}
+        <div className={cx(styles.stage, schema && styles.stageTall, cover && styles.stageCover)}>
+          <div className={styles.frame}>
+            {view.behind >= 2 ? <div className={cx(styles.behind, styles.behind2)} /> : null}
+            {view.behind >= 1 ? <div className={cx(styles.behind, styles.behind1)} /> : null}
+            <div
+              className={cx(
+                styles.wrap,
+                view.exit !== '' && styles[view.exit],
+                moving && styles.dragging,
+                view.exit === 'enter' && styles.instant,
+              )}
+              style={cardStyle}
+              {...(view.flipped ? view.cardEvents : {})}
             >
-              Alle zeigen
-            </button>
-            <button
-              type="button"
-              className={cx(styles.pairButton, styles.pairNext, tap.tap)}
-              onClick={view.onRevealNext}
-            >
-              {schema ? 'Nächster Punkt' : 'Nächste Lücke'}
-            </button>
+              {card}
+            </div>
           </div>
-        ) : (
-          <>
-            <button
-              type="button"
-              className={cx(styles.flipButton, tap.tap, rise.rise)}
-              onClick={view.onFlip}
-            >
-              {face.kind === 'cover' ? `Feld ${String(face.asked)} aufdecken` : 'Antwort zeigen'}
-            </button>
-            {face.kind === 'cover' ? (
-              <div className={styles.hint}>
-                {view.coverHint ?? 'Zwei Finger zum Zoomen · Feld antippen zum Aufdecken'}
+        </div>
+
+        <div className={styles.bottom}>
+          {view.flipped ? (
+            <>
+              <RatingBar animated intervals={view.intervals} onRate={view.onRate} />
+              <div className={cx(styles.hint, styles.hintSwipe)}>
+                Wischen: links Nochmal, rechts Gut
               </div>
-            ) : null}
-            {view.undoable ? (
-              <button type="button" className={styles.undo} onClick={view.onUndo}>
-                <UndoIcon size={16} strokeWidth={2.2} />
-                Letzte Bewertung zurücknehmen
+            </>
+          ) : bundle ? (
+            <div className={styles.pair}>
+              <button
+                type="button"
+                className={cx(styles.pairButton, styles.pairAll, tap.tap)}
+                onClick={view.onRevealAll}
+              >
+                Alle zeigen
               </button>
-            ) : null}
-          </>
-        )}
+              <button
+                type="button"
+                className={cx(styles.pairButton, styles.pairNext, tap.tap)}
+                onClick={view.onRevealNext}
+              >
+                {schema ? 'Nächster Punkt' : 'Nächste Lücke'}
+                <Kbd tone="dark">Leertaste</Kbd>
+              </button>
+            </div>
+          ) : (
+            <>
+              <button
+                type="button"
+                className={cx(styles.flipButton, tap.tap, rise.rise)}
+                onClick={view.onFlip}
+              >
+                {face.kind === 'cover' ? `Feld ${String(face.asked)} aufdecken` : 'Antwort zeigen'}
+                <Kbd tone="dark">Leertaste</Kbd>
+              </button>
+              {face.kind === 'cover' ? (
+                <div className={styles.hint}>
+                  {view.coverHint ?? 'Zwei Finger zum Zoomen · Feld antippen zum Aufdecken'}
+                </div>
+              ) : null}
+              {view.undoable ? (
+                <button type="button" className={styles.undo} onClick={view.onUndo}>
+                  <UndoIcon size={16} strokeWidth={2.2} />
+                  Letzte Bewertung zurücknehmen
+                </button>
+              ) : null}
+            </>
+          )}
+        </div>
+        <RoundPanel view={view} />
       </div>
     </main>
   );

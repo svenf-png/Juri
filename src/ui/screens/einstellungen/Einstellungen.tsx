@@ -49,19 +49,25 @@ const dateTime = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium', timeSty
 export function Einstellungen({ data }: { data: ProfileData }) {
   return (
     <Screen className={styles.screen}>
-      <BackLink to="/" label="Heute" />
+      <BackLink to="/" label="Heute" className={styles.back} />
       <h1 className={styles.title}>Einstellungen</h1>
-      <ProfileForm key={data.profile.name} name={data.profile.name} />
-      <RhythmSection />
-      <StorageSection />
-      <BackupSection data={data} />
-      {Testdaten ? (
-        <Suspense fallback={null}>
-          <Testdaten />
-        </Suspense>
-      ) : null}
-      <Entwicklungsstand />
-      <Entwicklung />
+      <div className={styles.cols}>
+        <div className={styles.col}>
+          <ProfileForm key={data.profile.name} name={data.profile.name} />
+          <RhythmSection />
+          <StorageSection />
+        </div>
+        <div className={styles.col}>
+          <BackupSection data={data} />
+          {Testdaten ? (
+            <Suspense fallback={null}>
+              <Testdaten />
+            </Suspense>
+          ) : null}
+          <Entwicklungsstand />
+          <Entwicklung />
+        </div>
+      </div>
       <p className={styles.footer}>
         {__JURI_INSTANCE__ === 'test' ? 'Juri Test' : 'Juri'} · Version {buildLabel(BUILD)}
       </p>

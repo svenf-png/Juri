@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import type { IncomingView } from '@/domain/juri/text';
 import { ChevronRightIcon, ShareIcon } from '../../components/icons';
+import { Kbd } from '../../components/Kbd';
 import { Screen } from '../../components/Screen';
 import { cx } from '../../cx';
 import tap from '../../motion/tap.module.css';
@@ -118,9 +119,11 @@ function ExportCard(props: TeilenViewProps) {
         className={cx(styles.send, tap.tap)}
         disabled={!model.canSend}
         onClick={props.onSend}
+        aria-keyshortcuts="E"
       >
         <ShareIcon size={20} strokeWidth={2.2} />
         {model.action}
+        <Kbd tone="dark">E</Kbd>
       </button>
       {model.note ? (
         <p className={model.note.error ? styles.error : styles.note} role="status">
@@ -137,8 +140,14 @@ function Incoming(props: TeilenViewProps) {
     return (
       <div className={cx(styles.incoming, styles.dashed)}>
         <p className={styles.emptyText}>{model.hint}</p>
-        <button type="button" className={cx(styles.go, tap.tap)} onClick={props.onOpenFile}>
+        <button
+          type="button"
+          className={cx(styles.go, tap.tap)}
+          onClick={props.onOpenFile}
+          aria-keyshortcuts="I"
+        >
           Datei öffnen
+          <Kbd tone="dark">I</Kbd>
         </button>
         <button type="button" className={cx(styles.textLink, tap.tap)} onClick={props.onHelp}>
           So geht&rsquo;s
@@ -226,15 +235,17 @@ export function TeilenView(props: TeilenViewProps) {
     <Screen className={styles.root}>
       <h1 className={styles.title}>Teilen</h1>
       <ExportCard {...props} />
-      <div className={styles.receive}>
-        <span className={styles.label}>Empfangen</span>
-        <Incoming {...props} />
-      </div>
-      <div className={styles.footer}>
-        <span className={styles.footerMuted}>Alles sichern</span>
-        <Link to="/einstellungen" className={styles.footerLink}>
-          Backup exportieren
-        </Link>
+      <div className={styles.side}>
+        <div className={styles.receive}>
+          <span className={styles.label}>Empfangen</span>
+          <Incoming {...props} />
+        </div>
+        <div className={styles.footer}>
+          <span className={styles.footerMuted}>Alles sichern</span>
+          <Link to="/einstellungen" className={styles.footerLink}>
+            Backup exportieren
+          </Link>
+        </div>
       </div>
     </Screen>
   );

@@ -1,3 +1,4 @@
+import { DesktopShell } from '../../components/DesktopShell';
 import { ConfirmSheet } from '../stapel/Sheets';
 import {
   AREAS,
@@ -33,7 +34,9 @@ export function FristenVorschau({ variant }: { variant: FristenVariant }) {
   };
   return (
     <>
-      <FristenView model={model} onAdd={noop} onOpen={noop} onExport={noop} />
+      <DesktopShell active="fristen">
+        <FristenView model={model} onAdd={noop} onOpen={noop} onExport={noop} />
+      </DesktopShell>
       {variant === 'neu' ? <FristSheet {...sheet} editing={null} initial={NEU} /> : null}
       {variant === 'bearbeiten' ? (
         <FristSheet

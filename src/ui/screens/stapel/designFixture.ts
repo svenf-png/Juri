@@ -149,3 +149,19 @@ export const padDeck: DeckModel = {
     },
   ],
 };
+
+/** Fälligkeit je Karte wie in der Stapelliste (A80); nur für die Desktop-Vorschau. */
+const DESKTOP_DUE = [
+  'heute fällig',
+  'fällig morgen',
+  'fällig in 5 Tagen',
+  'überfällig seit 2 Tagen',
+  'Neu, heute dran',
+  'Neu, kommt später',
+];
+
+/** Stapel-Detail der Desktop-Gestaltung (DesktopStapel.dc.html): wie iPad, plus Fälligkeit. */
+export const desktopDeck: DeckModel = {
+  ...padDeck,
+  cards: padDeck.cards.map((c, i) => ({ ...c, due: DESKTOP_DUE[i] ?? '' })),
+};

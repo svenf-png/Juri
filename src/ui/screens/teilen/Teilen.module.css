@@ -238,6 +238,10 @@
   color: var(--muted);
 }
 
+.side {
+  display: contents;
+}
+
 .receive {
   display: flex;
   flex-direction: column;
@@ -536,4 +540,61 @@
   font-size: 14px;
   line-height: 1.45;
   color: var(--muted);
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopTeilen.dc.html): Überschrift über beiden
+ * Spalten; links die Datei zum Weitergeben, rechts Empfangen und darunter das Backup.
+ */
+@media (min-width: 1280px) {
+  .root {
+    /* 40 px oben wie die übrigen Bildschirme: Screen rechnet --screen-top plus --top-shift (47 px weniger). */
+    --screen-top: 87px;
+    max-width: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 32px;
+    row-gap: 20px;
+    align-content: start;
+  }
+
+  .title {
+    grid-column: 1 / -1;
+    font-size: 44px;
+    line-height: 1.05;
+  }
+
+  .export {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+  }
+
+  .side {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .send,
+  .go {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+}
+
+/* Mit Zeiger: Tinte wird Violett-900, Violett wird Link-Violett. */
+@media (min-width: 1280px) and (hover: hover) {
+  .send:hover:not(:disabled) {
+    background: var(--violet-900);
+  }
+
+  .go:hover:not(:disabled) {
+    background: var(--link);
+  }
 }

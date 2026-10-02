@@ -1,10 +1,10 @@
 # Juri
 
-Minimalistische Karteikarten-App (PWA) für das juristische Referendariat, für iPhone und iPad, mit einer brauchbaren Browser-Version für den Desktop. Alle Daten bleiben lokal auf dem Gerät, es gibt keinen Server für Nutzerdaten.
+Minimalistische Karteikarten-App (PWA) für das juristische Referendariat, für iPhone und iPad, mit einer eigenen Gestaltung für den Desktop-Browser (ab 1280 px Breite). Alle Daten bleiben lokal auf dem Gerät, es gibt keinen Server für Nutzerdaten.
 
 - **Adresse:** https://svenf-png.github.io/Juri/
 - **Testinstanz** (eigene Daten, Demo-Inhalte, Testdaten-Menü): https://svenf-png.github.io/Juri/test/
-- **Version:** 1.0.0 (Meilensteine M0 bis M12). Offen sind die Gerätetests ([docs/geraete-testliste.md](docs/geraete-testliste.md)) und M13, die eigene Desktop-Gestaltung (1.1.0).
+- **Version:** 1.1.0 (Meilensteine M0 bis M13, mit eigener Desktop-Gestaltung ab 1280 px Breite). Offen sind die Gerätetests ([docs/geraete-testliste.md](docs/geraete-testliste.md)).
 - **Dokumentation:** [docs/README.md](docs/README.md), darin Architektur, Handbuch und Projekt-Präsentation (per KI in PowerPoint umwandelbar).
 - **Design-Referenz:** [design/](design/)
 - **Lizenz:** [MIT](LICENSE); mitgelieferte Schriften unter SIL Open Font License.

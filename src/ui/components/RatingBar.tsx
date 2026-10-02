@@ -1,5 +1,6 @@
 import { rating } from '../tokens/tokens';
 import { cx } from '../cx';
+import { Kbd } from './Kbd';
 import rise from '../motion/rise.module.css';
 import styles from './RatingBar.module.css';
 
@@ -26,9 +27,13 @@ export function RatingBar({
           className={cx(styles.button, styles[key], animated && rise.rise)}
           style={animated ? { animationDelay: `${index * 0.05}s` } : undefined}
           onClick={() => onRate(key)}
+          aria-keyshortcuts={String(index + 1)}
         >
           <span className={styles.label}>{rating[key].label}</span>
           <span className={styles.interval}>{intervals[key]}</span>
+          <Kbd tone={key === 'easy' ? 'dark' : 'light'} className={styles.key}>
+            {index + 1}
+          </Kbd>
         </button>
       ))}
     </div>

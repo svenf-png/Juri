@@ -1,9 +1,9 @@
 ---
 titel: Juri benutzen
-untertitel: Das Handbuch für iPhone, iPad und den Browser am Rechner
+untertitel: Das Handbuch für iPhone, iPad und den Rechner
 zielgruppe: Referendarinnen und Referendare
 stand: 2026-10-01
-version: 1.0 (bis M9 gegen die App geprüft, übrige Kapitel Entwurf nach Design; Bedienungshilfen und Updates neu in 1.0)
+version: 1.1 (bis M9 gegen die App geprüft, Juri am Rechner gegen die App bei 1440 × 900; übrige Kapitel Entwurf nach Design)
 ---
 
 <!-- status: Loslegen, Heute, Karten anlegen (Frage, Lücke, Schema, Abdeckung, PDF, Notiz), Lernen, Lernrhythmus, Stapel, Fristen, Erfolge und Serie sind gegen die App geprüft (bis M9). Die übrigen Kapitel sind Entwürfe nach den Design-Screens und werden im genannten Meilenstein geprüft. -->
@@ -486,11 +486,77 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - Der Name kommt aus der Datei und ist nicht geprüft; ein Kontakt ist nur ein Name mit einer Kennung
 - Ohne Kontakte steht dort **„Noch keine Kontakte“**
 
+# Juri am Rechner
+
+<!-- status: M13 umgesetzt (Version 1.1.0, ADR-017); Bilder aus der App bei 1440 × 900; Safari und Firefox sowie das Trackpad prüft der Gerätetest (Testliste M13) -->
+
+## Eigene Gestaltung ab 1280 px
+
+<!-- layout: bild-gross -->
+
+![Heute am Rechner: Tagesziel, Fristen und High five, darunter Rechtsgebiete und die letzten 7 Tage](../bilder/desktop-heute.png)
+
+- Ab einer Fensterbreite von **1280 px** hat Juri eine eigene Gestaltung für den Rechner, kleinere Fenster bleiben bei der iPad-Aufteilung
+- Links die **Seitenleiste** mit **Suchen** (Taste **/**) und **Neue Karte** (Taste **N**)
+- Der Inhalt wächst bis 1440 px und steht in größeren Fenstern mittig
+- **Heute** zeigt Tagesziel und Fristen oben, die Rechtsgebiete als Kacheln und die letzten 7 Tage darunter
+- Kleine Chips zeigen, welche **Taste** an welcher Stelle gilt
+
+> **Notizen:** Die Gestaltung hängt nur an der Fensterbreite. Ein iPad Pro 13 Zoll im Querformat ist breit genug und bekäme sie ebenfalls; ob das stört, klärt der Gerätetest. Hover (der Mauszeiger über einem Knopf) färbt Zeilen und Knöpfe leicht ein, auf dem Touch-Gerät bleibt es beim Antippen.
+
+## Lernen am Rechner
+
+<!-- layout: bild-gross -->
+
+![Lernen am Rechner: Karte links, rechts das Seitenfeld mit dem Stand der Runde](../bilder/desktop-lernen-antwort.png)
+
+- Die **Karte** steht groß links, rechts das **Seitenfeld**: Stand der Runde je Bewertung und was noch offen ist
+- **Leertaste** dreht die Karte, **1 bis 4** bewerten, **Pfeil links** ist „Nochmal“, **Pfeil rechts** „Gut“
+- **Strg Z** (Mac: **Cmd Z**) nimmt die letzte Bewertung zurück, **Esc** beendet die Runde
+- Die vier Bewertungsknöpfe tragen ihre Zifferntaste
+
+## Karten anlegen am Rechner
+
+<!-- layout: bild-gross -->
+
+![Neue Karte am Rechner: Formular links, Vorschau der Karte rechts, Fußleiste mit Speichern](../bilder/desktop-erstellen.png)
+
+- Alle Felder stehen offen: **Norm, Stapel, Tags und Notiz** brauchen kein „Mehr“
+- Rechts siehst du die **Vorschau**: so erscheint die Karte beim Lernen, der Umschalter zeigt die Rückseite
+- Unten **Speichern** (speichert und schließt) und **Speichern & nächste** (bleibt im Formular)
+- **Strg Eingabe** (Mac: **Cmd Eingabe**) speichert aus jedem Feld heraus
+
+## PDF und Felder am Rechner
+
+<!-- layout: zwei-spalten -->
+
+![Neue Karte mit geöffnetem PDF: links die Seite, rechts das Formular](../bilder/desktop-erstellen-pdf.png)
+
+- Das **PDF** steht links groß, das Formular rechts; unter der Seite stehen der Hinweis, die Zoom-Tasten und das Blättern
+- Zum Abdecken ziehst du **Felder** mit der Maus auf; rechts steht die **Liste der Felder** mit Auswahl, „Feld in der Mitte anlegen“ und **Entf**
+- Zoom: **Strg** (Mac: **Cmd**) mit dem Mausrad, oder die Knöpfe **−** und **+**, **0** setzt zurück
+
+## Schema am Rechner
+
+<!-- layout: bild-gross -->
+
+![Schema-Editor am Rechner: Gliederung links, rechts die Spalte Punkt bearbeiten mit der Suche nach Karten](../bilder/desktop-schema-editor.png)
+
+- Die **Gliederung** links, rechts bleibt die Spalte **„Punkt bearbeiten“** stehen: Text, Norm, Inhalt und Verknüpfung
+- Die **Suche** nach Karten für eine Verknüpfung erscheint als Liste in dieser Spalte
+- **Sichern** unten rechts, auch mit **Strg Eingabe**
+
+## Fenster in der Mitte
+
+- Sheets (Neue Frist, Backup, Tagesziele) stehen am Rechner als **Fenster in der Mitte**, nicht am unteren Rand
+- **Esc** oder ein Klick neben das Fenster schließt es
+- Der **Stapel** zeigt die Karten als **Tabelle** mit Typ, Karte, Norm und Fälligkeit
+
 # Deine Daten
 
-## Juri am Rechner
+## Juri im Browser
 
-<!-- status: M7 umgesetzt (Version 0.8.0, ADR-011); Safari, Firefox und die Desktop-App auf dem Rechner pruefen (Testliste M7) -->
+<!-- status: M7 umgesetzt (Version 0.8.0, ADR-011), M13 ergaenzt die Gestaltung; Safari, Firefox und die Desktop-App auf dem Rechner pruefen (Testliste M7 und M13) -->
 
 - Juri läuft auch in **Chrome, Safari und Firefox**, ohne Installation. Öffne die Adresse und lege los; die Install-Anleitung gibt es nur auf iPhone und iPad
 - Deine Daten liegen **nur in diesem Browser** (und Profil). Ein anderer Browser oder Rechner beginnt leer; zum Wechseln nimmst du ein **Backup** mit
@@ -499,7 +565,7 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 - **PDF und Bilder:** **Strg** (Mac: **Cmd**) + **Mausrad** oder Zwicken auf dem Trackpad zoomt, **+**, **−** und **0** ebenso; **Bild auf/ab** oder die **Pfeiltasten** blättern durch das PDF
 - In Chrome und Edge lässt sich Juri über das Symbol in der Adressleiste als eigene App installieren
 
-> **Notizen:** Die Oberfläche ist in M7 dieselbe wie auf dem iPad, bei großen Fenstern mit der iPad-Aufteilung. Eine eigene Gestaltung für große Bildschirme kommt später (M13). Es gibt keinen Abgleich zwischen Rechnern: Backup-Datei ist der Weg.
+> **Notizen:** Bei Fenstern ab 1280 px Breite gilt die eigene Gestaltung für den Rechner (Kapitel „Juri am Rechner“), darunter die iPad-Aufteilung. Es gibt keinen Abgleich zwischen Rechnern: Backup-Datei ist der Weg.
 
 ## Wo deine Daten liegen
 
@@ -549,6 +615,6 @@ Vier Kartentypen für die vier Arten, wie Jura gelernt wird.
 
 - Unten in den **Einstellungen** steht die **Version** der App
 - **Entwicklungsstand** zeigt die Schritte M0 bis M13: fertig mit Haken und Version, der nächste „in Arbeit“, die übrigen „ab“ ihrer Version
-- Zugeklappt siehst du nur „7 von 14 Schritten fertig“ und einen Balken
+- Zugeklappt siehst du nur eine Zeile wie „12 von 14 Schritten fertig“ (ab Version 1.1.0 „Alle Schritte fertig“) und einen Balken
 
 > **Notizen:** Die Versionen der kommenden Schritte sind vorläufig. Die Liste folgt der Versionsnummer der App und braucht keine Pflege.

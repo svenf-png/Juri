@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router';
 import { shellShortcut } from '@/domain/device/shortcuts';
 import { useKeys } from '../useKeys';
+import { useSearchAction } from '../useSearchAction';
 import { navKeyFor, type NavKey } from './navigation';
 import styles from './AppShell.module.css';
 import { Sidebar } from './Sidebar';
@@ -26,6 +27,7 @@ export function AppShell({
 }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const search = useSearchAction();
   // Kürzel für Tastatur und Desktop: „n“ neue Karte, „/“ Suche im Stapel.
   useKeys((input) => {
     const action = shellShortcut(input);
@@ -34,9 +36,7 @@ export function AppShell({
       return true;
     }
     if (action === 'search') {
-      const field = document.querySelector<HTMLInputElement>('[data-shortcut-search]');
-      if (field) field.focus();
-      else void navigate('/stapel');
+      search();
       return true;
     }
     return false;
@@ -49,7 +49,12 @@ export function AppShell({
   return (
     <div className={styles.shell} data-pushed={isPushed || undefined}>
       <Sidebar active={current} />
-      <div className={styles.content}>{children ?? <Outlet context={context} />}</div>
+      <div className={styles.content}>
+        {/* Ab 1280 px bis 1440 px gedeckelt und mittig (ADR-017); Stapel deckelt seine Detailspalte selbst. */}
+        <div className={styles.cap} data-uncapped={current === 'stapel' || undefined}>
+          {children ?? <Outlet context={context} />}
+        </div>
+      </div>
       <TabBar active={current} hidden={isPushed} />
     </div>
   );

@@ -1,4 +1,11 @@
-import { useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+} from 'react';
 import {
   drawMask,
   moveMask,
@@ -45,6 +52,8 @@ export interface MaskCanvasProps {
   /** Hinweis über dem Bild, solange es keine Felder gibt. */
   overlay?: ReactNode;
   label?: string;
+  /** Meldet den Zoom (Prozent) und den Schritt vor und zurück, z. B. für Knöpfe neben der Fläche. */
+  onZoom?: ((zoom: { percent: number; step: (direction: 1 | -1) => void }) => void) | undefined;
 }
 
 /**
@@ -63,6 +72,7 @@ export function MaskCanvas({
   onSelect,
   overlay,
   label,
+  onZoom,
 }: MaskCanvasProps) {
   const frame = useRef<HTMLDivElement>(null);
   const inner = useRef<HTMLDivElement>(null);
@@ -77,6 +87,11 @@ export function MaskCanvas({
     },
   });
   const labels = ordinals(masks);
+  const percent = Math.round(zoom.viewport.zoom * 100);
+  const { step } = zoom;
+  useEffect(() => {
+    onZoom?.({ percent, step });
+  }, [onZoom, percent, step]);
 
   const at = (event: { clientX: number; clientY: number }) => {
     const rect = inner.current?.getBoundingClientRect();

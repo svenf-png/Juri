@@ -600,3 +600,10 @@
     top: 0;
   }
 }
+
+/* Ab 1280 px (Desktop-Gestaltung, ADR-017): Innenabstand 48 px, der Inhalt deckelt AppShell. */
+@media (min-width: 1280px) {
+  .erfolge {
+    padding: calc(40px + var(--top-inset)) 48px calc(40px + var(--bottom-inset));
+  }
+}

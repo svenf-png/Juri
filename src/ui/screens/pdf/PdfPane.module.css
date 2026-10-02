@@ -121,6 +121,26 @@
   color: var(--bg);
 }
 
+/* iPad und Desktop: Seite samt Hinweis und Blättern in einer Fläche (Hinweis und Blättern liegen darüber). */
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.padFoot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.zoomKeys,
+.closeIcon {
+  display: none;
+}
+
 .page {
   position: relative;
   flex: 1;
@@ -202,6 +222,7 @@
   position: absolute;
   right: 12px;
   bottom: 8px;
+  pointer-events: auto;
 }
 
 .pagerCompact {
@@ -245,5 +266,103 @@
   .padHint {
     left: 16px;
     transform: none;
+  }
+}
+
+/*
+ * Ab 1280 px (Desktop-Gestaltung, ADR-017, DesktopErstellenPdf.dc.html): die linke Fläche ist
+ * etwas breiter als das Formular (1,15 zu 1), die Seite steht als große Karte, darunter links der
+ * Hinweis mit den Zoom-Tasten und rechts das Blättern.
+ */
+@media (min-width: 1280px) {
+  .pad {
+    /* 1,15 zu 1 neben dem Formular (Gesamtbreite, nicht nur der freie Platz). */
+    flex: 0 0 53.4884%;
+    width: auto;
+    padding: 0 32px 24px;
+    gap: 0;
+    background: var(--paper);
+  }
+
+  .pad .head {
+    height: 72px;
+    gap: 16px;
+  }
+
+  .pad .title {
+    font-size: 14.5px;
+  }
+
+  .pad .close {
+    margin-left: -10px;
+    gap: 2px;
+  }
+
+  .pad .closeIcon {
+    display: block;
+  }
+
+  .pad .modes {
+    border-radius: 14px;
+    box-shadow: 0 0 0 1px var(--line);
+  }
+
+  .pad .mode {
+    height: 34px;
+    padding: 0 16px;
+    border-radius: 11px;
+    font-size: 14px;
+  }
+
+  .pad .page {
+    border-radius: 20px;
+    box-shadow: 0 24px 48px -28px rgba(46, 26, 115, 0.35);
+  }
+
+  .pad .padFoot {
+    position: static;
+    pointer-events: auto;
+    flex-shrink: 0;
+    height: 64px;
+    box-sizing: border-box;
+    padding-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .pad .padHint {
+    position: static;
+    transform: none;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: normal;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    pointer-events: auto;
+  }
+
+  .pad .zoomKeys {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .pad .padPager {
+    position: static;
+  }
+}
+
+/* Hover am Rechner (ADR-017). */
+@media (min-width: 1280px) and (hover: hover) {
+  .pagerButton:hover:not(:disabled),
+  .pagerLabel:hover {
+    border-color: var(--dash-cloze);
+  }
+
+  .mode:not(.modeOn):hover {
+    background: var(--surface);
   }
 }

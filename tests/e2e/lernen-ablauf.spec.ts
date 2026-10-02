@@ -31,7 +31,9 @@ async function seedDeck(page: Page, cards: [string, string][], note = '') {
     await page.getByLabel('Vorderseite').fill(front);
     await page.getByLabel('Rückseite').fill(back);
     if (note && i === 0) {
-      await page.getByRole('button', { name: 'Mehr' }).click();
+      // Am Rechner (ab 1280 px) stehen alle Felder offen, „Mehr“ gibt es dort nicht.
+      const more = page.getByRole('button', { name: 'Mehr', exact: true });
+      if ((await more.count()) > 0) await more.click();
       await page.getByLabel('Notiz').fill(note);
     }
     await page.getByRole('button', { name: 'Speichern & nächste' }).click();
@@ -362,10 +364,10 @@ test.describe('Lernrhythmus', () => {
     await onboard(page);
     await openSettings(page);
     const stand = page.getByRole('region', { name: 'Entwicklungsstand' });
-    await expect(stand.getByText('13 von 14 Schritten fertig')).toBeVisible();
+    await expect(stand.getByText('Alle Schritte fertig')).toBeVisible();
     await stand.locator('summary').click();
     await expect(stand.getByRole('listitem').filter({ hasText: 'M11' })).toContainText('0.12.0');
     await expect(stand.getByRole('listitem').filter({ hasText: 'M12' })).toContainText('1.0.0');
-    await expect(stand.getByRole('listitem').filter({ hasText: 'M13' })).toContainText('in Arbeit');
+    await expect(stand.getByRole('listitem').filter({ hasText: 'M13' })).toContainText('1.1.0');
   });
 });
