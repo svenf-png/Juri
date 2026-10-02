@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { pixelDiff, showDesign } from './design';
+import { pixelDiff, showDesign, simulateStatusBar } from './design';
 
 /*
  * Schema (M5): pixelnah zu Schema.dc.html (Lernen mit verknüpfter Karte) und SchemaEditor.dc.html
@@ -113,10 +113,8 @@ test.describe('Schema: pixelnah zum Design', () => {
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto(`/Juri/styleguide/schema/${c.route}`);
-      await page.evaluate(() => {
-        document.documentElement.style.setProperty('--sim-safe-top', '47px');
-      });
       await expect(page.locator('main').first()).toBeVisible();
+      await simulateStatusBar(page);
       await page.evaluate(() => document.fonts.ready);
       // Ein Sheet setzt den Fokus auf sein erstes Element; das Design zeigt keinen Fokusring.
       await page.evaluate(() => {

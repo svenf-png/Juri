@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { pixelDiff, showDesign } from './design';
+import { pixelDiff, showDesign, simulateStatusBar } from './design';
 
 /*
  * Abdeckung, PDF und Foto (M6): pixelnah zu Abdeckung.dc.html, Erstellen.dc.html (Reiter
@@ -150,12 +150,8 @@ test.describe('Abdeckung, PDF und Foto: pixelnah zum Design', () => {
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto(`/Juri/styleguide/abdeckung/${c.route}`);
-      if (c.width === 390) {
-        await page.evaluate(() => {
-          document.documentElement.style.setProperty('--sim-safe-top', '47px');
-        });
-      }
       await expect(page.locator('main, section').first()).toBeVisible();
+      if (c.width === 390) await simulateStatusBar(page);
       await page.evaluate(() => document.fonts.ready);
       await page.evaluate(() => {
         const active = document.activeElement;

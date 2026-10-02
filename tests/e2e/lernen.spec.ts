@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { pixelDiff, showDesign } from './design';
+import { pixelDiff, showDesign, simulateStatusBar } from './design';
 
 /*
  * Lernen (M4): pixelnah zu Lernen.dc.html (erste Karte), Luecke.dc.html (gebündelte Lücken),
@@ -86,10 +86,8 @@ async function textRects(page: Page): Promise<Record<string, string>> {
 async function openPreview(page: Page, c: Case) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(c.route);
-  await page.evaluate(() => {
-    document.documentElement.style.setProperty('--sim-safe-top', '47px');
-  });
   await expect(page.locator('main').first()).toBeVisible();
+  await simulateStatusBar(page);
   await page.evaluate(() => document.fonts.ready);
   for (const selector of c.hide) {
     await page.locator(selector).evaluateAll((els) => {

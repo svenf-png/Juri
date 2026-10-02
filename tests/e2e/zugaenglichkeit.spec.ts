@@ -476,28 +476,45 @@ const PREVIEWS: string[] = [
   ].map((v) => `high-fives/${v}`),
 ];
 
-test('Vorschauen: axe und Touch-Ziele in Feier, Fertig, Fehler, Editoren und Sheets', async ({
-  page,
-}, testInfo) => {
-  // 60 Seiten je Projekt: nur die beiden Touch-Layouts in Chromium, sonst wird die CI zu lang.
-  test.skip(
-    !/^chromium-(iphone14|ipad-quer)$/.test(testInfo.project.name),
-    'nur Chromium iPhone und iPad',
-  );
-  test.setTimeout(600_000);
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  const found: string[] = [];
-  for (const path of PREVIEWS) {
-    await page.goto(`/Juri/test/styleguide/${path}`);
-    await page.waitForLoadState('networkidle');
-    await page.waitForFunction(() => document.querySelectorAll('#root *').length > 10);
-    await page.waitForTimeout(150);
-    const label = `${testInfo.project.name} · ${path}`;
-    found.push(...(await violations(page, label, undefined, true)));
-    for (const item of await smallTargets(page)) found.push(`${label} | ${item}`);
-  }
-  expect(found).toEqual([]);
-});
+/*
+ * Rund 100 Seiten je Projekt, in Gruppen zu je 20: Jede Gruppe hat ihr eigenes Zeitbudget und läuft
+ * auf einem eigenen Worker. Eine einzige Schleife über alle Seiten stieß auf langsamen CI-Läufern
+ * an die Grenze von 10 Minuten.
+ */
+const PREVIEW_GROUP = 20;
+const PREVIEW_GROUPS = Math.ceil(PREVIEWS.length / PREVIEW_GROUP);
+
+for (let g = 0; g < PREVIEW_GROUPS; g++) {
+  const paths = PREVIEWS.slice(g * PREVIEW_GROUP, (g + 1) * PREVIEW_GROUP);
+  test(`Vorschauen ${String(g + 1)} von ${String(PREVIEW_GROUPS)}: axe und Touch-Ziele in Feier, Fertig, Fehler, Editoren und Sheets`, async ({
+    page,
+  }, testInfo) => {
+    // Nur die beiden Touch-Layouts in Chromium, sonst wird die CI zu lang.
+    test.skip(
+      !/^chromium-(iphone14|ipad-quer)$/.test(testInfo.project.name),
+      'nur Chromium iPhone und iPad',
+    );
+    test.setTimeout(300_000);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const found: string[] = [];
+    for (const path of paths) {
+      await page.goto(`/Juri/test/styleguide/${path}`);
+      await page.waitForLoadState('networkidle');
+      try {
+        await page.waitForFunction(() => document.querySelectorAll('#root *').length > 10, null, {
+          timeout: 30_000,
+        });
+      } catch {
+        throw new Error(`Die Vorschau ${path} hat nichts gerendert`);
+      }
+      await page.waitForTimeout(150);
+      const label = `${testInfo.project.name} · ${path}`;
+      found.push(...(await violations(page, label, undefined, true)));
+      for (const item of await smallTargets(page)) found.push(`${label} | ${item}`);
+    }
+    expect(found).toEqual([]);
+  });
+}
 
 /*
  * Die Desktop-Gestaltung (M13, ADR-017) in ihren Zuständen: PDF neben dem Formular, Felder

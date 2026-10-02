@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { pixelDiff, showDesign } from './design';
+import { pixelDiff, showDesign, simulateStatusBar } from './design';
 
 /*
  * Teilen und Import (M10): pixelnah zu den Artboards aus scripts/build-teilen-designs.mjs, die auf
@@ -118,10 +118,8 @@ test.describe('Teilen: pixelnah zum Design', () => {
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto(`/Juri/styleguide/teilen/${c.route}`);
-      await page.evaluate(() => {
-        document.documentElement.style.setProperty('--sim-safe-top', '47px');
-      });
       await expect(page.getByRole('heading', { level: 1 })).toBeAttached();
+      await simulateStatusBar(page);
       await page.evaluate(() => document.fonts.ready);
       await page.locator('[data-addition]').evaluateAll((els) => {
         for (const el of els) (el as HTMLElement).style.setProperty('display', 'none');

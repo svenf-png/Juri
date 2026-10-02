@@ -207,6 +207,17 @@ export function designHtml(file: string): string {
   );
 }
 
+/**
+ * Simuliert die Statusleiste des iPhones (47 px, wie in den Designs enthalten). Erst aufrufen, wenn
+ * die App steht: Unbekannte Pfade liefern 404.html, die per `location.replace` weiterleitet; eine
+ * Eigenschaft, die vorher gesetzt wird, ginge mit dem alten Dokument verloren (WebKit, langsamer Runner).
+ */
+export async function simulateStatusBar(page: Page) {
+  await page.evaluate(() => {
+    document.documentElement.style.setProperty('--sim-safe-top', '47px');
+  });
+}
+
 /** Lädt ein Design in die Seite, ohne Animationen (Endzustand), Schriften geladen. */
 export async function showDesign(page: Page, file: string) {
   await page.emulateMedia({ reducedMotion: 'reduce' });

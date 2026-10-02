@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { pixelDiff, showDesign } from './design';
+import { pixelDiff, showDesign, simulateStatusBar } from './design';
 
 /*
  * High fives (M11): pixelnah zu HighFive.dc.html (iPhone 14) und den M11-Artboards aus
@@ -142,12 +142,8 @@ test.describe('High fives: pixelnah zum Design', () => {
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto(`/Juri/styleguide/high-fives/${c.route}`);
-      if (c.layout === 'iphone') {
-        await page.evaluate(() => {
-          document.documentElement.style.setProperty('--sim-safe-top', '47px');
-        });
-      }
       await expect(page.getByRole('heading', { level: 1 })).toBeAttached();
+      if (c.layout === 'iphone') await simulateStatusBar(page);
       await page.evaluate(() => document.fonts.ready);
       await page.locator('[data-addition]').evaluateAll((els) => {
         for (const el of els) (el as HTMLElement).style.setProperty('display', 'none');
