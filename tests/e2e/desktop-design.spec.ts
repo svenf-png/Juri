@@ -183,6 +183,21 @@ async function textRects(page: Page): Promise<Record<string, string>> {
   });
 }
 
+/**
+ * Das Board nennt die Taste „Strg“. WebKit meldet sich als Mac, dort zeigt die App „⌘“ (Beschriftung
+ * wie `modifierLabel`); das Board bekommt dieselbe Beschriftung, damit nur die Gestaltung verglichen wird.
+ */
+async function showBoard(page: Page, file: string) {
+  await showDesign(page, file);
+  await page.evaluate(() => {
+    if (!/Macintosh/.test(navigator.userAgent)) return;
+    for (const key of document.querySelectorAll('kbd')) {
+      if (key.textContent.startsWith('Strg'))
+        key.textContent = key.textContent.replace('Strg', '⌘');
+    }
+  });
+}
+
 test.describe('Desktop: pixelnah zum Design', () => {
   test.beforeEach(({ browserName }, testInfo) => {
     test.skip(
@@ -204,7 +219,7 @@ test.describe('Desktop: pixelnah zum Design', () => {
           'Firefox vergleicht nur 1440 × 900',
         );
         await page.setViewportSize({ width: size.width, height: size.height });
-        await showDesign(page, `${c.design}${size.suffix}.dc.html`);
+        await showBoard(page, `${c.design}${size.suffix}.dc.html`);
         if (c.name === 'Dialog')
           await page.addStyleTag({ content: '[data-mask] { visibility: hidden }' });
         const design = await page.screenshot({ animations: 'disabled' });
@@ -258,10 +273,12 @@ test.describe('Desktop: pixelnah zum Design', () => {
           if (process.env.CI && browserName !== 'chromium') {
             // Fehlersuche ohne Zugriff auf die Berichte: beide Bilder in 1x als JPEG ins Protokoll.
             const appJpg = await page.screenshot({ scale: 'css', type: 'jpeg', quality: 70 });
-            await showDesign(page, `${c.design}${size.suffix}.dc.html`);
-            if (c.name === 'Dialog')
-              await page.addStyleTag({ content: '[data-mask] { visibility: hidden }' });
-            const designJpg = await page.screenshot({ scale: 'css', type: 'jpeg', quality: 70 });
+            // Eine neue Seite: Die der App trägt noch deren Sicherheitsrichtlinie (kein Inline-Stil).
+            const other = await context.newPage();
+            await other.setViewportSize({ width: size.width, height: size.height });
+            await showBoard(other, `${c.design}${size.suffix}.dc.html`);
+            const designJpg = await other.screenshot({ scale: 'css', type: 'jpeg', quality: 70 });
+            await other.close();
             console.log(`IMGAPP ${tag} ${appJpg.toString('base64')}`);
             console.log(`IMGDESIGN ${tag} ${designJpg.toString('base64')}`);
           }
